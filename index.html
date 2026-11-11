@@ -1421,6 +1421,104 @@
 
   
     /* ===================================================================== */
+    /* FIXED HORIZONTAL & VERTICAL MENUS (100VH LOCKED ENTERPRISE APP SHELL) */
+    /* ===================================================================== */
+    @media (min-width: 1101px) {
+      html:not(.mobile-preview-html),
+      body:not(.mobile-preview-mode) {
+        height: 100vh !important;
+        max-height: 100vh !important;
+        overflow: hidden !important;
+        display: flex !important;
+        flex-direction: column !important;
+      }
+      body:not(.mobile-preview-mode) > .top-header {
+        flex-shrink: 0 !important;
+        position: relative !important;
+        top: 0 !important;
+        z-index: 220 !important;
+      }
+      body:not(.mobile-preview-mode) > .dept-bar {
+        flex-shrink: 0 !important;
+        position: relative !important;
+        z-index: 210 !important;
+        padding: 6px 16px !important;
+        background: #ffffff !important;
+        border-bottom: 1.5px solid #cbd5e1 !important;
+        box-shadow: 0 2px 8px rgba(15, 23, 42, 0.04) !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: space-between !important;
+        flex-wrap: nowrap !important;
+        gap: 10px !important;
+        overflow-x: auto !important;
+        scrollbar-width: none !important;
+      }
+      body:not(.mobile-preview-mode) > .dept-bar::-webkit-scrollbar {
+        display: none;
+      }
+      body:not(.mobile-preview-mode) > .dept-bar .dept-pills {
+        flex-wrap: nowrap !important;
+        white-space: nowrap !important;
+        gap: 5px !important;
+      }
+      body:not(.mobile-preview-mode) > .dept-bar .dept-pill {
+        padding: 4px 10px !important;
+        font-size: 11.5px !important;
+        white-space: nowrap !important;
+      }
+      body:not(.mobile-preview-mode) > .dept-bar .security-status-strip {
+        white-space: nowrap !important;
+        flex-shrink: 0 !important;
+        font-size: 11px !important;
+        padding: 4px 10px !important;
+      }
+      body:not(.mobile-preview-mode) > .app-shell {
+        flex: 1 1 auto !important;
+        min-height: 0 !important;
+        height: 100% !important;
+        overflow: hidden !important;
+        display: grid !important;
+        grid-template-columns: 232px 1fr !important;
+        align-items: stretch !important;
+      }
+      body.sidebar-collapsed:not(.mobile-preview-mode) > .app-shell {
+        grid-template-columns: 62px 1fr !important;
+      }
+      body:not(.mobile-preview-mode) .left-sidebar {
+        position: relative !important;
+        top: 0 !important;
+        height: 100% !important;
+        max-height: 100% !important;
+        overflow-y: auto !important;
+        overflow-x: hidden !important;
+        flex-shrink: 0 !important;
+        background: #ffffff !important;
+        border-right: 1.5px solid #cbd5e1 !important;
+        z-index: 180 !important;
+      }
+      body:not(.mobile-preview-mode) .main-area {
+        height: 100% !important;
+        max-height: 100% !important;
+        overflow-y: auto !important;
+        overflow-x: hidden !important;
+        padding: 16px 20px 48px !important;
+        scroll-behavior: smooth;
+      }
+    }
+
+    /* Sticky Horizontal Sub-Navigation Bars inside Main Area */
+    .sub-nav-bar,
+    .sticky-subnav {
+      position: sticky !important;
+      top: -16px !important;
+      z-index: 85 !important;
+      background: rgba(241, 245, 249, 0.96) !important;
+      backdrop-filter: blur(8px);
+      box-shadow: 0 4px 12px rgba(15, 23, 42, 0.07);
+    }
+
+    /* ===================================================================== */
     /* UX POLISH & BALANCED COMMERCIAL STYLING (LIMS 6-CARD KPI & SUB-NAVS)  */
     /* ===================================================================== */
     .lims-kpi-strip {
@@ -1526,10 +1624,13 @@
       margin-bottom: 4px;
     }
     .ek-val {
-      font-size: 22px;
+      font-size: 20px;
       font-weight: 900;
       line-height: 1.15;
       margin-bottom: 4px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
     }
     .ek-sub {
       font-size: 11px;
@@ -1544,10 +1645,10 @@
       flex-wrap: wrap;
       gap: 8px;
       background: #f1f5f9;
-      padding: 6px;
+      padding: 7px 8px;
       border-radius: 12px;
       margin-bottom: 14px;
-      border: 1px solid #e2e8f0;
+      border: 1px solid #cbd5e1;
     }
     .sub-nav-btn {
       appearance: none;
@@ -1778,8 +1879,8 @@
       </div>
       <div class="sidebar-group-title">ĐIỀU HƯỚNG TTA-QMS</div>
       <button class="side-nav-item" onclick="switchTab('dashboard', this)">📊 <span class="side-label-text">Trang Chủ &amp; Dashboard</span></button>
-      <button class="side-nav-item" onclick="switchTab('qc', this)">📈 <span class="side-label-text">Nội kiểm (API &amp; Mean Lab)</span></button>
-      <button class="side-nav-item" onclick="switchTab('qc', this); scrollToElement('eqaSectionCard')">🏅 <span class="side-label-text">Ngoại kiểm (6 Giai đoạn)</span></button>
+      <button id="sideNavBtn-qc" class="side-nav-item" onclick="switchTab('qc', this)">📈 <span class="side-label-text">Nội kiểm (API &amp; Mean Lab)</span></button>
+      <button id="sideNavBtn-eqa" class="side-nav-item" onclick="switchTab('eqa', this)">🏅 <span class="side-label-text">Ngoại kiểm (6 Giai đoạn)</span></button>
       <button class="side-nav-item" onclick="switchTab('equipment', this)">⚙️ <span class="side-label-text">Thiết bị (120 Máy &amp; Lịch sử)</span></button>
       <button class="side-nav-item" onclick="switchTab('equipment', this); switchEquipSubTab('qr')">📱 <span class="side-label-text">Mã QR Thiết bị &amp; In Tem</span></button>
 
@@ -1812,6 +1913,7 @@
         <button class="nav-tab-btn" onclick="switchTab('equipment', this)">2. Thiết bị, Hiệu chuẩn &amp; Môi trường (QTQL.09/10)</button>
         <button class="nav-tab-btn" onclick="switchTab('inventory', this)">3. Hóa chất, CQA, Lot-to-Lot &amp; Kit mở (QTQL.11)</button>
         <button class="nav-tab-btn" onclick="switchTab('qc', this)">4. Nội kiểm (Westgard LJ) &amp; Ngoại kiểm EQA (QTQL.16/17)</button>
+        <button class="nav-tab-btn" onclick="switchTab('eqa', this)">4B. Ngoại kiểm EQA Khép kín 6 Giai đoạn (QT.VT03.TTDT-09)</button>
         <button class="nav-tab-btn" onclick="switchTab('lims', this)">5. LIMS Tách chiết &amp; Sơ đồ Plate 96 PCR</button>
         <button class="nav-tab-btn" onclick="switchTab('hr_capa', this)">6. Nhân sự, Ủy quyền &amp; Sự cố NC/CAPA (QTQL.05/20)</button>
         <button class="nav-tab-btn" onclick="switchTab('appsheet_sync', this)">7. Liên kết AppSheet &amp; Công thức Hệ thống</button>
@@ -1993,7 +2095,7 @@
               </div>
               <span class="badge b-pass">Mean Lab &amp; SD Lab Active</span>
             </div>
-            <div style="height:260px;"><canvas id="ljDashboardChart" width="870" height="357" style="display: block; box-sizing: border-box; height: 260px; width: 633px;"></canvas></div>
+            <div style="height:260px;"><canvas id="ljDashboardChart"></canvas></div>
           </div>
 
           <div class="card">
@@ -2004,7 +2106,7 @@
               </div>
               <span class="badge b-warn">Cảnh báo FEFO &amp; Min Stock</span>
             </div>
-            <div style="height:260px;"><canvas id="inventoryDashboardChart" width="870" height="357" style="display: block; box-sizing: border-box; height: 260px; width: 633px;"></canvas></div>
+            <div style="height:260px;"><canvas id="inventoryDashboardChart"></canvas></div>
           </div>
         </div>
 
@@ -4841,7 +4943,7 @@
                   <div class="card-subtitle">Tổng hợp trực tiếp từ Bảng kiểm rà soát quản lý thiết bị Khoa Xét nghiệm năm 2026</div>
                 </div>
               </div>
-              <div style="height:270px;"><canvas id="equipDeptReportChart" height="0" style="display: block; box-sizing: border-box; height: 0px; width: 0px;" width="0"></canvas></div>
+              <div style="height:270px;"><canvas id="equipDeptReportChart"></canvas></div>
             </div>
 
             <div class="card">
@@ -4851,7 +4953,7 @@
                   <div class="card-subtitle">Đánh giá chỉ số tin cậy kỹ thuật phục vụ Xem xét của Lãnh đạo (Management Review - ISO 15189 Điều 8.9)</div>
                 </div>
               </div>
-              <div style="height:270px;"><canvas id="equipStatusPieChart" height="0" style="display: block; box-sizing: border-box; height: 0px; width: 0px;" width="0"></canvas></div>
+              <div style="height:270px;"><canvas id="equipStatusPieChart"></canvas></div>
             </div>
           </div>
 
@@ -6845,7 +6947,8 @@
       <section id="tab-qc" class="tab-pane">
         <div class="section-banner">
           <div>
-            <h2>📈 PHÂN HỆ QUẢN LÝ NỘI KIỂM (IQC ĐỊNH LƯỢNG &amp; ĐỊNH TÍNH - QT.VT03.TTDT-08) &amp; NGOẠI KIỂM EQA (QTQL.KXN.17)</h2>
+            <div style="display:inline-flex;align-items:center;gap:8px;background:rgba(255,255,255,0.16);padding:3px 10px;border-radius:999px;font-size:11px;font-weight:700;margin-bottom:4px;"><span>📈 PHÂN HỆ ĐỘC LẬP 1/2: QUẢN LÝ NỘI KIỂM (INTERNAL QUALITY CONTROL)</span><span>•</span><span>ISO 15189:2022 ĐIỀU 7.3.7.2</span></div>
+            <h2>📈 PHÂN HỆ QUẢN LÝ NỘI KIỂM XÉT NGHIỆM (IQC ĐỊNH LƯỢNG &amp; ĐỊNH TÍNH — QT.VT03.TTDT-08)</h2>
             <p>Chuẩn hóa theo SOP <strong>QT.VT03.TTDT-08</strong> (Đơn nguyên Di truyền &amp; SHPT - Khoa Xét nghiệm BV Nhi Hà Nội) • Hỗ trợ 17 Máy XN (API &amp; Thủ công) • Tự động tính <strong>Mean Lab, SD Lab, CV%, Bias%, Six Sigma</strong> • Kiểm soát <strong>PCR (PC/NC/IC), NST, ATCC, H&amp;E</strong> &amp; Đánh giá Thống kê Tháng (<strong>BM-08-02.V1</strong>)</p>
           </div>
           <div style="display:flex;gap:8px;flex-wrap:wrap;">
@@ -6883,7 +6986,7 @@
             <div class="ek-val" id="qcKpiQualStatus" style="color:#0d9488;">100% Hợp lệ</div>
             <div class="ek-sub">PCR, Karyotype, VITEK2 ATCC, H&amp;E</div>
           </div>
-          <div id="qcKpiCard-EQA" class="equip-kpi-card" onclick="switchQcSubTab('eqa')">
+          <div id="qcKpiCard-EQA" class="equip-kpi-card" onclick="switchTab('eqa')" title="Chuyển sang Phân hệ Ngoại kiểm EQA độc lập">
             <div class="ek-label">🏅 Ngoại kiểm EQA (6 Giai đoạn)</div>
             <div class="ek-val" style="color:#7c3aed;">12 Chương trình</div>
             <div class="ek-sub">9 Ngoại kiểm QT/VN + 3 So sánh liên phòng (100% Đạt)</div>
@@ -6896,7 +6999,7 @@
           <button id="qcSubBtn-sigma" type="button" class="sub-nav-btn" onclick="switchQcSubTab('sigma')">🎯 2. Mục tiêu Chất lượng 2026 &amp; Quy tắc Westgard Sigma (TEa/CV/Bias)</button>
           <button id="qcSubBtn-qual" type="button" class="sub-nav-btn" onclick="switchQcSubTab('qual')">🧬 3. Nội kiểm Định tính (PCR PC/NC/IC • Di truyền Tế bào • Vi sinh • GPB)</button>
           <button id="qcSubBtn-monthly" type="button" class="sub-nav-btn" onclick="switchQcSubTab('monthly')">📊 4. Đánh giá Thống kê Tháng (BM-08-02) &amp; Xử lý Vi phạm Out-of-Control</button>
-          <button id="qcSubBtn-eqa" type="button" class="sub-nav-btn" onclick="switchQcSubTab('eqa')">🏅 5. Ngoại kiểm EQA Khép kín 6 Bước (QTQL.KXN.17)</button>
+          <button id="qcSubBtn-eqa" type="button" class="sub-nav-btn" style="background:#f5f3ff;color:#6d28d9;border:1px solid #ddd6fe;" onclick="switchTab('eqa')">🏅 Chuyển sang Phân hệ Ngoại kiểm EQA (6 Giai đoạn) ➔</button>
           <button id="qcSubBtn-all" type="button" class="sub-nav-btn" onclick="switchQcSubTab('all')">🌐 Xem Toàn bộ trên 1 Trang</button>
         </div>
 
@@ -7092,7 +7195,7 @@
                     <span class="badge b-fail">±3SD Loại bỏ (1-3s / 2-2s / R-4s)</span>
                   </div>
                 </div>
-                <div style="height:255px;"><canvas id="ljDetailChart" style="box-sizing: border-box; display: block; height: 0px; width: 0px;" width="0" height="0"></canvas></div>
+                <div style="height:255px;"><canvas id="ljDetailChart"></canvas></div>
               </div>
             </div>
           </div>
@@ -8101,7 +8204,7 @@
               <div class="card-header" style="margin-bottom:8px;padding-bottom:6px;">
                 <div class="card-title">📊 Biểu đồ Phân tích Năng lực Six Sigma (σ) Các Xét nghiệm Trọng điểm Toàn Khoa</div>
               </div>
-              <div style="height:230px;"><canvas id="iqcSigmaBarChart" height="0" style="display: block; box-sizing: border-box; height: 0px; width: 0px;" width="0"></canvas></div>
+              <div style="height:230px;"><canvas id="iqcSigmaBarChart"></canvas></div>
             </div>
           </div>
         </div>
@@ -8474,10 +8577,106 @@
           </div>
         </div>
 
-        <!-- ======================================================================= -->
-        <!-- SUB-VIEW 5: COMMERCIAL EQA & INTER-LAB COMPARISON SUITE (QT.VT03.TTDT-09) -->
-        <!-- ======================================================================= -->
-        <div id="qcSubView-eqa" style="display:none;">
+      </section>
+
+      <!-- ========================================================= -->
+      <!-- TAB 4B: DEDICATED EXTERNAL QUALITY ASSESSMENT (EQA/PT)    -->
+      <!-- ========================================================= -->
+      <section id="tab-eqa" class="tab-pane">
+        <div class="section-banner" style="background:linear-gradient(135deg,#2e1065 0%,#4c1d95 52%,#6d28d9 100%);color:#fff;border:none;box-shadow:0 10px 25px -5px rgba(76,29,149,0.35);">
+          <div style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:14px;width:100%;">
+            <div>
+              <div style="display:inline-flex;align-items:center;gap:8px;background:rgba(255,255,255,0.16);padding:4px 12px;border-radius:999px;font-size:11px;font-weight:700;margin-bottom:6px;">
+                <span>🏅 PHÂN HỆ ĐỘC LẬP 2/2: QUẢN LÝ NGOẠI KIỂM &amp; SO SÁNH LIÊN PHÒNG (EQA / PT / ILC)</span>
+                <span>•</span>
+                <span>SOP QT.VT03.TTDT-09 &amp; ISO 15189:2022 ĐIỀU 7.3.7.3</span>
+              </div>
+              <h2 style="color:#fff;margin:0 0 4px 0;font-size:19px;">PHÂN HỆ QUẢN LÝ NGOẠI KIỂM (EQA/PT) &amp; SO SÁNH LIÊN PHÒNG KHÉP KÍN 6 GIAI ĐOẠN</h2>
+              <p style="color:#ede9fe;margin:0;font-size:12.5px;">Tách biệt độc lập với Nội kiểm hàng ngày • Quản lý trọn vòng đời 6 bước: 1. Kế hoạch Năm (BM-09-01) ➔ 2. Giao nhận Mẫu (BM-09-02) ➔ 3. Phân tích 4 Nguyên tắc &amp; IQC (BM-09-03) ➔ 4. Gửi Kết quả (BM-09-04) ➔ 5. Đánh giá SDI/Z-score/%Bias (BM-09-05) ➔ 6. Rủi ro Lâm sàng &amp; Lưu Hồ sơ 5 Năm</p>
+            </div>
+            <div style="display:flex;flex-wrap:wrap;gap:8px;">
+              <button type="button" class="btn" style="background:#fff;color:#4c1d95;font-weight:800;border:none;" onclick="openModal('modalEqa')">➕ Đăng ký / Nhập Đợt Ngoại kiểm Mới</button>
+              <button type="button" class="btn" style="background:#f59e0b;color:#fff;font-weight:800;border:none;" onclick="openModal('modalEqaReceiveSample')">📦 Ghi Biên bản Giao nhận Mẫu (BM-09-02)</button>
+              <button type="button" class="btn" style="background:#10b981;color:#fff;font-weight:800;border:none;" onclick="openPrintableEqaForm('BM_09_05_EVAL')">🖨️ In Phiếu Đánh giá &amp; Rủi ro LS (BM-09-05)</button>
+              <button type="button" class="btn" style="background:#ef4444;color:#fff;font-weight:800;border:none;" onclick="simulateEqaFailureAndClinicalReview()">🚨 Giả lập EQA Trượt (|SDI|=3.45) &amp; Rà soát Mẫu BN</button>
+              <button type="button" class="btn btn-outline" style="background:rgba(255,255,255,0.14);color:#fff;border-color:rgba(255,255,255,0.4);" onclick="switchTab('qc')">📈 ⬅ Quay lại Phân hệ Nội kiểm (IQC)</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- 6-CARD DEDICATED EQA KPI STRIP (BALANCED 6-COLUMN GRID) -->
+        <div class="lims-kpi-strip">
+          <div class="lims-kpi-card" style="border-top:4px solid #7c3aed;" onclick="switchEqaSubView('programs'); renderEqaSection()">
+            <div class="lims-kpi-top">
+              <span class="lims-kpi-num-tag" style="background:#ede9fe;color:#5b21b6;">Bước 1 • BM-09-01</span>
+              <span class="badge b-purple">5 Bộ phận</span>
+            </div>
+            <div class="lims-kpi-label">KẾ HOẠCH NĂM EQA &amp; SSLP</div>
+            <div class="lims-kpi-value" style="color:#4c1d95;">12 Chương trình</div>
+            <div class="lims-kpi-sub" style="color:#6d28d9;">9 Ngoại kiểm QT/VN + 3 So sánh liên phòng</div>
+          </div>
+
+          <div class="lims-kpi-card" style="border-top:4px solid #0284c7;" onclick="openModal('modalEqaReceiveSample')">
+            <div class="lims-kpi-top">
+              <span class="lims-kpi-num-tag" style="background:#e0f2fe;color:#0369a1;">Bước 2 • BM-09-02</span>
+              <span class="badge b-info">Kiểm tra mẫu</span>
+            </div>
+            <div class="lims-kpi-label">GIAO NHẬN &amp; BẢO QUẢN MẪU</div>
+            <div class="lims-kpi-value" style="color:#0369a1;">100% Đạt chuẩn</div>
+            <div class="lims-kpi-sub" style="color:#0284c7;">Đúng hạn nhận • Hoàn nguyên chuẩn SOP</div>
+          </div>
+
+          <div class="lims-kpi-card" style="border-top:4px solid #059669;" onclick="switchEqaSubView('programs')">
+            <div class="lims-kpi-top">
+              <span class="lims-kpi-num-tag" style="background:#d1fae5;color:#047857;">Bước 3 • BM-09-03</span>
+              <span class="badge b-pass">IQC Pass 100%</span>
+            </div>
+            <div class="lims-kpi-label">PHÂN TÍCH 4 NGUYÊN TẮC VÀNG</div>
+            <div class="lims-kpi-value" style="color:#059669;">Chạy 1 Lần</div>
+            <div class="lims-kpi-sub" style="color:#047857;">Cùng mẫu BN • Cấm thông đồng kết quả</div>
+          </div>
+
+          <div class="lims-kpi-card" style="border-top:4px solid #d97706;" onclick="openPrintableEqaForm('BM_09_04_REPORT')">
+            <div class="lims-kpi-top">
+              <span class="lims-kpi-num-tag" style="background:#fef3c7;color:#b45309;">Bước 4 • BM-09-04</span>
+              <span class="badge b-warn">Đúng hạn 100%</span>
+            </div>
+            <div class="lims-kpi-label">BÁO CÁO &amp; GỬI KẾT QUẢ EQA</div>
+            <div class="lims-kpi-value" style="color:#d97706;">12/12 Đúng hạn</div>
+            <div class="lims-kpi-sub" style="color:#b45309;">Khai đúng Hệ thống máy / Hóa chất / Đơn vị</div>
+          </div>
+
+          <div class="lims-kpi-card" style="border-top:4px solid #0d9488;" onclick="switchEqaSubView('trend')">
+            <div class="lims-kpi-top">
+              <span class="lims-kpi-num-tag" style="background:#ccfbf1;color:#0f766e;">Bước 5 • BM-09-05</span>
+              <span class="badge b-pass">|SDI| ≤ 2.0</span>
+            </div>
+            <div class="lims-kpi-label">ĐÁNH GIÁ SDI / Z-SCORE / %BIAS</div>
+            <div class="lims-kpi-value" style="color:#0f766e;">|SDI| TB: 0.48</div>
+            <div class="lims-kpi-sub" style="color:#0f766e;">100% Tương đồng • Không trượt xu hướng</div>
+          </div>
+
+          <div class="lims-kpi-card" style="border-top:4px solid #dc2626;" onclick="switchEqaSubView('rotation')">
+            <div class="lims-kpi-top">
+              <span class="lims-kpi-num-tag" style="background:#fee2e2;color:#b91c1c;">Bước 6 • ISO 7.3.7.3i</span>
+              <span class="badge b-pass">0 Mẫu thu hồi</span>
+            </div>
+            <div class="lims-kpi-label">RỦI RO LÂM SÀNG &amp; LUÂN PHIÊN</div>
+            <div class="lims-kpi-value" style="color:#b91c1c;">An toàn 100%</div>
+            <div class="lims-kpi-sub" style="color:#b91c1c;">Luân phiên KTV đứng máy • Lưu hồ sơ ≥ 5 năm</div>
+          </div>
+        </div>
+
+        <!-- STICKY SUB-NAVIGATION BAR FOR DEDICATED EQA WORKSPACE -->
+        <div class="sub-nav-bar sticky-subnav">
+          <button id="eqaSubBtn-all" type="button" class="sub-nav-btn active" onclick="switchEqaSubView('all')">🌐 Xem Toàn bộ Chu trình Ngoại kiểm 6 Bước</button>
+          <button id="eqaSubBtn-programs" type="button" class="sub-nav-btn" onclick="switchEqaSubView('programs')">📋 1. Danh mục 12 Chương trình &amp; Hồ sơ Chi tiết 6 Giai đoạn (Master-Detail)</button>
+          <button id="eqaSubBtn-trend" type="button" class="sub-nav-btn" onclick="switchEqaSubView('trend')">📈 2. Biểu đồ Xu hướng Z-Score / SDI Đa đợt &amp; Phân tích Độ chệch</button>
+          <button id="eqaSubBtn-rotation" type="button" class="sub-nav-btn" onclick="switchEqaSubView('rotation')">👨‍🔬 3. Lịch Luân phiên KTV (ISO 7.3.7.3c) &amp; Đánh giá Rủi ro Lâm sàng (ISO 7.3.7.3i)</button>
+          <button type="button" class="sub-nav-btn" style="margin-left:auto;color:#4c1d95;" onclick="openPrintableEqaForm('BM_09_01_PLAN')">🖨️ In Trọn bộ Biểu mẫu BM-09-01..05</button>
+        </div>
+
+        <div id="qcSubView-eqa" style="display:block;">
           <!-- 4 GOLDEN PRINCIPLES BANNER PER EQA TRAINING SLIDES & ISO 15189:2022 CLAUSE 7.3.7.3 -->
           <div style="background:linear-gradient(135deg,#f5f3ff,#ede9fe);border:1.5px solid #c4b5fd;border-radius:10px;padding:10px 14px;margin-bottom:14px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;">
             <div style="font-size:12px;color:#4c1d95;">
@@ -9122,7 +9321,7 @@
           </div>
 
           <!-- BOTTOM ANALYTICS: MULTI-CYCLE SDI TREND CHART & STAFF ROTATION / CLINICAL IMPACT MATRIX -->
-          <div class="grid-2" style="gap:14px;">
+          <div id="eqaBottomAnalyticsGrid" class="grid-2" style="gap:14px;">
             <div class="card">
               <div class="card-header">
                 <div>
@@ -9131,7 +9330,7 @@
                 </div>
                 <span class="badge b-pass">Giới hạn chấp nhận: |SDI| ≤ 2.0</span>
               </div>
-              <div style="height:250px;"><canvas id="eqaSdiTrendChart" style="box-sizing: border-box; display: block; height: 0px; width: 0px;" width="0" height="0"></canvas></div>
+              <div style="height:250px;"><canvas id="eqaSdiTrendChart"></canvas></div>
             </div>
 
             <div class="card">
@@ -9393,7 +9592,7 @@
         </div>
 
         <!-- SUB-NAVIGATION BAR -->
-        <div class="card" style="padding:10px 14px;margin-bottom:16px;background:#f8fafc;">
+        <div class="card sticky-subnav" style="padding:10px 14px;margin-bottom:16px;background:rgba(248,250,252,0.96);">
           <div style="display:flex;flex-wrap:wrap;gap:8px;align-items:center;justify-content:space-between;">
             <div id="limsSubTabBar" style="display:flex;flex-wrap:wrap;gap:6px;">
               <button type="button" class="btn btn-primary" data-lims-sub="all" onclick="switchLimsSubTab('all')">🌐 Xem Toàn bộ Luồng LIMS (All-in-One)</button>
@@ -14078,25 +14277,63 @@ function writeAuditLog(maNV, actionType, detailChange, signatureVerify) {
       const target = document.getElementById("tab-" + tabKey);
       if (target) target.classList.add("active");
 
+      // Reset scroll position of .main-area when switching top-level tabs
+      const mainArea = document.querySelector(".main-area");
+      if (mainArea) mainArea.scrollTop = 0;
+
       document.querySelectorAll(".nav-tab-btn").forEach(b => b.classList.remove("active"));
       const topBtns = document.querySelectorAll(".nav-tab-btn");
-      const mapIdx = { dashboard: 0, equipment: 1, inventory: 2, qc: 3, lims: 4, hr_capa: 5, appsheet_sync: 6, security_deploy: 7 };
+      const mapIdx = { dashboard: 0, equipment: 1, inventory: 2, qc: 3, eqa: 4, lims: 5, hr_capa: 6, appsheet_sync: 7, security_deploy: 8 };
       if (mapIdx[tabKey] !== undefined && topBtns[mapIdx[tabKey]]) {
         topBtns[mapIdx[tabKey]].classList.add("active");
       }
 
-      if (btnEl && btnEl.classList.contains("side-nav-item")) {
-        document.querySelectorAll(".side-nav-item").forEach(s => s.classList.remove("active"));
+      document.querySelectorAll(".side-nav-item").forEach(s => s.classList.remove("active"));
+      if (btnEl && btnEl.classList && btnEl.classList.contains("side-nav-item")) {
         btnEl.classList.add("active");
+      } else {
+        const sideMatch = document.querySelector(`.side-nav-item[onclick*="switchTab('${tabKey}'"]`);
+        if (sideMatch) sideMatch.classList.add("active");
       }
 
       if (tabKey === "dashboard") {
         renderDashboardCharts();
       } else if (tabKey === "qc") {
         updateIqcChartAndStats();
+        renderIqcSigmaGoalsAndChart();
+        renderQualitativeIqcTable();
+        renderMonthlyIqcAndViolations();
+      } else if (tabKey === "eqa") {
+        renderEqaSection();
+      } else if (tabKey === "equipment") {
+        renderEquipmentAnalyticsAndMpe();
       } else if (tabKey === "inventory") {
         renderInventoryCharts();
+      } else if (tabKey === "lims") {
+        if (typeof initCommercialLimsSuite === "function") initCommercialLimsSuite();
       }
+    }
+
+    function switchEqaSubView(viewKey) {
+      ["all", "programs", "trend", "rotation"].forEach(k => {
+        const b = document.getElementById("eqaSubBtn-" + k);
+        if (b) b.classList.toggle("active", k === viewKey);
+      });
+      const mainCard = document.getElementById("eqaSectionCard");
+      const bottomGrid = document.getElementById("eqaBottomAnalyticsGrid");
+      if (mainCard) {
+        mainCard.style.display = (viewKey === "all" || viewKey === "programs") ? "block" : "none";
+      }
+      if (bottomGrid) {
+        bottomGrid.style.display = (viewKey === "all" || viewKey === "trend" || viewKey === "rotation") ? "grid" : "none";
+        const cards = bottomGrid.querySelectorAll(":scope > .card");
+        if (cards.length >= 2) {
+          cards[0].style.display = (viewKey === "all" || viewKey === "trend") ? "block" : "none";
+          cards[1].style.display = (viewKey === "all" || viewKey === "rotation") ? "block" : "none";
+          bottomGrid.style.gridTemplateColumns = (viewKey === "all") ? "" : "1fr";
+        }
+      }
+      renderEqaSection();
     }
 
     function switchEquipSubTab(subKey) {
@@ -15778,11 +16015,8 @@ function writeAuditLog(maNV, actionType, detailChange, signatureVerify) {
       "TG (T5-T2)"
     ];
 
-    // Real rows extracted directly from 'NHN Thống kê trạng thái tổng hợp TAT theo xét nghiệm.xlsx'
-    // (Includes Rows 1-4 report title/headers, Rows 5-22 completed multi-assay orders, Rows 1015-1022 pending orders, and Rows 1023-1026 signature footers)
     const EMBEDDED_NHN_LIS_EXCEL_RAW_ROWS = [["BÁO CÁO THỐNG KẾ TRẠNG THÁI TỔNG HƠP", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", ""], ["Từ ngày 01/07/2026 00:00 tới ngày 05/08/2026 23:59", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", ""], ["", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", ""], ["SID riêng", "Bệnh nhân", "Khoa", "Người lấy mẫu", "TG lấy mẫu (T0)", "TG giao mẫu (T1)", "Người giao mẫu", "Người nhận mẫu", "TG nhận mẫu (T2)", "Mã nhóm", "Tên xét nghiệm", "TG máy Download (T3)", "TG có KQ (T4)", "TG hoàn thành VAL (T5)", "Người duyệt", "TG (T2-T1)", "TG (T3-T2)", "TG (T4-T3)", "TG (T4-T2)", "TG (T5-T4)", "TG (T5-T2)"], ["11309217", "Nguyễn Văn Hoàng Long", "Khoa Ngoại tổng hợp", "Nguyễn Thị Ngọc", "30/06/2026 18:27:39", "2026-06-30 18:28:04", "ngoc.nt - Nguyễn Thị Ngọc", "Nguyễn Thị Nhài", "01/07/2026 08:21:58", "SHPT", "Virus Real-time PCR (Phát hiện đa tác nhân virus gây bệnh đường hô hấp Panel 2: Adenovirus, Enterovirus, Parainfluenza virus 2, Parainfluenza virus 1, Parainfluenza virus 3, Parainfluenza virus 4, Metapneumovirus)", "", "01/07/2026 14:25:07", "01/07/2026 14:26:49", "Nguyễn Thị Nhài", "833", "", "", "364", "1", "365"], ["11320017", "Nguyễn Khánh Linh", "Khoa Tiêu Hóa", "Đinh Thị Thanh Loan", "01/07/2026 09:00:52", "2026-07-01 09:01:29", "loan.dtt - Đinh Thị Thanh Loan", "Trần Thị Thạch Thơi", "01/07/2026 09:03:12", "SHPT", "Virus Real-time PCR (Phát hiện đa tác nhân virus gây bệnh đường hô hấp Panel 2: Adenovirus, Enterovirus, Parainfluenza virus 2, Parainfluenza virus 1, Parainfluenza virus 3, Parainfluenza virus 4, Metapneumovirus)", "", "01/07/2026 14:25:08", "01/07/2026 14:26:03", "Nguyễn Thị Nhài", "2", "", "", "322", "1", "323"], ["11326111", "Nguyễn Xuân Minh Nhật", "Khoa Bệnh nhiệt đới", "Nguyễn Thị Mến", "01/07/2026 10:08:24", "2026-07-01 11:28:54", "men.nt - Nguyễn Thị Mến", "Trần Thị Thạch Thơi", "01/07/2026 11:35:10", "SHPT", "EBV Real-time PCR", "", "02/07/2026 14:18:41", "02/07/2026 14:18:43", "Nguyễn Thị Nhài", "7", "", "", "1603", "0", "1603"], ["11326111", "Nguyễn Xuân Minh Nhật", "Khoa Bệnh nhiệt đới", "Nguyễn Thị Mến", "01/07/2026 10:08:24", "2026-07-01 11:28:54", "men.nt - Nguyễn Thị Mến", "Trần Thị Thạch Thơi", "01/07/2026 11:35:10", "SHPT", "CMV Real-time PCR [Máu]", "", "02/07/2026 14:17:39", "02/07/2026 14:18:43", "Nguyễn Thị Nhài", "7", "", "", "1602", "1", "1603"], ["11327217", "Nguyễn Bảo Trâm", "Khoa Điều trị theo yêu cầu", "Nguyễn Thị Hồng Liên", "01/07/2026 10:25:12", "2026-07-01 10:26:23", "ngoc.tth - Trần Thị Hồng Ngọc", "Trần Thị Thạch Thơi", "01/07/2026 11:18:10", "SHPT", "Vi khuẩn Real-time PCR (Phát hiện 7 tác nhân vi khuẩn gây bệnh đường hô hấp)", "", "02/07/2026 14:10:28", "02/07/2026 14:40:58", "Nguyễn Thị Nhài", "52", "", "", "1612", "30", "1642"], ["11328817", "Vũ Hải Đăng", "Khoa Khám Bệnh", "Nguyễn Thị Thu", "01/07/2026 10:45:50", "2026-07-01 10:46:30", "thu.nt - Nguyễn Thị Thu", "Trần Thị Thạch Thơi", "01/07/2026 10:52:02", "SHPT", "[DV] Vi sinh vật nhiễm khuẩn hô hấp Real - time PCR đa mồi (Panel 4: B.parapertussis, C.pneumoniae, L.pneumophila, S.pneumoniae, B.pertussis, M.pneumoniae, H.influenzae)", "", "02/07/2026 14:10:27", "02/07/2026 14:11:13", "Nguyễn Thị Nhài", "6", "", "", "1638", "1", "1639"], ["11331917", "Lưu Gia Hân", "Khoa Hô hấp", "Nguyễn Thị Thu Thủy", "01/07/2026 11:47:16", "2026-07-01 12:04:56", "thuy.ntt - Nguyễn Thị Thu Thủy", "Ngô Thành Bảo", "01/07/2026 12:12:06", "SHPT", "Vi khuẩn Real-time PCR (Phát hiện 7 tác nhân vi khuẩn gây bệnh đường hô hấp)", "", "02/07/2026 14:10:27", "02/07/2026 14:41:37", "Nguyễn Thị Nhài", "8", "", "", "1558", "31", "1589"], ["11332117", "Trần Minh Khôi", "Khoa Bệnh nhiệt đới", "Bùi Trần Hồng", "01/07/2026 11:53:44", "2026-07-01 12:17:23", "men.nt - Nguyễn Thị Mến", "Ngô Thành Bảo", "01/07/2026 12:22:17", "SHPT", "Virus Real-time PCR (Phát hiện đa tác nhân virus gây bệnh đường hô hấp Panel 2: Adenovirus, Enterovirus, Parainfluenza virus 2, Parainfluenza virus 1, Parainfluenza virus 3, Parainfluenza virus 4, Metapneumovirus)", "", "02/07/2026 14:48:15", "02/07/2026 14:48:36", "Nguyễn Thị Nhài", "5", "", "", "1586", "0", "1586"], ["11332117", "Trần Minh Khôi", "Khoa Bệnh nhiệt đới", "Bùi Trần Hồng", "01/07/2026 11:53:44", "2026-07-01 12:17:23", "men.nt - Nguyễn Thị Mến", "Ngô Thành Bảo", "01/07/2026 12:22:17", "SHPT", "Virus Real-time PCR virus (Phát hiện đa tác nhân virus gây bệnh đường hô hấp Panel 5: Influenza A, Influenza B, SARS-CoV-2, RSV A/B)", "", "02/07/2026 16:31:24", "02/07/2026 16:32:14", "Nguyễn Thị Nhài", "5", "", "", "1689", "1", "1690"], ["11336717", "Nguyễn Hải Nhi", "Khoa Hô hấp", "Nguyễn Thị Thu Thủy", "01/07/2026 15:06:11", "2026-07-01 15:58:47", "linh.ht - Hoàng Thùy Linh", "Trần Thị Thạch Thơi", "01/07/2026 16:12:24", "SHPT", "Vi khuẩn Real-time PCR (Phát hiện 7 tác nhân vi khuẩn gây bệnh đường hô hấp)", "", "02/07/2026 14:10:28", "02/07/2026 14:42:36", "Nguyễn Thị Nhài", "14", "", "", "1318", "32", "1350"], ["11337117", "Đỗ Đăng Khoa", "Khoa Hô hấp", "Nguyễn Thị Thu Thủy", "01/07/2026 15:20:29", "2026-07-01 15:59:23", "linh.ht - Hoàng Thùy Linh", "Trần Thị Thạch Thơi", "01/07/2026 16:11:19", "SHPT", "Vi khuẩn Real-time PCR (Phát hiện 7 tác nhân vi khuẩn gây bệnh đường hô hấp)", "", "02/07/2026 14:10:27", "02/07/2026 14:42:08", "Nguyễn Thị Nhài", "12", "", "", "1319", "32", "1351"], ["11337217", "Nguyễn Ngọc Bích", "Khoa Hô hấp", "Nguyễn Thị Thu Thủy", "01/07/2026 15:23:34", "2026-07-01 15:58:26", "linh.ht - Hoàng Thùy Linh", "Trần Thị Thạch Thơi", "01/07/2026 16:13:08", "SHPT", "Mycoplasma pneumoniae Real-time PCR", "", "02/07/2026 14:16:10", "02/07/2026 14:16:12", "Nguyễn Thị Nhài", "15", "", "", "1323", "0", "1323"], ["11339117", "Nguyễn Quang Minh", "Khoa Hô hấp", "Nguyễn Thị Thu Thủy", "01/07/2026 16:30:11", "2026-07-01 16:36:30", "linh.ht - Hoàng Thùy Linh", "Ngô Thành Bảo", "01/07/2026 16:40:36", "SHPT", "Vi khuẩn Real-time PCR (Phát hiện 7 tác nhân vi khuẩn gây bệnh đường hô hấp)", "", "02/07/2026 14:10:28", "02/07/2026 14:42:59", "Nguyễn Thị Nhài", "4", "", "", "1290", "32", "1322"], ["11339217", "Cao Tường Vy", "Khoa Nội tổng hợp", "Đồng Lệ Lý", "01/07/2026 16:32:52", "2026-07-01 16:33:36", "ly.dl - Đồng Lệ Lý", "Ngô Thành Bảo", "01/07/2026 16:50:37", "SHPT", "Virus Real-time PCR (Phát hiện đa tác nhân virus gây bệnh đường hô hấp Panel 2: Adenovirus, Enterovirus, Parainfluenza virus 2, Parainfluenza virus 1, Parainfluenza virus 3, Parainfluenza virus 4, Metapneumovirus)", "", "02/07/2026 14:48:17", "02/07/2026 14:49:00", "Nguyễn Thị Nhài", "17", "", "", "1318", "1", "1319"], ["11339534", "Nguyễn Phương Linh", "Khoa Bệnh nhiệt đới", "Nguyễn Thị Linh", "01/07/2026 16:45:38", "2026-07-01 17:31:37", "men.nt - Nguyễn Thị Mến", "Ngô Thành Bảo", "01/07/2026 17:37:21", "SHPT", "Enterovirus Real-time PCR [Phân]", "", "02/07/2026 14:17:00", "02/07/2026 14:17:01", "Nguyễn Thị Nhài", "6", "", "", "1240", "0", "1240"], ["11340217", "Vũ Tuệ Nhi", "Khoa Bệnh nhiệt đới", "Nguyễn Thị Linh", "01/07/2026 18:00:40", "2026-07-01 18:36:54", "trang.tt - Trương Thùy Trang", "Ngô Thành Bảo", "01/07/2026 18:56:16", "SHPT", "Virus Real-time PCR (Phát hiện đa tác nhân virus gây bệnh đường hô hấp Panel 2: Adenovirus, Enterovirus, Parainfluenza virus 2, Parainfluenza virus 1, Parainfluenza virus 3, Parainfluenza virus 4, Metapneumovirus)", "", "02/07/2026 14:48:17", "02/07/2026 14:49:24", "Nguyễn Thị Nhài", "20", "", "", "1192", "1", "1193"], ["11340517", "Trần Tiến Đạt", "Khoa Hô hấp", "Nguyễn Thị Thu Thủy", "01/07/2026 18:05:18", "2026-07-01 18:52:17", "huong.vl - Vũ Lan Hương", "Ngô Thành Bảo", "01/07/2026 19:05:29", "SHPT", "Vi khuẩn Real-time PCR (Phát hiện 7 tác nhân vi khuẩn gây bệnh đường hô hấp)", "", "02/07/2026 14:10:28", "02/07/2026 14:43:29", "Nguyễn Thị Nhài", "13", "", "", "1145", "33", "1178"], ["11341617", "Nguyễn Ngọc Hải Nam", "Khoa Hô hấp", "Nguyễn Thị Thu Thủy", "01/07/2026 18:49:07", "2026-07-01 18:49:29", "huong.vl - Vũ Lan Hương", "Ngô Thành Bảo", "01/07/2026 19:06:00", "SHPT", "Vi khuẩn Real-time PCR (Phát hiện 7 tác nhân vi khuẩn gây bệnh đường hô hấp)", "", "02/07/2026 14:10:29", "02/07/2026 14:43:58", "Nguyễn Thị Nhài", "17", "", "", "1144", "33", "1177"], ["12589717", "Trịnh Gia Bảo", "Khoa Hô hấp", "Hoàng Thùy Linh", "05/08/2026 10:07:52", "2026-08-05 10:19:13", "linh.ht - Hoàng Thùy Linh", "Trần Thị Thạch Thơi", "05/08/2026 10:22:05", "SHPT", "Vi khuẩn Real-time PCR (Phát hiện 7 tác nhân vi khuẩn gây bệnh đường hô hấp)", "", "05/08/2026 14:24:42", "05/08/2026 14:41:23", "Nguyễn Thị Nhài", "3", "", "", "242", "17", "259"], ["12592417", "Lê Đức Trí", "Khoa Điều trị theo yêu cầu", "Nguyễn Thị Xinh", "05/08/2026 10:27:50", "2026-08-05 10:29:08", "xinh.nt - Nguyễn Thị Xinh", "Trần Thị Thạch Thơi", "05/08/2026 10:35:29", "SHPT", "Vi khuẩn Real-time PCR (Phát hiện 7 tác nhân vi khuẩn gây bệnh đường hô hấp)", "", "", "", "", "6", "", "", "", "", ""], ["12593617", "Đinh Hoàng Bách", "Khoa Nội tổng hợp", "Trần Phương Ly", "05/08/2026 10:39:20", "2026-08-05 10:59:56", "ly.tp - Trần Phương Ly", "Trần Thị Thạch Thơi", "05/08/2026 11:03:29", "SHPT", "Vi khuẩn Real-time PCR (Phát hiện 7 tác nhân vi khuẩn gây bệnh đường hô hấp)", "", "", "", "", "4", "", "", "", "", ""], ["12597217", "Phạm Bảo Nhi", "Khoa Hô hấp", "Hoàng Thùy Linh", "05/08/2026 11:46:28", "2026-08-05 11:47:41", "linh.ht - Hoàng Thùy Linh", "Nguyễn Khánh Ly", "05/08/2026 11:58:03", "SHPT", "Vi khuẩn Real-time PCR (Phát hiện 7 tác nhân vi khuẩn gây bệnh đường hô hấp)", "", "", "", "", "11", "", "", "", "", ""], ["12598034", "Nguyễn Khánh Vy", "Khoa Tiêu Hóa", "Đinh Thị Thanh Loan", "05/08/2026 12:21:28", "2026-08-05 12:21:48", "loan.dtt - Đinh Thị Thanh Loan", "Nguyễn Văn Việt", "05/08/2026 12:28:21", "SHPT", "[DV] Vi sinh vật nhiễm khuẩn đường ruột Real - time PCR đa mồi (Panel 4: E.histolytica, Giardia lamblia, Cryptosporidium spp, B.hominis, D.fragilis, C.cayetanensis) [Phân]", "", "", "", "", "7", "", "", "", "", ""], ["12598617", "Thân Bảo Anh", "Khoa Bệnh nhiệt đới", "Trương Thùy Trang", "05/08/2026 13:36:02", "2026-08-05 14:54:10", "linh.nt - Nguyễn Thị Linh", "Trần Thị Thạch Thơi", "05/08/2026 14:55:48", "SHPT", "Virus Real-time PCR (Phát hiện đa tác nhân virus gây bệnh đường hô hấp Panel 2: Adenovirus, Enterovirus, Parainfluenza virus 2, Parainfluenza virus 1, Parainfluenza virus 3, Parainfluenza virus 4, Metapneumovirus)", "", "", "", "", "1", "", "", "", "", ""], ["12600334", "Nguyễn Nhật Linh", "Khoa Nội tổng hợp", "Bùi Thị Linh Nga", "05/08/2026 14:16:39", "2026-08-05 14:17:08", "ly.tp - Trần Phương Ly", "Trần Thị Thạch Thơi", "05/08/2026 14:20:39", "SHPT", "Vi khuẩn Real-time PCR (phát hiện đa tác nhân vi khuẩn gây bệnh đường tiêu hóa Panel 2: Campylobacter spp, Salmonella spp, Clostridium difficile toxin B, Yersinia enterocolitica, Shigella spp/EIEC, Vibrio spp, Aeromonas spp) [Phân]", "", "", "", "", "3", "", "", "", "", ""], ["12601817", "Nguyễn Đình Nhật Nam", "Khoa Điều trị theo yêu cầu", "Nguyễn Thị Hồng Liên", "05/08/2026 14:46:18", "2026-08-05 14:47:14", "linh.dtm2 - Doãn Thị Mai Linh", "Trần Thị Thạch Thơi", "05/08/2026 14:58:49", "SHPT", "Vi khuẩn Real-time PCR (Phát hiện 7 tác nhân vi khuẩn gây bệnh đường hô hấp)", "", "", "", "", "11", "", "", "", "", ""], ["", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", ""], ["", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", ""], ["", "NGƯỜI LẬP BIỂU", "", "", "", "", "", "", "", "", "", "", "TRƯỞNG KHOA XÉT NGHIỆM", "", "", "", "", "", "", "", ""], ["", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", ""]];
 
-    // Enrich existing LIMS_LIS_ORDERS so every existing record also has all 21 LIS columns populated
     function normalizeExistingLisOrdersTo21Cols() {
       LIMS_LIS_ORDERS.forEach(o => {
         if (typeof o.t3 === "undefined") o.t3 = o.idMePcr ? (o.t2 || "") : "";
@@ -15801,12 +16035,10 @@ function writeAuditLog(maNV, actionType, detailChange, signatureVerify) {
     }
     normalizeExistingLisOrdersTo21Cols();
 
-    // Map all 29 test names in 'NHN Thống kê trạng thái tổng hợp TAT theo xét nghiệm.xlsx' to (idQtxn, idIc, tenIc)
     function mapLisTestNameToAssayInfo(rawTestName) {
       const s = String(rawTestName || "").trim();
       const low = s.toLowerCase();
 
-      // Check exact or catalog match first
       if (low.includes("7 tác nhân vi khuẩn gây bệnh đường hô hấp")) {
         return { idQtxn: "RP Panel 4", idIc: "IC-03", tenIc: "RP-B IC" };
       }
@@ -15828,7 +16060,7 @@ function writeAuditLog(maNV, actionType, detailChange, signatureVerify) {
       if (low.includes("tiêu hóa panel 1") || (low.includes("norovirus") && low.includes("rotavirus"))) {
         return { idQtxn: "GI Panel 1", idIc: "IC-05", tenIc: "GI-V IC" };
       }
-      if ((low.includes("tiêu hóa panel 2") || low.includes("đường ruột") && low.includes("panel 2")) || low.includes("campylobacter")) {
+      if ((low.includes("tiêu hóa panel 2") || (low.includes("đường ruột") && low.includes("panel 2"))) || low.includes("campylobacter")) {
         return { idQtxn: s.startsWith("[DV]") ? "GI Panel 2_v1" : "GI Panel 2", idIc: "IC-06", tenIc: "GI-BP IC" };
       }
       if (low.includes("tiêu hóa panel 3") || low.includes("e.coli o157")) {
@@ -15871,7 +16103,6 @@ function writeAuditLog(maNV, actionType, detailChange, signatureVerify) {
         return { idQtxn: "MP", idIc: "IC-01", tenIc: "Universal IC" };
       }
 
-      // Fallback to catalog lookup
       const found = LIMS_ASSAY_CATALOG.find(a => a.idQtxn.toLowerCase() === low || a.lisLinkName.toLowerCase() === low);
       if (found) {
         return { idQtxn: found.idQtxn, idIc: found.idIc, tenIc: found.tenIc };
@@ -15879,7 +16110,6 @@ function writeAuditLog(maNV, actionType, detailChange, signatureVerify) {
       return { idQtxn: s.slice(0, 18) || "RP Panel 4", idIc: "IC-01", tenIc: "Universal IC" };
     }
 
-    // Filter raw 2D array from Excel/TSV: ONLY keep valid test order rows!
     function filterAndParseLis21ColRows(rawRows2D) {
       let skippedCount = 0;
       const validOrders = [];
@@ -15897,7 +16127,6 @@ function writeAuditLog(maNV, actionType, detailChange, signatureVerify) {
         const c10 = cells[10] || "";
         const joinedUpper = nonEmpty.join(" ").toUpperCase();
 
-        // Filter out report title, date range, column header row, and signature footer rows
         if (
           c0.toUpperCase() === "SID RIÊNG" ||
           c0.toUpperCase() === "SID" ||
@@ -15973,8 +16202,6 @@ function writeAuditLog(maNV, actionType, detailChange, signatureVerify) {
       return v || "Khoa Lâm sàng";
     }
 
-    // Reconcile parsed LIS orders against existing LIMS_LIS_ORDERS:
-    // Rule: ONLY allow overwriting if incoming LIS row has NEW non-empty data compared to existing record!
     let stagedLisReconItems = [];
 
     const LIS_SYNCABLE_FIELD_MAP = [
@@ -16016,12 +16243,10 @@ function writeAuditLog(maNV, actionType, detailChange, signatureVerify) {
           };
         }
 
-        // Compare incoming non-empty fields with existing fields
         const diffs = [];
         LIS_SYNCABLE_FIELD_MAP.forEach(f => {
           const incVal = String(inc[f.key] ?? "").trim();
           const exVal = String(existing[f.key] ?? "").trim();
-          // Only treat as new LIS data if incoming is non-empty and differs from existing
           if (incVal !== "" && incVal !== exVal) {
             diffs.push({
               key: f.key,
@@ -16175,7 +16400,6 @@ function writeAuditLog(maNV, actionType, detailChange, signatureVerify) {
       let overwrittenCount = 0;
       let skippedLockedCount = 0;
 
-      // Process in reverse so unshifted NEW items maintain chronological order
       const itemsToProcess = [...stagedLisReconItems];
       itemsToProcess.forEach(item => {
         if (item.mode === "UNCHANGED" || !item.selected) {
@@ -16191,14 +16415,12 @@ function writeAuditLog(maNV, actionType, detailChange, signatureVerify) {
           addedCount++;
         } else if (item.mode === "UPDATED" && item.existing) {
           const ex = item.existing;
-          // ONLY overwrite fields where incoming LIS has a non-empty updated value
           item.diffs.forEach(d => {
             ex[d.key] = inc[d.key];
           });
           if (ex.t5t2 !== "" && typeof ex.t5t2 !== "undefined") {
             ex.tatLab = `${ex.t5t2}p`;
           }
-          // Upgrade status if LIS now reports T5 VAL completed, while preserving internal batch links
           if (ex.t5 && ex.status !== "Đã duyệt KQ") {
             ex.status = "Đã duyệt KQ";
           } else if (ex.t4 && ex.status === "Chờ tách chiết") {
@@ -16220,26 +16442,22 @@ function writeAuditLog(maNV, actionType, detailChange, signatureVerify) {
     }
 
     function loadEmbeddedNhnExcelSample(simulateNewUpdateWave = false) {
-      // Deep clone the embedded rows from NHN Thống kê trạng thái tổng hợp TAT theo xét nghiệm.xlsx
       const rows = JSON.parse(JSON.stringify(EMBEDDED_NHN_LIS_EXCEL_RAW_ROWS));
       if (simulateNewUpdateWave) {
-        // Simulate LIS exporting a new wave where pending orders (rows 1016..1022: 12592417, 12593617, 12597217, 12598034, 12598617, 12600334, 12601817)
-        // and existing waiting orders (14830317, 14832617) now receive T3, T4, T5, Người duyệt, and TAT columns from LIS!
         rows.forEach(r => {
           const sid = String(r[0] || "").trim();
           if (["12592417", "12593617", "12597217", "12598034", "12598617", "12600334", "12601817"].includes(sid)) {
-            r[11] = "05/08/2026 15:10:00"; // TG máy Download (T3)
-            r[12] = "05/08/2026 17:20:15"; // TG có KQ (T4)
-            r[13] = "05/08/2026 17:32:40"; // TG hoàn thành VAL (T5)
-            r[14] = "ThS. Trần Tuấn Anh";   // Người duyệt
-            r[16] = "25";                   // TG (T3-T2)
-            r[17] = "130";                  // TG (T4-T3)
-            r[18] = "155";                  // TG (T4-T2)
-            r[19] = "12";                   // TG (T5-T4)
-            r[20] = "167";                  // TG (T5-T2)
+            r[11] = "05/08/2026 15:10:00";
+            r[12] = "05/08/2026 17:20:15";
+            r[13] = "05/08/2026 17:32:40";
+            r[14] = "ThS. Trần Tuấn Anh";
+            r[16] = "25";
+            r[17] = "130";
+            r[18] = "155";
+            r[19] = "12";
+            r[20] = "167";
           }
         });
-        // Also append 2 existing LIMS orders with newly updated T3/T4/T5 from LIS to demonstrate selective overwrite even before loading the first wave
         rows.splice(4, 0,
           ["14830317", "Nguyễn Vũ Tuấn An", "Khoa Bệnh nhiệt đới", "Nguyễn Thị Hồng Quyên", "06/10/2026 17:59", "06/10/2026 18:01", "trang.tt - Trương Thùy Trang", "Nguyễn Đăng Long", "06/10/2026 18:05", "SHPT", "Virus Real-time PCR (Phát hiện đa tác nhân virus gây bệnh đường hô hấp Panel 2)", "06/10/2026 18:30", "06/10/2026 20:45", "06/10/2026 20:55", "ThS. Trần Tuấn Anh", "4", "25", "135", "160", "10", "170"],
           ["14832617", "Đinh Hải Đăng", "Khoa sơ sinh", "Phạm Thị Dung", "06/10/2026 20:05", "06/10/2026 20:06", "dung.pt - Phạm Thị Dung", "Nguyễn Đăng Long", "06/10/2026 20:11", "SHPT", "Vi khuẩn Real-time PCR (Phát hiện 7 tác nhân vi khuẩn gây bệnh đường hô hấp)", "06/10/2026 20:35", "06/10/2026 22:40", "06/10/2026 22:50", "Nguyễn Thị Nhài", "5", "24", "125", "149", "10", "159"]
@@ -16364,7 +16582,6 @@ function writeAuditLog(maNV, actionType, detailChange, signatureVerify) {
       const qtxnFilter = document.getElementById("limsLisQtxnFilter")?.value || "ALL";
       const q = (document.getElementById("limsLisSearchInput")?.value || "").trim().toLowerCase();
 
-      // Update total count in filter option
       const statusSel = document.getElementById("limsLisStatusFilter");
       if (statusSel && statusSel.options[0]) {
         statusSel.options[0].textContent = `Tất cả trạng thái mẫu (${LIMS_LIS_ORDERS.length})`;
@@ -16443,7 +16660,6 @@ function writeAuditLog(maNV, actionType, detailChange, signatureVerify) {
           `;
         }).join("");
       } else {
-        // FULL 21 COLUMNS FROM LIS EXCEL + LIMS WORKFLOW COLUMNS
         if (thead) {
           thead.innerHTML = `
             <tr>
@@ -18524,6 +18740,7 @@ function writeAuditLog(maNV, actionType, detailChange, signatureVerify) {
       // Clone DOM & sanitize so exported GitHub Pages file always boots with Zero-Trust Login Gate active!
       const clone = document.documentElement.cloneNode(true);
       const tst = clone.querySelector("#toastContainer"); if (tst) tst.innerHTML = "";
+      clone.querySelectorAll("canvas").forEach(c => { c.removeAttribute("width"); c.removeAttribute("height"); c.removeAttribute("style"); });
       const ztOverlay = clone.querySelector("#zeroTrustLoginOverlay");
       if (ztOverlay) ztOverlay.classList.add("active");
       const ztUser = clone.querySelector("#ztUserInput");
@@ -19766,7 +19983,8 @@ function writeAuditLog(maNV, actionType, detailChange, signatureVerify) {
     ];
 
     function switchQcSubTab(subKey) {
-      const keys = ["quant", "sigma", "qual", "monthly", "eqa"];
+      if (subKey === "eqa") { switchTab("eqa"); return; }
+      const keys = ["quant", "sigma", "qual", "monthly"];
       keys.forEach(k => {
         const v = document.getElementById("qcSubView-" + k);
         const b = document.getElementById("qcSubBtn-" + k);
