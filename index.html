@@ -1,728 +1,5 @@
 <!DOCTYPE html>
-<html lang="vi"><head><script data-bard-client-injected="true">(function(firebaseConfig, initialAuthToken, appId) {
-        window.__firebase_config = firebaseConfig;
-        window.__initial_auth_token = initialAuthToken;
-        window.__app_id = appId;
-            })("\n{\n  \"apiKey\": \"AIzaSyCqyCcs2R2e7AegGjvFAwG98wlamtbHvZY\",\n  \"authDomain\": \"bard-frontend.firebaseapp.com\",\n  \"projectId\": \"bard-frontend\",\n  \"storageBucket\": \"bard-frontend.firebasestorage.app\",\n  \"messagingSenderId\": \"175205271074\",\n  \"appId\": \"1:175205271074:web:2b7bd4d34d33bf38e6ec7b\"\n}\n","eyJhbGciOiJSUzI1NiIsImtpZCI6IjExNjRiNzdiNDMzZDdhMDAyMWI4NjE4YjhjYTU3ZTMyZGI5MWUxMTMiLCJ0eXAiOiJKV1QifQ.eyJzdWIiOiJmaXJlYmFzZS1hZG1pbnNkay1mYnN2Y0BiYXJkLWZyb250ZW5kLmlhbS5nc2VydmljZWFjY291bnQuY29tIiwiYXVkIjoiaHR0cHM6Ly9pZGVudGl0eXRvb2xraXQuZ29vZ2xlYXBpcy5jb20vZ29vZ2xlLmlkZW50aXR5LmlkZW50aXR5dG9vbGtpdC52MS5JZGVudGl0eVRvb2xraXQiLCJ1aWQiOiIwNjI2MjkzMTcxMjc4NTg3NDQzOCIsImlzcyI6ImZpcmViYXNlLWFkbWluc2RrLWZic3ZjQGJhcmQtZnJvbnRlbmQuaWFtLmdzZXJ2aWNlYWNjb3VudC5jb20iLCJjbGFpbXMiOnsiYXBwSWQiOiJjXzhiZDYxYTAwYjM5OGU5M2NfMjljMGJmYThfVFRBX1FNU19MSU1TX0lTTzE1MTg5XzIwMjJfQXBwLmh0bWwtNzQ2In0sImV4cCI6MTc5NDMyNzM1NywiaWF0IjoxNzk0MzIzNzU3LCJhbGciOiJSUzI1NiJ9.cyeL1Jyx1u0H4jyDA_tB8Up4GAb8pz0qNI0JrvwsH9q6ml7RZB6vjkXDlBBX2-fr5aLaA1qAfpdtUbiDcASisWHo_V4_f5GP5fRhjCeh2G2hZbV3InM5j6TXZGinZdpWe2RdxxY5rd9QjXtqbahWpMxQbp-QRmpEWoyVDzFxKoi1sf4bVKglrlhmk45qhpZ9mycJEw0-ZGzQC9_4TF8QjoxvpAM38451beunJylxrnvKsC5GGNQlxqb5qUcc36UQu-EYG9uE1L_CnCBl-7bsSIELAljUEn_cSfTjxQuJS-Nv_umSNzuUGk3KzUOIFpQrS6vAdnrMD0wzyOlvLLVrkA","c_8bd61a00b398e93c_29c0bfa8_TTA_QMS_LIMS_ISO15189_2022_App.html-746")</script><script data-bard-client-injected="true">
-  document.addEventListener('input', (event) => {
-    if (event.target && (event.target.isContentEditable || event.target.hasAttribute('contenteditable'))) {
-      const clonedDoc = document.cloneNode(true);
-      const injectedScripts = clonedDoc.querySelectorAll('[data-bard-client-injected="true"]');
-      injectedScripts.forEach(el => el.remove());
-      window.parent.postMessage({
-        type: 'inlineEdit',
-        html: '<!DOCTYPE html>\n' + clonedDoc.documentElement.outerHTML
-      }, '*');
-    }
-  });
-</script><script data-bard-client-injected="true">(function(){'use strict';window.addEventListener("message",a=>{a.data&&a.data.type==="SUPPLEMENTAL_DATA_UPDATE"&&window.dispatchEvent(new CustomEvent("supplementaldataupdate",{detail:a.data.data}))});}).call(this);
-</script><script data-bard-client-injected="true">(function() {
-  const SCROLL_KEYS = new Set([
-    'ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight',
-    ' ', 'Spacebar', 'PageUp', 'PageDown', 'Home', 'End',
-  ]);
-  const HORIZONTAL_KEYS = new Set(['ArrowLeft', 'ArrowRight']);
-
-  function isTextEntryTarget(target) {
-    if (!target) return false;
-    const tagName = target.tagName;
-    return tagName === 'INPUT' || tagName === 'TEXTAREA' ||
-        tagName === 'SELECT' || target.isContentEditable === true;
-  }
-
-  // An element absorbs the key only if it both overflows on the axis being
-  // scrolled and is configured to scroll on that axis. The cheap dimension
-  // test runs first because getComputedStyle forces a style recalc, and this
-  // runs on every keypress. Each axis is read from its own longhand: the
-  // 'overflow' shorthand serializes as two values when the axes differ, which
-  // is the common 'overflow-x: hidden; overflow-y: auto' pane.
-  function canScroll(node, horizontal) {
-    const overflows = horizontal ? node.scrollWidth > node.clientWidth
-                                 : node.scrollHeight > node.clientHeight;
-    if (!overflows) return false;
-    const style = window.getComputedStyle(node);
-    const overflow = horizontal ? style.overflowX : style.overflowY;
-    return overflow === 'auto' || overflow === 'scroll';
-  }
-
-  // Walks up from the event target so nested scrollers keep their behavior.
-  // <body> is included because pages that pin the root height make it the
-  // scroll container.
-  function hasScrollableAncestor(target, horizontal) {
-    let node = target;
-    while (node && node !== document.documentElement) {
-      if (canScroll(node, horizontal)) return true;
-      node = node.parentElement;
-    }
-    return false;
-  }
-
-  function rootCanScroll(horizontal) {
-    const scroller = document.scrollingElement || document.documentElement;
-    if (!scroller) return false;
-    // Tolerate a pixel of rounding so subpixel layouts do not look scrollable.
-    return horizontal ? scroller.scrollWidth > window.innerWidth + 1
-                      : scroller.scrollHeight > window.innerHeight + 1;
-  }
-
-  window.addEventListener('keydown', function(event) {
-    if (!SCROLL_KEYS.has(event.key)) return;
-    if (event.defaultPrevented) return;
-    // Alt and Meta turn arrows into browser history navigation, and Ctrl is
-    // reserved for shortcuts, so none of them are scroll intent.
-    if (event.altKey || event.metaKey || event.ctrlKey) return;
-
-    const target = event.target;
-    if (isTextEntryTarget(target)) return;
-
-    // Anything that can still absorb the scroll gets to keep it.
-    const horizontal = HORIZONTAL_KEYS.has(event.key);
-    if (rootCanScroll(horizontal)) return;
-    if (hasScrollableAncestor(target, horizontal)) return;
-
-    event.preventDefault();
-  }, {capture: true, passive: false});
-})();</script><script data-bard-client-injected="true">(function() {
-  // Ensure this script is executed only once
-  if (window.firebaseAuthBridgeScriptLoaded) {
-    return;
-  }
-  window.firebaseAuthBridgeScriptLoaded = true;
-
-  let nextTokenPromiseId = 0;
-
-  // Stores { resolve, reject } for ongoing token requests
-  const pendingTokenPromises = {};
-
-  // Listen for messages from the Host Application
-  window.addEventListener('message', function(event) {
-
-    const messageData = event.data;
-
-  if (messageData && messageData.type === 'RESOLVE_NEW_FIREBASE_TOKEN') {
-      const { success, token, error, promiseId } = messageData ?? {};
-      if (pendingTokenPromises[promiseId]) {
-        if (success) {
-          pendingTokenPromises[promiseId].resolve(token);
-        } else {
-          pendingTokenPromises[promiseId].reject(new Error(error || 'Token refresh failed from host.'));
-        }
-        delete pendingTokenPromises[promiseId];
-      }
-    }
-  });
-
-  // Expose a function for the Generated App to request a new Firebase token
-  window.requestNewFirebaseToken = function() {
-    const currentPromiseId = nextTokenPromiseId++;
-    const promise = new Promise((resolve, reject) => {
-      pendingTokenPromises[currentPromiseId] = { resolve, reject };
-    });
-    if (window.parent && window.parent !== window) {
-      window.parent.postMessage({
-        type: 'REQUEST_NEW_FIREBASE_TOKEN',
-        promiseId: currentPromiseId
-      }, '*');
-    } else {
-      pendingTokenPromises[currentPromiseId].reject(new Error('No parent window to request token from.'));
-      delete pendingTokenPromises[currentPromiseId];
-    }
-    return promise;
-  };
-})();</script><script data-bard-client-injected="true">
-let realOriginalGetUserMedia = null;
-if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
-  realOriginalGetUserMedia = navigator.mediaDevices.getUserMedia.bind(navigator.mediaDevices);
-}
-
-(function() {
-  if (navigator.mediaDevices && navigator.mediaDevices.__proto__) {
-    try {
-      Object.defineProperty(navigator.mediaDevices.__proto__, 'getUserMedia', {
-        get: function() {
-          return undefined; // Or throw an error
-        },
-        configurable: false
-      });
-    } catch (error) {
-      console.error("Error defining prototype getter:", error);
-    }
-  }
-})();
-
-(function() {
-  const pendingMediaResolvers = {};
-  let nextMediaPromiseId = 0;
-
-  function requestMediaPermissions(constraints) {
-    const mediaPromiseId = nextMediaPromiseId++;
-    const promise = new Promise((resolve, reject) => {
-      pendingMediaResolvers[mediaPromiseId] = (granted) => {
-        delete pendingMediaResolvers[mediaPromiseId];
-        resolve(granted);
-      };
-    });
-
-    window.parent.postMessage({
-      type: 'requestMediaPermission',
-      constraints: constraints,
-      promiseId: mediaPromiseId,
-    }, '*');
-
-    return promise;
-  }
-
-  let originalGetUserMedia = realOriginalGetUserMedia;
-
-  function interceptGetUserMedia() {
-    if (navigator.mediaDevices) {
-      Object.defineProperty(navigator.mediaDevices, 'getUserMedia', {
-        value: function(constraints) {
-          return requestMediaPermissions(constraints).then((granted) => {
-            if (granted) {
-              if (originalGetUserMedia) {
-                return originalGetUserMedia(constraints);
-              } else {
-                throw new Error("Original getUserMedia not available.");
-              }
-            } else {
-              throw new DOMException('Permission denied', 'NotAllowedError');
-            }
-          });
-        },
-        writable: false,
-        configurable: false
-      });
-    }
-  }
-
-  interceptGetUserMedia();
-
-  const observer = new MutationObserver(function(mutationsList, observer) {
-    for (const mutation of mutationsList) {
-      if (mutation.type === 'reconfigured' && mutation.name === 'getUserMedia' && mutation.object === navigator.mediaDevices) {
-        interceptGetUserMedia();
-      } else if (mutation.type === 'attributes' && mutation.attributeName === 'getUserMedia' && mutation.target === navigator.mediaDevices) {
-        interceptGetUserMedia();
-      } else if (mutation.type === 'childList' && mutation.addedNodes) {
-        mutation.addedNodes.forEach(node => {
-          if (node === navigator.mediaDevices) {
-            interceptGetUserMedia();
-          }
-        });
-      }
-    }
-  });
-
-  function interceptSpeechRecognition() {
-    if (!window.SpeechRecognition && !window.webkitSpeechRecognition) {
-      return;
-    }
-
-    const OriginalSpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-
-    const SpeechRecognitionWrapper = function(...args) {
-      const recognizer = new OriginalSpeechRecognition(...args);
-      const originalStart = recognizer.start.bind(recognizer);
-
-      recognizer.start = function() {
-        requestMediaPermissions({ audio: true }).then(granted => {
-          if (granted) {
-            originalStart();
-          } else {
-            const errorEvent = new SpeechRecognitionErrorEvent('error');
-            errorEvent.error = 'not-allowed'; // This is the standard error for permission denial.
-            recognizer.dispatchEvent(errorEvent);
-          }
-        });
-      };
-
-      return recognizer;
-    };
-
-    SpeechRecognitionWrapper.prototype = OriginalSpeechRecognition.prototype;
-    SpeechRecognitionWrapper.prototype.constructor = SpeechRecognitionWrapper;
-
-    if (window.SpeechRecognition) {
-      window.SpeechRecognition = SpeechRecognitionWrapper;
-    }
-    if (window.webkitSpeechRecognition) {
-      window.webkitSpeechRecognition = SpeechRecognitionWrapper;
-    }
-  }
-
-  interceptSpeechRecognition();
-
-  window.addEventListener('message', function(event) {
-    if (event.data) {
-      if (event.data.type === 'resolveMediaPermission') {
-        const { promiseId, granted } = event.data;
-        if (pendingMediaResolvers[promiseId]) {
-          pendingMediaResolvers[promiseId](granted);
-        }
-      }
-    }
-  });
-
-})();</script><script ws-interception-config="{&quot;parentOrigin&quot;:&quot;https://gemini.google.com&quot;,&quot;proxiedDomains&quot;:[]}" data-bard-client-injected="true">(function(){'use strict';var u=typeof Object.defineProperties=="function"?Object.defineProperty:function(b,d,e){if(b==Array.prototype||b==Object.prototype)return b;b[d]=e.value;return b};function v(b){b=["object"==typeof globalThis&&globalThis,b,"object"==typeof window&&window,"object"==typeof self&&self,"object"==typeof global&&global];for(var d=0;d<b.length;++d){var e=b[d];if(e&&e.Math==Math)return e}throw Error("Cannot find global object");}var w=v(this);
-function y(b,d){if(d)a:{var e=w;b=b.split(".");for(var h=0;h<b.length-1;h++){var k=b[h];if(!(k in e))break a;e=e[k]}b=b[b.length-1];h=e[b];d=d(h);d!=h&&d!=null&&u(e,b,{configurable:!0,writable:!0,value:d})}}function z(b){function d(h){return b.next(h)}function e(h){return b.throw(h)}return new Promise(function(h,k){function m(n){n.done?h(n.value):Promise.resolve(n.value).then(d,e).then(m,k)}m(b.next())})}y("globalThis",function(b){return b||w});/*
-
- Copyright The Closure Library Authors.
- SPDX-License-Identifier: Apache-2.0
-*/
-function A(b,d){function e(){}e.prototype=d.prototype;b.j=d.prototype;b.prototype=new e;b.prototype.constructor=b;b.h=function(h,k,m){for(var n=Array(arguments.length-2),p=2;p<arguments.length;p++)n[p-2]=arguments[p];return d.prototype[k].apply(h,n)}};function B(b,d,e="*"){function h(a){if(typeof a==="string")return F.encode(a).buffer;if(a instanceof ArrayBuffer)return a.slice(0);if(ArrayBuffer.isView(a))return a.buffer.slice(a.byteOffset,a.byteOffset+a.byteLength);throw Error("Invalid data type");}function k(a){a=h(a);var f={type:"send",data:new Uint8Array(a)},g;(g=r)==null||g.postMessage(f,[a])}function m(){if(!r)throw Error("Data port not captured yet.");r.onmessage=a=>{if(a.data.type==="message"){a=new MessageEvent("message",{data:G.decode(a.data.data)});
-let f;(f=c.onmessage)==null||f.call(c,a);c.dispatchEvent(a)}}}function n(){if(!t)throw Error("Control port not captured yet.");t.onmessage=a=>{switch(a.data.type){case "open":l=1;var f=new Event("open"),g;(g=c.onopen)==null||g.call(c,f);c.dispatchEvent(f);q.forEach(H=>{k(H)});q=[];break;case "close":g=a.data;l=3;g=new CloseEvent("close",{code:g.code,reason:g.reason,wasClean:g.wasClean});(f=c.onclose)==null||f.call(c,g);c.dispatchEvent(g);break;case "error":l=3;f=new Event("error");let x;(x=c.onerror)==
-null||x.call(c,f);c.dispatchEvent(f)}}}function p(a){return z(function*(){var f=new MessageChannel;t=f.port1;var g=new MessageChannel;r=g.port1;n();m();window.parent.postMessage({type:"websocket_open",portOrdering:["control","data"],url:b,protocols:a||[],connectionId:I},e,[f.port2,g.port2])}())}var c=Reflect.construct(EventTarget,[],new.target);c.CONNECTING=0;c.OPEN=1;c.CLOSING=2;c.CLOSED=3;c.url=b;c.binaryType="arraybuffer";c.protocol="";c.i="";var l=0,t=null,r=null,q=[],F=new TextEncoder,G=new TextDecoder;
-c.onopen=null;c.onmessage=null;c.onclose=null;c.onerror=null;Object.defineProperty(c,"readyState",{get:()=>l,enumerable:!0,configurable:!0});Object.defineProperty(c,"bufferedAmount",{get:()=>{var a=0;q.forEach(f=>{a+=typeof f==="string"?f.length:f.byteLength});return a},enumerable:!0,configurable:!0});var I=function(){var a;return((a=globalThis.crypto)==null?0:a.randomUUID)?globalThis.crypto.randomUUID():"xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(/[xy]/g,f=>{var g=Math.random()*16|0;return(f===
-"x"?g:g&3|8).toString(16)})}();c.send=a=>{if(l===1)a instanceof Blob?a.arrayBuffer().then(f=>{k(f)}):k(a);else if(l===0)if(typeof a==="string")q.push(a);else if(a instanceof ArrayBuffer||ArrayBuffer.isView(a))q.push(h(a));else throw Error("Sending Blob is not supported before the connection is open.");else console.debug("WebSocket send called in CLOSING or CLOSED state; ignored.")};c.close=(a=1E3,f="")=>{if(l!==2&&l!==3){l=2;a={type:"close",code:a,reason:f,wasClean:a===1E3};var g;(g=t)==null||g.postMessage(a)}};
-Promise.resolve().then(()=>p(d));return c}A(B,EventTarget);var C=document.currentScript,D=C==null?void 0:C.getAttribute("ws-interception-config");if(!D)throw Error("WebSocket Interceptor: Missing ws-interception-config attribute in the script tag.");var E=JSON.parse(D);if(!E.parentOrigin||typeof E.parentOrigin!=="string")throw Error("WebSocket Interceptor: Invalid parentOrigin in ws-interception-config");
-(function(b){var d=Object.getOwnPropertyDescriptor(window,"WebSocket");if(!d||d.writable||d.configurable)d=Object.assign(function(e,h){try{let k=(new URL(e)).hostname;if(b.proxiedDomains.some(m=>k===m||k.endsWith(`.${m}`)))return new B(e,h,b.parentOrigin)}catch(k){throw window.parent.postMessage({type:"websocket_blocked",url:e,reason:"blocked_invalid_url"},b.parentOrigin),new DOMException(`WebSocket connection to '${e}' is not allowed in Canvas.`,"SecurityError");}window.parent.postMessage({type:"websocket_blocked",
-url:e,reason:"blocked_domain_not_allowlisted"},b.parentOrigin);throw new DOMException(`WebSocket connection to '${e}' is not allowed in Canvas.`,"SecurityError");},{CONNECTING:0,OPEN:1,CLOSING:2,CLOSED:3}),Object.defineProperty(window,"WebSocket",{value:d,writable:!1,configurable:!1})})({proxiedDomains:E.proxiedDomains||[],parentOrigin:E.parentOrigin});}).call(this);
-</script><script data-bard-client-injected="true">((function(modelInformation) {
-  const originalFetch = window.fetch;
-  // TODO: b/421908508 - Move these out of the script and match all generative AI model calls.
-  let googleLlmBaseApiUrls = [
-    'https://generativelanguage.googleapis.com/v1beta/models/' + modelInformation.textModelName + ':streamGenerateContent',
-    'https://generativelanguage.googleapis.com/v1beta/models/' + modelInformation.textModelName + ':generateContent',
-    'https://generativelanguage.googleapis.com/v1beta/models/' + modelInformation.imageModelName + ':predict',
-    'https://generativelanguage.googleapis.com/v1beta/models/' + modelInformation.imageModelName + ':predictLongRunning',
-    'https://generativelanguage.googleapis.com/v1beta/models/' + modelInformation.imageEditModelName + ':generateContent',
-    'https://generativelanguage.googleapis.com/v1beta/models/' + modelInformation.imageTransformModelName + ':generateContent',
-    'https://generativelanguage.googleapis.com/v1beta/models/' + modelInformation.videoModelName + ':predict',
-    'https://generativelanguage.googleapis.com/v1beta/models/' + modelInformation.videoModelName + ':predictLongRunning',
-    'https://generativelanguage.googleapis.com/v1beta/models/' + modelInformation.ttsModelName + ':generateContent',
-  ];
-  modelInformation.deprecatedTextModelNames.forEach((modelName) => {
-    googleLlmBaseApiUrls.push(
-      'https://generativelanguage.googleapis.com/v1beta/models/' + modelName + ':streamGenerateContent',
-      'https://generativelanguage.googleapis.com/v1beta/models/' + modelName + ':generateContent',
-    );
-  });
-  modelInformation.deprecatedImageModelNames.forEach((modelName) => {
-    googleLlmBaseApiUrls.push(
-      'https://generativelanguage.googleapis.com/v1beta/models/' + modelName + ':predict',
-      'https://generativelanguage.googleapis.com/v1beta/models/' + modelName + ':predictLongRunning',
-      'https://generativelanguage.googleapis.com/v1beta/models/' + modelName + ':generateContent',
-      'https://generativelanguage.googleapis.com/v1beta/models/' + modelName + ':streamGenerateContent',
-    );
-  });
-  modelInformation.deprecatedGenerateImageModelNames.forEach((modelName) => {
-    googleLlmBaseApiUrls.push(
-      'https://generativelanguage.googleapis.com/v1beta/models/' + modelName + ':generateContent',
-      'https://generativelanguage.googleapis.com/v1beta/models/' + modelName + ':streamGenerateContent',
-    );
-  });
-  modelInformation.deprecatedImageTransformModelNames.forEach((modelName) => {
-    googleLlmBaseApiUrls.push(
-      'https://generativelanguage.googleapis.com/v1beta/models/' + modelName + ':generateContent',
-      'https://generativelanguage.googleapis.com/v1beta/models/' + modelName + ':streamGenerateContent',
-    );
-  });
-
-  const pendingFetchResolvers = {};
-  let nextPromiseId = 0;
-
-  function handleStringInput(input, optionsArgument) {
-    const actualUrl = input;
-    const fetchCallArgs = [actualUrl, optionsArgument];
-    const effectiveOptions = optionsArgument || {};
-    const bodyForApiKeyCheck = effectiveOptions.body;
-    const bodyForPostMessage = effectiveOptions.body;
-    return { actualUrl, fetchCallArgs, effectiveOptions, bodyForApiKeyCheck, bodyForPostMessage };
-  }
-
-  function handleRequestInput(input, optionsArgument) {
-    const actualUrl = input.url;
-    const fetchCallArgs = [input, optionsArgument];
-    const effectiveOptions = { method: input.method, headers: new Headers(input.headers) };
-    let bodyForApiKeyCheck;
-    let bodyForPostMessage;
-
-    if (optionsArgument) {
-      if (optionsArgument.method) effectiveOptions.method = optionsArgument.method;
-      if (optionsArgument.headers) effectiveOptions.headers = new Headers(optionsArgument.headers);
-      if ('body' in optionsArgument) {
-        bodyForApiKeyCheck = optionsArgument.body;
-        bodyForPostMessage = optionsArgument.body;
-      } else {
-        bodyForApiKeyCheck = undefined;
-        bodyForPostMessage = input.body;
-      }
-    } else {
-      bodyForApiKeyCheck = undefined;
-      bodyForPostMessage = input.body;
-    }
-    return { actualUrl, fetchCallArgs, effectiveOptions, bodyForApiKeyCheck, bodyForPostMessage };
-  }
-
-  window.fetch = function(input, optionsArgument) {
-    let actualUrl;
-    let fetchCallArgs;
-    let effectiveOptions = {};
-    let bodyForApiKeyCheck;
-    let bodyForPostMessage;
-
-    if (typeof input === 'string') {
-      ({actualUrl, fetchCallArgs, effectiveOptions, bodyForApiKeyCheck, bodyForPostMessage} = handleStringInput(input, optionsArgument));
-    } else if (input instanceof Request) {
-      ({actualUrl, fetchCallArgs, effectiveOptions, bodyForApiKeyCheck, bodyForPostMessage} = handleRequestInput(input, optionsArgument));
-    } else {
-      return originalFetch.apply(window, [input, optionsArgument]);
-    }
-
-    effectiveOptions.method = effectiveOptions.method || 'GET';
-    if (!effectiveOptions.headers) {
-      effectiveOptions.headers = new Headers();
-    }
-
-
-    if (typeof actualUrl === 'string' && googleLlmBaseApiUrls.some((url) => actualUrl.startsWith(url))) {
-      let apiKeyIsNull = true;
-
-      const regex = new RegExp("models/([^:]+)");
-      const modelNameMatch = actualUrl.match(regex);
-      const modelName = modelNameMatch ? modelNameMatch[1] : 'unspecified';
-
-
-      try {
-        const urlObject = new URL(actualUrl);  // Use URL object for robust parsing
-        const apiKeyParam = urlObject.searchParams.get('key');
-        if (apiKeyParam) {
-          apiKeyIsNull = false;
-        }
-      } catch (e) {
-        // Continue checks even if URL parsing fails
-      }
-
-      if (apiKeyIsNull && effectiveOptions.headers) {
-        const h = new Headers(effectiveOptions.headers);
-        const apiKeyHeaderValue = h.get('X-API-Key') || h.get('x-api-key');
-        if (apiKeyHeaderValue) {
-          apiKeyIsNull = false;
-          return originalFetch.apply(window, fetchCallArgs);
-        }
-      }
-
-      if (apiKeyIsNull && effectiveOptions.method && ['POST', 'PUT', 'PATCH'].includes(effectiveOptions.method.toUpperCase()) && typeof bodyForApiKeyCheck === 'string') {
-        try {
-          const bodyData = JSON.parse(bodyForApiKeyCheck);
-          if (bodyData && bodyData.apiKey) {
-            apiKeyIsNull = false;
-            return originalFetch.apply(window, fetchCallArgs);
-          }
-        } catch (e) {
-          // Ignore JSON parsing errors
-        }
-      }
-
-      if(apiKeyIsNull) {
-        const promiseId = nextPromiseId++;
-        const promise = new Promise((resolve) => {
-          pendingFetchResolvers[promiseId] = (resolvedResponse) => {
-            delete pendingFetchResolvers[promiseId];
-            resolve(resolvedResponse);
-          };
-        });
-
-        let serializedBodyForPostMessage;
-        if (typeof bodyForPostMessage === 'string' || bodyForPostMessage == null) {
-            serializedBodyForPostMessage = bodyForPostMessage;
-        } else if (bodyForPostMessage instanceof ReadableStream) {
-            serializedBodyForPostMessage = null;
-        } else {
-            try {
-                serializedBodyForPostMessage = JSON.stringify(bodyForPostMessage);
-            } catch (e) {
-                serializedBodyForPostMessage = null;
-            }
-        }
-
-        const messageOptions = {
-            method: effectiveOptions.method,
-            headers: Object.fromEntries(new Headers(effectiveOptions.headers).entries()),
-            body: serializedBodyForPostMessage
-        };
-
-        window.parent.postMessage({
-          type: 'requestFetch',
-          url: actualUrl,
-          modelName: modelName,
-          options: messageOptions,
-          promiseId: promiseId,
-        }, '*');
-
-        return promise;
-      }
-      return originalFetch.apply(window, fetchCallArgs);
-    }
-    return originalFetch.apply(window, fetchCallArgs);
-  };
-
-  window.addEventListener('message', function(event) {
-    if (event.data && event.data.type === 'resolveFetch') {
-      const { promiseId, response } = event.data;
-      if (pendingFetchResolvers[promiseId]) {
-        try {
-          const reconstructedResponse = new Response(response.body, {
-            status: response.status,
-            statusText: response.statusText,
-            headers: new Headers(response.headers),
-          });
-          pendingFetchResolvers[promiseId](reconstructedResponse);
-        } catch (error) {
-          pendingFetchResolvers[promiseId](new Response(null, { status: 500, statusText: "Interceptor Response Reconstruction Error" }));
-        }
-      }
-    }
-  });
-
-}))({"textModelName":"gemini-3-flash-preview","imageModelName":"imagen-4.0-generate-001","imageEditModelName":"gemini-3.1-flash-image","imageTransformModelName":"gemini-3-pro-image","videoModelName":"veo-2.0-generate-001","ttsModelName":"gemini-2.5-flash-preview-tts","deprecatedTextModelNames":["gemini-2.0-flash","gemini-2.5-flash","gemini-2.5-flash-preview-04-17","gemini-2.5-flash-preview-05-20","gemini-2.5-flash-preview-09-2025"],"deprecatedImageModelNames":["imagen-3.0-generate-001","imagen-3.0-generate-002"],"deprecatedGenerateImageModelNames":["gemini-2.5-flash-image-preview","gemini-2.5-flash-image","gemini-3.1-flash-image-preview"],"deprecatedImageTransformModelNames":["gemini-3-pro-image-preview-11-2025"]})</script><script data-bard-client-injected="true">(function() {
-  function normalizeSlug(str) {
-    try {
-      return str
-        .trim()
-        .toLowerCase()
-        .replace(/[^p{L}p{N}s_-]/gu, '')
-        .replace(/s+/g, '-');
-    } catch (e) {
-      return str
-        .trim()
-        .toLowerCase()
-        .replace(/[^a-z0-9s_-]/g, '')
-        .replace(/s+/g, '-');
-    }
-  }
-
-  function findTargetElement(hash) {
-    if (!hash || hash === '#') {
-      return null;
-    }
-    const rawId = hash.startsWith('#') ? hash.slice(1) : hash;
-    let decodedId = rawId;
-    try {
-      decodedId = decodeURIComponent(rawId);
-    } catch (e) {
-      // Ignore URI malformed errors.
-    }
-
-    // 1. Direct ID match (raw and decoded).
-    let target = document.getElementById(rawId) || document.getElementById(decodedId);
-    if (target) {
-      return target;
-    }
-
-    // 2. Name attribute match (<a name="...">).
-    try {
-      if (typeof CSS !== 'undefined' && CSS.escape) {
-        target =
-          document.querySelector('[name="' + CSS.escape(rawId) + '"]') ||
-          document.querySelector('[name="' + CSS.escape(decodedId) + '"]');
-      } else {
-        const namedElements = document.getElementsByName(rawId);
-        if (namedElements && namedElements.length > 0) {
-          return namedElements[0];
-        }
-      }
-    } catch (e) {
-      // Ignore querySelector syntax errors.
-    }
-    if (target) {
-      return target;
-    }
-
-    // 3. Match heading text by slug (for Markdown TOCs where headings lack explicit IDs).
-    const targetSlug = normalizeSlug(decodedId);
-    if (targetSlug) {
-      for (const heading of document.querySelectorAll('h1, h2, h3, h4, h5, h6')) {
-        if (normalizeSlug(heading.textContent || '') === targetSlug) {
-          return heading;
-        }
-      }
-    }
-
-    return null;
-  }
-
-  document.addEventListener('click', function(event) {
-    const target = event.target;
-    const anchor = target && typeof target.closest === 'function' ? target.closest('a') : null;
-    if (!anchor) {
-      return;
-    }
-
-    const href = anchor.getAttribute('href');
-    if (
-      !href ||
-      href.trim().toLowerCase().startsWith('javascript:') ||
-      anchor.hasAttribute('download')
-    ) {
-      return;
-    }
-
-    // Check if the link is an in-page hash / anchor link.
-    if (href.startsWith('#')) {
-      event.preventDefault();
-      const targetElement = findTargetElement(href);
-      if (targetElement) {
-        targetElement.scrollIntoView({behavior: 'smooth', block: 'start'});
-      }
-      return;
-    }
-
-    // Check if the URL has the same origin/pathname but with a hash.
-    try {
-      const url = new URL(anchor.href, window.location.href);
-      if (
-        url.hash &&
-        url.origin === window.location.origin &&
-        url.pathname === window.location.pathname
-      ) {
-        event.preventDefault();
-        const targetElement = findTargetElement(url.hash);
-        if (targetElement) {
-          targetElement.scrollIntoView({behavior: 'smooth', block: 'start'});
-        }
-        return;
-      }
-    } catch (e) {
-      // Fall through if URL parsing fails.
-    }
-
-    // For all external or full navigation links, prevent iframe-level navigation
-    // (which breaks in AGSA WebView or sandboxed iframes) and ensure they open
-    // safely in a new tab/window.
-    if (anchor.target !== '_blank') {
-      event.preventDefault();
-      window.open(anchor.href, '_blank', 'noopener,noreferrer');
-    }
-  }, {capture: true});
-})();</script><script data-bard-client-injected="true">(function(){'use strict';function a(){window.parent.postMessage({type:"interaction"},"*")}window.addEventListener("click",a,{capture:!0,passive:!0});window.addEventListener("touchstart",a,{capture:!0,passive:!0});window.addEventListener("keydown",a,{capture:!0,passive:!0});}).call(this);
-</script><script data-bard-client-injected="true">(function() {
-  const originalConsoleLog = console.log;
-  const originalConsoleError = console.error;
-
-    /**
-   * Normalizes an error event or a promise rejection reason into a structured error object.
-   * @param {*} errorEventOrReason The error object or reason.
-   * @return {object} Structured error data { message, name, stack }.
-   */
-  function getErrorObject(errorEventOrReason) {
-    if (errorEventOrReason instanceof Error) {
-      return {
-        message: errorEventOrReason.message,
-        name: errorEventOrReason.name,
-        stack: errorEventOrReason.stack,
-      };
-    }
-    // Fallback for non-Error objects.
-    try {
-      return {
-        message: JSON.stringify(errorEventOrReason),
-        name: 'UnknownErrorType',
-        stack: null,
-      };
-    } catch (e) {
-      return {
-        message: String(errorEventOrReason),
-        name: 'UnknownErrorTypeNonStringifiable',
-        stack: null,
-      };
-    }
-  }
-
-  /**
-   * Converts an array of arguments (from log/error) into a single string.
-   * Handles Error objects specially to include their message and stack.
-   * @param {Array<*>} args - Arguments passed to console methods.
-   * @return {string} A string representation of the arguments.
-   */
-  function stringifyArgs(args) {
-    return args
-      .map((arg) => {
-        if (arg instanceof Error) {
-          const {message, stack} = arg;
-          return `Error: ${message}${stack ? ('\nStack: ' + stack) : ''}`;
-        }
-        if (typeof arg === 'object' && arg !== null) {
-          try {
-            return JSON.stringify(arg);
-          } catch (error) {
-            return '[Circular Object]';
-          }
-        } else {
-          return String(arg);
-        }
-      })
-      .join(' ');
-  }
-
-  console.log = function(...args) {
-    const logString = stringifyArgs(args);
-    window.parent.postMessage({ type: 'log', message: logString }, '*');
-    originalConsoleLog.apply(console, args);
-  };
-
-  console.error = function(...args) {
-    let errorData;
-    if (args.length > 0 && args[0] instanceof Error) {
-      const err = args[0];
-      // If the first arg is an Error, capture its details.
-      errorData = {
-        type: 'error',
-        source: 'CONSOLE_ERROR',
-        ...getErrorObject(err),
-        rawArgsString: stringifyArgs(args.slice(1)),
-        timestamp: new Date().toISOString(),
-      };
-    } else {
-      // If not an Error object, treat all args as a general error message.
-      errorData = {
-        type: 'error',
-        source: 'CONSOLE_ERROR',
-        message: stringifyArgs(args),
-        name: 'ConsoleLoggedError',
-        stack: null,
-        timestamp: new Date().toISOString(),
-      };
-    }
-    window.parent.postMessage(errorData, '*');
-    originalConsoleError.apply(console, args);
-  };
-
-  // Listen for global unhandled synchronous errors.
-  window.addEventListener('error', function(event) {
-    const errorDetails = event.error ? getErrorObject(event.error) : {
-      message: event.message,
-      name: 'GlobalError',
-      stack: null,
-      filename: event.filename,
-      lineno: event.lineno,
-      colno: event.colno,
-    };
-
-    window.parent.postMessage({
-      type: 'error',
-      source: 'global',
-      ...errorDetails,
-      message: errorDetails.message || event.message,
-      timestamp: new Date().toISOString(),
-    }, '*');
-  });
-
-  // Listen for unhandled promise rejections (asynchronous errors).
-  window.addEventListener('unhandledrejection', function(event) {
-    const errorDetails = getErrorObject(event.reason);
-
-    window.parent.postMessage({
-      type: 'error',
-      source: 'unhandledrejection',
-      ...errorDetails,
-      message: errorDetails.message || 'Unhandled Promise Rejection',
-      timestamp: new Date().toISOString(),
-    }, '*');
-  });
-
-})();</script>
+<html lang="vi"><head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>TTA-QMS &amp; LIMS ISO 15189:2022 - Khoa Xét nghiệm Bệnh viện Nhi Hà Nội</title>
@@ -2142,7 +1419,300 @@ url:e,reason:"blocked_domain_not_allowlisted"},b.parentOrigin);throw new DOMExce
       transition: width 0.25s ease;
     }
 
+  
+    /* ===================================================================== */
+    /* UX POLISH & BALANCED COMMERCIAL STYLING (LIMS 6-CARD KPI & SUB-NAVS)  */
+    /* ===================================================================== */
+    .lims-kpi-strip {
+      display: grid;
+      grid-template-columns: repeat(6, minmax(0, 1fr));
+      gap: 12px;
+      margin-bottom: 16px;
+      align-items: stretch;
+    }
+    @media (max-width: 1360px) {
+      .lims-kpi-strip {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+      }
+    }
+    @media (max-width: 768px) {
+      .lims-kpi-strip {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+    .lims-kpi-card {
+      background: #ffffff;
+      border: 1px solid #e2e8f0;
+      border-radius: 12px;
+      padding: 12px 14px;
+      box-shadow: 0 2px 6px rgba(15, 23, 42, 0.04);
+      cursor: pointer;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      transition: transform 0.16s ease, box-shadow 0.16s ease, border-color 0.16s ease;
+      min-width: 0;
+    }
+    .lims-kpi-card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 18px rgba(0, 104, 181, 0.12);
+      border-color: #93c5fd;
+    }
+    .lims-kpi-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 6px;
+      margin-bottom: 6px;
+      flex-wrap: wrap;
+    }
+    .lims-kpi-num-tag {
+      font-size: 10px;
+      font-weight: 800;
+      padding: 2px 7px;
+      border-radius: 6px;
+      letter-spacing: 0.02em;
+      white-space: nowrap;
+    }
+    .lims-kpi-label {
+      font-size: 11px;
+      font-weight: 800;
+      color: #475569;
+      text-transform: uppercase;
+      letter-spacing: 0.02em;
+      line-height: 1.3;
+      margin-bottom: 4px;
+    }
+    .lims-kpi-value {
+      font-size: 19px;
+      font-weight: 900;
+      line-height: 1.2;
+      letter-spacing: -0.02em;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      margin-bottom: 4px;
+    }
+    .lims-kpi-sub {
+      font-size: 11px;
+      font-weight: 600;
+      line-height: 1.35;
+    }
+
+    /* Missing equipment & reagent KPI card classes */
+    .equip-kpi-card {
+      background: #ffffff;
+      border: 1px solid #e2e8f0;
+      border-radius: 12px;
+      padding: 12px 14px;
+      box-shadow: 0 2px 6px rgba(15, 23, 42, 0.04);
+      cursor: pointer;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      transition: transform 0.16s ease, box-shadow 0.16s ease, border-color 0.16s ease;
+      min-width: 0;
+    }
+    .equip-kpi-card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 18px rgba(0, 104, 181, 0.12);
+    }
+    .ek-label {
+      font-size: 10.5px;
+      font-weight: 800;
+      color: #64748b;
+      text-transform: uppercase;
+      letter-spacing: 0.03em;
+      margin-bottom: 4px;
+    }
+    .ek-val {
+      font-size: 22px;
+      font-weight: 900;
+      line-height: 1.15;
+      margin-bottom: 4px;
+    }
+    .ek-sub {
+      font-size: 11px;
+      color: #475569;
+      font-weight: 600;
+      line-height: 1.3;
+    }
+
+    /* Sub-navigation bars & filter chips (Equipment, Reagent, IQC/EQA) */
+    .sub-nav-bar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      background: #f1f5f9;
+      padding: 6px;
+      border-radius: 12px;
+      margin-bottom: 14px;
+      border: 1px solid #e2e8f0;
+    }
+    .sub-nav-btn {
+      appearance: none;
+      border: 1px solid transparent;
+      background: transparent;
+      color: #334155;
+      font-family: inherit;
+      font-size: 12px;
+      font-weight: 700;
+      padding: 7px 13px;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.15s ease;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .sub-nav-btn:hover {
+      background: #ffffff;
+      color: #0068b5;
+      border-color: #cbd5e1;
+    }
+    .sub-nav-btn.active {
+      background: linear-gradient(135deg, #005496 0%, #0284c7 100%);
+      color: #ffffff;
+      box-shadow: 0 3px 10px rgba(2, 132, 199, 0.25);
+    }
+    .quick-chip-bar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      align-items: center;
+      margin-bottom: 12px;
+    }
+    .filter-chip {
+      appearance: none;
+      border: 1px solid #cbd5e1;
+      background: #ffffff;
+      color: #334155;
+      font-family: inherit;
+      font-size: 11.5px;
+      font-weight: 700;
+      padding: 5px 11px;
+      border-radius: 999px;
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+    .filter-chip:hover {
+      border-color: #0284c7;
+      color: #0284c7;
+      background: #f0f9ff;
+    }
+    .filter-chip.active {
+      background: #0068b5;
+      color: #ffffff;
+      border-color: #0068b5;
+      box-shadow: 0 2px 6px rgba(0, 104, 181, 0.22);
+    }
+
+    /* Additional utility classes */
+    .grid-4 {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 12px;
+    }
+    @media (max-width: 1100px) {
+      .grid-4 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    }
+    @media (max-width: 640px) {
+      .grid-4 { grid-template-columns: 1fr; }
+    }
+    .b-danger {
+      background: #fee2e2;
+      color: #b91c1c;
+      border: 1px solid #fecaca;
+    }
+    .b-teal {
+      background: #ccfbf1;
+      color: #0f766e;
+      border: 1px solid #99f6e4;
+    }
+    .code-pill {
+      background: #eff6ff;
+      color: #0369a1;
+      border: 1px solid #bae6fd;
+      padding: 1px 6px;
+      border-radius: 5px;
+      font-family: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      font-size: 0.9em;
+      font-weight: 700;
+    }
+    .modal-close {
+      appearance: none;
+      border: 1px solid #cbd5e1;
+      background: #f8fafc;
+      color: #334155;
+      width: 30px;
+      height: 30px;
+      border-radius: 8px;
+      font-size: 18px;
+      font-weight: 800;
+      line-height: 1;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .modal-close:hover {
+      background: #fee2e2;
+      color: #dc2626;
+      border-color: #fca5a5;
+    }
+
+    /* 21-Column LIS Table formatting */
+    .lis-21col-table th {
+      white-space: nowrap;
+      font-size: 11px;
+      padding: 8px 10px;
+      background: #0f172a;
+      color: #f8fafc;
+      border-right: 1px solid #1e293b;
+    }
+    .lis-21col-table td {
+      font-size: 11.5px;
+      padding: 7px 10px;
+      vertical-align: middle;
+      border-right: 1px solid #f1f5f9;
+      white-space: nowrap;
+    }
+    .lis-21col-table td.wrap-cell {
+      white-space: normal;
+      min-width: 210px;
+      max-width: 280px;
+      line-height: 1.35;
+    }
+    .lis-21col-table tbody tr:hover td {
+      background-color: #f0f9ff !important;
+    }
+
+    /* Improved section & card title hierarchy */
+    .card-header {
+      border-bottom: 1.5px solid #e2e8f0;
+      padding-bottom: 11px;
+      margin-bottom: 13px;
+    }
+    .card-title {
+      font-size: 14.2px;
+      font-weight: 800;
+      color: #0f172a;
+      letter-spacing: -0.01em;
+      line-height: 1.4;
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 5px;
+    }
+    .card-subtitle {
+      font-size: 12px;
+      color: #475569;
+      margin-top: 4px;
+      line-height: 1.45;
+    }
+
   </style>
+  <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js" crossorigin="anonymous"></script>
 </head>
 <body>
 
@@ -9737,7 +9307,7 @@ url:e,reason:"blocked_domain_not_allowlisted"},b.parentOrigin);throw new DOMExce
       <!-- ========================================================= -->
       <!-- TAB 5: LIMS EXTRACTION & 96-WELL PLATE                    -->
       <!-- ========================================================= -->
-      <section id="tab-lims" class="tab-pane">
+      <section id="tab-lims" class="tab-pane active">
         <div class="section-banner" style="background:linear-gradient(135deg,#0f172a 0%,#0f4c81 52%,#0284c7 100%);color:#fff;border:none;box-shadow:0 10px 25px -5px rgba(15,76,129,0.35);">
           <div style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:14px;width:100%;">
             <div>
@@ -9759,60 +9329,66 @@ url:e,reason:"blocked_domain_not_allowlisted"},b.parentOrigin);throw new DOMExce
           </div>
         </div>
 
-        <!-- 6-CARD INTERACTIVE LIMS KPI STRIP -->
-        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px;margin-bottom:16px;">
-          <div class="card" style="padding:13px;border-left:4px solid #0284c7;cursor:pointer;" onclick="switchLimsSubTab('lis')">
-            <div style="font-size:11px;font-weight:800;color:#64748b;text-transform:uppercase;">1. DANH SÁCH CHỈ ĐỊNH (1. LIS_Data)</div>
-            <div style="display:flex;align-items:baseline;justify-content:space-between;margin-top:4px;">
-              <div id="limsKpiTotalLis" style="font-size:22px;font-weight:900;color:#0f172a;">22 Chỉ định</div>
+        <!-- 6-CARD INTERACTIVE LIMS KPI STRIP (BALANCED 6-COLUMN COMMERCIAL LAYOUT) -->
+        <div class="lims-kpi-strip">
+          <div class="lims-kpi-card" style="border-top:4px solid #0284c7;" onclick="switchLimsSubTab('lis')">
+            <div class="lims-kpi-top">
+              <span class="lims-kpi-num-tag" style="background:#e0f2fe;color:#0369a1;">1. LIS_Data</span>
               <span class="badge b-info">Tự động gán IC</span>
             </div>
-            <div id="limsKpiLisBreakdown" style="font-size:11.5px;color:#0369a1;margin-top:4px;font-weight:600;">3 Chờ tách • 7 Đã tách • 12 Đã chạy PCR</div>
+            <div class="lims-kpi-label">DANH SÁCH CHỈ ĐỊNH LIS</div>
+            <div id="limsKpiTotalLis" class="lims-kpi-value" style="color:#0f172a;">22 Chỉ định</div>
+            <div id="limsKpiLisBreakdown" class="lims-kpi-sub" style="color:#0369a1;">3 Chờ tách • 7 Đã tách • 12 Đã chạy PCR</div>
           </div>
 
-          <div class="card" style="padding:13px;border-left:4px solid #059669;cursor:pointer;" onclick="switchLimsSubTab('ext')">
-            <div style="font-size:11px;font-weight:800;color:#64748b;text-transform:uppercase;">2. MẺ TÁCH CHIẾT &amp; PHA IC (2A/2B/2C)</div>
-            <div style="display:flex;align-items:baseline;justify-content:space-between;margin-top:4px;">
-              <div id="limsKpiExtCount" style="font-size:22px;font-weight:900;color:#059669;">3 Mẻ tách</div>
+          <div class="lims-kpi-card" style="border-top:4px solid #059669;" onclick="switchLimsSubTab('ext')">
+            <div class="lims-kpi-top">
+              <span class="lims-kpi-num-tag" style="background:#d1fae5;color:#047857;">2A / 2B / 2C</span>
               <span class="badge b-pass">9 Loại IC Chuẩn</span>
             </div>
-            <div id="limsKpiExtSub" style="font-size:11.5px;color:#047857;margin-top:4px;font-weight:600;">1 Đang thực hiện (ABT-32) • 2 Đã hoàn thành</div>
+            <div class="lims-kpi-label">MẺ TÁCH CHIẾT &amp; PHA IC</div>
+            <div id="limsKpiExtCount" class="lims-kpi-value" style="color:#059669;">3 Mẻ tách</div>
+            <div id="limsKpiExtSub" class="lims-kpi-sub" style="color:#047857;">1 Đang thực hiện (ABT-32) • 2 Đã hoàn thành</div>
           </div>
 
-          <div class="card" style="padding:13px;border-left:4px solid #7c3aed;cursor:pointer;" onclick="switchLimsSubTab('pcr')">
-            <div style="font-size:11px;font-weight:800;color:#64748b;text-transform:uppercase;">3. MẺ CHẠY REAL-TIME PCR (3A/3B/3C)</div>
-            <div style="display:flex;align-items:baseline;justify-content:space-between;margin-top:4px;">
-              <div id="limsKpiPcrCount" style="font-size:22px;font-weight:900;color:#7c3aed;">3 Mẻ PCR</div>
+          <div class="lims-kpi-card" style="border-top:4px solid #7c3aed;" onclick="switchLimsSubTab('pcr')">
+            <div class="lims-kpi-top">
+              <span class="lims-kpi-num-tag" style="background:#ede9fe;color:#6d28d9;">3A / 3B / 3C</span>
               <span id="limsKpiLotCrossBadge" class="badge b-warn">1 Cảnh báo Gối Lot</span>
             </div>
-            <div id="limsKpiPcrSub" style="font-size:11.5px;color:#6d28d9;margin-top:4px;font-weight:600;">Lọc mẫu chờ tự động theo đúng Ma_QTXN</div>
+            <div class="lims-kpi-label">MẺ CHẠY REAL-TIME PCR</div>
+            <div id="limsKpiPcrCount" class="lims-kpi-value" style="color:#7c3aed;">3 Mẻ PCR</div>
+            <div id="limsKpiPcrSub" class="lims-kpi-sub" style="color:#6d28d9;">Lọc mẫu chờ tự động theo đúng Ma_QTXN</div>
           </div>
 
-          <div class="card" style="padding:13px;border-left:4px solid #dc2626;cursor:pointer;" onclick="switchLimsSubTab('pcr')">
-            <div style="font-size:11px;font-weight:800;color:#64748b;text-transform:uppercase;">4. SƠ ĐỒ PLATE 96 THEO CỘT (3D/3E)</div>
-            <div style="display:flex;align-items:baseline;justify-content:space-between;margin-top:4px;">
-              <div id="limsKpiPlateStart" style="font-size:22px;font-weight:900;color:#dc2626;">Cột dọc (A2→)</div>
+          <div class="lims-kpi-card" style="border-top:4px solid #dc2626;" onclick="switchLimsSubTab('pcr')">
+            <div class="lims-kpi-top">
+              <span class="lims-kpi-num-tag" style="background:#fee2e2;color:#b91c1c;">3D / 3E Plate 96</span>
               <span class="badge b-danger">Tùy chỉnh linh hoạt</span>
             </div>
-            <div style="font-size:11.5px;color:#b91c1c;margin-top:4px;font-weight:600;">Click 2 giếng để đổi chỗ • Hỗ trợ Skip giếng</div>
+            <div class="lims-kpi-label">SƠ ĐỒ PLATE 96 THEO CỘT</div>
+            <div id="limsKpiPlateStart" class="lims-kpi-value" style="color:#dc2626;">Cột dọc (A2→)</div>
+            <div class="lims-kpi-sub" style="color:#b91c1c;">Click 2 giếng để đổi chỗ • Hỗ trợ Skip giếng</div>
           </div>
 
-          <div class="card" style="padding:13px;border-left:4px solid #d97706;cursor:pointer;" onclick="switchLimsSubTab('catalog')">
-            <div style="font-size:11px;font-weight:800;color:#64748b;text-transform:uppercase;">5. KHẤU TRỪ TỰ ĐỘNG HÓA CHẤT &amp; VẬT TƯ</div>
-            <div style="display:flex;align-items:baseline;justify-content:space-between;margin-top:4px;">
-              <div id="limsKpiDeductRxn" style="font-size:22px;font-weight:900;color:#d97706;">100% Tự động</div>
-              <span class="badge b-warn">Liên kết Kho 4C</span>
+          <div class="lims-kpi-card" style="border-top:4px solid #d97706;" onclick="switchLimsSubTab('catalog')">
+            <div class="lims-kpi-top">
+              <span class="lims-kpi-num-tag" style="background:#fef3c7;color:#b45309;">5A → 5F Định mức</span>
+              <span class="badge b-warn">Liên kết Kho 4°C</span>
             </div>
-            <div style="font-size:11.5px;color:#b45309;margin-top:4px;font-weight:600;">Trừ Kit tách + Kit PCR (cả 2 Lot) + Đầu côn/Ống</div>
+            <div class="lims-kpi-label">KHẤU TRỪ HÓA CHẤT &amp; VẬT TƯ</div>
+            <div id="limsKpiDeductRxn" class="lims-kpi-value" style="color:#d97706;">100% Tự động</div>
+            <div class="lims-kpi-sub" style="color:#b45309;">Trừ Kit tách + Kit PCR (cả 2 Lot) + Đầu côn/Ống</div>
           </div>
 
-          <div class="card" style="padding:13px;border-left:4px solid #0f766e;cursor:pointer;" onclick="switchLimsSubTab('approval')">
-            <div style="font-size:11px;font-weight:800;color:#64748b;text-transform:uppercase;">6. GIÁM SÁT TAT TOÀN TRÌNH (T0 → T5)</div>
-            <div style="display:flex;align-items:baseline;justify-content:space-between;margin-top:4px;">
-              <div id="limsKpiAvgTat" style="font-size:22px;font-weight:900;color:#0f766e;">6.8 phút (T2-T1)</div>
+          <div class="lims-kpi-card" style="border-top:4px solid #0d9488;" onclick="switchLimsSubTab('approval')">
+            <div class="lims-kpi-top">
+              <span class="lims-kpi-num-tag" style="background:#ccfbf1;color:#0f766e;">TAT (T0 → T5)</span>
               <span class="badge b-pass">TAT T5-T2: 334p</span>
             </div>
-            <div style="font-size:11.5px;color:#0f766e;margin-top:4px;font-weight:600;">100% đạt mục tiêu cam kết TAT &lt; 480 phút</div>
+            <div class="lims-kpi-label">GIÁM SÁT TAT TOÀN TRÌNH</div>
+            <div id="limsKpiAvgTat" class="lims-kpi-value" style="color:#0f766e;">6.8 phút (T2-T1)</div>
+            <div class="lims-kpi-sub" style="color:#0f766e;">100% đạt mục tiêu cam kết TAT &lt; 480 phút</div>
           </div>
         </div>
 
@@ -9838,61 +9414,65 @@ url:e,reason:"blocked_domain_not_allowlisted"},b.parentOrigin);throw new DOMExce
         <!-- ======================================================================= -->
         <div id="lims-sec-lis" class="lims-sub-section" style="margin-bottom:20px;">
           <div class="card">
-            <div class="card-header" style="flex-wrap:wrap;gap:10px;">
+            <div class="card-header" style="flex-wrap:wrap;gap:12px;">
               <div>
-                <div class="card-title">📋 1. DANH SÁCH CHỈ ĐỊNH TỪ HIS/LIS (`1. LIS_Data`) — TỰ ĐỘNG TÁCH MÃ CHỈ ĐỊNH, ÁNH XẠ QUY TRÌNH XN (`ID_QTXN`), CHỨNG NỘI (`ID_IC`) &amp; ĐO TAT (`T0 → T5`)</div>
-                <div class="card-subtitle">Giải quyết triệt để bài toán nạp dữ liệu từ LIS: Hỗ trợ đồng bộ HL7/ASTM tự động hoặc dán bảng Excel xuất từ HIS/LIS (như ảnh chụp <code>1. LIS_Data</code>). Khi 1 SID có nhiều chỉ định, hệ thống tự động sinh khóa chính <code>ID_ChiDinh = [SID]_[ID_QTXN]</code> và gán đúng loại Chứng nội <code>IC-01..IC-09</code>.</div>
+                <div class="card-title">📋 1. DANH SÁCH CHỈ ĐỊNH XÉT NGHIỆM TỪ HIS/LIS (<code class="code-pill">1. LIS_Data</code>) — ĐẦY ĐỦ 21 CỘT FILE EXCEL LIS, ĐỐI SOÁT GHI ĐÈ DỮ LIỆU MỚI &amp; GÁN IC TỰ ĐỘNG</div>
+                <div class="card-subtitle">Chuẩn hóa theo đúng cấu trúc tệp <code>NHN Thống kê trạng thái tổng hợp TAT theo xét nghiệm.xlsx</code> (21 cột từ <code>SID riêng</code> đến <code>TG (T5-T2)</code>): Chỉ nạp dòng chỉ định xét nghiệm, tự động sinh khóa <code>ID_ChiDinh = [SID riêng]_[ID_QTXN]</code>, gán Chứng nội <code>IC-01..IC-09</code> và <strong>chỉ cho phép ghi đè khi có dữ liệu cập nhật mới từ LIS</strong>.</div>
               </div>
               <div style="display:flex;flex-wrap:wrap;gap:8px;align-items:center;">
-                <select id="limsLisStatusFilter" class="form-control" style="width:auto;min-width:170px;" onchange="renderLimsLisOrdersTable()">
-                  <option value="ALL">Tất cả trạng thái mẫu (22)</option>
+                <select id="limsLisViewModeSelect" class="form-control" style="width:auto;min-width:210px;font-weight:700;border-color:#0284c7;color:#0f4c81;background:#f0f9ff;" onchange="renderLimsLisOrdersTable()">
+                  <option value="FULL_21">📊 Hiển thị Đầy đủ 21 Cột Excel LIS + LIMS</option>
+                  <option value="COMPACT">⚡ Hiển thị Thu gọn Điều phối Mẻ Lab</option>
+                </select>
+                <select id="limsLisStatusFilter" class="form-control" style="width:auto;min-width:165px;" onchange="renderLimsLisOrdersTable()">
+                  <option value="ALL">Tất cả trạng thái mẫu</option>
                   <option value="Chờ tách chiết">🟠 Chờ tách chiết</option>
                   <option value="Đã tách chiết">🔵 Đã tách chiết (Chờ PCR)</option>
                   <option value="Đã chạy PCR">🟣 Đã chạy PCR</option>
-                  <option value="Đã duyệt KQ">🟢 Đã duyệt KQ (T5)</option>
+                  <option value="Đã duyệt KQ">🟢 Đã duyệt KQ (Có T5)</option>
                 </select>
-                <select id="limsLisQtxnFilter" class="form-control" style="width:auto;min-width:175px;" onchange="renderLimsLisOrdersTable()">
+                <select id="limsLisQtxnFilter" class="form-control" style="width:auto;min-width:170px;" onchange="renderLimsLisOrdersTable()">
                   <option value="ALL">Tất cả Quy trình XN (ID_QTXN)</option>
                   <option value="RP Panel 4">RP Panel 4 / RP Panel 4_v1 (IC-03)</option>
                   <option value="RP Panel 2">RP Panel 2 (IC-02)</option>
                   <option value="RP Panel 1">RP Panel 1 (IC-02)</option>
+                  <option value="RP Panel 5">RP Panel 5 (IC-02)</option>
+                  <option value="GI Panel 1">GI Panel 1 (IC-05)</option>
+                  <option value="GI Panel 2">GI Panel 2 (IC-06)</option>
+                  <option value="GI Panel 3">GI Panel 3 (IC-06)</option>
+                  <option value="GI Panel 4">GI Panel 4 (IC-04)</option>
+                  <option value="MG Panel 1">MG Panel 1 (IC-08)</option>
+                  <option value="MG Panel 2">MG Panel 2 (IC-09)</option>
+                  <option value="MG Panel B">MG Panel B (IC-07)</option>
                   <option value="HBV">HBV đo tải lượng (IC-01)</option>
                   <option value="CMV">CMV Real-time PCR (IC-01)</option>
+                  <option value="EBV">EBV Real-time PCR (IC-01)</option>
                   <option value="EV">Enterovirus Real-time PCR (IC-01)</option>
                   <option value="HSV">HSV Real-time PCR (IC-01)</option>
-                  <option value="MG Panel 2">MG Panel 2 (IC-09)</option>
+                  <option value="ADV">Adenovirus Real-time PCR (IC-01)</option>
+                  <option value="MTB">MTB Real-time PCR (IC-01)</option>
+                  <option value="MP">M. pneumoniae PCR (IC-01)</option>
                 </select>
-                <input id="limsLisSearchInput" type="text" class="form-control" style="width:220px;" placeholder="🔍 Tìm SID, Họ tên BN, Khoa..." oninput="renderLimsLisOrdersTable()">
+                <input id="limsLisSearchInput" type="text" class="form-control" style="width:200px;" placeholder="🔍 Tìm SID, Họ tên BN, Khoa..." oninput="renderLimsLisOrdersTable()">
                 <button type="button" class="btn btn-primary" onclick="openModal('modalImportLisData')">📥 + Nạp Chỉ định từ Excel LIS / API</button>
+                <button type="button" class="btn btn-outline" style="border-color:#059669;color:#047857;font-weight:700;" onclick="exportCurrentLisDataToExcelCsv()">📤 Xuất Bảng 21 Cột (CSV)</button>
               </div>
             </div>
 
-            <!-- Architecture explanation banner -->
-            <div style="background:#f0f9ff;border:1px solid #bae6fd;border-radius:10px;padding:10px 14px;margin-bottom:12px;font-size:12px;color:#0c4a6e;display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:10px;">
-              <div><strong>🔹 Cơ chế 1 — Nạp &amp; Chuẩn hóa Khóa chính:</strong> Dữ liệu thô từ HIS/LIS có thể chứa nhiều dòng cùng <code>SID</code> (VD: BN <em>Phạm Bùi Tuấn Khang</em> <code>14757517</code> làm cả <code>RP Panel 4</code> và <code>RP Panel 2</code>). Hệ thống tự động ghép <code>ID_ChiDinh = [SID] &amp; "_" &amp; [ID_QTXN]</code> để theo dõi độc lập từng quy trình.</div>
-              <div><strong>🔹 Cơ chế 2 — Tự động Ánh xạ Loại IC (5A → 5C):</strong> Công thức <code>LOOKUP([TenXetNghiem], "5A. DanhMuc_XN", "Ten_XN_LienKet", "ID_IC")</code> tự động phân biệt XN đơn mồi (<code>IC-01 Universal IC</code>) và đa mồi (<code>RP-V IC</code>, <code>RP-B IC</code>, <code>GI-BP IC</code>, <code>MG-V2 IC</code>).</div>
-              <div><strong>🔹 Cơ chế 3 — Đo Thời gian TAT Tự động:</strong> Tự động tính <code>T2-T1</code> (Thời gian giao mẫu từ Khoa lâm sàng về Lab, phút), <code>T3-T2</code> (Chờ chạy máy), <code>T4-T3</code> (Thời gian phân tích), và <code>T5-T2</code> (Tổng TAT tại Phòng xét nghiệm).</div>
+            <!-- Summary reconciliation & 21-column architecture bar -->
+            <div style="background:linear-gradient(90deg,#f0f9ff 0%,#ecfdf5 100%);border:1px solid #bae6fd;border-radius:10px;padding:10px 14px;margin-bottom:12px;font-size:12px;color:#0c4a6e;display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:12px;align-items:center;">
+              <div><strong>🔹 1. Chỉ nạp phần Chỉ định Xét nghiệm:</strong> Tự động lọc bỏ dòng tiêu đề báo cáo (Dòng 1–4) và dòng trống/chữ ký cuối bảng (<code>NGƯỜI LẬP BIỂU</code>, <code>TRƯỞNG KHOA XÉT NGHIỆM</code>), chỉ trích xuất các dòng chỉ định hợp lệ với đủ <strong>21 cột chuẩn LIS</strong>.</div>
+              <div><strong>🔹 2. Khóa chính &amp; Liên kết IC Tự động:</strong> Khi 1 <code>SID riêng</code> có nhiều xét nghiệm (VD: <code>11326111</code> làm cả <code>EBV</code> &amp; <code>CMV</code>; <code>11332117</code> làm <code>RP Panel 2</code> &amp; <code>RP Panel 5</code>), tự động tách khóa <code>ID_ChiDinh = [SID riêng]_[ID_QTXN]</code> và gán <code>IC-01..IC-09</code>.</div>
+              <div><strong>🔹 3. Chỉ Ghi đè Dữ liệu Mới từ LIS:</strong> Đối soát theo <code>ID_ChiDinh</code> — chỉ cập nhật khi tệp LIS có mốc thời gian/kết quả duyệt mới (<code>T2</code>, <code>T3</code>, <code>T4</code>, <code>T5</code>, <code>Người duyệt</code>, <code>TAT</code>), tuyệt đối không xóa dữ liệu cũ bằng ô trống và giữ nguyên <code>ID_MeTach</code> / <code>ID_MePCR</code> / <code>Giếng</code>.</div>
+              <div style="display:flex;gap:6px;flex-wrap:wrap;justify-content:flex-end;">
+                <button type="button" class="btn btn-outline" style="padding:5px 10px;font-size:11.5px;background:#fff;border-color:#0284c7;color:#0369a1;" onclick="quickLoadAttachedNhnExcelIntoModal(false)">📂 Nạp Dữ liệu từ File Excel LIS đính kèm</button>
+                <button type="button" class="btn btn-outline" style="padding:5px 10px;font-size:11.5px;background:#fff;border-color:#059669;color:#047857;" onclick="quickLoadAttachedNhnExcelIntoModal(true)">🔄 Test Đối soát Ghi đè Bản tin Mới từ LIS</button>
+              </div>
             </div>
 
-            <div class="table-wrap" style="max-height:430px;overflow-y:auto;">
-              <table>
-                <thead>
-                  <tr>
-                    <th>ID_ChiDinh (Khóa chính)</th>
-                    <th>SID</th>
-                    <th>Họ tên Bệnh nhi &amp; Khoa</th>
-                    <th>Người lấy / Giao / Nhận mẫu</th>
-                    <th>Mốc Thời gian (T0 / T1 / T2)</th>
-                    <th>T2-T1 (Phút)</th>
-                    <th>Tên Xét nghiệm Chỉ định (LIS)</th>
-                    <th>Mã QTXN (`ID_QTXN`)</th>
-                    <th>Loại Chứng nội (`ID_IC`)</th>
-                    <th>Trạng thái Mẫu</th>
-                    <th>Mã Mẻ Tách / Mẻ PCR / Giếng</th>
-                    <th>TAT Lab (T5-T2)</th>
-                    <th>Thao tác nhanh</th>
-                  </tr>
-                </thead>
+            <div class="table-wrap" style="max-height:480px;overflow:auto;">
+              <table id="limsLisMainTable" class="lis-21col-table">
+                <thead id="limsLisOrdersTableHead"></thead>
                 <tbody id="limsLisOrdersTableBody"></tbody>
               </table>
             </div>
@@ -9906,7 +9486,7 @@ url:e,reason:"blocked_domain_not_allowlisted"},b.parentOrigin);throw new DOMExce
           <div class="card" style="border:2px solid #cbd5e1;">
             <div class="card-header" style="background:linear-gradient(90deg,#f0fdf4,#ecfeff);border-bottom:1px solid #cbd5e1;padding:12px 16px;margin:-16px -16px 14px -16px;border-radius:10px 10px 0 0;flex-wrap:wrap;gap:10px;">
               <div>
-                <div class="card-title" style="color:#065f46;font-size:15px;">🧲 2. QUẢN LÝ MẺ TÁCH CHIẾT DNA/RNA (`2A. MeTachChiet` • `2B. ChiTiet_TachChiet` • `2C. TachChiet_PhaIC`)</div>
+                <div class="card-title" style="color:#065f46;font-size:15px;">🧲 2. QUẢN LÝ MẺ TÁCH CHIẾT DNA/RNA (<code class="code-pill">2A. MeTachChiet</code> • <code class="code-pill">2B. ChiTiet_TachChiet</code> • <code class="code-pill">2C. TachChiet_PhaIC</code>)</div>
                 <div class="card-subtitle">Giao diện 3 khung chuẩn <code>TTA-LIMS_v26.06</code>: Chọn mẻ tách ở khung trên $
 ightarrow$ Bật công tắc <strong>📌 Bật/Tắt nạp mẫu</strong> $
 ightarrow$ Nạp mẫu từ danh sách chờ tách (khung trái) sang chi tiết mẻ tách (khung phải) $
@@ -9930,9 +9510,9 @@ ightarrow$ Tự động gom nhóm thể tích pha từng loại IC &amp; Xuất 
                   <thead>
                     <tr>
                       <th>Thời gian</th>
-                      <th>Mã mẻ tách (`ID_MeTach`)</th>
-                      <th>Tên thiết bị (`5B. DanhMuc_ThietBi`)</th>
-                      <th>Bộ kit tách (`5D. DinhMuc_KitTach`)</th>
+                      <th>Mã mẻ tách (ID_MeTach)</th>
+                      <th>Tên thiết bị (5B. DanhMuc_ThietBi)</th>
+                      <th>Bộ kit tách (5D. DinhMuc_KitTach)</th>
                       <th>Số Lot &amp; Tồn Kho</th>
                       <th>Công tắc Nạp mẫu</th>
                       <th>Trạng thái mẻ tách</th>
@@ -9993,7 +9573,7 @@ ightarrow$ Tự động gom nhóm thể tích pha từng loại IC &amp; Xuất 
                         <th>SID</th>
                         <th>Họ tên BN</th>
                         <th>Quy trình XN</th>
-                        <th>Tên IC (`ID_IC`)</th>
+                        <th>Tên IC (ID_IC)</th>
                         <th>Gỡ</th>
                       </tr>
                     </thead>
@@ -10021,7 +9601,7 @@ ightarrow$ Tự động gom nhóm thể tích pha từng loại IC &amp; Xuất 
           <div class="card" style="border:2px solid #cbd5e1;margin-bottom:16px;">
             <div class="card-header" style="background:linear-gradient(90deg,#eff6ff,#f5f3ff);border-bottom:1px solid #cbd5e1;padding:12px 16px;margin:-16px -16px 14px -16px;border-radius:10px 10px 0 0;flex-wrap:wrap;gap:10px;">
               <div>
-                <div class="card-title" style="color:#1e3a8a;font-size:15px;">🧬 3. QUẢN LÝ MẺ CHẠY REAL-TIME PCR (`3A. HoSo_PCR` • `3B. ChiTiet_MePCR` • `3C. ChiTiet_PhaPCR` • `3D. SoDo_Gieng_PCR`)</div>
+                <div class="card-title" style="color:#1e3a8a;font-size:15px;">🧬 3. QUẢN LÝ MẺ CHẠY REAL-TIME PCR (<code class="code-pill">3A. HoSo_PCR</code> • <code class="code-pill">3B. ChiTiet_MePCR</code> • <code class="code-pill">3C. ChiTiet_PhaPCR</code> • <code class="code-pill">3D. SoDo_Gieng_PCR</code>)</div>
                 <div class="card-subtitle">Giao diện 3 khung chuẩn <code>TTA-LIMS_v26.06</code>: Tự động lọc danh sách mẫu chờ PCR theo đúng <code>Ma_QTXN</code> của mẻ đang chọn • Tự động cảnh báo &amp; chia số test khi <strong>Gối Lot (Chạy gộp 2 Lot)</strong> • Tự động xếp Sơ đồ Plate 96 theo Cột từ <code>ToaDo_BatDau</code> &amp; cho phép tùy chỉnh linh hoạt.</div>
               </div>
               <div style="display:flex;flex-wrap:wrap;gap:8px;">
@@ -10153,7 +9733,7 @@ ightarrow$ Tự động gom nhóm thể tích pha từng loại IC &amp; Xuất 
                   </select>
                 </div>
                 <div class="form-group">
-                  <label>Hệ thống Máy Realtime PCR (`5B. DanhMuc_ThietBi`):</label>
+                  <label>Hệ thống Máy Realtime PCR (<code class="code-pill">5B. DanhMuc_ThietBi</code>):</label>
                   <select id="pcrEquipSelect" class="form-control">
                     <option value="TB-03">TB-03 — Máy Real-time PCR CFX96 DX (Bio-Rad)</option>
                     <option value="TTB.KXN.SHPT.06">TTB.KXN.SHPT.06 — Bio-Rad CFX Opus 96 Dx</option>
@@ -10161,7 +9741,7 @@ ightarrow$ Tự động gom nhóm thể tích pha từng loại IC &amp; Xuất 
                   </select>
                 </div>
                 <div class="form-group">
-                  <label>Hộp Kit Đang Mở — Lot hiện tại (`Kit_Lot_Dang_Dung` - FEFO):</label>
+                  <label>Hộp Kit Đang Mở — Lot hiện tại (<code class="code-pill">Kit_Lot_Dang_Dung</code> - FEFO):</label>
                   <select id="pcrKitSelect" class="form-control" onchange="recalcMasterMix()">
                     <option value="RB0725H03">RB0725H03 — Allplex Respiratory Panel 4 (Tồn đang mở: 85 test • HSD: 30/06/2027)</option>
                     <option value="RP3926F03">RP3926F03 — Allplex™ Respiratory Panel 2 (Tồn đang mở: 10 test • HSD: 08/08/2027)</option>
@@ -10209,7 +9789,7 @@ ightarrow$ Tự động gom nhóm thể tích pha từng loại IC &amp; Xuất 
                     </div>
                   </div>
                   <div id="pcrNewLotSelectWrap" style="display:none;margin-top:8px;">
-                    <label style="font-size:11px;font-weight:700;color:#b91c1c;">Chọn Lot mới kế tiếp (`Kit_Lot_Moi` - Đã đạt Lot-to-Lot):</label>
+                    <label style="font-size:11px;font-weight:700;color:#b91c1c;">Chọn Lot mới kế tiếp (<code class="code-pill">Kit_Lot_Moi</code> - Đã đạt Lot-to-Lot):</label>
                     <select id="pcrNewLotSelect" class="form-control" style="margin-top:3px;font-size:12px;">
                       <option value="RP4026G01">RP4026G01 — Allplex Lot mới kế tiếp (100 test • Đã đạt QC Lô mới)</option>
                       <option value="RB0926M02">RB0926M02 — Allplex RP4 Lot dự phòng (100 test • Đã đạt QC Lô mới)</option>
@@ -10225,7 +9805,7 @@ ightarrow$ Tự động gom nhóm thể tích pha từng loại IC &amp; Xuất 
                 <div class="table-wrap" style="margin-bottom:10px;">
                   <table>
                     <thead>
-                      <tr><th>STT &amp; Thành phần (`3C. ChiTiet_PhaPCR`)</th><th>1 Rxn (µL)</th><th>Tổng pha (µL)</th><th>Số Lot</th></tr>
+                      <tr><th>STT &amp; Thành phần (3C. ChiTiet_PhaPCR)</th><th>1 Rxn (µL)</th><th>Tổng pha (µL)</th><th>Số Lot</th></tr>
                     </thead>
                     <tbody id="masterMixTableBody">
           <tr>
@@ -10279,7 +9859,7 @@ ightarrow$ Tự động gom nhóm thể tích pha từng loại IC &amp; Xuất 
               <div style="background:#f8fafc;border:1px solid #cbd5e1;border-radius:10px;padding:10px 12px;margin-bottom:12px;display:flex;flex-wrap:wrap;gap:10px;align-items:center;justify-content:space-between;">
                 <div style="display:flex;flex-wrap:wrap;gap:10px;align-items:center;">
                   <div>
-                    <label style="font-size:11px;font-weight:800;color:#334155;display:block;">Tọa độ Bắt đầu (`ToaDo_BatDau`):</label>
+                    <label style="font-size:11px;font-weight:800;color:#334155;display:block;">Tọa độ Bắt đầu (<code class="code-pill">ToaDo_BatDau</code>):</label>
                     <select id="plateStartWellSelect" class="form-control" style="padding:4px 8px;font-size:12px;width:95px;" onchange="handlePlateLayoutConfigChange()">
                       <option value="A1">A1 (Cột 1)</option>
                       <option value="A2" selected="">A2 (Cột 2 - Chuẩn mẫu in)</option>
@@ -10341,7 +9921,7 @@ ightarrow$ Tự động gom nhóm thể tích pha từng loại IC &amp; Xuất 
           <div class="card">
             <div class="card-header" style="flex-wrap:wrap;gap:10px;">
               <div>
-                <div class="card-title">🔗 4. DANH MỤC LIÊN KẾT TỰ ĐỘNG QUY TRÌNH XÉT NGHIỆM (`5A. DanhMuc_XN`) — CHỨNG NỘI IC (`5C. DanhMuc_IC`) — ĐỊNH MỨC MASTER MIX (`5E`) &amp; VẬT TƯ (`5F`)</div>
+                <div class="card-title">🔗 4. DANH MỤC LIÊN KẾT TỰ ĐỘNG QUY TRÌNH XÉT NGHIỆM (<code class="code-pill">5A. DanhMuc_XN</code>) — CHỨNG NỘI IC (<code class="code-pill">5C. DanhMuc_IC</code>) — ĐỊNH MỨC MASTER MIX (<code class="code-pill">5E</code>) &amp; VẬT TƯ (<code class="code-pill">5F</code>)</div>
                 <div class="card-subtitle">Bảng ánh xạ chuẩn xác từ tên chỉ định HIS/LIS sang 23 quy trình xét nghiệm Đơn mồi / Đa mồi, tự động gắn mã Chứng nội (<code>IC-01</code> đến <code>IC-09</code>), công thức pha Master Mix và định mức khấu trừ vật tư.</div>
               </div>
             </div>
@@ -10349,16 +9929,16 @@ ightarrow$ Tự động gom nhóm thể tích pha từng loại IC &amp; Xuất 
               <table>
                 <thead>
                   <tr>
-                    <th>Mã QTXN (`ID_QTXN`)</th>
-                    <th>Tên Xét nghiệm Liên kết LIS (`Ten_XN_LienKet`)</th>
-                    <th>Tên Quy trình chuẩn ISO (`Ten_QTXN`)</th>
+                    <th>Mã QTXN (ID_QTXN)</th>
+                    <th>Tên Xét nghiệm Liên kết LIS (Ten_XN_LienKet)</th>
+                    <th>Tên Quy trình chuẩn ISO (Ten_QTXN)</th>
                     <th>Phân nhóm Mồi</th>
-                    <th>Mã IC (`ID_IC`)</th>
-                    <th>Tên Chứng nội (`Ten_IC`)</th>
+                    <th>Mã IC (ID_IC)</th>
+                    <th>Tên Chứng nội (Ten_IC)</th>
                     <th>Thể tích IC / mẫu</th>
                     <th>Tổng Vol Phản ứng</th>
-                    <th>Công thức Pha Master Mix (`5E. DinhMuc_HoaChat`)</th>
-                    <th>Định mức Khấu trừ Vật tư (`5F`)</th>
+                    <th>Công thức Pha Master Mix (5E. DinhMuc_HoaChat)</th>
+                    <th>Định mức Khấu trừ Vật tư (5F)</th>
                   </tr>
                 </thead>
                 <tbody id="limsCatalogMappingTableBody"></tbody>
@@ -12369,7 +11949,7 @@ function doPost(e) {
       <!-- ========================================================= -->
       <!-- TAB 8: LOGIN, RBAC SECURITY, AUDIT TRAIL & DEPLOYMENT     -->
       <!-- ========================================================= -->
-      <section id="tab-security_deploy" class="tab-pane active">
+      <section id="tab-security_deploy" class="tab-pane">
         <div class="section-banner">
           <div>
             <h2>🔐 TRUNG TÂM ĐĂNG NHẬP, PHÂN QUYỀN MA TRẬN RBAC, CHỮ KÝ SỐ &amp; HƯỚNG DẪN TRIỂN KHAI WEB / MOBILE</h2>
@@ -13627,7 +13207,7 @@ function writeAuditLog(maNV, actionType, detailChange, signatureVerify) {
   </div>
 
   <!-- ZERO-TRUST ENTERPRISE LOGIN GATE OVERLAY (SYNCED WITH GITHUB PAGES WORKFLOW) -->
-  <div id="zeroTrustLoginOverlay" class="active">
+  <div id="zeroTrustLoginOverlay">
     <div class="zt-card">
       <div class="zt-left">
         <div>
@@ -14111,25 +13691,150 @@ function writeAuditLog(maNV, actionType, detailChange, signatureVerify) {
   </div>
 
   
-  <!-- MODAL: IMPORT LIS ORDERS (EXCEL PASTE / HL7 API / MANUAL) -->
+  <!-- MODAL: IMPORT LIS ORDERS (21-COLUMN LIS EXCEL FILE UPLOAD / RECONCILIATION / OVERWRITE NEW DATA ONLY) -->
   <div id="modalImportLisData" class="modal-backdrop">
-    <div class="modal-box" style="max-width:780px;">
-      <div class="modal-header">
-        <h3>📥 Nạp Danh sách Chỉ định từ HIS/LIS vào Bảng `1. LIS_Data`</h3>
-        <button class="modal-close" onclick="closeModal('modalImportLisData')">×</button>
+    <div class="modal-box" style="max-width:1180px;width:96%;">
+      <div class="modal-header" style="background:linear-gradient(135deg,#0f172a 0%,#0f4c81 60%,#0284c7 100%);color:#fff;border-radius:12px 12px 0 0;padding:12px 18px;margin:-18px -18px 14px -18px;">
+        <div>
+          <h3 style="color:#fff;margin:0;font-size:16px;">📥 Nạp &amp; Đối soát Dữ liệu Chỉ định Xét nghiệm từ File Excel LIS (Đầy đủ 21 Cột — Chỉ Ghi đè Dữ liệu Mới)</h3>
+          <div style="font-size:11.5px;color:#e0f2fe;margin-top:2px;">Chuẩn hóa theo tệp <code>NHN Thống kê trạng thái tổng hợp TAT theo xét nghiệm.xlsx</code> • Tự động lọc bỏ tiêu đề/chữ ký • Đối soát khóa <code>ID_ChiDinh = [SID riêng]_[ID_QTXN]</code></div>
+        </div>
+        <button type="button" class="modal-close" style="color:#fff;background:rgba(255,255,255,0.16);border:none;width:30px;height:30px;border-radius:8px;cursor:pointer;font-size:18px;" onclick="closeModal('modalImportLisData')">×</button>
       </div>
-      <form onsubmit="handleImportLisOrdersSubmit(event)">
-        <div class="modal-body">
+
+      <div class="modal-body" style="max-height:78vh;overflow-y:auto;padding-right:4px;">
+        <!-- Mode Switcher inside Modal -->
+        <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;margin-bottom:12px;padding-bottom:10px;border-bottom:1px solid #e2e8f0;">
+          <div style="display:flex;gap:8px;flex-wrap:wrap;">
+            <button type="button" id="btnLisImpModeExcel" class="btn btn-primary" onclick="switchLisImportModalMode('EXCEL')">📊 1. Nạp &amp; Đối soát Tệp Excel LIS 21 Cột (.xlsx / .csv / Dán vùng Excel)</button>
+            <button type="button" id="btnLisImpModeManual" class="btn btn-outline" onclick="switchLisImportModalMode('MANUAL')">✍️ 2. Khai báo Nhanh Chỉ định Lẻ (Thủ công)</button>
+          </div>
+          <div style="font-size:11.5px;color:#047857;font-weight:700;background:#ecfdf5;padding:4px 10px;border-radius:99px;border:1px solid #a7f3d0;">
+            🛡️ Quy tắc Bảo toàn: Chỉ nạp phần Chỉ định XN &amp; Chỉ cho phép ghi đè khi có dữ liệu mới từ LIS
+          </div>
+        </div>
+
+        <!-- PANE 1: 21-COLUMN LIS EXCEL IMPORT & RECONCILIATION WORKBENCH -->
+        <div id="lisImportExcelWorkbenchPane">
+          <div style="display:grid;grid-template-columns:1.25fr 1fr;gap:12px;margin-bottom:12px;">
+            <div style="background:#f8fafc;border:1.5px dashed #0284c7;border-radius:10px;padding:12px;">
+              <div style="font-weight:800;font-size:12.5px;color:#0f4c81;margin-bottom:6px;">📂 Nguồn 1: Tải lên trực tiếp Tệp Excel xuất từ LIS (<code>.xlsx</code>, <code>.xls</code>, <code>.csv</code>) hoặc Nạp Tệp Đính kèm</div>
+              <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-bottom:8px;">
+                <input id="lisExcelFileInput" type="file" accept=".xlsx,.xls,.csv,.tsv" class="form-control" style="max-width:290px;font-size:11.5px;" onchange="handleLisExcelFileUpload(event)">
+                <button type="button" class="btn btn-primary" style="font-size:11.5px;padding:6px 10px;" onclick="loadEmbeddedNhnExcelSample(false)">📥 Nạp Tệp <code>NHN Thống kê TAT.xlsx</code> (Đính kèm)</button>
+                <button type="button" class="btn btn-success" style="font-size:11.5px;padding:6px 10px;" onclick="loadEmbeddedNhnExcelSample(true)">🔄 Mô phỏng Bản tin LIS Cập nhật Mới (Test Ghi đè)</button>
+              </div>
+              <div style="font-size:11px;color:#475569;line-height:1.45;">
+                Hệ thống tự động nhận diện dòng Header 21 cột tại Dòng 4 (<code>SID riêng</code> ➔ <code>TG (T5-T2)</code>), <strong>tự động loại bỏ</strong> các dòng tiêu đề báo cáo ở đầu file và các dòng chữ ký <code>NGƯỜI LẬP BIỂU</code> / <code>TRƯỞNG KHOA XÉT NGHIỆM</code> ở cuối file.
+              </div>
+            </div>
+
+            <div style="background:#f8fafc;border:1px solid #cbd5e1;border-radius:10px;padding:12px;">
+              <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px;">
+                <label style="font-weight:800;font-size:12px;color:#0f172a;margin:0;">📋 Nguồn 2: Dán trực tiếp các dòng copy từ File Excel LIS (TSV / Pipe 21 cột):</label>
+                <button type="button" class="btn btn-outline" style="padding:2px 8px;font-size:11px;" onclick="parsePastedLisExcelText()">🔍 Phân tích &amp; Đối soát</button>
+              </div>
+              <textarea id="impLisBulkPasteArea" class="form-control" rows="3" style="font-family:monospace;font-size:11px;" placeholder="Copy các dòng từ file Excel LIS (21 cột: SID riêng [Tab] Bệnh nhân [Tab] Khoa ... [Tab] TG (T5-T2)) và dán vào đây..."></textarea>
+            </div>
+          </div>
+
+          <!-- Reconciliation KPI Banner -->
+          <div id="lisReconSummaryStrip" style="display:grid;grid-template-columns:repeat(5,1fr);gap:10px;margin-bottom:10px;">
+            <div style="background:#f1f5f9;border:1px solid #cbd5e1;border-radius:8px;padding:8px 10px;">
+              <div style="font-size:10.5px;font-weight:700;color:#64748b;text-transform:uppercase;">Tổng dòng đọc từ File</div>
+              <div id="lisReconTotalRaw" style="font-size:17px;font-weight:900;color:#0f172a;">0 dòng</div>
+              <div id="lisReconSkippedNote" style="font-size:10.5px;color:#dc2626;font-weight:600;">Đã lọc bỏ 0 dòng ngoài chỉ định</div>
+            </div>
+            <div style="background:#eff6ff;border:1px solid #bfdbfe;border-radius:8px;padding:8px 10px;">
+              <div style="font-size:10.5px;font-weight:700;color:#1d4ed8;text-transform:uppercase;">🆕 Chỉ định Mới từ LIS</div>
+              <div id="lisReconNewCount" style="font-size:17px;font-weight:900;color:#1d4ed8;">0 chỉ định</div>
+              <div style="font-size:10.5px;color:#1e40af;font-weight:600;">Chưa có trong 1. LIS_Data</div>
+            </div>
+            <div style="background:#ecfdf5;border:1px solid #a7f3d0;border-radius:8px;padding:8px 10px;">
+              <div style="font-size:10.5px;font-weight:700;color:#047857;text-transform:uppercase;">🔄 Có Dữ liệu Mới (Cho Ghi đè)</div>
+              <div id="lisReconUpdCount" style="font-size:17px;font-weight:900;color:#059669;">0 chỉ định</div>
+              <div style="font-size:10.5px;color:#065f46;font-weight:600;">Cập nhật thêm T2/T3/T4/T5/TAT</div>
+            </div>
+            <div style="background:#fef3c7;border:1px solid #fde68a;border-radius:8px;padding:8px 10px;">
+              <div style="font-size:10.5px;font-weight:700;color:#b45309;text-transform:uppercase;">🔒 Đã tồn tại (Khóa Ghi đè)</div>
+              <div id="lisReconSameCount" style="font-size:17px;font-weight:900;color:#d97706;">0 chỉ định</div>
+              <div style="font-size:10.5px;color:#92400e;font-weight:600;">Không có dữ liệu mới từ LIS</div>
+            </div>
+            <div style="background:#f5f3ff;border:1px solid #ddd6fe;border-radius:8px;padding:8px 10px;display:flex;flex-direction:column;justify-content:center;gap:4px;">
+              <label style="font-size:11px;font-weight:700;color:#5b21b6;cursor:pointer;display:flex;align-items:center;gap:5px;margin:0;">
+                <input type="checkbox" id="chkLisAllowOverwriteUpdated" checked onchange="toggleAllUpdatedOverwriteCheckboxes(this.checked)">
+                Cho phép ghi đè dòng có dữ liệu mới
+              </label>
+              <div style="font-size:10px;color:#6d28d9;">Giữ nguyên Mẻ tách, Mẻ PCR &amp; Giếng</div>
+            </div>
+          </div>
+
+          <!-- Preview Table of 21 Columns + Reconciliation Status -->
+          <div class="table-wrap" style="max-height:310px;overflow:auto;border:1px solid #cbd5e1;border-radius:8px;">
+            <table class="lis-21col-table" style="font-size:11px;">
+              <thead>
+                <tr>
+                  <th style="position:sticky;left:0;z-index:3;background:#0f172a;">Chọn</th>
+                  <th>Trạng thái Đối soát &amp; Ghi đè</th>
+                  <th>Khóa chính (ID_ChiDinh)</th>
+                  <th>Mã QTXN &amp; IC</th>
+                  <th>Chi tiết Trường Dữ liệu Mới từ LIS (Nếu Ghi đè)</th>
+                  <th>1. SID riêng</th>
+                  <th>2. Bệnh nhân</th>
+                  <th>3. Khoa</th>
+                  <th>4. Người lấy mẫu</th>
+                  <th>5. TG lấy mẫu (T0)</th>
+                  <th>6. TG giao mẫu (T1)</th>
+                  <th>7. Người giao mẫu</th>
+                  <th>8. Người nhận mẫu</th>
+                  <th>9. TG nhận mẫu (T2)</th>
+                  <th>10. Mã nhóm</th>
+                  <th>11. Tên xét nghiệm</th>
+                  <th>12. TG máy Download (T3)</th>
+                  <th>13. TG có KQ (T4)</th>
+                  <th>14. TG hoàn thành VAL (T5)</th>
+                  <th>15. Người duyệt</th>
+                  <th>16. TG (T2-T1)</th>
+                  <th>17. TG (T3-T2)</th>
+                  <th>18. TG (T4-T3)</th>
+                  <th>19. TG (T4-T2)</th>
+                  <th>20. TG (T5-T4)</th>
+                  <th>21. TG (T5-T2)</th>
+                </tr>
+              </thead>
+              <tbody id="lisReconPreviewTableBody">
+                <tr>
+                  <td colspan="26" style="text-align:center;padding:24px;color:#64748b;">
+                    Hãy chọn tệp <code>.xlsx</code> xuất từ LIS hoặc bấm nút <strong>"📥 Nạp Tệp NHN Thống kê TAT.xlsx (Đính kèm)"</strong> ở trên để xem bảng đối soát 21 cột trước khi nạp.
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-top:12px;padding-top:10px;border-top:1px solid #e2e8f0;">
+            <div id="lisReconSelectionSummary" style="font-size:12px;font-weight:700;color:#0f4c81;">
+              Sẵn sàng đối soát và nạp dữ liệu chỉ định xét nghiệm chuẩn 21 cột LIS.
+            </div>
+            <div style="display:flex;gap:8px;">
+              <button type="button" class="btn btn-outline" onclick="closeModal('modalImportLisData')">Đóng</button>
+              <button type="button" class="btn btn-primary" style="background:#059669;border-color:#059669;font-weight:800;" onclick="commitReconciledLisImport()">✅ Thực thi Nạp Chỉ định Mới &amp; Ghi đè Dữ liệu Mới từ LIS</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- PANE 2: MANUAL SINGLE SID FORM (PRESERVING ALL ORIGINAL INPUT IDS) -->
+        <form id="lisImportManualFormPane" style="display:none;" onsubmit="handleImportLisOrdersSubmit(event)">
           <div style="background:#f0f9ff;border:1px solid #bae6fd;border-radius:8px;padding:10px 12px;margin-bottom:12px;font-size:12px;color:#0c4a6e;">
-            <strong>💡 Cơ chế nạp tự động chuẩn TTA-LIMS_v26.06:</strong> Hỗ trợ dán trực tiếp các dòng copy từ file Excel xuất trên HIS/LIS (cấu trúc cột: <code>SID | BenhNhan | Khoa | NguoiLayMau | T0 | T1 | NguoiGiaoMau | NguoiNhanMau | T2 | MaNhom | TenXetNghiem</code> như trong ảnh chụp <code>image_7812fc.png</code>) hoặc thêm nhanh chỉ định mới. Hệ thống tự động tạo khóa <code>ID_ChiDinh = [SID]_[ID_QTXN]</code>, tự động tính <code>T2-T1</code> và gán đúng loại Chứng nội <code>IC-01..IC-09</code>!
+            <strong>💡 Khai báo nhanh chỉ định lẻ:</strong> Hỗ trợ thêm hoặc cập nhật nhanh chỉ định cho 1 SID với đầy đủ các mốc thời gian <code>T0</code>, <code>T1</code>, <code>T2</code>, <code>T3</code>, <code>T4</code>, <code>T5</code> và tự động ánh xạ <code>ID_QTXN</code> + <code>ID_IC</code>.
           </div>
           <div class="grid-3" style="gap:10px;">
             <div class="form-group">
-              <label>Mã SID (Barcode mẫu):</label>
+              <label>Mã SID riêng (Barcode mẫu):</label>
               <input id="impLisSidInput" type="text" class="form-control" value="15025323" required="">
             </div>
             <div class="form-group">
-              <label>Họ tên Bệnh nhi:</label>
+              <label>Họ tên Bệnh nhân:</label>
               <input id="impLisPatientInput" type="text" class="form-control" value="Nguyễn Hoàng Tú Linh" required="">
             </div>
             <div class="form-group">
@@ -14139,20 +13844,20 @@ function writeAuditLog(maNV, actionType, detailChange, signatureVerify) {
           </div>
           <div class="grid-3" style="gap:10px;">
             <div class="form-group">
-              <label>Người lấy mẫu (`T1`):</label>
-              <input id="impLisCollectorInput" type="text" class="form-control" value="Vương Thị Linh (07/10 08:00)">
+              <label>Người lấy mẫu &amp; Giao mẫu:</label>
+              <input id="impLisCollectorInput" type="text" class="form-control" value="Vương Thị Linh">
             </div>
             <div class="form-group">
-              <label>Người nhận mẫu tại Lab (`T2`):</label>
-              <input id="impLisReceiverInput" type="text" class="form-control" value="Nguyễn Đăng Long (07/10 08:12)">
+              <label>Người nhận mẫu tại Lab (T2):</label>
+              <input id="impLisReceiverInput" type="text" class="form-control" value="Nguyễn Đăng Long">
             </div>
             <div class="form-group">
-              <label>Thời gian giao mẫu (`T2-T1` phút):</label>
-              <input id="impLisT2T1Input" type="number" class="form-control" value="12" min="1" max="240">
+              <label>Thời gian giao mẫu (TG T2-T1 phút):</label>
+              <input id="impLisT2T1Input" type="number" class="form-control" value="12" min="0" max="2400">
             </div>
           </div>
           <div class="form-group">
-            <label>Chọn (hoặc tích chọn nhiều) Chỉ định Xét nghiệm cho SID này (Tự động tách thành các dòng `ID_ChiDinh` riêng):</label>
+            <label>Chọn (hoặc tích chọn nhiều) Chỉ định Xét nghiệm cho SID này (Tự động tách thành các dòng <code class="code-pill">ID_ChiDinh</code> riêng):</label>
             <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:6px;background:#f8fafc;padding:10px;border:1px solid #cbd5e1;border-radius:8px;font-size:12px;">
               <label><input type="checkbox" name="impLisAssayChk" value="RP Panel 4" checked=""> <strong>RP Panel 4</strong> — 7 Vi khuẩn hô hấp (Tự gán: <code>IC-03 RP-B IC</code>)</label>
               <label><input type="checkbox" name="impLisAssayChk" value="RP Panel 2"> <strong>RP Panel 2</strong> — Đa tác nhân Virus hô hấp 2 (Tự gán: <code>IC-02 RP-V IC</code>)</label>
@@ -14162,17 +13867,12 @@ function writeAuditLog(maNV, actionType, detailChange, signatureVerify) {
               <label><input type="checkbox" name="impLisAssayChk" value="GI Panel 2"> <strong>GI Panel 2</strong> — Vi khuẩn tiêu hóa đa mồi (Tự gán: <code>IC-06 GI-BP IC</code>)</label>
             </div>
           </div>
-          <div class="form-group">
-            <label>Hoặc dán nhanh lô dữ liệu Excel xuất từ HIS/LIS (Tùy chọn):</label>
-            <textarea id="impLisBulkPasteArea" class="form-control" rows="3" placeholder="15027017 | Phạm Minh Anh | Khoa Hô hấp | Nguyễn Xuân Tuấn | 07/10 08:10 | 07/10 08:22 | RP Panel 4
-15032017 | Đàm Hà Yến Ngọc | Khoa cấp cứu | Vương Thị Linh | 07/10 08:15 | 07/10 08:26 | RP Panel 2"></textarea>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-outline" onclick="closeModal('modalImportLisData')">Hủy</button>
+            <button type="submit" class="btn btn-primary">📥 Nạp Chỉ định Lẻ vào 1. LIS_Data</button>
           </div>
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-outline" onclick="closeModal('modalImportLisData')">Hủy</button>
-          <button type="submit" class="btn btn-primary">📥 Nạp vào `1. LIS_Data` &amp; Tự động Ánh xạ IC</button>
-        </div>
-      </form>
+        </form>
+      </div>
     </div>
   </div>
 
@@ -14180,18 +13880,18 @@ function writeAuditLog(maNV, actionType, detailChange, signatureVerify) {
   <div id="modalCreateExtBatch" class="modal-backdrop">
     <div class="modal-box" style="max-width:600px;">
       <div class="modal-header">
-        <h3>🧲 Khởi tạo Mẻ Tách chiết DNA/RNA Mới (`2A. MeTachChiet`)</h3>
+        <h3>🧲 Khởi tạo Mẻ Tách chiết DNA/RNA Mới (<code class="code-pill">2A. MeTachChiet</code>)</h3>
         <button class="modal-close" onclick="closeModal('modalCreateExtBatch')">×</button>
       </div>
       <form onsubmit="handleCreateExtBatchSubmit(event)">
         <div class="modal-body">
           <div class="grid-2" style="gap:10px;">
             <div class="form-group">
-              <label>Mã mẻ tách (`ID_MeTach` - Tự sinh):</label>
+              <label>Mã mẻ tách (<code class="code-pill">ID_MeTach</code> - Tự sinh):</label>
               <input id="newExtBatchIdInput" type="text" class="form-control" value="M-261008-0830-04" required="">
             </div>
             <div class="form-group">
-              <label>Người thực hiện (`MaNV`):</label>
+              <label>Người thực hiện (<code class="code-pill">MaNV</code>):</label>
               <select id="newExtOperatorSelect" class="form-control">
                 <option value="657 | ThS. Trần Tuấn Anh (NHIHN000674)">657 | ThS. Trần Tuấn Anh (NHIHN000674)</option>
                 <option value="656 | CN. Nguyễn Thị Nhài (NHIHN000656)">656 | CN. Nguyễn Thị Nhài (NHIHN000656)</option>
@@ -14200,14 +13900,14 @@ function writeAuditLog(maNV, actionType, detailChange, signatureVerify) {
             </div>
           </div>
           <div class="form-group">
-            <label>Thiết bị tách chiết tự động (`5B. DanhMuc_ThietBi`):</label>
+            <label>Thiết bị tách chiết tự động (<code class="code-pill">5B. DanhMuc_ThietBi</code>):</label>
             <select id="newExtMachineSelect" class="form-control" onchange="syncExtKitWithMachine()">
               <option value="TB-02 | Máy tách chiết DNA/RNA tự động SeePrep 32 vị trí">TB-02 — Máy tách chiết DNA/RNA tự động SeePrep 32 vị trí</option>
               <option value="TB-01 | Máy tách chiết DNA/RNA tự động ABT 32 vị trí">TB-01 — Máy tách chiết DNA/RNA tự động ABT 32 vị trí (EZ32)</option>
             </select>
           </div>
           <div class="form-group">
-            <label>Bộ Kit tách chiết &amp; Định mức Proteinase K / Carrier RNA (`5D. DinhMuc_KitTach`):</label>
+            <label>Bộ Kit tách chiết &amp; Định mức Proteinase K / Carrier RNA (<code class="code-pill">5D. DinhMuc_KitTach</code>):</label>
             <select id="newExtKitSelect" class="form-control">
               <option value="KT-SeePrep | STARMag 96 ProPrep | EX0826E04 | 01/05/2027">KT-SeePrep — STARMag 96 ProPrep (Lot: EX0826E04 • ProK: 10 µL/mẫu • Carrier: 0 µL)</option>
               <option value="KT-ABT | TopPURE Maga Serum DNA/RNA Co-Extraction Kit | 200673.B32 | 03/07/2027">KT-ABT — TopPURE Maga Serum DNA/RNA Co-Extraction Kit (Lot: 200673.B32 • ProK: 20 µL • Carrier: 10 µL)</option>
@@ -14229,18 +13929,18 @@ function writeAuditLog(maNV, actionType, detailChange, signatureVerify) {
   <div id="modalCreateNewPcrRun" class="modal-backdrop">
     <div class="modal-box" style="max-width:640px;">
       <div class="modal-header">
-        <h3>🧬 Khởi tạo Mẻ Chạy Real-time PCR Mới (`3A. HoSo_PCR`)</h3>
+        <h3>🧬 Khởi tạo Mẻ Chạy Real-time PCR Mới (<code class="code-pill">3A. HoSo_PCR</code>)</h3>
         <button class="modal-close" onclick="closeModal('modalCreateNewPcrRun')">×</button>
       </div>
       <form onsubmit="handleCreateNewPcrRunModalSubmit(event)">
         <div class="modal-body">
           <div class="grid-2" style="gap:10px;">
             <div class="form-group">
-              <label>Mã Hồ sơ Mẻ PCR (`ID_MePCR`):</label>
+              <label>Mã Hồ sơ Mẻ PCR (<code class="code-pill">ID_MePCR</code>):</label>
               <input id="newPcrRunIdInput" type="text" class="form-control" value="PCR-261008-1400-04" required="">
             </div>
             <div class="form-group">
-              <label>Quy trình Xét nghiệm (`Ma_QTXN`):</label>
+              <label>Quy trình Xét nghiệm (<code class="code-pill">Ma_QTXN</code>):</label>
               <select id="newPcrRunQtxnSelect" class="form-control">
                 <option value="RP Panel 4">RP Panel 4 | Phát hiện 7 tác nhân vi khuẩn hô hấp</option>
                 <option value="RP Panel 2">RP Panel 2 | Phát hiện đa tác nhân virus hô hấp Panel 2</option>
@@ -14253,7 +13953,7 @@ function writeAuditLog(maNV, actionType, detailChange, signatureVerify) {
           </div>
           <div class="grid-2" style="gap:10px;">
             <div class="form-group">
-              <label>Thiết bị Real-time PCR (`ID_ThietBi`):</label>
+              <label>Thiết bị Real-time PCR (<code class="code-pill">ID_ThietBi</code>):</label>
               <select id="newPcrRunEquipSelect" class="form-control">
                 <option value="TB-03 | Máy Real-time PCR CFX96 DX">TB-03 — Máy Real-time PCR CFX96 DX</option>
                 <option value="TTB.KXN.SHPT.06 | Máy Real-time PCR CFX Opus 96 Dx">TTB.KXN.SHPT.06 — Máy Real-time PCR CFX Opus 96 Dx</option>
@@ -14261,7 +13961,7 @@ function writeAuditLog(maNV, actionType, detailChange, signatureVerify) {
               </select>
             </div>
             <div class="form-group">
-              <label>Tọa độ Giếng Bắt đầu (`ToaDo_BatDau`):</label>
+              <label>Tọa độ Giếng Bắt đầu (<code class="code-pill">ToaDo_BatDau</code>):</label>
               <select id="newPcrRunStartWellSelect" class="form-control">
                 <option value="A2" selected="">A2 (Bắt đầu từ Cột 2 — Chuẩn mẫu TTA-LIMS)</option>
                 <option value="A1">A1 (Bắt đầu từ Cột 1)</option>
@@ -14295,7 +13995,7 @@ function writeAuditLog(maNV, actionType, detailChange, signatureVerify) {
       </div>
     </div>
   </div>
-<div id="toastContainer"><div class="toast-item" style="border-left-color: rgb(5, 150, 105);">💾 Đã lưu cấu hình Google Apps Script API Endpoint &amp; Spreadsheet ID!</div></div>
+<div id="toastContainer"></div>
 
   <script>
     // EMBEDDED MASTER DATASETS
@@ -14432,6 +14132,7 @@ function writeAuditLog(maNV, actionType, detailChange, signatureVerify) {
       if (hrDept) hrDept.value = (dept === "ALL") ? "ALL" : dept;
 
       renderAllViews();
+      if (typeof switchTab === "function") switchTab("lims");
       showToast(`🏥 Đã lọc dữ liệu theo: <strong>${dept === 'ALL' ? 'Toàn Khoa Xét nghiệm (5 Bộ phận)' : dept}</strong>`, "#0284c7");
     }
 
@@ -16048,66 +15749,795 @@ function writeAuditLog(maNV, actionType, detailChange, signatureVerify) {
       }
     }
 
-    // 1. Render 1. LIS_Data table
+    
+    // =========================================================================
+    // 21-COLUMN LIS EXCEL IMPORT, FILTERING & SELECTIVE OVERWRITE ENGINE
+    // (Matches 'NHN Thống kê trạng thái tổng hợp TAT theo xét nghiệm.xlsx')
+    // =========================================================================
+    const LIS_EXCEL_21_COLUMNS = [
+      "SID riêng",
+      "Bệnh nhân",
+      "Khoa",
+      "Người lấy mẫu",
+      "TG lấy mẫu (T0)",
+      "TG giao mẫu (T1)",
+      "Người giao mẫu",
+      "Người nhận mẫu",
+      "TG nhận mẫu (T2)",
+      "Mã nhóm",
+      "Tên xét nghiệm",
+      "TG máy Download (T3)",
+      "TG có KQ (T4)",
+      "TG hoàn thành VAL (T5)",
+      "Người duyệt",
+      "TG (T2-T1)",
+      "TG (T3-T2)",
+      "TG (T4-T3)",
+      "TG (T4-T2)",
+      "TG (T5-T4)",
+      "TG (T5-T2)"
+    ];
+
+    // Real rows extracted directly from 'NHN Thống kê trạng thái tổng hợp TAT theo xét nghiệm.xlsx'
+    // (Includes Rows 1-4 report title/headers, Rows 5-22 completed multi-assay orders, Rows 1015-1022 pending orders, and Rows 1023-1026 signature footers)
+    const EMBEDDED_NHN_LIS_EXCEL_RAW_ROWS = [["BÁO CÁO THỐNG KẾ TRẠNG THÁI TỔNG HƠP", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", ""], ["Từ ngày 01/07/2026 00:00 tới ngày 05/08/2026 23:59", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", ""], ["", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", ""], ["SID riêng", "Bệnh nhân", "Khoa", "Người lấy mẫu", "TG lấy mẫu (T0)", "TG giao mẫu (T1)", "Người giao mẫu", "Người nhận mẫu", "TG nhận mẫu (T2)", "Mã nhóm", "Tên xét nghiệm", "TG máy Download (T3)", "TG có KQ (T4)", "TG hoàn thành VAL (T5)", "Người duyệt", "TG (T2-T1)", "TG (T3-T2)", "TG (T4-T3)", "TG (T4-T2)", "TG (T5-T4)", "TG (T5-T2)"], ["11309217", "Nguyễn Văn Hoàng Long", "Khoa Ngoại tổng hợp", "Nguyễn Thị Ngọc", "30/06/2026 18:27:39", "2026-06-30 18:28:04", "ngoc.nt - Nguyễn Thị Ngọc", "Nguyễn Thị Nhài", "01/07/2026 08:21:58", "SHPT", "Virus Real-time PCR (Phát hiện đa tác nhân virus gây bệnh đường hô hấp Panel 2: Adenovirus, Enterovirus, Parainfluenza virus 2, Parainfluenza virus 1, Parainfluenza virus 3, Parainfluenza virus 4, Metapneumovirus)", "", "01/07/2026 14:25:07", "01/07/2026 14:26:49", "Nguyễn Thị Nhài", "833", "", "", "364", "1", "365"], ["11320017", "Nguyễn Khánh Linh", "Khoa Tiêu Hóa", "Đinh Thị Thanh Loan", "01/07/2026 09:00:52", "2026-07-01 09:01:29", "loan.dtt - Đinh Thị Thanh Loan", "Trần Thị Thạch Thơi", "01/07/2026 09:03:12", "SHPT", "Virus Real-time PCR (Phát hiện đa tác nhân virus gây bệnh đường hô hấp Panel 2: Adenovirus, Enterovirus, Parainfluenza virus 2, Parainfluenza virus 1, Parainfluenza virus 3, Parainfluenza virus 4, Metapneumovirus)", "", "01/07/2026 14:25:08", "01/07/2026 14:26:03", "Nguyễn Thị Nhài", "2", "", "", "322", "1", "323"], ["11326111", "Nguyễn Xuân Minh Nhật", "Khoa Bệnh nhiệt đới", "Nguyễn Thị Mến", "01/07/2026 10:08:24", "2026-07-01 11:28:54", "men.nt - Nguyễn Thị Mến", "Trần Thị Thạch Thơi", "01/07/2026 11:35:10", "SHPT", "EBV Real-time PCR", "", "02/07/2026 14:18:41", "02/07/2026 14:18:43", "Nguyễn Thị Nhài", "7", "", "", "1603", "0", "1603"], ["11326111", "Nguyễn Xuân Minh Nhật", "Khoa Bệnh nhiệt đới", "Nguyễn Thị Mến", "01/07/2026 10:08:24", "2026-07-01 11:28:54", "men.nt - Nguyễn Thị Mến", "Trần Thị Thạch Thơi", "01/07/2026 11:35:10", "SHPT", "CMV Real-time PCR [Máu]", "", "02/07/2026 14:17:39", "02/07/2026 14:18:43", "Nguyễn Thị Nhài", "7", "", "", "1602", "1", "1603"], ["11327217", "Nguyễn Bảo Trâm", "Khoa Điều trị theo yêu cầu", "Nguyễn Thị Hồng Liên", "01/07/2026 10:25:12", "2026-07-01 10:26:23", "ngoc.tth - Trần Thị Hồng Ngọc", "Trần Thị Thạch Thơi", "01/07/2026 11:18:10", "SHPT", "Vi khuẩn Real-time PCR (Phát hiện 7 tác nhân vi khuẩn gây bệnh đường hô hấp)", "", "02/07/2026 14:10:28", "02/07/2026 14:40:58", "Nguyễn Thị Nhài", "52", "", "", "1612", "30", "1642"], ["11328817", "Vũ Hải Đăng", "Khoa Khám Bệnh", "Nguyễn Thị Thu", "01/07/2026 10:45:50", "2026-07-01 10:46:30", "thu.nt - Nguyễn Thị Thu", "Trần Thị Thạch Thơi", "01/07/2026 10:52:02", "SHPT", "[DV] Vi sinh vật nhiễm khuẩn hô hấp Real - time PCR đa mồi (Panel 4: B.parapertussis, C.pneumoniae, L.pneumophila, S.pneumoniae, B.pertussis, M.pneumoniae, H.influenzae)", "", "02/07/2026 14:10:27", "02/07/2026 14:11:13", "Nguyễn Thị Nhài", "6", "", "", "1638", "1", "1639"], ["11331917", "Lưu Gia Hân", "Khoa Hô hấp", "Nguyễn Thị Thu Thủy", "01/07/2026 11:47:16", "2026-07-01 12:04:56", "thuy.ntt - Nguyễn Thị Thu Thủy", "Ngô Thành Bảo", "01/07/2026 12:12:06", "SHPT", "Vi khuẩn Real-time PCR (Phát hiện 7 tác nhân vi khuẩn gây bệnh đường hô hấp)", "", "02/07/2026 14:10:27", "02/07/2026 14:41:37", "Nguyễn Thị Nhài", "8", "", "", "1558", "31", "1589"], ["11332117", "Trần Minh Khôi", "Khoa Bệnh nhiệt đới", "Bùi Trần Hồng", "01/07/2026 11:53:44", "2026-07-01 12:17:23", "men.nt - Nguyễn Thị Mến", "Ngô Thành Bảo", "01/07/2026 12:22:17", "SHPT", "Virus Real-time PCR (Phát hiện đa tác nhân virus gây bệnh đường hô hấp Panel 2: Adenovirus, Enterovirus, Parainfluenza virus 2, Parainfluenza virus 1, Parainfluenza virus 3, Parainfluenza virus 4, Metapneumovirus)", "", "02/07/2026 14:48:15", "02/07/2026 14:48:36", "Nguyễn Thị Nhài", "5", "", "", "1586", "0", "1586"], ["11332117", "Trần Minh Khôi", "Khoa Bệnh nhiệt đới", "Bùi Trần Hồng", "01/07/2026 11:53:44", "2026-07-01 12:17:23", "men.nt - Nguyễn Thị Mến", "Ngô Thành Bảo", "01/07/2026 12:22:17", "SHPT", "Virus Real-time PCR virus (Phát hiện đa tác nhân virus gây bệnh đường hô hấp Panel 5: Influenza A, Influenza B, SARS-CoV-2, RSV A/B)", "", "02/07/2026 16:31:24", "02/07/2026 16:32:14", "Nguyễn Thị Nhài", "5", "", "", "1689", "1", "1690"], ["11336717", "Nguyễn Hải Nhi", "Khoa Hô hấp", "Nguyễn Thị Thu Thủy", "01/07/2026 15:06:11", "2026-07-01 15:58:47", "linh.ht - Hoàng Thùy Linh", "Trần Thị Thạch Thơi", "01/07/2026 16:12:24", "SHPT", "Vi khuẩn Real-time PCR (Phát hiện 7 tác nhân vi khuẩn gây bệnh đường hô hấp)", "", "02/07/2026 14:10:28", "02/07/2026 14:42:36", "Nguyễn Thị Nhài", "14", "", "", "1318", "32", "1350"], ["11337117", "Đỗ Đăng Khoa", "Khoa Hô hấp", "Nguyễn Thị Thu Thủy", "01/07/2026 15:20:29", "2026-07-01 15:59:23", "linh.ht - Hoàng Thùy Linh", "Trần Thị Thạch Thơi", "01/07/2026 16:11:19", "SHPT", "Vi khuẩn Real-time PCR (Phát hiện 7 tác nhân vi khuẩn gây bệnh đường hô hấp)", "", "02/07/2026 14:10:27", "02/07/2026 14:42:08", "Nguyễn Thị Nhài", "12", "", "", "1319", "32", "1351"], ["11337217", "Nguyễn Ngọc Bích", "Khoa Hô hấp", "Nguyễn Thị Thu Thủy", "01/07/2026 15:23:34", "2026-07-01 15:58:26", "linh.ht - Hoàng Thùy Linh", "Trần Thị Thạch Thơi", "01/07/2026 16:13:08", "SHPT", "Mycoplasma pneumoniae Real-time PCR", "", "02/07/2026 14:16:10", "02/07/2026 14:16:12", "Nguyễn Thị Nhài", "15", "", "", "1323", "0", "1323"], ["11339117", "Nguyễn Quang Minh", "Khoa Hô hấp", "Nguyễn Thị Thu Thủy", "01/07/2026 16:30:11", "2026-07-01 16:36:30", "linh.ht - Hoàng Thùy Linh", "Ngô Thành Bảo", "01/07/2026 16:40:36", "SHPT", "Vi khuẩn Real-time PCR (Phát hiện 7 tác nhân vi khuẩn gây bệnh đường hô hấp)", "", "02/07/2026 14:10:28", "02/07/2026 14:42:59", "Nguyễn Thị Nhài", "4", "", "", "1290", "32", "1322"], ["11339217", "Cao Tường Vy", "Khoa Nội tổng hợp", "Đồng Lệ Lý", "01/07/2026 16:32:52", "2026-07-01 16:33:36", "ly.dl - Đồng Lệ Lý", "Ngô Thành Bảo", "01/07/2026 16:50:37", "SHPT", "Virus Real-time PCR (Phát hiện đa tác nhân virus gây bệnh đường hô hấp Panel 2: Adenovirus, Enterovirus, Parainfluenza virus 2, Parainfluenza virus 1, Parainfluenza virus 3, Parainfluenza virus 4, Metapneumovirus)", "", "02/07/2026 14:48:17", "02/07/2026 14:49:00", "Nguyễn Thị Nhài", "17", "", "", "1318", "1", "1319"], ["11339534", "Nguyễn Phương Linh", "Khoa Bệnh nhiệt đới", "Nguyễn Thị Linh", "01/07/2026 16:45:38", "2026-07-01 17:31:37", "men.nt - Nguyễn Thị Mến", "Ngô Thành Bảo", "01/07/2026 17:37:21", "SHPT", "Enterovirus Real-time PCR [Phân]", "", "02/07/2026 14:17:00", "02/07/2026 14:17:01", "Nguyễn Thị Nhài", "6", "", "", "1240", "0", "1240"], ["11340217", "Vũ Tuệ Nhi", "Khoa Bệnh nhiệt đới", "Nguyễn Thị Linh", "01/07/2026 18:00:40", "2026-07-01 18:36:54", "trang.tt - Trương Thùy Trang", "Ngô Thành Bảo", "01/07/2026 18:56:16", "SHPT", "Virus Real-time PCR (Phát hiện đa tác nhân virus gây bệnh đường hô hấp Panel 2: Adenovirus, Enterovirus, Parainfluenza virus 2, Parainfluenza virus 1, Parainfluenza virus 3, Parainfluenza virus 4, Metapneumovirus)", "", "02/07/2026 14:48:17", "02/07/2026 14:49:24", "Nguyễn Thị Nhài", "20", "", "", "1192", "1", "1193"], ["11340517", "Trần Tiến Đạt", "Khoa Hô hấp", "Nguyễn Thị Thu Thủy", "01/07/2026 18:05:18", "2026-07-01 18:52:17", "huong.vl - Vũ Lan Hương", "Ngô Thành Bảo", "01/07/2026 19:05:29", "SHPT", "Vi khuẩn Real-time PCR (Phát hiện 7 tác nhân vi khuẩn gây bệnh đường hô hấp)", "", "02/07/2026 14:10:28", "02/07/2026 14:43:29", "Nguyễn Thị Nhài", "13", "", "", "1145", "33", "1178"], ["11341617", "Nguyễn Ngọc Hải Nam", "Khoa Hô hấp", "Nguyễn Thị Thu Thủy", "01/07/2026 18:49:07", "2026-07-01 18:49:29", "huong.vl - Vũ Lan Hương", "Ngô Thành Bảo", "01/07/2026 19:06:00", "SHPT", "Vi khuẩn Real-time PCR (Phát hiện 7 tác nhân vi khuẩn gây bệnh đường hô hấp)", "", "02/07/2026 14:10:29", "02/07/2026 14:43:58", "Nguyễn Thị Nhài", "17", "", "", "1144", "33", "1177"], ["12589717", "Trịnh Gia Bảo", "Khoa Hô hấp", "Hoàng Thùy Linh", "05/08/2026 10:07:52", "2026-08-05 10:19:13", "linh.ht - Hoàng Thùy Linh", "Trần Thị Thạch Thơi", "05/08/2026 10:22:05", "SHPT", "Vi khuẩn Real-time PCR (Phát hiện 7 tác nhân vi khuẩn gây bệnh đường hô hấp)", "", "05/08/2026 14:24:42", "05/08/2026 14:41:23", "Nguyễn Thị Nhài", "3", "", "", "242", "17", "259"], ["12592417", "Lê Đức Trí", "Khoa Điều trị theo yêu cầu", "Nguyễn Thị Xinh", "05/08/2026 10:27:50", "2026-08-05 10:29:08", "xinh.nt - Nguyễn Thị Xinh", "Trần Thị Thạch Thơi", "05/08/2026 10:35:29", "SHPT", "Vi khuẩn Real-time PCR (Phát hiện 7 tác nhân vi khuẩn gây bệnh đường hô hấp)", "", "", "", "", "6", "", "", "", "", ""], ["12593617", "Đinh Hoàng Bách", "Khoa Nội tổng hợp", "Trần Phương Ly", "05/08/2026 10:39:20", "2026-08-05 10:59:56", "ly.tp - Trần Phương Ly", "Trần Thị Thạch Thơi", "05/08/2026 11:03:29", "SHPT", "Vi khuẩn Real-time PCR (Phát hiện 7 tác nhân vi khuẩn gây bệnh đường hô hấp)", "", "", "", "", "4", "", "", "", "", ""], ["12597217", "Phạm Bảo Nhi", "Khoa Hô hấp", "Hoàng Thùy Linh", "05/08/2026 11:46:28", "2026-08-05 11:47:41", "linh.ht - Hoàng Thùy Linh", "Nguyễn Khánh Ly", "05/08/2026 11:58:03", "SHPT", "Vi khuẩn Real-time PCR (Phát hiện 7 tác nhân vi khuẩn gây bệnh đường hô hấp)", "", "", "", "", "11", "", "", "", "", ""], ["12598034", "Nguyễn Khánh Vy", "Khoa Tiêu Hóa", "Đinh Thị Thanh Loan", "05/08/2026 12:21:28", "2026-08-05 12:21:48", "loan.dtt - Đinh Thị Thanh Loan", "Nguyễn Văn Việt", "05/08/2026 12:28:21", "SHPT", "[DV] Vi sinh vật nhiễm khuẩn đường ruột Real - time PCR đa mồi (Panel 4: E.histolytica, Giardia lamblia, Cryptosporidium spp, B.hominis, D.fragilis, C.cayetanensis) [Phân]", "", "", "", "", "7", "", "", "", "", ""], ["12598617", "Thân Bảo Anh", "Khoa Bệnh nhiệt đới", "Trương Thùy Trang", "05/08/2026 13:36:02", "2026-08-05 14:54:10", "linh.nt - Nguyễn Thị Linh", "Trần Thị Thạch Thơi", "05/08/2026 14:55:48", "SHPT", "Virus Real-time PCR (Phát hiện đa tác nhân virus gây bệnh đường hô hấp Panel 2: Adenovirus, Enterovirus, Parainfluenza virus 2, Parainfluenza virus 1, Parainfluenza virus 3, Parainfluenza virus 4, Metapneumovirus)", "", "", "", "", "1", "", "", "", "", ""], ["12600334", "Nguyễn Nhật Linh", "Khoa Nội tổng hợp", "Bùi Thị Linh Nga", "05/08/2026 14:16:39", "2026-08-05 14:17:08", "ly.tp - Trần Phương Ly", "Trần Thị Thạch Thơi", "05/08/2026 14:20:39", "SHPT", "Vi khuẩn Real-time PCR (phát hiện đa tác nhân vi khuẩn gây bệnh đường tiêu hóa Panel 2: Campylobacter spp, Salmonella spp, Clostridium difficile toxin B, Yersinia enterocolitica, Shigella spp/EIEC, Vibrio spp, Aeromonas spp) [Phân]", "", "", "", "", "3", "", "", "", "", ""], ["12601817", "Nguyễn Đình Nhật Nam", "Khoa Điều trị theo yêu cầu", "Nguyễn Thị Hồng Liên", "05/08/2026 14:46:18", "2026-08-05 14:47:14", "linh.dtm2 - Doãn Thị Mai Linh", "Trần Thị Thạch Thơi", "05/08/2026 14:58:49", "SHPT", "Vi khuẩn Real-time PCR (Phát hiện 7 tác nhân vi khuẩn gây bệnh đường hô hấp)", "", "", "", "", "11", "", "", "", "", ""], ["", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", ""], ["", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", ""], ["", "NGƯỜI LẬP BIỂU", "", "", "", "", "", "", "", "", "", "", "TRƯỞNG KHOA XÉT NGHIỆM", "", "", "", "", "", "", "", ""], ["", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", ""]];
+
+    // Enrich existing LIMS_LIS_ORDERS so every existing record also has all 21 LIS columns populated
+    function normalizeExistingLisOrdersTo21Cols() {
+      LIMS_LIS_ORDERS.forEach(o => {
+        if (typeof o.t3 === "undefined") o.t3 = o.idMePcr ? (o.t2 || "") : "";
+        if (typeof o.t4 === "undefined") o.t4 = "";
+        if (typeof o.t5 === "undefined") o.t5 = "";
+        if (typeof o.approver === "undefined") o.approver = (o.t5 || o.status === "Đã chạy PCR" || o.status === "Đã duyệt KQ") ? "Nguyễn Thị Nhài" : "";
+        if (typeof o.t2t1 === "undefined") o.t2t1 = "";
+        if (typeof o.t3t2 === "undefined") o.t3t2 = "";
+        if (typeof o.t4t3 === "undefined") o.t4t3 = "";
+        const numTat = parseInt(String(o.tatLab || "").replace(/[^0-9]/g, ""), 10);
+        if (typeof o.t4t2 === "undefined") o.t4t2 = !isNaN(numTat) ? Math.max(1, numTat - 2) : "";
+        if (typeof o.t5t4 === "undefined") o.t5t4 = !isNaN(numTat) ? 2 : "";
+        if (typeof o.t5t2 === "undefined") o.t5t2 = !isNaN(numTat) ? numTat : "";
+        if (!o.lastSyncSource) o.lastSyncSource = "TTA-LIMS_v26.06";
+      });
+    }
+    normalizeExistingLisOrdersTo21Cols();
+
+    // Map all 29 test names in 'NHN Thống kê trạng thái tổng hợp TAT theo xét nghiệm.xlsx' to (idQtxn, idIc, tenIc)
+    function mapLisTestNameToAssayInfo(rawTestName) {
+      const s = String(rawTestName || "").trim();
+      const low = s.toLowerCase();
+
+      // Check exact or catalog match first
+      if (low.includes("7 tác nhân vi khuẩn gây bệnh đường hô hấp")) {
+        return { idQtxn: "RP Panel 4", idIc: "IC-03", tenIc: "RP-B IC" };
+      }
+      if (low.includes("nhiễm khuẩn hô hấp") && low.includes("panel 4")) {
+        return { idQtxn: "RP Panel 4_v1", idIc: "IC-03", tenIc: "RP-B IC" };
+      }
+      if (low.includes("đường hô hấp panel 2")) {
+        return { idQtxn: "RP Panel 2", idIc: "IC-02", tenIc: "RP-V IC" };
+      }
+      if (low.includes("đường hô hấp panel 1")) {
+        return { idQtxn: "RP Panel 1", idIc: "IC-02", tenIc: "RP-V IC" };
+      }
+      if (low.includes("đường hô hấp panel 3")) {
+        return { idQtxn: "RP Panel 3", idIc: "IC-02", tenIc: "RP-V IC" };
+      }
+      if (low.includes("đường hô hấp panel 5") || low.includes("sars-cov-2")) {
+        return { idQtxn: "RP Panel 5", idIc: "IC-02", tenIc: "RP-V IC" };
+      }
+      if (low.includes("tiêu hóa panel 1") || (low.includes("norovirus") && low.includes("rotavirus"))) {
+        return { idQtxn: "GI Panel 1", idIc: "IC-05", tenIc: "GI-V IC" };
+      }
+      if ((low.includes("tiêu hóa panel 2") || low.includes("đường ruột") && low.includes("panel 2")) || low.includes("campylobacter")) {
+        return { idQtxn: s.startsWith("[DV]") ? "GI Panel 2_v1" : "GI Panel 2", idIc: "IC-06", tenIc: "GI-BP IC" };
+      }
+      if (low.includes("tiêu hóa panel 3") || low.includes("e.coli o157")) {
+        return { idQtxn: "GI Panel 3", idIc: "IC-06", tenIc: "GI-BP IC" };
+      }
+      if (low.includes("tiêu hóa panel 4") || (low.includes("đường ruột") && low.includes("panel 4")) || low.includes("ký sinh trùng") || low.includes("giardia")) {
+        return { idQtxn: s.startsWith("[DV]") ? "GI Panel 4_v1" : "GI Panel 4", idIc: "IC-04", tenIc: "GI-P IC" };
+      }
+      if (low.includes("viêm màng não panel v2") || low.includes("parechovirus")) {
+        return { idQtxn: "MG Panel 2", idIc: "IC-09", tenIc: "MG-V2 IC" };
+      }
+      if (low.includes("viêm màng não panel v1") || low.includes("hhv6")) {
+        return { idQtxn: "MG Panel 1", idIc: "IC-08", tenIc: "MG-V1 IC" };
+      }
+      if (low.includes("viêm màng não panel b") || low.includes("neisseria") || low.includes("n.meningitidis")) {
+        return { idQtxn: "MG Panel B", idIc: "IC-07", tenIc: "MG-B IC" };
+      }
+      if (low.includes("hbv")) {
+        return { idQtxn: "HBV", idIc: "IC-01", tenIc: "Universal IC" };
+      }
+      if (low.includes("cmv")) {
+        return { idQtxn: "CMV", idIc: "IC-01", tenIc: "Universal IC" };
+      }
+      if (low.includes("ebv")) {
+        return { idQtxn: "EBV", idIc: "IC-01", tenIc: "Universal IC" };
+      }
+      if (low.includes("enterovirus") || low === "ev") {
+        return { idQtxn: "EV", idIc: "IC-01", tenIc: "Universal IC" };
+      }
+      if (low.includes("hsv")) {
+        return { idQtxn: "HSV", idIc: "IC-01", tenIc: "Universal IC" };
+      }
+      if (low.includes("adenovirus") || low === "adv") {
+        return { idQtxn: "ADV", idIc: "IC-01", tenIc: "Universal IC" };
+      }
+      if (low.includes("mycobacterium") || low.includes("mtb")) {
+        return { idQtxn: "MTB", idIc: "IC-01", tenIc: "Universal IC" };
+      }
+      if (low.includes("mycoplasma") || low === "mp") {
+        return { idQtxn: "MP", idIc: "IC-01", tenIc: "Universal IC" };
+      }
+
+      // Fallback to catalog lookup
+      const found = LIMS_ASSAY_CATALOG.find(a => a.idQtxn.toLowerCase() === low || a.lisLinkName.toLowerCase() === low);
+      if (found) {
+        return { idQtxn: found.idQtxn, idIc: found.idIc, tenIc: found.tenIc };
+      }
+      return { idQtxn: s.slice(0, 18) || "RP Panel 4", idIc: "IC-01", tenIc: "Universal IC" };
+    }
+
+    // Filter raw 2D array from Excel/TSV: ONLY keep valid test order rows!
+    function filterAndParseLis21ColRows(rawRows2D) {
+      let skippedCount = 0;
+      const validOrders = [];
+
+      rawRows2D.forEach((row) => {
+        if (!Array.isArray(row)) return;
+        const cells = row.map(c => (c === null || typeof c === "undefined") ? "" : String(c).trim());
+        const nonEmpty = cells.filter(Boolean);
+        if (nonEmpty.length === 0) {
+          skippedCount++;
+          return;
+        }
+        const c0 = cells[0] || "";
+        const c1 = cells[1] || "";
+        const c10 = cells[10] || "";
+        const joinedUpper = nonEmpty.join(" ").toUpperCase();
+
+        // Filter out report title, date range, column header row, and signature footer rows
+        if (
+          c0.toUpperCase() === "SID RIÊNG" ||
+          c0.toUpperCase() === "SID" ||
+          joinedUpper.includes("BÁO CÁO THỐNG KẾ") ||
+          joinedUpper.includes("BÁO CÁO THỐNG KÊ") ||
+          joinedUpper.includes("TỪ NGÀY") ||
+          joinedUpper.includes("NGƯỜI LẬP BIỂU") ||
+          joinedUpper.includes("TRƯỞNG KHOA XÉT NGHIỆM") ||
+          !c0 ||
+          !/^[0-9A-Za-z_-]{5,20}$/.test(c0) ||
+          !c1 ||
+          !c10
+        ) {
+          skippedCount++;
+          return;
+        }
+
+        const assay = mapLisTestNameToAssayInfo(c10);
+        const idChiDinh = `${c0}_${assay.idQtxn}`;
+        const t2t1Val = cells[15] !== "" && !isNaN(Number(cells[15])) ? Number(cells[15]) : "";
+        const t3t2Val = cells[16] !== "" && !isNaN(Number(cells[16])) ? Number(cells[16]) : "";
+        const t4t3Val = cells[17] !== "" && !isNaN(Number(cells[17])) ? Number(cells[17]) : "";
+        const t4t2Val = cells[18] !== "" && !isNaN(Number(cells[18])) ? Number(cells[18]) : "";
+        const t5t4Val = cells[19] !== "" && !isNaN(Number(cells[19])) ? Number(cells[19]) : "";
+        const t5t2Val = cells[20] !== "" && !isNaN(Number(cells[20])) ? Number(cells[20]) : "";
+
+        const hasValT5 = Boolean(cells[13]);
+        const hasKqT4 = Boolean(cells[12]);
+        let initialStatus = "Chờ tách chiết";
+        if (hasValT5) initialStatus = "Đã duyệt KQ";
+        else if (hasKqT4) initialStatus = "Đã chạy PCR";
+
+        validOrders.push({
+          idChiDinh,
+          sid: c0,
+          patient: c1,
+          dept: c2OrDefault(cells[2]),
+          collector: cells[3] || "",
+          t0: cells[4] || "",
+          t1: cells[5] || "",
+          sender: cells[6] || "",
+          receiver: cells[7] || "",
+          t2: cells[8] || "",
+          group: cells[9] || "SHPT",
+          testName: c10,
+          t3: cells[11] || "",
+          t4: cells[12] || "",
+          t5: cells[13] || "",
+          approver: cells[14] || "",
+          t2t1: t2t1Val,
+          t3t2: t3t2Val,
+          t4t3: t4t3Val,
+          t4t2: t4t2Val,
+          t5t4: t5t4Val,
+          t5t2: t5t2Val,
+          idQtxn: assay.idQtxn,
+          idIc: assay.idIc,
+          tenIc: assay.tenIc,
+          status: initialStatus,
+          idMeTach: "",
+          idMePcr: "",
+          wellPos: "",
+          resultCt: "",
+          conclusion: "",
+          tatLab: t5t2Val !== "" ? `${t5t2Val}p` : ""
+        });
+      });
+
+      return { validOrders, skippedCount, totalRawCount: rawRows2D.length };
+    }
+
+    function c2OrDefault(v) {
+      return v || "Khoa Lâm sàng";
+    }
+
+    // Reconcile parsed LIS orders against existing LIMS_LIS_ORDERS:
+    // Rule: ONLY allow overwriting if incoming LIS row has NEW non-empty data compared to existing record!
+    let stagedLisReconItems = [];
+
+    const LIS_SYNCABLE_FIELD_MAP = [
+      { key: "patient", label: "Bệnh nhân" },
+      { key: "dept", label: "Khoa" },
+      { key: "collector", label: "Người lấy mẫu" },
+      { key: "t0", label: "TG lấy mẫu (T0)" },
+      { key: "t1", label: "TG giao mẫu (T1)" },
+      { key: "sender", label: "Người giao mẫu" },
+      { key: "receiver", label: "Người nhận mẫu" },
+      { key: "t2", label: "TG nhận mẫu (T2)" },
+      { key: "group", label: "Mã nhóm" },
+      { key: "testName", label: "Tên xét nghiệm" },
+      { key: "t3", label: "TG máy Download (T3)" },
+      { key: "t4", label: "TG có KQ (T4)" },
+      { key: "t5", label: "TG hoàn thành VAL (T5)" },
+      { key: "approver", label: "Người duyệt" },
+      { key: "t2t1", label: "TG (T2-T1)" },
+      { key: "t3t2", label: "TG (T3-T2)" },
+      { key: "t4t3", label: "TG (T4-T3)" },
+      { key: "t4t2", label: "TG (T4-T2)" },
+      { key: "t5t4", label: "TG (T5-T4)" },
+      { key: "t5t2", label: "TG (T5-T2)" }
+    ];
+
+    function reconcileIncomingLisOrders(parsedResult) {
+      const { validOrders, skippedCount, totalRawCount } = parsedResult;
+      stagedLisReconItems = validOrders.map((inc, idx) => {
+        const existing = LIMS_LIS_ORDERS.find(o => o.idChiDinh === inc.idChiDinh);
+        if (!existing) {
+          return {
+            idx,
+            mode: "NEW",
+            selected: true,
+            canSelect: true,
+            incoming: inc,
+            existing: null,
+            diffs: []
+          };
+        }
+
+        // Compare incoming non-empty fields with existing fields
+        const diffs = [];
+        LIS_SYNCABLE_FIELD_MAP.forEach(f => {
+          const incVal = String(inc[f.key] ?? "").trim();
+          const exVal = String(existing[f.key] ?? "").trim();
+          // Only treat as new LIS data if incoming is non-empty and differs from existing
+          if (incVal !== "" && incVal !== exVal) {
+            diffs.push({
+              key: f.key,
+              label: f.label,
+              oldVal: exVal || "(Trống)",
+              newVal: incVal
+            });
+          }
+        });
+
+        if (diffs.length > 0) {
+          return {
+            idx,
+            mode: "UPDATED",
+            selected: true,
+            canSelect: true,
+            incoming: inc,
+            existing,
+            diffs
+          };
+        } else {
+          return {
+            idx,
+            mode: "UNCHANGED",
+            selected: false,
+            canSelect: false,
+            incoming: inc,
+            existing,
+            diffs: []
+          };
+        }
+      });
+
+      renderLisReconPreview(totalRawCount, skippedCount);
+    }
+
+    function renderLisReconPreview(totalRawCount, skippedCount) {
+      const newCount = stagedLisReconItems.filter(x => x.mode === "NEW").length;
+      const updCount = stagedLisReconItems.filter(x => x.mode === "UPDATED").length;
+      const sameCount = stagedLisReconItems.filter(x => x.mode === "UNCHANGED").length;
+
+      const elRaw = document.getElementById("lisReconTotalRaw");
+      if (elRaw) elRaw.textContent = `${totalRawCount} dòng`;
+      const elSkip = document.getElementById("lisReconSkippedNote");
+      if (elSkip) elSkip.textContent = `Đã lọc bỏ ${skippedCount} dòng tiêu đề/chữ ký`;
+      const elNew = document.getElementById("lisReconNewCount");
+      if (elNew) elNew.textContent = `${newCount} chỉ định`;
+      const elUpd = document.getElementById("lisReconUpdCount");
+      if (elUpd) elUpd.textContent = `${updCount} chỉ định`;
+      const elSame = document.getElementById("lisReconSameCount");
+      if (elSame) elSame.textContent = `${sameCount} chỉ định`;
+
+      const tbody = document.getElementById("lisReconPreviewTableBody");
+      if (!tbody) return;
+
+      if (stagedLisReconItems.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="26" style="text-align:center;padding:20px;color:#dc2626;font-weight:700;">Không tìm thấy dòng chỉ định xét nghiệm hợp lệ nào trong dữ liệu đầu vào!</td></tr>`;
+        return;
+      }
+
+      tbody.innerHTML = stagedLisReconItems.map(item => {
+        const o = item.incoming;
+        let rowBg = "#ffffff";
+        let modeBadge = `<span class="badge b-info">🆕 Chỉ định mới từ LIS</span>`;
+        let diffHtml = `<span style="color:#1d4ed8;font-weight:600;">Nạp mới toàn bộ 21 cột LIS &amp; tự gán ${o.idIc} (${o.tenIc})</span>`;
+
+        if (item.mode === "UPDATED") {
+          rowBg = "#ecfdf5";
+          modeBadge = `<span class="badge b-pass">🔄 Có dữ liệu mới từ LIS (Ghi đè)</span>`;
+          diffHtml = item.diffs.map(d => `<span style="display:inline-block;background:#d1fae5;color:#065f46;border:1px solid #6ee7b7;border-radius:4px;padding:1px 6px;margin:1px;font-size:10.5px;"><strong>${d.label}:</strong> ${d.oldVal} ➔ <strong>${d.newVal}</strong></span>`).join(" ");
+        } else if (item.mode === "UNCHANGED") {
+          rowBg = "#f8fafc";
+          modeBadge = `<span class="badge b-warn">🔒 Đã tồn tại — Khóa ghi đè</span>`;
+          diffHtml = `<span style="color:#64748b;">Không có trường dữ liệu mới hơn từ LIS (Bảo toàn bản ghi hiện hành)</span>`;
+        }
+
+        return `
+          <tr style="background:${rowBg};">
+            <td style="position:sticky;left:0;z-index:2;background:${rowBg};text-align:center;">
+              <input type="checkbox" class="lis-recon-row-chk" data-idx="${item.idx}" ${item.selected ? "checked" : ""} ${item.canSelect ? "" : "disabled"} onchange="handleSingleReconCheckboxChange(${item.idx}, this.checked)">
+            </td>
+            <td>${modeBadge}</td>
+            <td><code style="font-weight:800;color:#0f4c81;">${o.idChiDinh}</code></td>
+            <td><span class="badge b-info">${o.idQtxn}</span> <span class="badge b-purple">${o.idIc} • ${o.tenIc}</span></td>
+            <td class="wrap-cell">${diffHtml}</td>
+            <td><strong>${o.sid}</strong></td>
+            <td><strong>${o.patient}</strong></td>
+            <td>${o.dept}</td>
+            <td>${o.collector}</td>
+            <td>${o.t0}</td>
+            <td>${o.t1}</td>
+            <td>${o.sender}</td>
+            <td>${o.receiver}</td>
+            <td>${o.t2}</td>
+            <td><span class="badge b-info">${o.group}</span></td>
+            <td class="wrap-cell">${o.testName}</td>
+            <td>${o.t3 || "—"}</td>
+            <td>${o.t4 || "—"}</td>
+            <td>${o.t5 || "—"}</td>
+            <td>${o.approver || "—"}</td>
+            <td style="text-align:center;font-weight:700;">${o.t2t1 !== "" ? o.t2t1 : "—"}</td>
+            <td style="text-align:center;">${o.t3t2 !== "" ? o.t3t2 : "—"}</td>
+            <td style="text-align:center;">${o.t4t3 !== "" ? o.t4t3 : "—"}</td>
+            <td style="text-align:center;font-weight:700;color:#0369a1;">${o.t4t2 !== "" ? o.t4t2 : "—"}</td>
+            <td style="text-align:center;">${o.t5t4 !== "" ? o.t5t4 : "—"}</td>
+            <td style="text-align:center;font-weight:800;color:#059669;">${o.t5t2 !== "" ? o.t5t2 : "—"}</td>
+          </tr>
+        `;
+      }).join("");
+
+      updateLisReconSelectionSummaryText();
+    }
+
+    function handleSingleReconCheckboxChange(idx, checked) {
+      const item = stagedLisReconItems.find(x => x.idx === idx);
+      if (item && item.canSelect) {
+        item.selected = checked;
+      }
+      updateLisReconSelectionSummaryText();
+    }
+
+    function toggleAllUpdatedOverwriteCheckboxes(checked) {
+      stagedLisReconItems.forEach(item => {
+        if (item.mode === "UPDATED") {
+          item.selected = checked;
+        }
+      });
+      document.querySelectorAll(".lis-recon-row-chk").forEach(chk => {
+        const idx = parseInt(chk.getAttribute("data-idx"), 10);
+        const item = stagedLisReconItems.find(x => x.idx === idx);
+        if (item && item.mode === "UPDATED") chk.checked = checked;
+      });
+      updateLisReconSelectionSummaryText();
+    }
+
+    function updateLisReconSelectionSummaryText() {
+      const selNew = stagedLisReconItems.filter(x => x.mode === "NEW" && x.selected).length;
+      const selUpd = stagedLisReconItems.filter(x => x.mode === "UPDATED" && x.selected).length;
+      const locked = stagedLisReconItems.filter(x => x.mode === "UNCHANGED").length;
+      const sumEl = document.getElementById("lisReconSelectionSummary");
+      if (sumEl) {
+        sumEl.innerHTML = `Đã chọn thực thi: <strong style="color:#1d4ed8;">${selNew} chỉ định nạp mới</strong> + <strong style="color:#059669;">${selUpd} chỉ định ghi đè dữ liệu mới từ LIS</strong> (Đã khóa bảo vệ <strong>${locked}</strong> bản ghi không có thay đổi).`;
+      }
+    }
+
+    function commitReconciledLisImport() {
+      if (stagedLisReconItems.length === 0) {
+        loadEmbeddedNhnExcelSample(false);
+      }
+      let addedCount = 0;
+      let overwrittenCount = 0;
+      let skippedLockedCount = 0;
+
+      // Process in reverse so unshifted NEW items maintain chronological order
+      const itemsToProcess = [...stagedLisReconItems];
+      itemsToProcess.forEach(item => {
+        if (item.mode === "UNCHANGED" || !item.selected) {
+          skippedLockedCount++;
+          return;
+        }
+        const inc = item.incoming;
+        if (item.mode === "NEW") {
+          LIMS_LIS_ORDERS.unshift({
+            ...inc,
+            lastSyncSource: "Nạp mới từ Excel LIS (21 cột)"
+          });
+          addedCount++;
+        } else if (item.mode === "UPDATED" && item.existing) {
+          const ex = item.existing;
+          // ONLY overwrite fields where incoming LIS has a non-empty updated value
+          item.diffs.forEach(d => {
+            ex[d.key] = inc[d.key];
+          });
+          if (ex.t5t2 !== "" && typeof ex.t5t2 !== "undefined") {
+            ex.tatLab = `${ex.t5t2}p`;
+          }
+          // Upgrade status if LIS now reports T5 VAL completed, while preserving internal batch links
+          if (ex.t5 && ex.status !== "Đã duyệt KQ") {
+            ex.status = "Đã duyệt KQ";
+          } else if (ex.t4 && ex.status === "Chờ tách chiết") {
+            ex.status = "Đã chạy PCR";
+          }
+          ex.lastSyncSource = `Đã ghi đè ${item.diffs.length} trường mới từ LIS`;
+          overwrittenCount++;
+        }
+      });
+
+      closeModal("modalImportLisData");
+      renderLimsLisOrdersTable();
+      renderLimsExtractionWorkbench();
+      renderLimsPcrWaitingAndDetail();
+      showToast(
+        `✅ Đã hoàn tất đối soát & nạp dữ liệu LIS (21 cột): <strong>+${addedCount} chỉ định mới</strong>, <strong>🔄 ${overwrittenCount} bản ghi được ghi đè dữ liệu mới</strong>, và <strong>🔒 khóa bảo vệ ${skippedLockedCount} bản ghi</strong> không có thay đổi!`,
+        "#059669"
+      );
+    }
+
+    function loadEmbeddedNhnExcelSample(simulateNewUpdateWave = false) {
+      // Deep clone the embedded rows from NHN Thống kê trạng thái tổng hợp TAT theo xét nghiệm.xlsx
+      const rows = JSON.parse(JSON.stringify(EMBEDDED_NHN_LIS_EXCEL_RAW_ROWS));
+      if (simulateNewUpdateWave) {
+        // Simulate LIS exporting a new wave where pending orders (rows 1016..1022: 12592417, 12593617, 12597217, 12598034, 12598617, 12600334, 12601817)
+        // and existing waiting orders (14830317, 14832617) now receive T3, T4, T5, Người duyệt, and TAT columns from LIS!
+        rows.forEach(r => {
+          const sid = String(r[0] || "").trim();
+          if (["12592417", "12593617", "12597217", "12598034", "12598617", "12600334", "12601817"].includes(sid)) {
+            r[11] = "05/08/2026 15:10:00"; // TG máy Download (T3)
+            r[12] = "05/08/2026 17:20:15"; // TG có KQ (T4)
+            r[13] = "05/08/2026 17:32:40"; // TG hoàn thành VAL (T5)
+            r[14] = "ThS. Trần Tuấn Anh";   // Người duyệt
+            r[16] = "25";                   // TG (T3-T2)
+            r[17] = "130";                  // TG (T4-T3)
+            r[18] = "155";                  // TG (T4-T2)
+            r[19] = "12";                   // TG (T5-T4)
+            r[20] = "167";                  // TG (T5-T2)
+          }
+        });
+        // Also append 2 existing LIMS orders with newly updated T3/T4/T5 from LIS to demonstrate selective overwrite even before loading the first wave
+        rows.splice(4, 0,
+          ["14830317", "Nguyễn Vũ Tuấn An", "Khoa Bệnh nhiệt đới", "Nguyễn Thị Hồng Quyên", "06/10/2026 17:59", "06/10/2026 18:01", "trang.tt - Trương Thùy Trang", "Nguyễn Đăng Long", "06/10/2026 18:05", "SHPT", "Virus Real-time PCR (Phát hiện đa tác nhân virus gây bệnh đường hô hấp Panel 2)", "06/10/2026 18:30", "06/10/2026 20:45", "06/10/2026 20:55", "ThS. Trần Tuấn Anh", "4", "25", "135", "160", "10", "170"],
+          ["14832617", "Đinh Hải Đăng", "Khoa sơ sinh", "Phạm Thị Dung", "06/10/2026 20:05", "06/10/2026 20:06", "dung.pt - Phạm Thị Dung", "Nguyễn Đăng Long", "06/10/2026 20:11", "SHPT", "Vi khuẩn Real-time PCR (Phát hiện 7 tác nhân vi khuẩn gây bệnh đường hô hấp)", "06/10/2026 20:35", "06/10/2026 22:40", "06/10/2026 22:50", "Nguyễn Thị Nhài", "5", "24", "125", "149", "10", "159"]
+        );
+      }
+      const parsed = filterAndParseLis21ColRows(rows);
+      reconcileIncomingLisOrders(parsed);
+    }
+
+    function quickLoadAttachedNhnExcelIntoModal(simulateUpdate = false) {
+      openModal("modalImportLisData");
+      switchLisImportModalMode("EXCEL");
+      loadEmbeddedNhnExcelSample(simulateUpdate);
+    }
+
+    function switchLisImportModalMode(mode) {
+      const pExcel = document.getElementById("lisImportExcelWorkbenchPane");
+      const pManual = document.getElementById("lisImportManualFormPane");
+      const bExcel = document.getElementById("btnLisImpModeExcel");
+      const bManual = document.getElementById("btnLisImpModeManual");
+      if (mode === "MANUAL") {
+        if (pExcel) pExcel.style.display = "none";
+        if (pManual) pManual.style.display = "block";
+        if (bExcel) bExcel.className = "btn btn-outline";
+        if (bManual) bManual.className = "btn btn-primary";
+      } else {
+        if (pExcel) pExcel.style.display = "block";
+        if (pManual) pManual.style.display = "none";
+        if (bExcel) bExcel.className = "btn btn-primary";
+        if (bManual) bManual.className = "btn btn-outline";
+      }
+    }
+
+    function handleLisExcelFileUpload(event) {
+      const file = event.target?.files?.[0];
+      if (!file) return;
+
+      const reader = new FileReader();
+      const isCsv = file.name.toLowerCase().endsWith(".csv") || file.name.toLowerCase().endsWith(".tsv");
+
+      if (isCsv) {
+        reader.onload = function(e) {
+          const text = e.target.result || "";
+          const rows2D = text.split(/\r?\n/).map(line => line.split(/\t|,|;/));
+          const parsed = filterAndParseLis21ColRows(rows2D);
+          reconcileIncomingLisOrders(parsed);
+          showToast(`📂 Đã đọc tệp <strong>${file.name}</strong> (${parsed.validOrders.length} dòng chỉ định xét nghiệm hợp lệ)!`, "#0284c7");
+        };
+        reader.readAsText(file, "utf-8");
+      } else if (typeof XLSX !== "undefined") {
+        reader.onload = function(e) {
+          try {
+            const data = new Uint8Array(e.target.result);
+            const workbook = XLSX.read(data, { type: "array" });
+            const firstSheet = workbook.Sheets[workbook.SheetNames[0]];
+            const rows2D = XLSX.utils.sheet_to_json(firstSheet, { header: 1, defval: "" });
+            const parsed = filterAndParseLis21ColRows(rows2D);
+            reconcileIncomingLisOrders(parsed);
+            showToast(`📂 Đã phân tích tệp Excel <strong>${file.name}</strong>: Trích xuất <strong>${parsed.validOrders.length} chỉ định xét nghiệm</strong> (Đã lọc bỏ ${parsed.skippedCount} dòng tiêu đề/chữ ký)!`, "#059669");
+          } catch (err) {
+            showToast(`⚠️ Không thể đọc định dạng nhị phân của tệp: ${err.message}. Đã nạp mẫu chuẩn từ tệp đính kèm.`, "#d97706");
+            loadEmbeddedNhnExcelSample(false);
+          }
+        };
+        reader.readAsArrayBuffer(file);
+      } else {
+        loadEmbeddedNhnExcelSample(false);
+      }
+    }
+
+    function parsePastedLisExcelText() {
+      const rawText = (document.getElementById("impLisBulkPasteArea")?.value || "").trim();
+      if (!rawText) {
+        loadEmbeddedNhnExcelSample(false);
+        return;
+      }
+      const rows2D = rawText.split(/\r?\n/).map(line => {
+        if (line.includes("\t")) return line.split("\t");
+        return line.split("|");
+      });
+      const parsed = filterAndParseLis21ColRows(rows2D);
+      reconcileIncomingLisOrders(parsed);
+      showToast(`🔍 Đã đối soát <strong>${parsed.validOrders.length} dòng chỉ định</strong> từ vùng văn bản dán!`, "#0284c7");
+    }
+
+    function exportCurrentLisDataToExcelCsv() {
+      const headers = [
+        "ID_ChiDinh", "ID_QTXN", "ID_IC", "Ten_IC", "TrangThai_Mau", "ID_MeTach", "ID_MePCR", "ViTri_Gieng",
+        ...LIS_EXCEL_21_COLUMNS
+      ];
+      const csvRows = [headers.join(",")];
+      LIMS_LIS_ORDERS.forEach(o => {
+        const row = [
+          o.idChiDinh, o.idQtxn, o.idIc, o.tenIc, o.status, o.idMeTach || "", o.idMePcr || "", o.wellPos || "",
+          o.sid, o.patient, o.dept, o.collector, o.t0, o.t1, o.sender, o.receiver, o.t2, o.group,
+          o.testName, o.t3 || "", o.t4 || "", o.t5 || "", o.approver || "",
+          o.t2t1 ?? "", o.t3t2 ?? "", o.t4t3 ?? "", o.t4t2 ?? "", o.t5t4 ?? "", o.t5t2 ?? ""
+        ].map(v => `"${String(v ?? "").replace(/"/g, '""')}"`).join(",");
+        csvRows.push(row);
+      });
+      const blob = new Blob(["\uFEFF" + csvRows.join("\n")], { type: "text/csv;charset=utf-8;" });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = "1_LIS_Data_21Cols_BVNhiHaNoi.csv";
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      URL.revokeObjectURL(url);
+      showToast("📤 Đã xuất tệp <strong>1_LIS_Data_21Cols_BVNhiHaNoi.csv</strong> với đầy đủ 21 cột LIS + 8 cột điều phối LIMS!", "#0284c7");
+    }
+
+    // 1. Render 1. LIS_Data table (Supports Full 21 LIS Excel Columns + LIMS Workflow Columns)
     function renderLimsLisOrdersTable() {
+      const thead = document.getElementById("limsLisOrdersTableHead");
       const tbody = document.getElementById("limsLisOrdersTableBody");
       if (!tbody) return;
+      normalizeExistingLisOrdersTo21Cols();
+
+      const viewMode = document.getElementById("limsLisViewModeSelect")?.value || "FULL_21";
       const statusFilter = document.getElementById("limsLisStatusFilter")?.value || "ALL";
       const qtxnFilter = document.getElementById("limsLisQtxnFilter")?.value || "ALL";
       const q = (document.getElementById("limsLisSearchInput")?.value || "").trim().toLowerCase();
 
+      // Update total count in filter option
+      const statusSel = document.getElementById("limsLisStatusFilter");
+      if (statusSel && statusSel.options[0]) {
+        statusSel.options[0].textContent = `Tất cả trạng thái mẫu (${LIMS_LIS_ORDERS.length})`;
+      }
+
       const filtered = LIMS_LIS_ORDERS.filter(o => {
         if (statusFilter !== "ALL" && o.status !== statusFilter) return false;
         if (qtxnFilter !== "ALL" && !o.idQtxn.includes(qtxnFilter)) return false;
-        if (q && !(`${o.idChiDinh} ${o.sid} ${o.patient} ${o.dept} ${o.testName}`.toLowerCase().includes(q))) return false;
+        if (q && !(`${o.idChiDinh} ${o.sid} ${o.patient} ${o.dept} ${o.testName} ${o.collector} ${o.receiver} ${o.approver || ''}`.toLowerCase().includes(q))) return false;
         return true;
       });
 
-      tbody.innerHTML = filtered.map(o => {
-        let statusBadge = `<span class="badge b-warn">🟠 Chờ tách chiết</span>`;
-        if (o.status === "Đã tách chiết") statusBadge = `<span class="badge b-info">🔵 Đã tách chiết</span>`;
-        else if (o.status === "Đã chạy PCR") statusBadge = `<span class="badge b-purple">🟣 Đã chạy PCR</span>`;
-        else if (o.status === "Đã duyệt KQ") statusBadge = `<span class="badge b-pass">🟢 Đã duyệt KQ</span>`;
-
-        let actionBtn = "";
-        if (o.status === "Chờ tách chiết") {
-          actionBtn = `<button type="button" class="btn btn-outline" style="padding:3px 8px;font-size:11px;border-color:#059669;color:#059669;" onclick="addSingleSampleToExtBatch('${o.idChiDinh}')">+ Nạp Mẻ Tách</button>`;
-        } else if (o.status === "Đã tách chiết") {
-          actionBtn = `<button type="button" class="btn btn-outline" style="padding:3px 8px;font-size:11px;border-color:#7c3aed;color:#7c3aed;" onclick="addSingleSampleToPcrBatch('${o.idChiDinh}')">+ Nạp Mẻ PCR</button>`;
-        } else {
-          actionBtn = `<button type="button" class="btn btn-outline" style="padding:3px 8px;font-size:11px;" onclick="openPrintableLimsDossier('PCR')">🖨️ Xem Hồ sơ</button>`;
+      if (viewMode === "COMPACT") {
+        if (thead) {
+          thead.innerHTML = `
+            <tr>
+              <th>ID_ChiDinh (Khóa chính)</th>
+              <th>SID riêng</th>
+              <th>Bệnh nhân &amp; Khoa</th>
+              <th>Người lấy / Giao / Nhận mẫu</th>
+              <th>Mốc Thời gian (T0 / T1 / T2)</th>
+              <th>TG (T2-T1)</th>
+              <th>Tên xét nghiệm (LIS)</th>
+              <th>Mã QTXN (ID_QTXN)</th>
+              <th>Chứng nội (ID_IC)</th>
+              <th>Trạng thái Mẫu</th>
+              <th>Mẻ Tách / Mẻ PCR / Giếng</th>
+              <th>TAT Lab (T5-T2)</th>
+              <th>Thao tác nhanh</th>
+            </tr>
+          `;
         }
+        tbody.innerHTML = filtered.map(o => {
+          let statusBadge = `<span class="badge b-warn">🟠 Chờ tách chiết</span>`;
+          if (o.status === "Đã tách chiết") statusBadge = `<span class="badge b-info">🔵 Đã tách chiết</span>`;
+          else if (o.status === "Đã chạy PCR") statusBadge = `<span class="badge b-purple">🟣 Đã chạy PCR</span>`;
+          else if (o.status === "Đã duyệt KQ") statusBadge = `<span class="badge b-pass">🟢 Đã duyệt KQ</span>`;
 
-        return `
-          <tr>
-            <td><code style="font-weight:800;color:#0f4c81;">${o.idChiDinh}</code></td>
-            <td><strong>${o.sid}</strong></td>
-            <td>
-              <div style="font-weight:700;color:#0f172a;">${o.patient}</div>
-              <div style="font-size:11px;color:#64748b;">${o.dept}</div>
-            </td>
-            <td style="font-size:11px;">
-              <div><strong>Lấy:</strong> ${o.collector}</div>
-              <div><strong>Nhận:</strong> ${o.receiver}</div>
-            </td>
-            <td style="font-size:11px;">
-              <div><strong>T0:</strong> ${o.t0}</div>
-              <div><strong>T1:</strong> ${o.t1} → <strong>T2:</strong> ${o.t2}</div>
-            </td>
-            <td style="text-align:center;"><span class="badge ${o.t2t1 <= 15 ? 'b-pass' : 'b-warn'}">${o.t2t1} phút</span></td>
-            <td style="max-width:220px;font-size:11.5px;">${o.testName}</td>
-            <td><span class="badge b-info" style="font-weight:800;">${o.idQtxn}</span></td>
-            <td><span class="badge b-purple">${o.idIc} • ${o.tenIc}</span></td>
-            <td>${statusBadge}</td>
-            <td style="font-size:11px;">
-              ${o.idMeTach ? `<div>🧲 <code>${o.idMeTach}</code></div>` : ""}
-              ${o.idMePcr ? `<div>🧬 <code>${o.idMePcr}</code> ${o.wellPos ? `<strong style="color:#dc2626;">[${o.wellPos}]</strong>` : ""}</div>` : ""}
-            </td>
-            <td style="text-align:center;font-weight:700;color:#059669;">${o.tatLab || "Đang xử lý"}</td>
-            <td>${actionBtn}</td>
-          </tr>
-        `;
-      }).join("");
+          let actionBtn = "";
+          if (o.status === "Chờ tách chiết") {
+            actionBtn = `<button type="button" class="btn btn-outline" style="padding:3px 8px;font-size:11px;border-color:#059669;color:#059669;" onclick="addSingleSampleToExtBatch('${o.idChiDinh}')">+ Nạp Mẻ Tách</button>`;
+          } else if (o.status === "Đã tách chiết") {
+            actionBtn = `<button type="button" class="btn btn-outline" style="padding:3px 8px;font-size:11px;border-color:#7c3aed;color:#7c3aed;" onclick="addSingleSampleToPcrBatch('${o.idChiDinh}')">+ Nạp Mẻ PCR</button>`;
+          } else {
+            actionBtn = `<button type="button" class="btn btn-outline" style="padding:3px 8px;font-size:11px;" onclick="openPrintableLimsDossier('PCR')">🖨️ Xem Hồ sơ</button>`;
+          }
+
+          return `
+            <tr>
+              <td><code style="font-weight:800;color:#0f4c81;">${o.idChiDinh}</code></td>
+              <td><strong>${o.sid}</strong></td>
+              <td>
+                <div style="font-weight:700;color:#0f172a;">${o.patient}</div>
+                <div style="font-size:11px;color:#64748b;">${o.dept}</div>
+              </td>
+              <td style="font-size:11px;">
+                <div><strong>Lấy:</strong> ${o.collector}</div>
+                <div><strong>Nhận:</strong> ${o.receiver}</div>
+              </td>
+              <td style="font-size:11px;">
+                <div><strong>T0:</strong> ${o.t0}</div>
+                <div><strong>T1:</strong> ${o.t1} ➔ <strong>T2:</strong> ${o.t2}</div>
+              </td>
+              <td style="text-align:center;"><span class="badge ${(o.t2t1 || 0) <= 15 ? 'b-pass' : 'b-warn'}">${o.t2t1 !== "" ? o.t2t1 + " phút" : "—"}</span></td>
+              <td class="wrap-cell">${o.testName}</td>
+              <td><span class="badge b-info" style="font-weight:800;">${o.idQtxn}</span></td>
+              <td><span class="badge b-purple">${o.idIc} • ${o.tenIc}</span></td>
+              <td>${statusBadge}</td>
+              <td style="font-size:11px;">
+                ${o.idMeTach ? `<div>🧲 <code>${o.idMeTach}</code></div>` : ""}
+                ${o.idMePcr ? `<div>🧬 <code>${o.idMePcr}</code> ${o.wellPos ? `<strong style="color:#dc2626;">[${o.wellPos}]</strong>` : ""}</div>` : ""}
+              </td>
+              <td style="text-align:center;font-weight:700;color:#059669;">${o.t5t2 !== "" ? o.t5t2 + "p" : (o.tatLab || "Đang xử lý")}</td>
+              <td>${actionBtn}</td>
+            </tr>
+          `;
+        }).join("");
+      } else {
+        // FULL 21 COLUMNS FROM LIS EXCEL + LIMS WORKFLOW COLUMNS
+        if (thead) {
+          thead.innerHTML = `
+            <tr>
+              <th style="position:sticky;left:0;z-index:3;background:#0f172a;">ID_ChiDinh (Khóa LIMS)</th>
+              <th>Mã QTXN &amp; IC</th>
+              <th>Trạng thái &amp; Mẻ Lab</th>
+              <th>Thao tác</th>
+              <th>1. SID riêng</th>
+              <th>2. Bệnh nhân</th>
+              <th>3. Khoa</th>
+              <th>4. Người lấy mẫu</th>
+              <th>5. TG lấy mẫu (T0)</th>
+              <th>6. TG giao mẫu (T1)</th>
+              <th>7. Người giao mẫu</th>
+              <th>8. Người nhận mẫu</th>
+              <th>9. TG nhận mẫu (T2)</th>
+              <th>10. Mã nhóm</th>
+              <th>11. Tên xét nghiệm</th>
+              <th>12. TG máy Download (T3)</th>
+              <th>13. TG có KQ (T4)</th>
+              <th>14. TG hoàn thành VAL (T5)</th>
+              <th>15. Người duyệt</th>
+              <th>16. TG (T2-T1)</th>
+              <th>17. TG (T3-T2)</th>
+              <th>18. TG (T4-T3)</th>
+              <th>19. TG (T4-T2)</th>
+              <th>20. TG (T5-T4)</th>
+              <th>21. TG (T5-T2)</th>
+            </tr>
+          `;
+        }
+        tbody.innerHTML = filtered.map(o => {
+          let statusBadge = `<span class="badge b-warn">🟠 Chờ tách chiết</span>`;
+          if (o.status === "Đã tách chiết") statusBadge = `<span class="badge b-info">🔵 Đã tách chiết</span>`;
+          else if (o.status === "Đã chạy PCR") statusBadge = `<span class="badge b-purple">🟣 Đã chạy PCR</span>`;
+          else if (o.status === "Đã duyệt KQ") statusBadge = `<span class="badge b-pass">🟢 Đã duyệt KQ</span>`;
+
+          let actionBtn = "";
+          if (o.status === "Chờ tách chiết") {
+            actionBtn = `<button type="button" class="btn btn-outline" style="padding:3px 8px;font-size:11px;border-color:#059669;color:#059669;" onclick="addSingleSampleToExtBatch('${o.idChiDinh}')">+ Nạp Mẻ Tách</button>`;
+          } else if (o.status === "Đã tách chiết") {
+            actionBtn = `<button type="button" class="btn btn-outline" style="padding:3px 8px;font-size:11px;border-color:#7c3aed;color:#7c3aed;" onclick="addSingleSampleToPcrBatch('${o.idChiDinh}')">+ Nạp Mẻ PCR</button>`;
+          } else {
+            actionBtn = `<button type="button" class="btn btn-outline" style="padding:3px 8px;font-size:11px;" onclick="openPrintableLimsDossier('PCR')">🖨️ Hồ sơ</button>`;
+          }
+
+          const syncTag = (o.lastSyncSource && o.lastSyncSource.includes("ghi đè"))
+            ? `<div style="font-size:10px;color:#059669;font-weight:700;">🔄 ${o.lastSyncSource}</div>`
+            : (o.lastSyncSource && o.lastSyncSource.includes("Nạp mới") ? `<div style="font-size:10px;color:#0284c7;font-weight:700;">🆕 ${o.lastSyncSource}</div>` : "");
+
+          return `
+            <tr>
+              <td style="position:sticky;left:0;z-index:2;background:#fff;border-right:2px solid #cbd5e1;">
+                <code style="font-weight:800;color:#0f4c81;">${o.idChiDinh}</code>
+                ${syncTag}
+              </td>
+              <td>
+                <span class="badge b-info" style="font-weight:800;">${o.idQtxn}</span>
+                <span class="badge b-purple">${o.idIc} • ${o.tenIc}</span>
+              </td>
+              <td>
+                ${statusBadge}
+                <div style="font-size:10.5px;margin-top:2px;">
+                  ${o.idMeTach ? `🧲 <code>${o.idMeTach}</code> ` : ""}
+                  ${o.idMePcr ? `🧬 <code>${o.idMePcr}</code> ${o.wellPos ? `<strong style="color:#dc2626;">[${o.wellPos}]</strong>` : ""}` : ""}
+                </div>
+              </td>
+              <td>${actionBtn}</td>
+              <td><strong>${o.sid}</strong></td>
+              <td><strong style="color:#0f172a;">${o.patient}</strong></td>
+              <td>${o.dept}</td>
+              <td>${o.collector}</td>
+              <td>${o.t0}</td>
+              <td>${o.t1}</td>
+              <td>${o.sender}</td>
+              <td>${o.receiver}</td>
+              <td>${o.t2}</td>
+              <td><span class="badge b-info">${o.group || "SHPT"}</span></td>
+              <td class="wrap-cell">${o.testName}</td>
+              <td>${o.t3 || "—"}</td>
+              <td>${o.t4 || "—"}</td>
+              <td>${o.t5 || "—"}</td>
+              <td>${o.approver || "—"}</td>
+              <td style="text-align:center;"><span class="badge ${(o.t2t1 || 0) <= 15 ? 'b-pass' : 'b-warn'}">${o.t2t1 !== "" ? o.t2t1 : "—"}</span></td>
+              <td style="text-align:center;">${o.t3t2 !== "" ? o.t3t2 : "—"}</td>
+              <td style="text-align:center;">${o.t4t3 !== "" ? o.t4t3 : "—"}</td>
+              <td style="text-align:center;font-weight:700;color:#0369a1;">${o.t4t2 !== "" ? o.t4t2 : "—"}</td>
+              <td style="text-align:center;">${o.t5t4 !== "" ? o.t5t4 : "—"}</td>
+              <td style="text-align:center;font-weight:800;color:#059669;">${o.t5t2 !== "" ? o.t5t2 : (o.tatLab || "—")}</td>
+            </tr>
+          `;
+        }).join("");
+      }
+
       updateLimsKpiCards();
     }
 
@@ -17224,7 +17654,7 @@ function writeAuditLog(maNV, actionType, detailChange, signatureVerify) {
         `).join("");
 
         container.innerHTML = `
-          <div style="font-family:Arial,sans-serif;color:#0f172a;padding:12px;border:1px solid #cbd5e1;">
+          <div style="font-family:'Be Vietnam Pro', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;color:#0f172a;padding:12px;border:1px solid #cbd5e1;">
             <div style="text-align:center;border-bottom:2px solid #0f4c81;padding-bottom:10px;margin-bottom:14px;">
               <div style="font-size:12px;font-weight:800;color:#0f4c81;">BỆNH VIỆN NHI HÀ NỘI — KHOA XÉT NGHIỆM — ĐƠN NGUYÊN DI TRUYỀN &amp; SHPT</div>
               <h2 style="margin:6px 0 4px 0;color:#0f4c81;font-size:20px;">HỒ SƠ TÁCH CHIẾT DNA/RNA</h2>
@@ -17324,7 +17754,7 @@ function writeAuditLog(maNV, actionType, detailChange, signatureVerify) {
         `).join("");
 
         container.innerHTML = `
-          <div style="font-family:Arial,sans-serif;color:#0f172a;padding:12px;border:1px solid #cbd5e1;">
+          <div style="font-family:'Be Vietnam Pro', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;color:#0f172a;padding:12px;border:1px solid #cbd5e1;">
             <table style="width:100%;border-collapse:collapse;margin-bottom:12px;">
               <tr>
                 <td style="border:1px solid #334155;padding:8px;text-align:center;width:32%;font-size:11.5px;font-weight:800;">
@@ -17455,6 +17885,7 @@ function writeAuditLog(maNV, actionType, detailChange, signatureVerify) {
 
     function initCommercialLimsSuite() {
       renderLimsLisOrdersTable();
+      if (typeof loadEmbeddedNhnExcelSample === 'function' && stagedLisReconItems.length === 0) { loadEmbeddedNhnExcelSample(false); }
       renderLimsExtractionWorkbench();
       renderLimsPcrWaitingAndDetail();
       renderLimsCatalogMappingTable();
@@ -17805,6 +18236,7 @@ function writeAuditLog(maNV, actionType, detailChange, signatureVerify) {
     }, 1000);
 
     function renderAllViews() {
+      if (typeof initCommercialLimsSuite === 'function') initCommercialLimsSuite();
       renderSecurityCenter();
       renderDeptAnalyzerMatrix();
       renderEquipmentTable();
@@ -18091,6 +18523,7 @@ function writeAuditLog(maNV, actionType, detailChange, signatureVerify) {
       saveGasEndpointConfig();
       // Clone DOM & sanitize so exported GitHub Pages file always boots with Zero-Trust Login Gate active!
       const clone = document.documentElement.cloneNode(true);
+      const tst = clone.querySelector("#toastContainer"); if (tst) tst.innerHTML = "";
       const ztOverlay = clone.querySelector("#zeroTrustLoginOverlay");
       if (ztOverlay) ztOverlay.classList.add("active");
       const ztUser = clone.querySelector("#ztUserInput");
