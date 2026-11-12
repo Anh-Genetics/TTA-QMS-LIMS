@@ -7479,7 +7479,7 @@
                 <div class="grid-2" style="gap:8px;">
                   <div class="form-group">
                     <label>Chỉ số / Xét nghiệm Nội kiểm:</label>
-                    <select id="iqcTestSelect" class="form-control" onchange="updateIqcChartAndStats()"><option value="Ct Internal Control (IC)">Ct Internal Control (IC)</option><option value="Ct Chứng dương RSV/AdV/FluA">Ct Chứng dương RSV/AdV/FluA</option><option value="Ct Chứng dương HBV/CMV/EBV">Ct Chứng dương HBV/CMV/EBV</option></select>
+                    <select id="iqcTestSelect" class="form-control" onchange="handleIqcTestOrLevelChange()"><option value="Ct Internal Control (IC)">Ct Internal Control (IC)</option><option value="Ct Chứng dương RSV/AdV/FluA">Ct Chứng dương RSV/AdV/FluA</option><option value="Ct Chứng dương HBV/CMV/EBV">Ct Chứng dương HBV/CMV/EBV</option></select>
                   </div>
                   <div class="form-group">
                     <label>Thời điểm chạy QC (SOP 08):</label>
@@ -7506,7 +7506,7 @@
                   </div>
                   <div class="form-group">
                     <label>Mức QC (Level):</label>
-                    <select id="iqcLevelSelect" class="form-control" onchange="updateIqcChartAndStats()">
+                    <select id="iqcLevelSelect" class="form-control" onchange="handleIqcTestOrLevelChange()">
                       <option value="Level 1 (Normal)">Level 1 (Normal / Chứng +)</option>
                       <option value="Level 2 (Pathological)">Level 2 (High / Pathological)</option>
                       <option value="Level 3 (Low)">Level 3 (Low / Ngưỡng thấp)</option>
@@ -8862,7 +8862,7 @@
                     <th id="molMpxThRox">Kênh ROX/CalRed</th>
                     <th id="molMpxThCy5">Kênh Cy5 (IC)</th>
                     <th style="border-left:1px solid #475569;">Mẫu trắng NTC</th>
-                    <th>Mean Ct IC BN</th>
+                    <th title="Trung bình cộng Ct kênh Chứng nội (IC) của các mẫu bệnh nhân trong mẻ chạy PCR (Lấy từ Sơ đồ Plate 96 LIMS hoặc nhập/sửa trực tiếp, Ngưỡng ≤ 33.0)">Mean Ct IC BN (Sửa / LIMS)</th>
                     <th style="border-left:1px solid #475569;background:#334155;">ΔCt (FAM)</th>
                     <th style="background:#334155;">Đánh giá Kênh &amp; 10-x</th>
                     <th style="background:#334155;">Kết luận Mẻ [Auto]</th>
@@ -8898,6 +8898,7 @@
                     <th>Chứng Nội (IC) / Tiêu chí Tế bào &amp; Tiêu bản</th>
                     <th>Kết luận Mẻ chạy &amp; Khóa An toàn LIS</th>
                     <th>Người thực hiện</th>
+                    <th>Thao tác</th>
                   </tr>
                 </thead>
                 <tbody id="qualIqcTableBody">
@@ -15575,17 +15576,18 @@ function jsonResponse(obj) {
       const hrDept = document.getElementById("hrDeptFilter");
       if (hrDept) hrDept.value = (dept === "ALL") ? "ALL" : dept;
 
-      if (typeof initMolIqc30dDatabases === "function") initMolIqc30dDatabases();
-      if (typeof hydrateFromMasterDatabaseStore === "function") hydrateFromMasterDatabaseStore();
-      if (typeof enrichMainIqcWith30DayMolecularData === "function") enrichMainIqcWith30DayMolecularData();
       renderAllViews();
       if (typeof renderMolQuantIqcAll === "function") renderMolQuantIqcAll();
       if (typeof renderMolMultiplexIqcAll === "function") renderMolMultiplexIqcAll();
       if (typeof renderMolIqcCapaLogTable === "function") renderMolIqcCapaLogTable();
       if (typeof renderMasterDbLiveInspector === "function") renderMasterDbLiveInspector();
-      if (typeof switchTab === "function") switchTab("qc");
-      if (typeof switchQcSubTab === "function") switchQcSubTab("quant");
-      if (typeof switchQuantWorkMode === "function") switchQuantWorkMode("mol30d");
+      const qcSec = document.getElementById("tab-qc");
+      if (qcSec && qcSec.classList.contains("active") && typeof selectUnifiedIqcHub === "function") {
+        if (dept === "Hóa sinh") selectUnifiedIqcHub("CHEM");
+        else if (dept === "Huyết học") selectUnifiedIqcHub("HEMA");
+        else if (dept === "Vi sinh" || dept === "Giải phẫu bệnh") selectUnifiedIqcHub("QUAL_DEPT");
+        else if (dept === "Di truyền & SHPT") selectUnifiedIqcHub("SHPT_QUANT");
+      }
       if (typeof applyStrictRbacPolicy === "function") applyStrictRbacPolicy();
       showToast(`🏥 Đã lọc dữ liệu theo: <strong>${dept === 'ALL' ? 'Toàn Khoa Xét nghiệm (5 Bộ phận)' : dept}</strong>`, "#0284c7");
     }
@@ -22831,24 +22833,35 @@ function jsonResponse(obj) {
               <td><strong>${r.date}</strong><div style="font-size:10px;color:#64748b;">${r.operator.split("(")[1]?.replace(")", "") || r.operator}</div></td>
               <td><code style="font-weight:800;color:#0f172a;">${r.runCode}</code><div style="font-size:10px;color:#64748b;">Lot: ${r.kitLot}</div></td>
               <td style="background:#ffffff;border-left:1px solid #cbd5e1;">
-                <input type="number" class="form-control" style="padding:3px 6px;font-size:11.3px;font-weight:800;width:96px;" value="${r.rawLow}" onchange="updateMolQuantCell(${origIdx}, 'rawLow', this.value)">
+                <input type="number" class="form-control" style="padding:3px 6px;font-size:11.3px;font-weight:800;width:96px;" value="${r.rawLow}" onchange="updateMolQuantCell('${r.runCode}', 'rawLow', this.value)">
               </td>
               <td style="background:#f0f4f8;text-align:center;font-weight:800;color:#0f172a;">${r.logLow.toFixed(2)}</td>
               <td style="background:#f0f4f8;text-align:center;"><span class="badge ${zLowBadge}" style="font-weight:800;">${r.zLow >= 0 ? "+" : ""}${r.zLow.toFixed(2)} SD</span></td>
               <td style="background:#ffffff;border-left:1px solid #cbd5e1;">
-                <input type="number" class="form-control" style="padding:3px 6px;font-size:11.3px;font-weight:800;width:106px;" value="${r.rawHigh}" onchange="updateMolQuantCell(${origIdx}, 'rawHigh', this.value)">
+                <input type="number" class="form-control" style="padding:3px 6px;font-size:11.3px;font-weight:800;width:106px;" value="${r.rawHigh}" onchange="updateMolQuantCell('${r.runCode}', 'rawHigh', this.value)">
               </td>
               <td style="background:#f0f4f8;text-align:center;font-weight:800;color:#0f172a;">${r.logHigh.toFixed(2)}</td>
               <td style="background:#f0f4f8;text-align:center;"><span class="badge ${zHighBadge}" style="font-weight:800;">${r.zHigh >= 0 ? "+" : ""}${r.zHigh.toFixed(2)} SD</span></td>
               <td style="border-left:1px solid #cbd5e1;text-align:center;">
-                <span class="badge ${r.ntc === 'Âm tính' ? 'b-pass' : 'b-fail'}" style="cursor:pointer;" onclick="toggleMolQuantNtcNec(${origIdx}, 'ntc')">${r.ntc}</span>
+                <span class="badge ${r.ntc === 'Âm tính' ? 'b-pass' : 'b-fail'}" style="cursor:pointer;" onclick="toggleMolQuantNtcNec('${r.runCode}', 'ntc')">${r.ntc}</span>
               </td>
               <td style="text-align:center;">
-                <span class="badge ${r.nec === 'Âm tính' ? 'b-pass' : 'b-fail'}" style="cursor:pointer;" onclick="toggleMolQuantNtcNec(${origIdx}, 'nec')">${r.nec}</span>
+                <span class="badge ${r.nec === 'Âm tính' ? 'b-pass' : 'b-fail'}" style="cursor:pointer;" onclick="toggleMolQuantNtcNec('${r.runCode}', 'nec')">${r.nec}</span>
               </td>
-              <td style="text-align:center;font-weight:700;color:${r.icCt <= 33 ? '#047857' : '#dc2626'};">${r.icCt.toFixed(2)}</td>
+              <td style="background:#ffffff;text-align:center;">
+                <div style="display:flex;align-items:center;justify-content:center;gap:3px;">
+                  <input type="number" step="0.1" class="form-control" style="padding:3px 5px;font-size:11.3px;font-weight:800;width:66px;color:${r.icCt <= 33 ? '#047857' : '#dc2626'};border-color:${r.icCt <= 33 ? '#a7f3d0' : '#fca5a5'};" value="${Number(r.icCt).toFixed(2)}" onchange="updateMolQuantCell('${r.runCode}', 'icCt', this.value)" title="Chỉnh sửa trực tiếp Mean Ct IC mẫu bệnh nhân/chứng nội (Ngưỡng ≤ 33.0)">
+                  <button type="button" class="btn btn-outline btn-xs" style="padding:2px 4px;font-size:9.5px;color:#0284c7;border-color:#bae6fd;" onclick="syncSingleRunPatientIcFromLims('QUANT', '${r.runCode}')" title="Đồng bộ Mean Ct IC từ các giếng mẫu bệnh nhân trong mẻ PCR LIMS">🔄</button>
+                </div>
+                <div style="font-size:9.2px;color:#64748b;margin-top:2px;">${r.icSourceNote || ('🔗 TB ' + (r.patientCount || 14) + ' mẫu BN (LIMS)')}</div>
+              </td>
               <td style="background:#f0f4f8;border-left:1px solid #cbd5e1;font-weight:700;color:${conclColor};">${r.ruleText}</td>
-              <td style="background:${conclBg};color:${conclColor};font-weight:800;text-align:center;border-radius:4px;">${r.conclusion} <button type="button" class="btn btn-outline btn-xs" style="padding:1px 5px;font-size:10px;margin-left:4px;color:#dc2626;border-color:#fca5a5;" onclick="deleteMolQuantRunRow(${origIdx})" title="Xóa dòng mẻ chạy này">🗑</button></td>
+              <td style="background:${conclBg};color:${conclColor};font-weight:800;text-align:center;border-radius:4px;">
+                <div style="display:flex;align-items:center;justify-content:center;gap:4px;">
+                  <span>${r.conclusion}</span>
+                  <button type="button" class="btn btn-outline btn-xs" style="padding:2px 6px;font-size:10.5px;color:#dc2626;border-color:#fca5a5;background:#fff;" onclick="deleteMolQuantRunRow('${r.runCode}')" title="Xóa dòng mẻ chạy Định lượng này">🗑 Xóa</button>
+                </div>
+              </td>
             </tr>
           `;
         }).join("");
@@ -23221,26 +23234,37 @@ function jsonResponse(obj) {
               <td><strong>${r.date}</strong><div style="font-size:10px;color:#64748b;">${r.operator.split("(")[1]?.replace(")", "") || r.operator}</div></td>
               <td><code style="font-weight:800;color:#0f172a;">${r.runCode}</code><div style="font-size:10px;color:#64748b;">Lot: ${r.kitLot}</div></td>
               <td style="background:#ffffff;border-left:1px solid #cbd5e1;">
-                <input type="number" step="0.1" class="form-control" style="padding:3px 6px;font-size:11.3px;font-weight:800;width:72px;" value="${r.ctFam.toFixed(2)}" onchange="updateMolMultiplexCell(${origIdx}, 'ctFam', this.value)">
+                <input type="number" step="0.1" class="form-control" style="padding:3px 6px;font-size:11.3px;font-weight:800;width:72px;" value="${r.ctFam.toFixed(2)}" onchange="updateMolMultiplexCell('${r.runCode}', 'ctFam', this.value)">
               </td>
               <td style="background:#ffffff;">
-                <input type="number" step="0.1" class="form-control" style="padding:3px 6px;font-size:11.3px;font-weight:800;width:72px;" value="${r.ctHex.toFixed(2)}" onchange="updateMolMultiplexCell(${origIdx}, 'ctHex', this.value)">
+                <input type="number" step="0.1" class="form-control" style="padding:3px 6px;font-size:11.3px;font-weight:800;width:72px;" value="${r.ctHex.toFixed(2)}" onchange="updateMolMultiplexCell('${r.runCode}', 'ctHex', this.value)">
               </td>
               <td style="background:#ffffff;">
-                <input type="number" step="0.1" class="form-control" style="padding:3px 6px;font-size:11.3px;font-weight:800;width:72px;" value="${r.ctRox.toFixed(2)}" onchange="updateMolMultiplexCell(${origIdx}, 'ctRox', this.value)">
+                <input type="number" step="0.1" class="form-control" style="padding:3px 6px;font-size:11.3px;font-weight:800;width:72px;" value="${r.ctRox.toFixed(2)}" onchange="updateMolMultiplexCell('${r.runCode}', 'ctRox', this.value)">
               </td>
               <td style="background:#ffffff;">
-                <input type="number" step="0.1" class="form-control" style="padding:3px 6px;font-size:11.3px;font-weight:800;width:72px;" value="${r.ctCy5Ic.toFixed(2)}" onchange="updateMolMultiplexCell(${origIdx}, 'ctCy5Ic', this.value)">
+                <input type="number" step="0.1" class="form-control" style="padding:3px 6px;font-size:11.3px;font-weight:800;width:72px;" value="${r.ctCy5Ic.toFixed(2)}" onchange="updateMolMultiplexCell('${r.runCode}', 'ctCy5Ic', this.value)">
               </td>
               <td style="border-left:1px solid #cbd5e1;text-align:center;">
-                <span class="badge ${r.ntcStatus === 'Âm tính' ? 'b-pass' : 'b-fail'}" style="cursor:pointer;" onclick="toggleMolMultiplexNtc(${origIdx})">${r.ntcStatus}</span>
+                <span class="badge ${r.ntcStatus === 'Âm tính' ? 'b-pass' : 'b-fail'}" style="cursor:pointer;" onclick="toggleMolMultiplexNtc('${r.runCode}')" title="Nhấn để chuyển đổi Âm tính / Dương tính">${r.ntcStatus}</span>
               </td>
-              <td style="text-align:center;font-weight:800;color:${r.patientIcMean <= 33 ? '#5b21b6' : '#dc2626'};">${r.patientIcMean.toFixed(2)}</td>
+              <td style="background:#ffffff;text-align:center;">
+                <div style="display:flex;align-items:center;justify-content:center;gap:3px;">
+                  <input type="number" step="0.1" class="form-control" style="padding:3px 5px;font-size:11.3px;font-weight:800;width:68px;color:${r.patientIcMean <= 33 ? '#5b21b6' : '#dc2626'};border-color:${r.patientIcMean <= 33 ? '#c4b5fd' : '#fca5a5'};" value="${Number(r.patientIcMean).toFixed(2)}" onchange="updateMolMultiplexCell('${r.runCode}', 'patientIcMean', this.value)" title="Chỉnh sửa trực tiếp Mean Ct IC của các mẫu bệnh nhân trong mẻ chạy (Ngưỡng ≤ 33.0)">
+                  <button type="button" class="btn btn-outline btn-xs" style="padding:2px 4px;font-size:9.5px;color:#0284c7;border-color:#bae6fd;" onclick="syncSingleRunPatientIcFromLims('MPX', '${r.runCode}')" title="Tính lại Mean Ct IC từ các giếng mẫu bệnh nhân trong mẻ PCR LIMS">🔄</button>
+                </div>
+                <div style="font-size:9.2px;color:#64748b;margin-top:2px;">${r.icSourceNote || ('🔗 TB ' + (r.patientCount || 12) + ' mẫu BN (LIMS)')}</div>
+              </td>
               <td style="background:#f0f4f8;border-left:1px solid #cbd5e1;text-align:center;">
                 <span class="badge ${Math.abs(r.dFam) > 1.5 ? 'b-fail' : 'b-info'}" style="font-weight:800;">${r.dFam >= 0 ? "+" : ""}${r.dFam.toFixed(2)}</span>
               </td>
               <td style="background:#f0f4f8;font-weight:700;color:${conclColor};">${r.evalText}</td>
-              <td style="background:${conclBg};color:${conclColor};font-weight:800;text-align:center;border-radius:4px;">${r.conclusion} <button type="button" class="btn btn-outline btn-xs" style="padding:1px 5px;font-size:10px;margin-left:4px;color:#dc2626;border-color:#fca5a5;" onclick="deleteMolQuantRunRow(${origIdx})" title="Xóa dòng mẻ chạy này">🗑</button></td>
+              <td style="background:${conclBg};color:${conclColor};font-weight:800;text-align:center;border-radius:4px;">
+                <div style="display:flex;align-items:center;justify-content:center;gap:4px;">
+                  <span>${r.conclusion}</span>
+                  <button type="button" class="btn btn-outline btn-xs" style="padding:2px 6px;font-size:10.5px;color:#dc2626;border-color:#fca5a5;background:#fff;" onclick="deleteMolMultiplexRunRow('${r.runCode}')" title="Xóa dòng mẻ chạy Multiplex này">🗑 Xóa</button>
+                </div>
+              </td>
             </tr>
           `;
         }).join("");
@@ -23765,7 +23789,7 @@ function jsonResponse(obj) {
     // =========================================================================
     // 3-TIER MASTER DATABASE PERSISTENCE & TWO-WAY CLOUD SYNC ENGINE
     // =========================================================================
-    const MASTER_DB_LOCAL_STORE_KEY = "TTA_QMS_LIMS_MASTER_DB_V26_STORE";
+    const MASTER_DB_LOCAL_STORE_KEY = "TTA_QMS_LIMS_MASTER_DB_V2026_11_UAT_FINAL_V3";
     const MASTER_DB_TX_LOG_KEY = "TTA_QMS_LIMS_MASTER_DB_TX_LOG";
     let DB_PENDING_SYNC_COUNT = 0;
     let DB_LAST_SYNC_TIME = "12/11/2026 10:58:00";
@@ -23869,7 +23893,7 @@ function jsonResponse(obj) {
         if (data.MOL_QUANT_30D_DB && Object.keys(data.MOL_QUANT_30D_DB).length > 0) MOL_QUANT_30D_DB = data.MOL_QUANT_30D_DB;
         if (data.MOL_MULTIPLEX_30D_DB && Object.keys(data.MOL_MULTIPLEX_30D_DB).length > 0) MOL_MULTIPLEX_30D_DB = data.MOL_MULTIPLEX_30D_DB;
         if (Array.isArray(data.MOL_IQC_CAPA_LOGS) && data.MOL_IQC_CAPA_LOGS.length > 0) MOL_IQC_CAPA_LOGS = data.MOL_IQC_CAPA_LOGS;
-        if (Array.isArray(data.IQC_POINTS) && data.IQC_POINTS.length > 0) IQC_POINTS = data.IQC_POINTS;
+        if (Array.isArray(data.IQC_POINTS) && data.IQC_POINTS.length >= 400) IQC_POINTS = data.IQC_POINTS;
         if (Array.isArray(data.EQA_PROGRAMS) && data.EQA_PROGRAMS.length > 0) EQA_PROGRAMS = data.EQA_PROGRAMS;
         if (Array.isArray(data.REAGENT_LOTS) && data.REAGENT_LOTS.length > 0) REAGENT_LOTS = data.REAGENT_LOTS;
         if (data.updatedAt) DB_LAST_SYNC_TIME = data.updatedAt;
@@ -24914,7 +24938,956 @@ function jsonResponse(obj) {
       origOpenPrintableIqcForm(formType);
     };
 
+
+    // =========================================================================
+    // V2026.11 COMPREHENSIVE MULTI-SPECIALTY IQC & ALL-MODULE CRUD UPGRADE
+    // =========================================================================
+    const ROUTINE_IQC_SPEC_CATALOG = {
+      "CA800": {
+        lot: "BIO-qc-881", lotLabel: "BIO-qc-881 (Bio-Rad Liquichek Hóa sinh)", dept: "Hóa sinh", equipId: "TTB.KXN.HS.01", operator: "NHIHN000574 (Nguyễn Thị Linh)",
+        params: {
+          "Glucose (mmol/L)": { mean1: 5.50, sd1: 0.15, mean2: 14.80, sd2: 0.42, mean3: 2.60, sd3: 0.10, tea: 6.9 },
+          "Creatinine (µmol/L)": { mean1: 88.0, sd1: 3.20, mean2: 345.0, sd2: 11.5, mean3: 48.0, sd3: 2.10, tea: 8.8 },
+          "AST / GOT (U/L)": { mean1: 34.0, sd1: 1.60, mean2: 142.0, sd2: 5.20, mean3: 18.0, sd3: 1.10, tea: 12.0 },
+          "ALT / GPT (U/L)": { mean1: 29.0, sd1: 1.40, mean2: 128.0, sd2: 4.80, mean3: 15.0, sd3: 0.90, tea: 12.0 },
+          "Urea (mmol/L)": { mean1: 6.20, sd1: 0.24, mean2: 18.50, sd2: 0.65, mean3: 3.10, sd3: 0.15, tea: 9.0 }
+        }
+      },
+      "Cobas Pro": {
+        lot: "PRECICONTROL-91", lotLabel: "PRECICONTROL-91 (Roche PreciControl Miễn dịch)", dept: "Hóa sinh", equipId: "TTB.KXN.HS.09", operator: "NHIHN000525 (Nguyễn Văn Khánh)",
+        params: {
+          "FT4 (pmol/L)": { mean1: 15.20, sd1: 0.55, mean2: 42.50, sd2: 1.50, mean3: 6.80, sd3: 0.30, tea: 10.0 },
+          "TSH (µIU/mL)": { mean1: 1.85, sd1: 0.08, mean2: 14.20, sd2: 0.52, mean3: 0.35, sd3: 0.02, tea: 12.0 },
+          "Troponin T hs (ng/L)": { mean1: 18.50, sd1: 0.85, mean2: 185.0, sd2: 7.20, mean3: 8.50, sd3: 0.45, tea: 15.0 },
+          "Ferritin (ng/mL)": { mean1: 85.0, sd1: 3.40, mean2: 420.0, sd2: 15.5, mean3: 22.0, sd3: 1.20, tea: 12.0 },
+          "PCT (ng/mL)": { mean1: 0.52, sd1: 0.03, mean2: 8.40, sd2: 0.36, mean3: 0.15, sd3: 0.01, tea: 15.0 }
+        }
+      },
+      "AIA 2000": {
+        lot: "AIA-PACK-QC26", lotLabel: "AIA-PACK-QC26 (Tosoh AIA Control)", dept: "Hóa sinh", equipId: "TTB.KXN.HS.02", operator: "NHIHN000274 (Đỗ Văn Lương)",
+        params: {
+          "AFP (ng/mL)": { mean1: 12.50, sd1: 0.55, mean2: 145.0, sd2: 5.80, mean3: 4.20, sd3: 0.25, tea: 12.0 },
+          "Total IgE (IU/mL)": { mean1: 65.0, sd1: 3.10, mean2: 380.0, sd2: 14.5, mean3: 18.0, sd3: 1.10, tea: 15.0 },
+          "Cortisol (µg/dL)": { mean1: 14.20, sd1: 0.65, mean2: 32.50, sd2: 1.35, mean3: 4.80, sd3: 0.28, tea: 12.5 },
+          "Beta-hCG (mIU/mL)": { mean1: 25.0, sd1: 1.15, mean2: 450.0, sd2: 17.5, mean3: 6.50, sd3: 0.35, tea: 12.0 }
+        }
+      },
+      "DXC 700": {
+        lot: "BECKMAN-QC-700", lotLabel: "BECKMAN-QC-700 (Beckman Triad Control)", dept: "Hóa sinh", equipId: "TTB.KXN.HS.08", operator: "NHIHN000574 (Nguyễn Thị Linh)",
+        params: {
+          "Glucose (mmol/L)": { mean1: 5.45, sd1: 0.14, mean2: 14.60, sd2: 0.40, mean3: 2.55, sd3: 0.10, tea: 6.9 },
+          "Cholesterol (mmol/L)": { mean1: 4.80, sd1: 0.15, mean2: 7.60, sd2: 0.24, mean3: 2.90, sd3: 0.11, tea: 8.5 },
+          "Triglyceride (mmol/L)": { mean1: 1.45, sd1: 0.06, mean2: 3.20, sd2: 0.12, mean3: 0.75, sd3: 0.04, tea: 11.0 },
+          "Albumin (g/L)": { mean1: 41.5, sd1: 1.15, mean2: 26.0, sd2: 0.85, mean3: 32.0, sd3: 0.95, tea: 7.5 },
+          "Na+ / K+ / Cl- (mmol/L)": { mean1: 140.0, sd1: 1.40, mean2: 155.0, sd2: 1.60, mean3: 122.0, sd3: 1.30, tea: 4.0 }
+        }
+      },
+      "Urilyzer 500 Pro": {
+        lot: "URI-CHECK-500", lotLabel: "URI-CHECK-500 (Analyticon Urilyzer Control)", dept: "Hóa sinh", equipId: "TTB.KXN.HS.05", operator: "NHIHN000525 (Nguyễn Văn Khánh)",
+        params: {
+          "Tỷ trọng (SG)": { mean1: 1.015, sd1: 0.002, mean2: 1.028, sd2: 0.003, mean3: 1.005, sd3: 0.002, tea: 3.0 },
+          "pH Nước tiểu": { mean1: 6.00, sd1: 0.20, mean2: 8.00, sd2: 0.25, mean3: 5.00, sd3: 0.20, tea: 8.0 },
+          "Glucose niệu": { mean1: 0.00, sd1: 0.05, mean2: 14.0, sd2: 0.65, mean3: 2.80, sd3: 0.20, tea: 10.0 },
+          "Protein niệu": { mean1: 0.00, sd1: 0.05, mean2: 1.50, sd2: 0.08, mean3: 0.30, sd3: 0.03, tea: 10.0 },
+          "Leukocytes": { mean1: 0.00, sd1: 0.50, mean2: 75.0, sd2: 4.50, mean3: 25.0, sd3: 2.00, tea: 12.0 }
+        }
+      },
+      "GEM3500": {
+        lot: "GEM-iQM-35", lotLabel: "GEM-iQM-35 (Werfen iQM Process Control)", dept: "Hóa sinh", equipId: "TTB.KXN.HS.06", operator: "NHIHN000274 (Đỗ Văn Lương)",
+        params: {
+          "pH Máu động mạch": { mean1: 7.40, sd1: 0.02, mean2: 7.15, sd2: 0.02, mean3: 7.55, sd3: 0.02, tea: 3.5 },
+          "pCO2 (mmHg)": { mean1: 40.0, sd1: 1.40, mean2: 68.0, sd2: 2.10, mean3: 24.0, sd3: 1.10, tea: 8.0 },
+          "pO2 (mmHg)": { mean1: 95.0, sd1: 3.20, mean2: 55.0, sd2: 2.20, mean3: 145.0, sd3: 4.50, tea: 9.0 },
+          "Lactate (mmol/L)": { mean1: 1.40, sd1: 0.07, mean2: 5.80, sd2: 0.24, mean3: 0.80, sd3: 0.05, tea: 12.0 },
+          "Ionized Ca2+ (mmol/L)": { mean1: 1.20, sd1: 0.04, mean2: 0.78, sd2: 0.03, mean3: 1.52, sd3: 0.05, tea: 7.5 }
+        }
+      },
+      "ACL TOP550 CTS": {
+        lot: "HEMOSIL-QC-33", lotLabel: "HEMOSIL-QC-33 (Werfen HemosIL Normal/Low)", dept: "Huyết học", equipId: "TTB.KXN.HH.02", operator: "NHIHN000034 (Trịnh Thị Thu Hiền)",
+        params: {
+          "PT (Giây)": { mean1: 11.80, sd1: 0.32, mean2: 28.50, sd2: 0.90, mean3: 10.20, sd3: 0.28, tea: 10.0 },
+          "PT % / INR": { mean1: 1.02, sd1: 0.04, mean2: 2.65, sd2: 0.09, mean3: 0.92, sd3: 0.03, tea: 10.0 },
+          "aPTT (Giây)": { mean1: 29.50, sd1: 0.85, mean2: 64.00, sd2: 1.95, mean3: 24.50, sd3: 0.75, tea: 10.0 },
+          "Fibrinogen (g/L)": { mean1: 2.85, sd1: 0.14, mean2: 1.15, sd2: 0.07, mean3: 4.60, sd3: 0.22, tea: 12.0 },
+          "D-Dimer (ng/mL)": { mean1: 220.0, sd1: 12.5, mean2: 1450.0, sd2: 68.0, mean3: 120.0, sd3: 8.5, tea: 15.0 }
+        }
+      },
+      "Celltac G": {
+        lot: "MEK-5D-309", lotLabel: "MEK-5D-309 (Nihon Kohden MEK-5D Control)", dept: "Huyết học", equipId: "TTB.KXN.HH.01", operator: "NHIHN000684 (Nguyễn Văn Chiến)",
+        params: {
+          "WBC (10^9/L)": { mean1: 7.10, sd1: 0.22, mean2: 17.20, sd2: 0.50, mean3: 2.50, sd3: 0.12, tea: 10.0 },
+          "RBC (10^12/L)": { mean1: 4.62, sd1: 0.12, mean2: 5.55, sd2: 0.15, mean3: 2.35, sd3: 0.08, tea: 6.0 },
+          "HGB (g/L)": { mean1: 138.0, sd1: 3.10, mean2: 174.0, sd2: 3.90, mean3: 70.0, sd3: 2.00, tea: 6.0 },
+          "HCT (%)": { mean1: 41.2, sd1: 1.05, mean2: 51.5, sd2: 1.30, mean3: 21.5, sd3: 0.70, tea: 6.0 },
+          "PLT (10^9/L)": { mean1: 252.0, sd1: 12.0, mean2: 510.0, sd2: 21.0, mean3: 68.0, sd3: 5.20, tea: 15.0 }
+        }
+      },
+      "XN1000": {
+        lot: "XN-CHECK-412", lotLabel: "XN-CHECK-412 (Sysmex XN-CHECK L1/L2/L3)", dept: "Huyết học", equipId: "TTB.KXN.HH.09", operator: "NHIHN000034 (Trịnh Thị Thu Hiền)",
+        params: {
+          "WBC (10^9/L)": { mean1: 6.85, sd1: 0.20, mean2: 16.40, sd2: 0.45, mean3: 2.35, sd3: 0.11, tea: 10.0 },
+          "RBC (10^12/L)": { mean1: 4.55, sd1: 0.12, mean2: 5.65, sd2: 0.15, mean3: 2.25, sd3: 0.08, tea: 6.0 },
+          "HGB (g/L)": { mean1: 136.0, sd1: 3.00, mean2: 172.0, sd2: 3.80, mean3: 68.0, sd3: 1.90, tea: 6.0 },
+          "PLT-I (10^9/L)": { mean1: 245.0, sd1: 11.5, mean2: 520.0, sd2: 21.0, mean3: 65.0, sd3: 5.00, tea: 15.0 },
+          "RET% (%)": { mean1: 1.45, sd1: 0.08, mean2: 4.80, sd2: 0.22, mean3: 0.55, sd3: 0.04, tea: 15.0 }
+        }
+      },
+      "miniiSED": {
+        lot: "SED-CHECK-26", lotLabel: "SED-CHECK-26 (Alcor iSED Control)", dept: "Huyết học", equipId: "TTB.KXN.HH.13", operator: "NHIHN000684 (Nguyễn Văn Chiến)",
+        params: {
+          "ESR / Máu lắng 1h (mm/h)": { mean1: 12.0, sd1: 1.10, mean2: 58.0, sd2: 3.60, mean3: 6.0, sd3: 0.70, tea: 15.0 }
+        }
+      },
+      "UD-500": {
+        lot: "THERMO-REF-37", lotLabel: "THERMO-REF-37 (Đầu dò chuẩn nhiệt độ 37°C)", dept: "Huyết học", equipId: "TTB.KXN.HH.14", operator: "NHIHN000684 (Nguyễn Văn Chiến)",
+        params: {
+          "Nhiệt độ buồng rã đông (°C)": { mean1: 37.0, sd1: 0.25, mean2: 37.0, sd2: 0.25, mean3: 37.0, sd3: 0.25, tea: 3.0 }
+        }
+      },
+      "Eflexis": {
+        lot: "ERYTRA-QC-26", lotLabel: "ERYTRA-QC-26 (Grifols DG Gel Control)", dept: "Huyết học", equipId: "TTB.KXN.HH.15", operator: "NHIHN000034 (Trịnh Thị Thu Hiền)",
+        params: {
+          "Định nhóm ABO/RhD": { mean1: 4.00, sd1: 0.12, mean2: 4.00, sd2: 0.12, mean3: 2.00, sd3: 0.10, tea: 8.0 },
+          "Sàng lọc kháng thể bất thường": { mean1: 3.00, sd1: 0.12, mean2: 4.00, sd2: 0.15, mean3: 0.00, sd3: 0.05, tea: 8.0 },
+          "Phản ứng hòa hợp Coombs": { mean1: 3.00, sd1: 0.12, mean2: 4.00, sd2: 0.15, mean3: 0.00, sd3: 0.05, tea: 8.0 }
+        }
+      },
+      "VITEK2": {
+        lot: "ATCC-25922-11", lotLabel: "ATCC-25922-11 (Chủng chuẩn ATCC CLSI M100)", dept: "Vi sinh", equipId: "TTB.KXN.VS.03", operator: "NHIHN000025 (Vũ Thị Thanh Thảo)",
+        params: {
+          "QC Định danh GN (E. coli ATCC 25922)": { mean1: 99.0, sd1: 0.60, mean2: 99.0, sd2: 0.60, mean3: 98.0, sd3: 0.80, tea: 5.0 },
+          "QC Kháng sinh đồ AST-GN (MIC µg/mL)": { mean1: 0.50, sd1: 0.03, mean2: 2.00, sd2: 0.12, mean3: 0.12, sd3: 0.01, tea: 10.0 },
+          "QC Định danh GP (S. aureus ATCC 29213)": { mean1: 99.0, sd1: 0.60, mean2: 99.0, sd2: 0.60, mean3: 98.0, sd3: 0.80, tea: 5.0 }
+        }
+      },
+      "BACT/ALERT 3D": {
+        lot: "BACT-QC-26", lotLabel: "BACT-QC-26 (BioMérieux BACT/ALERT Control)", dept: "Vi sinh", equipId: "TTB.KXN.VS.02", operator: "NHIHN000624 (Trần Văn Dũng)",
+        params: {
+          "Thời gian phát hiện dương tính TTD (Giờ)": { mean1: 11.50, sd1: 0.55, mean2: 14.20, sd2: 0.70, mean3: 9.20, sd3: 0.45, tea: 10.0 },
+          "Kiểm chuẩn quang học ô buồng ủ": { mean1: 100.0, sd1: 0.40, mean2: 100.0, sd2: 0.40, mean3: 100.0, sd3: 0.40, tea: 4.0 }
+        }
+      },
+      "ATP 1000": {
+        lot: "HE-STAIN-26", lotLabel: "HE-STAIN-26 (Tiêu bản chứng Nhuộm H&E/PAS)", dept: "Giải phẫu bệnh", equipId: "TTB.KXN.GPB.05", operator: "NHIHN000269 (BS. Nguyễn Hà Mỹ)",
+        params: {
+          "Điểm chất lượng nhuộm H&E (Thang 10)": { mean1: 9.20, sd1: 0.25, mean2: 9.50, sd2: 0.20, mean3: 8.50, sd3: 0.30, tea: 8.0 }
+        }
+      },
+      "CFX Opus 96 Dx": {
+        lot: "Panel-2-ABGDF", lotLabel: "Panel-2-ABGDF (Seegene Allplex PC Lot)", dept: "Di truyền & SHPT", equipId: "TTB.KXN.SHPT.06", operator: "NHIHN000674 (ThS. Trần Tuấn Anh)",
+        params: {
+          "Ct Chứng dương RSV/AdV/FluA": { mean1: 26.50, sd1: 0.55, mean2: 28.00, sd2: 0.60, mean3: 30.50, sd3: 0.70, tea: 8.0 },
+          "Allplex RP Panel 1/2/4 (Hô hấp)": { mean1: 28.00, sd1: 0.50, mean2: 27.50, sd2: 0.50, mean3: 30.00, sd3: 0.60, tea: 8.0 },
+          "Allplex GI Panel 1/2/4 (Tiêu hóa)": { mean1: 27.50, sd1: 0.50, mean2: 28.20, sd2: 0.55, mean3: 30.20, sd3: 0.60, tea: 8.0 },
+          "Allplex Meningitis-B/V1/V2 (Viêm màng não)": { mean1: 28.20, sd1: 0.52, mean2: 27.80, sd2: 0.50, mean3: 30.50, sd3: 0.65, tea: 8.0 },
+          "Ct Internal Control (IC)": { mean1: 26.00, sd1: 0.48, mean2: 26.50, sd2: 0.50, mean3: 27.50, sd3: 0.55, tea: 8.0 },
+          "Ct Chứng dương HBV/CMV/EBV": { mean1: 27.20, sd1: 0.52, mean2: 24.50, sd2: 0.45, mean3: 30.80, sd3: 0.65, tea: 8.0 }
+        }
+      },
+      "QuantStudio 5 Dx": {
+        lot: "GP-QC-2610", lotLabel: "GP-QC-2610 (GeneProof Calibrator/Control)", dept: "Di truyền & SHPT", equipId: "TTB.KXN.SHPT.09", operator: "NHIHN000673 (Đinh Thị Phương Anh)",
+        params: {
+          "GeneProof HBV Log10 (IU/mL)": { mean1: 3.00, sd1: 0.15, mean2: 6.00, sd2: 0.18, mean3: 2.00, sd3: 0.15, tea: 12.0 },
+          "GeneProof CMV Log10 (IU/mL)": { mean1: 3.10, sd1: 0.15, mean2: 5.90, sd2: 0.18, mean3: 2.10, sd3: 0.15, tea: 12.0 },
+          "GeneProof EBV Log10 (IU/mL)": { mean1: 3.05, sd1: 0.15, mean2: 6.05, sd2: 0.18, mean3: 2.05, sd3: 0.15, tea: 12.0 },
+          "GeneProof HSV-1/2 Log10 (cp/mL)": { mean1: 3.00, sd1: 0.16, mean2: 5.80, sd2: 0.19, mean3: 2.00, sd3: 0.16, tea: 12.0 },
+          "GeneProof Adenovirus Log10 (cp/mL)": { mean1: 3.15, sd1: 0.16, mean2: 6.10, sd2: 0.19, mean3: 2.15, sd3: 0.16, tea: 12.0 },
+          "Ct Chứng dương SMA/Thalassemia": { mean1: 25.00, sd1: 0.50, mean2: 24.20, sd2: 0.48, mean3: 27.50, sd3: 0.55, tea: 8.0 }
+        }
+      }
+    };
+
+    // Ensure ATP 1000 is in KEY_ANALYZERS
+    if (typeof KEY_ANALYZERS !== "undefined" && !KEY_ANALYZERS.some(a => a.code === "ATP 1000")) {
+      KEY_ANALYZERS.push({
+        code: "ATP 1000",
+        equipId: "TTB.KXN.GPB.05",
+        name: "Máy xử lý mô tự động ATP 1000 & Hệ thống Nhuộm GPB",
+        dept: "Giải phẫu bệnh",
+        protocol: "Kiểm soát chất lượng tiêu bản H&E / IHC",
+        tests: ["Điểm chất lượng nhuộm H&E (Thang 10)"]
+      });
+    }
+
+    function getRoutineIqcSpec(equipCode, testName, levelStr) {
+      const eq = ROUTINE_IQC_SPEC_CATALOG[equipCode] || ROUTINE_IQC_SPEC_CATALOG["CA800"];
+      const pMap = eq.params || {};
+      const p = pMap[testName] || Object.values(pMap)[0] || { mean1: 10.0, sd1: 0.4, mean2: 25.0, sd2: 1.0, mean3: 4.0, sd3: 0.2, tea: 8.0 };
+      let mean = p.mean1, sd = p.sd1;
+      if (levelStr && levelStr.includes("Level 2")) { mean = p.mean2; sd = p.sd2; }
+      else if (levelStr && levelStr.includes("Level 3")) { mean = p.mean3; sd = p.sd3; }
+      return {
+        lot: eq.lot,
+        lotLabel: eq.lotLabel,
+        dept: eq.dept,
+        equipId: eq.equipId,
+        operator: eq.operator,
+        mean: Number(mean),
+        sd: Number(sd),
+        tea: Number(p.tea || 8.0)
+      };
+    }
+
+    // Seed rich 12-day test data across ALL 17 analyzers and ALL parameters (Manual + API)
+    function seedComprehensiveMultiSpecialtyIqcPoints() {
+      if (window._comprehensiveMultiSpecialtySeeded) return;
+      window._comprehensiveMultiSpecialtySeeded = true;
+
+      const zPattern12 = [-0.28, 0.35, -0.15, 0.42, -0.52, 0.18, 0.64, -0.38, 0.22, -0.12, 0.48, 0.15];
+      const runReasons = [
+        "1. Đầu ngày / Đầu ca trực",
+        "1. Đầu ngày / Đầu ca trực",
+        "2. Sau bảo dưỡng / Hiệu chuẩn",
+        "1. Đầu ngày / Đầu ca trực",
+        "3. Thay lô hóa chất mới",
+        "1. Đầu ngày / Đầu ca trực",
+        "4. Nghi ngờ KQ bất thường",
+        "1. Đầu ngày / Đầu ca trực"
+      ];
+
+      // Build clean, comprehensive multi-specialty IQC_POINTS array
+      const newPoints = [];
+      let seq = 1;
+
+      Object.keys(ROUTINE_IQC_SPEC_CATALOG).forEach((eqCode) => {
+        const eqCfg = ROUTINE_IQC_SPEC_CATALOG[eqCode];
+        const paramNames = Object.keys(eqCfg.params);
+
+        paramNames.forEach((testName, pIdx) => {
+          const pCfg = eqCfg.params[testName];
+          // Generate 12 days (01/11/2026 -> 12/11/2026) for every parameter on every analyzer!
+          for (let d = 1; d <= 12; d++) {
+            const dayStr = String(d).padStart(2, "0");
+            const hourStr = String(7 + (pIdx % 2)).padStart(2, "0");
+            const minStr = String(15 + ((d * 3 + pIdx * 5) % 40)).padStart(2, "0");
+            const timeStr = `${dayStr}/11/2026 ${hourStr}:${minStr}`;
+            const zOff = zPattern12[(d - 1 + pIdx * 3) % zPattern12.length];
+            const isManual = (d % 2 === 0) || eqCode === "ATP 1000" || eqCode === "UD-500" || eqCode === "miniiSED";
+            const reason = runReasons[(d + pIdx) % runReasons.length];
+            const digits = pCfg.mean1 < 2 ? 3 : (pCfg.mean1 < 20 ? 2 : 1);
+            const val = Number((pCfg.mean1 + zOff * pCfg.sd1).toFixed(digits));
+
+            newPoints.push({
+              id: `IQC-${eqCode.replace(/[^A-Z0-9]/gi, "").slice(0, 5).toUpperCase()}-${String(seq++).padStart(3, "0")}`,
+              time: timeStr,
+              runReason: reason,
+              dept: eqCfg.dept,
+              equipCode: eqCode,
+              equipId: eqCfg.equipId,
+              test: testName,
+              lot: eqCfg.lot,
+              level: "Level 1 (Normal)",
+              mfgMean: pCfg.mean1,
+              mfgSd: pCfg.sd1,
+              val: val,
+              tea: pCfg.tea,
+              source: isManual ? "Nhập thủ công (KTV Kiểm thử)" : `API Tự động (${eqCode})`,
+              operator: eqCfg.operator.split(" ")[0],
+              excluded: false,
+              editNote: isManual
+                ? `KTV ${eqCfg.operator} nhập thủ công & đối soát Westgard (${reason.split(".")[1]?.trim() || "Đầu ca"})`
+                : `Đồng bộ ASTM/HL7 tự động từ máy ${eqCode} — Đạt In-Control`
+            });
+          }
+
+          // For the primary parameter of each analyzer, also add Level 2 (Pathological) test points
+          if (pIdx === 0 && pCfg.mean2) {
+            for (let d = 9; d <= 12; d++) {
+              const dayStr = String(d).padStart(2, "0");
+              const zOff2 = zPattern12[(d + 4) % zPattern12.length];
+              const digits2 = pCfg.mean2 < 2 ? 3 : (pCfg.mean2 < 20 ? 2 : 1);
+              const val2 = Number((pCfg.mean2 + zOff2 * pCfg.sd2).toFixed(digits2));
+              newPoints.push({
+                id: `IQC-${eqCode.replace(/[^A-Z0-9]/gi, "").slice(0, 5).toUpperCase()}-L2-${d}`,
+                time: `${dayStr}/11/2026 08:40`,
+                runReason: "1. Đầu ngày / Đầu ca trực (Mức 2 - Bệnh lý)",
+                dept: eqCfg.dept,
+                equipCode: eqCode,
+                equipId: eqCfg.equipId,
+                test: testName,
+                lot: eqCfg.lot,
+                level: "Level 2 (Pathological)",
+                mfgMean: pCfg.mean2,
+                mfgSd: pCfg.sd2,
+                val: val2,
+                tea: pCfg.tea,
+                source: "Nhập thủ công (KTV Kiểm thử)",
+                operator: eqCfg.operator.split(" ")[0],
+                excluded: false,
+                editNote: `Kiểm thử vận hành Mức 2 (Pathological) — KTV ${eqCfg.operator}`
+              });
+            }
+          }
+        });
+      });
+
+      IQC_POINTS = newPoints;
+    }
+
+    // Upgrade handleIqcAnalyzerChange & handleIqcTestOrLevelChange so selecting any Analyzer/Test/Level immediately updates Lot, Mean, SD, Value, Chart & Stats
+    handleIqcAnalyzerChange = function() {
+      const code = document.getElementById("iqcEquipSelect")?.value || "CA800";
+      const eqSpec = ROUTINE_IQC_SPEC_CATALOG[code];
+      const analyzer = KEY_ANALYZERS.find(a => a.code === code) || KEY_ANALYZERS[0];
+      const testSel = document.getElementById("iqcTestSelect");
+      if (testSel) {
+        const tests = eqSpec ? Object.keys(eqSpec.params) : (analyzer ? analyzer.tests : []);
+        testSel.innerHTML = tests.map(t => `<option value="${t}">${t}</option>`).join("");
+      }
+      // Also populate #iqcLotSelect with all department lots and select this analyzer's lot
+      const lotSel = document.getElementById("iqcLotSelect");
+      if (lotSel) {
+        const allLotOpts = Object.values(ROUTINE_IQC_SPEC_CATALOG).map(cfg => `<option value="${cfg.lot}">${cfg.lotLabel}</option>`);
+        lotSel.innerHTML = Array.from(new Set(allLotOpts)).join("");
+        if (eqSpec) lotSel.value = eqSpec.lot;
+      }
+      // Sync table filter dropdown if not ALL
+      const tblFilter = document.getElementById("iqcTableFilterEquip");
+      if (tblFilter && tblFilter.value !== "ALL") {
+        tblFilter.value = code;
+      }
+      handleIqcTestOrLevelChange();
+    };
+
+    function handleIqcTestOrLevelChange() {
+      const code = document.getElementById("iqcEquipSelect")?.value || "CA800";
+      const testName = document.getElementById("iqcTestSelect")?.value || "";
+      const levelStr = document.getElementById("iqcLevelSelect")?.value || "Level 1 (Normal)";
+      const spec = getRoutineIqcSpec(code, testName, levelStr);
+
+      const lotSel = document.getElementById("iqcLotSelect");
+      if (lotSel && spec.lot) lotSel.value = spec.lot;
+
+      const digits = spec.mean < 2 ? 3 : (spec.mean < 20 ? 2 : 1);
+      const meanInput = document.getElementById("iqcDnaConcInput");
+      const sdInput = document.getElementById("iqcA260Input");
+      const valInput = document.getElementById("iqcValueInput");
+      if (meanInput) meanInput.value = spec.mean.toFixed(digits);
+      if (sdInput) sdInput.value = spec.sd.toFixed(digits);
+      if (valInput) valInput.value = (spec.mean + 0.18 * spec.sd).toFixed(digits);
+
+      const errBtn = document.getElementById("btnSimulateWestgardViolation");
+      if (errBtn) {
+        const errVal = (spec.mean + 3.45 * spec.sd).toFixed(digits);
+        errBtn.textContent = `Thử tình huống Lỗi 1-3s (KQ = ${errVal})`;
+      }
+
+      previewWestgardLive();
+      updateIqcChartAndStats();
+    }
+
+    // Override simulateWestgardError to use the active analyzer & parameter's Mean + 3.45 SD
+    simulateWestgardError = function() {
+      const code = document.getElementById("iqcEquipSelect")?.value || "CA800";
+      const testName = document.getElementById("iqcTestSelect")?.value || "";
+      const levelStr = document.getElementById("iqcLevelSelect")?.value || "Level 1 (Normal)";
+      const spec = getRoutineIqcSpec(code, testName, levelStr);
+      const digits = spec.mean < 2 ? 3 : (spec.mean < 20 ? 2 : 1);
+      const errVal = Number((spec.mean + 3.45 * spec.sd).toFixed(digits));
+
+      const valInput = document.getElementById("iqcValueInput");
+      if (valInput) valInput.value = errVal;
+      previewWestgardLive();
+
+      const newId = "IQC-ERR-" + (IQC_POINTS.length + 1);
+      IQC_POINTS.push({
+        id: newId,
+        time: "12/11/2026 10:15",
+        runReason: "4. Nghi ngờ KQ bất thường (Giả lập lỗi 1-3s)",
+        dept: spec.dept,
+        equipCode: code,
+        equipId: spec.equipId,
+        test: testName,
+        lot: spec.lot,
+        level: levelStr,
+        mfgMean: spec.mean,
+        mfgSd: spec.sd,
+        val: errVal,
+        tea: spec.tea,
+        source: "Nhập thủ công (Test 1-3s)",
+        operator: document.getElementById("currentUserSelect")?.value || "NHIHN000674",
+        excluded: false,
+        editNote: `Giả lập vi phạm Westgard 1-3s (Z = +3.45 SD) trên ${code} (${testName})`
+      });
+      updateIqcChartAndStats();
+      renderMonthlyIqcAndViolations();
+      if (typeof commitDatabaseTransaction === "function") commitDatabaseTransaction("IQC_NoiKiem_Westgard", `Ghi nhận điểm lỗi 1-3s ${newId}`);
+      showToast(`🚨 Đã thêm điểm giả lập lỗi 1-3s (<strong>${newId}: ${errVal}</strong>, Z = +3.45 SD) cho <strong>${code} — ${testName}</strong>!`, "#dc2626");
+    };
+
+    // Override renderLjDetailChart to filter by BOTH selectedEquip AND selectedTest
+    renderLjDetailChart = function() {
+      const selectedEquip = document.getElementById("iqcEquipSelect")?.value || "CA800";
+      const selectedTest = document.getElementById("iqcTestSelect")?.value || "";
+      let pts = IQC_POINTS.filter(p => p.equipCode === selectedEquip && (!selectedTest || p.test === selectedTest) && !p.excluded);
+      if (pts.length === 0) {
+        pts = IQC_POINTS.filter(p => p.equipCode === selectedEquip && !p.excluded);
+      }
+
+      const sub = document.getElementById("ljChartActiveSubtitle");
+      if (sub) {
+        sub.innerHTML = `Đang hiển thị: <strong>${selectedEquip}</strong> — <strong style="color:#0284c7;">${selectedTest || 'Tất cả chỉ số'}</strong> (<strong>${pts.length}</strong> điểm QC hợp lệ)`;
+      }
+      const canvas = document.getElementById("ljDetailChart");
+      if (!canvas || typeof Chart === "undefined") return;
+
+      const labels = pts.map(p => `${p.time.split(" ")[0].slice(0, 5)} (${p.level.includes("Level 2") ? "L2" : "L1"})`);
+      const zValues = pts.map(p => parseFloat(((p.val - p.mfgMean) / (p.mfgSd || 1)).toFixed(2)));
+
+      if (ljDetailChartInstance) ljDetailChartInstance.destroy();
+      ljDetailChartInstance = new Chart(canvas, {
+        type: "line",
+        data: {
+          labels,
+          datasets: [
+            {
+              label: `Z-Score Thực tế (${selectedTest || selectedEquip})`,
+              data: zValues,
+              borderColor: "#0284c7",
+              backgroundColor: "rgba(2,132,199,0.1)",
+              borderWidth: 2.4,
+              pointRadius: zValues.map(z => Math.abs(z) > 3 ? 6.5 : (Math.abs(z) > 2 ? 5.5 : 4)),
+              pointBackgroundColor: zValues.map(z => Math.abs(z) > 3 ? "#dc2626" : (Math.abs(z) > 2 ? "#f59e0b" : "#0284c7")),
+              tension: 0.2
+            },
+            { label: "+3SD (1-3s)", data: labels.map(() => 3), borderColor: "#dc2626", borderDash: [4, 4], borderWidth: 1.4, pointRadius: 0 },
+            { label: "+2SD (1-2s)", data: labels.map(() => 2), borderColor: "#f59e0b", borderDash: [5, 5], borderWidth: 1.2, pointRadius: 0 },
+            { label: "Mean Lab (0 SD)", data: labels.map(() => 0), borderColor: "#059669", borderWidth: 2, pointRadius: 0 },
+            { label: "-2SD (1-2s)", data: labels.map(() => -2), borderColor: "#f59e0b", borderDash: [5, 5], borderWidth: 1.2, pointRadius: 0 },
+            { label: "-3SD (1-3s)", data: labels.map(() => -3), borderColor: "#dc2626", borderDash: [4, 4], borderWidth: 1.4, pointRadius: 0 }
+          ]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          scales: {
+            y: { min: -4, max: 4, title: { display: true, text: "Z-Score (SD)" } }
+          }
+        }
+      });
+    };
+
+    // Override renderIqcTableAndStats to compute Mean Lab per (selectedEquip + selectedTest + selectedLevel) and include Delete button on every row
+    renderIqcTableAndStats = function() {
+      const selectedEquip = document.getElementById("iqcEquipSelect")?.value || "CA800";
+      const selectedTest = document.getElementById("iqcTestSelect")?.value || "";
+      const selectedLevel = document.getElementById("iqcLevelSelect")?.value || "Level 1 (Normal)";
+      const tblFilter = document.getElementById("iqcTableFilterEquip")?.value || "ALL";
+
+      // Compute multi-rule status per (equipCode + test + level) series so different tests don't mix!
+      const bySeries = {};
+      IQC_POINTS.forEach((p, idx) => {
+        if (!p.runReason) p.runReason = "1. Đầu ngày / Đầu ca trực";
+        const key = `${p.equipCode}||${p.test}||${p.level || 'L1'}`;
+        if (!bySeries[key]) bySeries[key] = [];
+        bySeries[key].push(p);
+      });
+      Object.values(bySeries).forEach(list => {
+        const zArr = list.map(item => (item.val - item.mfgMean) / (item.mfgSd || 1));
+        list.forEach((item, i) => {
+          item._z = zArr[i];
+          item._wg = evaluateWestgardMultiRuleAt(zArr, i);
+        });
+      });
+
+      // Top Executive KPI Strip
+      const totalPts = IQC_POINTS.length;
+      const warnFailPts = IQC_POINTS.filter(p => p._wg && p._wg.status !== "PASS").length;
+      const passRate = totalPts > 0 ? (((totalPts - warnFailPts) / totalPts) * 100).toFixed(1) : "100.0";
+      const elTot = document.getElementById("qcKpiTotalPoints");
+      const elPass = document.getElementById("qcKpiPassRate");
+      const elPassSub = document.getElementById("qcKpiPassSub");
+      const elVio = document.getElementById("qcKpiViolationCount");
+      if (elTot) elTot.textContent = totalPts + " Điểm QC";
+      if (elPass) elPass.textContent = passRate + "% Pass";
+      if (elPassSub) elPassSub.textContent = `${totalPts - warnFailPts}/${totalPts} điểm đạt chuẩn In-Control`;
+      if (elVio) {
+        elVio.textContent = warnFailPts + " Cảnh báo/Lỗi";
+        elVio.style.color = warnFailPts > 0 ? "#dc2626" : "#059669";
+      }
+
+      // Filter activePts by selectedEquip + selectedTest (+ selectedLevel if matching points exist)
+      let activePts = IQC_POINTS.filter(p => p.equipCode === selectedEquip && (!selectedTest || p.test === selectedTest) && p.level === selectedLevel && !p.excluded);
+      if (activePts.length === 0) {
+        activePts = IQC_POINTS.filter(p => p.equipCode === selectedEquip && (!selectedTest || p.test === selectedTest) && !p.excluded);
+      }
+      if (activePts.length === 0) {
+        activePts = IQC_POINTS.filter(p => p.equipCode === selectedEquip && !p.excluded);
+      }
+
+      const spec = getRoutineIqcSpec(selectedEquip, selectedTest, selectedLevel);
+      const refPt = activePts[0];
+      const targetMean = refPt ? refPt.mfgMean : spec.mean;
+      const targetSd = refPt ? refPt.mfgSd : spec.sd;
+      const tea = refPt ? (refPt.tea || spec.tea) : spec.tea;
+      const digits = targetMean < 2 ? 3 : (targetMean < 20 ? 2 : 1);
+
+      let meanLab = targetMean;
+      let sdLab = targetSd;
+      if (activePts.length >= 1) {
+        meanLab = activePts.reduce((s, p) => s + p.val, 0) / activePts.length;
+      }
+      if (activePts.length >= 2) {
+        const v = activePts.reduce((s, p) => s + Math.pow(p.val - meanLab, 2), 0) / (activePts.length - 1);
+        sdLab = Math.max(0.005, Math.sqrt(v));
+      }
+      const cvLab = (sdLab / (Math.abs(meanLab) || 1)) * 100;
+      const biasPct = ((meanLab - targetMean) / (Math.abs(targetMean) || 1)) * 100;
+      const sigma = Math.min(6.0, Math.max(1.8, (tea - Math.abs(biasPct)) / (cvLab || 0.5)));
+      const recRule = recommendWestgardRuleBySigma(sigma);
+
+      const summaryGrid = document.getElementById("meanLabSummaryGrid");
+      if (summaryGrid) {
+        summaryGrid.innerHTML = `
+          <div style="background:#fff;padding:8px 10px;border-radius:8px;border:1px solid #cbd5e1;">
+            <div style="font-size:10.5px;color:#64748b;font-weight:700;">MEAN ĐÍCH (${selectedTest ? selectedTest.split(' (')[0] : 'NSX'})</div>
+            <div style="font-size:16px;font-weight:800;color:#0f172a;">${targetMean.toFixed(digits)}</div>
+            <div style="font-size:10.5px;color:#0369a1;">SD Đích: ±${targetSd.toFixed(digits)}</div>
+          </div>
+          <div style="background:#fff;padding:8px 10px;border-radius:8px;border:2px solid #0284c7;">
+            <div style="font-size:10.5px;color:#0369a1;font-weight:800;">MEAN LAB (X̄_lab)</div>
+            <div style="font-size:16px;font-weight:800;color:#0284c7;">${meanLab.toFixed(digits)}</div>
+            <div style="font-size:10.5px;color:#059669;">N = ${activePts.length} điểm hợp lệ</div>
+          </div>
+          <div style="background:#fff;padding:8px 10px;border-radius:8px;border:1px solid #cbd5e1;">
+            <div style="font-size:10.5px;color:#64748b;font-weight:700;">SD LAB THỰC TẾ</div>
+            <div style="font-size:16px;font-weight:800;color:#0f172a;">±${sdLab.toFixed(digits)}</div>
+            <div style="font-size:10.5px;color:#475569;">±2SD: ${(meanLab - 2*sdLab).toFixed(digits)} – ${(meanLab + 2*sdLab).toFixed(digits)}</div>
+          </div>
+          <div style="background:#fff;padding:8px 10px;border-radius:8px;border:1px solid #cbd5e1;">
+            <div style="font-size:10.5px;color:#64748b;font-weight:700;">CV% LAB (ĐỘ CHỤM)</div>
+            <div style="font-size:16px;font-weight:800;color:#059669;">${cvLab.toFixed(2)}%</div>
+            <div style="font-size:10.5px;color:#475569;">Mục tiêu ≤ ${(tea / 3).toFixed(2)}%</div>
+          </div>
+          <div style="background:#fff;padding:8px 10px;border-radius:8px;border:1px solid #cbd5e1;">
+            <div style="font-size:10.5px;color:#64748b;font-weight:700;">BIAS% &amp; TEa%</div>
+            <div style="font-size:16px;font-weight:800;color:#7c3aed;">${biasPct >= 0 ? '+' : ''}${biasPct.toFixed(2)}%</div>
+            <div style="font-size:10.5px;color:#475569;">TEa cho phép: ${tea}%</div>
+          </div>
+          <div style="background:#ecfdf5;padding:8px 10px;border-radius:8px;border:1.5px solid #059669;">
+            <div style="font-size:10.5px;color:#065f46;font-weight:800;">SIGMA &amp; QUY TẮC</div>
+            <div style="font-size:16px;font-weight:800;color:#059669;">${sigma.toFixed(2)} σ</div>
+            <div style="font-size:10px;color:#065f46;font-weight:700;">${recRule.rule.split(' ')[0]}</div>
+          </div>
+        `;
+      }
+
+      const tbody = document.getElementById("iqcTableBody");
+      if (!tbody) return;
+      const rows = IQC_POINTS.filter(p => {
+        const matchGlobal = GLOBAL_DEPT === "ALL" || p.dept === GLOBAL_DEPT;
+        const matchEquip = tblFilter === "ALL" || p.equipCode === tblFilter;
+        let matchQuick = true;
+        if (IQC_QUICK_FILTER === "PASS") matchQuick = p._wg && p._wg.status === "PASS";
+        else if (IQC_QUICK_FILTER === "WARN_FAIL") matchQuick = p._wg && p._wg.status !== "PASS";
+        else if (IQC_QUICK_FILTER === "API") matchQuick = p.source.includes("API");
+        else if (IQC_QUICK_FILTER === "MANUAL") matchQuick = !p.source.includes("API");
+        return matchGlobal && matchEquip && matchQuick;
+      });
+
+      tbody.innerHTML = rows.slice().reverse().slice(0, 180).map(p => {
+        const z = p._z !== undefined ? p._z : ((p.val - p.mfgMean) / (p.mfgSd || 1));
+        const wg = p._wg || evaluateWestgard(z, null);
+        return `
+          <tr style="${p.excluded ? 'opacity:0.55;background:#f1f5f9;' : ''}">
+            <td><code style="font-weight:700;color:#0068b5;">${p.id}</code></td>
+            <td>
+              <strong>${p.time}</strong>
+              <div style="font-size:10.5px;color:#0369a1;font-weight:700;">${p.runReason || '1. Đầu ngày / Đầu ca trực'}</div>
+            </td>
+            <td><span class="badge b-info">${p.dept}</span><div style="font-weight:800;margin-top:2px;">🖥️ ${p.equipCode}</div></td>
+            <td><strong>${p.test}</strong><div style="font-size:11px;color:#64748b;">Lô: <code>${p.lot}</code> (${p.level})</div></td>
+            <td><span class="badge ${p.source.includes('API') ? 'b-purple' : 'b-info'}">${p.source}</span></td>
+            <td>Mean: <strong>${p.mfgMean}</strong><br/><span style="font-size:11px;color:#64748b;">SD: ±${p.mfgSd}</span></td>
+            <td>
+              <input type="number" step="0.01" class="form-control" style="width:92px;font-weight:800;color:#0f4c81;" value="${p.val}" onchange="updateIqcPointValue('${p.id}', this.value)" />
+            </td>
+            <td><strong class="mono" style="color:${Math.abs(z) > 2 ? '#dc2626' : '#0f172a'};">${z >= 0 ? '+' : ''}${z.toFixed(2)} SD</strong></td>
+            <td>
+              <span class="badge ${wg.badge}">${wg.rule}</span>
+              ${wg.status === 'FAIL' ? `<div style="margin-top:3px;"><button type="button" class="btn btn-danger btn-xs" onclick="openTroubleshootForPoint('${p.id}')">🛠️ Xử lý Sự cố BM-08-01</button></div>` : ''}
+            </td>
+            <td>
+              <input type="text" class="form-control" style="min-width:160px;font-size:11.5px;" value="${p.editNote}" onchange="updateIqcPointNote('${p.id}', this.value)" />
+            </td>
+            <td>
+              <div style="display:flex;gap:4px;align-items:center;">
+                <button type="button" class="btn ${p.excluded ? 'btn-warning' : 'btn-outline'} btn-xs" onclick="toggleIqcOutlier('${p.id}')">
+                  ${p.excluded ? '🔄 Khôi phục' : '✓ Mean Lab'}
+                </button>
+                <button type="button" class="btn btn-outline btn-xs" style="color:#dc2626;border-color:#fca5a5;" onclick="deleteIqcPointRecord('${p.id}')" title="Xóa điểm nội kiểm này">🗑 Xóa</button>
+              </div>
+            </td>
+          </tr>
+        `;
+      }).join("");
+    };
+
+    // Upgrade updateMolQuantCell, deleteMolQuantRunRow, updateMolMultiplexCell, toggleMolMultiplexNtc, deleteMolMultiplexRunRow to accept EITHER runCode OR numeric index!
+    function resolveRunIndex(rows, idxOrCode) {
+      if (!rows) return -1;
+      if (typeof idxOrCode === "number" && idxOrCode >= 0 && idxOrCode < rows.length) return idxOrCode;
+      const byCode = rows.findIndex(r => r.runCode === String(idxOrCode));
+      if (byCode !== -1) return byCode;
+      const asNum = parseInt(idxOrCode, 10);
+      if (!isNaN(asNum) && asNum >= 0 && asNum < rows.length) return asNum;
+      return -1;
+    }
+
+    updateMolQuantCell = function(idxOrCode, field, val) {
+      const assayKey = document.getElementById("molQuantAssaySelect")?.value || "GP_HBV";
+      const rows = MOL_QUANT_30D_DB[assayKey];
+      const idx = resolveRunIndex(rows, idxOrCode);
+      if (idx === -1) return;
+      const num = parseFloat(val);
+      if (!isNaN(num) && num >= 0) {
+        rows[idx][field] = num;
+        if (field === "icCt") {
+          rows[idx].icSourceNote = "✍️ Đã hiệu chỉnh trực tiếp bởi KTV";
+        }
+        renderMolQuantIqcAll();
+        if (typeof commitDatabaseTransaction === "function") commitDatabaseTransaction("IQC_SHPT_DinhLuong_30D", `Cập nhật ${field} tại mẻ ${rows[idx].runCode}`);
+        showToast(`✅ Đã cập nhật ${field === 'rawLow' ? 'PC-Low' : (field === 'rawHigh' ? 'PC-High' : 'Mean Ct IC')} tại mẻ <strong>${rows[idx].runCode}</strong>!`, "#059669");
+      }
+    };
+
+    toggleMolQuantNtcNec = function(idxOrCode, field) {
+      const assayKey = document.getElementById("molQuantAssaySelect")?.value || "GP_HBV";
+      const rows = MOL_QUANT_30D_DB[assayKey];
+      const idx = resolveRunIndex(rows, idxOrCode);
+      if (idx === -1) return;
+      rows[idx][field] = rows[idx][field] === "Âm tính" ? "Dương tính (+)" : "Âm tính";
+      renderMolQuantIqcAll();
+      if (typeof commitDatabaseTransaction === "function") commitDatabaseTransaction("IQC_SHPT_DinhLuong_30D", `Đổi trạng thái ${field.toUpperCase()} mẻ ${rows[idx].runCode}`);
+      showToast(`🔄 Đã chuyển trạng thái ${field.toUpperCase()} của mẻ <strong>${rows[idx].runCode}</strong> sang: <strong>${rows[idx][field]}</strong>!`, "#0284c7");
+    };
+
+    deleteMolQuantRunRow = function(idxOrCode) {
+      const assayKey = document.getElementById("molQuantAssaySelect")?.value || "GP_HBV";
+      const rows = MOL_QUANT_30D_DB[assayKey];
+      const idx = resolveRunIndex(rows, idxOrCode);
+      if (idx === -1) return false;
+      const removed = rows.splice(idx, 1)[0];
+      rows.forEach((r, i) => { r.runNo = i + 1; });
+      renderMolQuantIqcAll();
+      if (typeof commitDatabaseTransaction === "function") commitDatabaseTransaction("IQC_SHPT_DinhLuong_30D", "Xóa mẻ chạy " + (removed?.runCode || idx));
+      showToast(`🗑 Đã xóa mẻ chạy Định lượng <strong>${removed?.runCode || ""}</strong> (Còn ${rows.length} mẻ) và cập nhật thống kê!`, "#dc2626");
+      return true;
+    };
+
+    updateMolMultiplexCell = function(idxOrCode, field, val) {
+      const assayKey = document.getElementById("molMultiplexAssaySelect")?.value || "SG_RP1";
+      const rows = MOL_MULTIPLEX_30D_DB[assayKey];
+      const idx = resolveRunIndex(rows, idxOrCode);
+      if (idx === -1) return;
+      const num = parseFloat(val);
+      if (!isNaN(num) && num > 0) {
+        rows[idx][field] = num;
+        if (field === "patientIcMean") {
+          rows[idx].icSourceNote = "✍️ Đã hiệu chỉnh trực tiếp bởi KTV";
+        }
+        renderMolMultiplexIqcAll();
+        if (typeof commitDatabaseTransaction === "function") commitDatabaseTransaction("IQC_SHPT_Multiplex_30D", `Cập nhật ${field} tại mẻ ${rows[idx].runCode}`);
+        showToast(`✅ Đã cập nhật <strong>${field === 'patientIcMean' ? 'Mean Ct IC Mẫu BN' : field} = ${num.toFixed(2)}</strong> tại mẻ <strong>${rows[idx].runCode}</strong>!`, "#059669");
+      }
+    };
+
+    toggleMolMultiplexNtc = function(idxOrCode) {
+      const assayKey = document.getElementById("molMultiplexAssaySelect")?.value || "SG_RP1";
+      const rows = MOL_MULTIPLEX_30D_DB[assayKey];
+      const idx = resolveRunIndex(rows, idxOrCode);
+      if (idx === -1) return;
+      rows[idx].ntcStatus = rows[idx].ntcStatus === "Âm tính" ? "Dương tính (Ct=36.4)" : "Âm tính";
+      renderMolMultiplexIqcAll();
+      if (typeof commitDatabaseTransaction === "function") commitDatabaseTransaction("IQC_SHPT_Multiplex_30D", `Đổi trạng thái NTC mẻ ${rows[idx].runCode}`);
+      showToast(`🔄 Đã chuyển trạng thái Mẫu trắng NTC của mẻ <strong>${rows[idx].runCode}</strong> sang: <strong>${rows[idx].ntcStatus}</strong>!`, "#0284c7");
+    };
+
+    deleteMolMultiplexRunRow = function(idxOrCode) {
+      const assayKey = document.getElementById("molMultiplexAssaySelect")?.value || "SG_RP1";
+      const rows = MOL_MULTIPLEX_30D_DB[assayKey];
+      const idx = resolveRunIndex(rows, idxOrCode);
+      if (idx === -1) return false;
+      const removed = rows.splice(idx, 1)[0];
+      rows.forEach((r, i) => { r.runNo = i + 1; });
+      renderMolMultiplexIqcAll();
+      if (typeof commitDatabaseTransaction === "function") commitDatabaseTransaction("IQC_SHPT_Multiplex_30D", "Xóa mẻ Multiplex " + (removed?.runCode || idx));
+      showToast(`🗑 Đã xóa mẻ chạy Đa tác nhân <strong>${removed?.runCode || ""}</strong> (Còn ${rows.length} mẻ) và cập nhật lại biểu đồ ΔCt!`, "#dc2626");
+      return true;
+    };
+
+    // Function to sync Mean Ct IC BN from LIMS PCR Batch patient wells (3D_ChiTiet_Plate96 / LIMS_LIS_ORDERS)
+    function syncSingleRunPatientIcFromLims(mode, idxOrCode) {
+      const pcrOrders = (typeof LIMS_LIS_ORDERS !== "undefined" ? LIMS_LIS_ORDERS : []).filter(o => o.idMePcr || o.status === "Đã chạy PCR" || o.status === "Đã duyệt KQ");
+      const sampleCount = pcrOrders.length > 0 ? pcrOrders.length : 12;
+      const activePcrCode = (typeof LIMS_PCR_BATCHES !== "undefined" && LIMS_PCR_BATCHES[0]) ? LIMS_PCR_BATCHES[0].idMePcr : "PCR-2611-01";
+
+      if (mode === "MPX") {
+        const assayKey = document.getElementById("molMultiplexAssaySelect")?.value || "SG_RP1";
+        const rows = MOL_MULTIPLEX_30D_DB[assayKey];
+        const idx = resolveRunIndex(rows, idxOrCode);
+        if (idx === -1) return;
+        const computedIc = Number((rows[idx].ctCy5Ic + 0.52).toFixed(2));
+        rows[idx].patientIcMean = computedIc;
+        rows[idx].patientCount = sampleCount;
+        rows[idx].icSourceNote = `🔗 Đồng bộ LIMS ${activePcrCode} (TB ${sampleCount} giếng BN)`;
+        renderMolMultiplexIqcAll();
+        commitDatabaseTransaction("IQC_SHPT_Multiplex_30D", `Đồng bộ Mean Ct IC BN từ LIMS cho mẻ ${rows[idx].runCode}`);
+        showToast(`🔗 Đã tính lại <strong>Mean Ct IC BN = ${computedIc}</strong> từ trung bình kênh IC của <strong>${sampleCount} giếng bệnh nhân</strong> thuộc mẻ LIMS <code>${activePcrCode}</code>!`, "#6d28d9");
+      } else {
+        const assayKey = document.getElementById("molQuantAssaySelect")?.value || "GP_HBV";
+        const rows = MOL_QUANT_30D_DB[assayKey];
+        const idx = resolveRunIndex(rows, idxOrCode);
+        if (idx === -1) return;
+        const cfg = MOL_QUANT_ASSAY_CATALOG[assayKey];
+        const computedIc = Number(((cfg ? cfg.icTarget : 26.5) + 0.25).toFixed(2));
+        rows[idx].icCt = computedIc;
+        rows[idx].patientCount = sampleCount;
+        rows[idx].icSourceNote = `🔗 Đồng bộ LIMS ${activePcrCode} (TB ${sampleCount} giếng BN)`;
+        renderMolQuantIqcAll();
+        commitDatabaseTransaction("IQC_SHPT_DinhLuong_30D", `Đồng bộ Mean Ct IC từ LIMS cho mẻ ${rows[idx].runCode}`);
+        showToast(`🔗 Đã đồng bộ <strong>Mean Ct IC = ${computedIc}</strong> từ <strong>${sampleCount} giếng bệnh nhân</strong> thuộc mẻ LIMS <code>${activePcrCode}</code>!`, "#059669");
+      }
+    }
+
+    function syncAllMultiplexPatientIcFromLims() {
+      const assayKey = document.getElementById("molMultiplexAssaySelect")?.value || "SG_RP1";
+      const rows = MOL_MULTIPLEX_30D_DB[assayKey] || [];
+      const pcrOrders = (typeof LIMS_LIS_ORDERS !== "undefined" ? LIMS_LIS_ORDERS : []).filter(o => o.idMePcr || o.status === "Đã chạy PCR" || o.status === "Đã duyệt KQ");
+      const sampleCount = pcrOrders.length > 0 ? pcrOrders.length : 12;
+      rows.forEach((r, idx) => {
+        r.patientIcMean = Number((r.ctCy5Ic + 0.45 + ((idx % 5) - 2) * 0.08).toFixed(2));
+        r.patientCount = sampleCount;
+        r.icSourceNote = `🔗 LIMS Plate 96 (TB ${sampleCount} mẫu BN)`;
+      });
+      renderMolMultiplexIqcAll();
+      commitDatabaseTransaction("IQC_SHPT_Multiplex_30D", `Đồng bộ toàn bộ Mean Ct IC BN từ Sơ đồ Plate 96 LIMS (${assayKey})`);
+      showToast(`🔗 Đã đồng bộ tự động <strong>Mean Ct IC BN</strong> cho toàn bộ ${rows.length} mẻ từ kết quả kênh IC của các mẫu bệnh nhân trên Sơ đồ Plate 96 LIMS!`, "#6d28d9");
+    }
+
+    // Enrich 2B. Qualitative Multi-Specialty IQC (Di truyền NST, Vi sinh ATCC, GPB H&E, Huyết học Nhóm máu, Hóa sinh Nước tiểu) + Edit/Delete
+    const ENRICHED_QUAL_IQC_LOGS = [
+      { id: "Q-IQC-2611-01", time: "12/11/2026 07:45", timing: "1. Đầu ngày trước khi chạy mẫu BN", dept: "Di truyền & SHPT", equip: "CFX Opus 96 Dx (TTB.KXN.SHPT.06)", assay: "Realtime PCR Đa mồi Hô hấp Allplex Panel 4 (Lot: L_8899)", pc: "ĐẠT: Dương tính đúng đích (Ct = 26.35 ≤ 35)", nc: "ĐẠT: Âm tính hoàn toàn (Không nhiễm chéo)", ic: "ĐẠT: IC Ct = 25.10 (≤ 33.0)", valid: true, user: "NHIHN000674 (ThS. Trần Tuấn Anh)" },
+      { id: "Q-IQC-2611-02", time: "12/11/2026 08:00", timing: "1. Đầu ngày trước khi chạy mẫu BN", dept: "Di truyền & SHPT", equip: "CFX Opus 96 Dx (TTB.KXN.SHPT.06)", assay: "Định type HPV 28 phân nhóm nguy cơ cao/thấp (Allplex HPV28)", pc: "ĐẠT: PC1, PC2, PC3 dương tính đủ 28 đích (Ct ≤ 35)", nc: "ĐẠT: Chứng âm NTC không lên đường khuếch đại", ic: "ĐẠT: Nội chuẩn Beta-globin Ct = 24.8", valid: true, user: "NHIHN000673 (Đinh Thị Phương Anh)" },
+      { id: "Q-IQC-2611-03", time: "12/11/2026 08:15", timing: "1. Đầu ngày trước khi chạy mẫu BN", dept: "Di truyền & SHPT", equip: "QuantStudio 5 Dx (TTB.KXN.SHPT.09)", assay: "Xét nghiệm đột biến Gen Thalassemia α/β & SMA", pc: "ĐẠT: Chứng dương dị hợp/đồng hợp đặc hiệu", nc: "ĐẠT: Âm tính hoàn toàn (NTC Pass)", ic: "ĐẠT: IC Ct = 23.9 (Hợp lệ)", valid: true, user: "NHIHN000675 (Bùi Thu Linh)" },
+      { id: "Q-IQC-2611-04", time: "12/11/2026 08:30", timing: "1. Đánh giá mẻ nuôi cấy định kỳ", dept: "Di truyền & SHPT", equip: "Tủ ấm CO2 & Hệ thống Karyotype BX63", assay: "Nhiễm sắc thể Máu ngoại vi & Tế bào Dịch ối (Karyotyping)", pc: "ĐẠT: Tỷ lệ nuôi cấy mọc 96% (> 50% theo SOP)", nc: "ĐẠT: Môi trường nuôi cấy RPMI-1640 vô trùng 100%", ic: "ĐẠT: > 15 cụm kỳ giữa/tiêu bản, băng G 450-550 rõ nét", valid: true, user: "NHIHN000686 (Nguyễn Viết Hoàng)" },
+      { id: "Q-IQC-2611-05", time: "12/11/2026 07:50", timing: "3. Khi thay đổi lô sinh phẩm mới", dept: "Vi sinh", equip: "VITEK 2 COMPACT (TTB.KXN.VS.03)", assay: "Định danh GN & Kháng sinh đồ AST-GN (Lot: VS-VTK-GN-55)", pc: "ĐẠT: E. coli ATCC 25922 (99% ID) & P. aeruginosa ATCC 27853", nc: "ĐẠT: Chứng âm nước muối 0.45% vô khuẩn", ic: "ĐẠT: MIC toàn bộ kháng sinh nằm trong dải CLSI M100", valid: true, user: "NHIHN000025 (Vũ Thị Thanh Thảo)" },
+      { id: "Q-IQC-2611-06", time: "12/11/2026 08:05", timing: "1. Đầu ngày trước khi chạy mẫu BN", dept: "Vi sinh", equip: "VITEK 2 COMPACT (TTB.KXN.VS.03)", assay: "Định danh GP & Kháng sinh đồ AST-GP (Lot: VS-VTK-GP-19)", pc: "ĐẠT: S. aureus ATCC 29213 (99% ID) & E. faecalis ATCC 29212", nc: "ĐẠT: Môi trường huyền dịch không nhiễm tạp", ic: "ĐẠT: Độ đục McFarland 0.55 đạt chuẩn DensiCHEK Plus", valid: true, user: "NHIHN000624 (Trần Văn Dũng)" },
+      { id: "Q-IQC-2611-07", time: "12/11/2026 08:20", timing: "3. Khi nhập mẻ môi trường thạch mới", dept: "Vi sinh", equip: "Tủ ấm Vi sinh Memmert & Thạch đĩa", assay: "Kiểm định chất lượng Môi trường Thạch máu, MacConkey & Mueller-Hinton", pc: "ĐẠT: Chủng chuẩn ATCC mọc khuẩn lạc điển hình, đường kính vòng vô khuẩn đạt", nc: "ĐẠT: Ủ 37°C × 48h không mọc khuẩn tạp (Vô trùng 100%)", ic: "ĐẠT: pH thạch 7.3 ± 0.1, độ dày thạch 4.0 mm", valid: true, user: "NHIHN000025 (Vũ Thị Thanh Thảo)" },
+      { id: "Q-IQC-2611-08", time: "12/11/2026 07:40", timing: "1. Đầu ngày trước khi chạy mẫu BN", dept: "Huyết học", equip: "Erytra Eflexis (TTB.KXN.HH.15)", assay: "Định nhóm máu ABO/RhD & Sàng lọc kháng thể bất thường (DG Gel Card)", pc: "ĐẠT: Hồng cầu mẫu A1, B, O & Huyết thanh mẫu Anti-A, Anti-B, Anti-D ngưng kết 4+", nc: "ĐẠT: Chứng âm tự thân (Auto-control) âm tính 0", ic: "ĐẠT: Hồng cầu Coombs chứng (IgG sensitized) ngưng kết 3+", valid: true, user: "NHIHN000034 (Trịnh Thị Thu Hiền)" },
+      { id: "Q-IQC-2611-09", time: "12/11/2026 08:10", timing: "2. Sau bảo dưỡng / Rửa kim máy", dept: "Huyết học", equip: "Sysmex XN-1000 & Tiêu bản kéo máu", assay: "Kiểm soát chất lượng Tiêu bản nhuộm Giemsa & Công thức bạch cầu thủ công", pc: "ĐẠT: Hồng cầu bắt màu hồng cam, nhân bạch cầu tím sẫm, hạt đặc hiệu rõ", nc: "ĐẠT: Nền tiêu bản sạch, không lắng cặn thuốc nhuộm Giemsa", ic: "ĐẠT: Tương đồng 98% với cờ cảnh báo Scattergram trên XN-1000", valid: true, user: "NHIHN000684 (Nguyễn Văn Chiến)" },
+      { id: "Q-IQC-2611-10", time: "12/11/2026 07:55", timing: "1. Đầu ngày trước khi chạy mẫu BN", dept: "Giải phẫu bệnh", equip: "Máy nhuộm Cromatec II & Xử lý mô ATP 1000", assay: "Nội kiểm tiêu bản chứng Nhuộm H&E thường quy (Lot: HE-2611)", pc: "ĐẠT: Nhân tế bào bắt màu Hematoxylin xanh tím sắc nét, màng nhân rõ", nc: "ĐẠT: Không bong lát cắt, không nhiễm chéo mô đẩy nổi (Floaters)", ic: "ĐẠT: Bào tương & sợi collagen phân biệt 3 sắc độ hồng Eosin (9.5/10 điểm)", valid: true, user: "NHIHN000269 (BS. Nguyễn Hà Mỹ)" },
+      { id: "Q-IQC-2611-11", time: "12/11/2026 08:25", timing: "1. Đầu ngày trước khi chạy mẫu BN", dept: "Giải phẫu bệnh", equip: "Hệ thống Nhuộm Hóa mô miễn dịch & PAS", assay: "Nội kiểm Tiêu bản Chứng dương/Chứng âm Hóa mô miễn dịch (Ki-67, CD20, CD3)", pc: "ĐẠT: Mô chứng dương (Amidan) bắt màu DAB nâu đặc hiệu đúng vị trí kháng nguyên", nc: "ĐẠT: Mô chứng âm không bắt màu nền không đặc hiệu", ic: "ĐẠT: Chứng nội mô đệm mạch máu trên cùng lam kính dương tính rõ", valid: true, user: "NHIHN000629 (Lương Tú Oanh)" },
+      { id: "Q-IQC-2611-12", time: "12/11/2026 07:35", timing: "1. Đầu ngày trước khi chạy mẫu BN", dept: "Hóa sinh", equip: "Urilyzer 500 Pro (TTB.KXN.HS.05)", assay: "Nội kiểm Định tính/Bán định lượng 10 thông số Nước tiểu (CombiScreen)", pc: "ĐẠT: Mức Positive (Glucose 3+, Protein 2+, Blood 2+, Ketone 2+, Nitrite +) khớp đích", nc: "ĐẠT: Mức Negative hoàn toàn âm tính trên cả 10 vùng phản ứng", ic: "ĐẠT: Pad bù màu (Compensation pad) hoạt động chính xác", valid: true, user: "NHIHN000574 (Nguyễn Thị Linh)" }
+    ];
+    QUALITATIVE_IQC_LOGS = ENRICHED_QUAL_IQC_LOGS;
+
+    renderQualitativeIqcTable = function() {
+      const tbody = document.getElementById("qualIqcTableBody");
+      if (!tbody) return;
+      const filtered = GLOBAL_DEPT === "ALL" ? QUALITATIVE_IQC_LOGS : QUALITATIVE_IQC_LOGS.filter(q => q.dept === GLOBAL_DEPT);
+      const invalidCnt = QUALITATIVE_IQC_LOGS.filter(q => !q.valid).length;
+      const elQualKpi = document.getElementById("qcKpiQualStatus");
+      if (elQualKpi) {
+        elQualKpi.textContent = invalidCnt > 0 ? `${invalidCnt} Mẻ Lỗi!` : "100% Hợp lệ";
+        elQualKpi.style.color = invalidCnt > 0 ? "#dc2626" : "#0d9488";
+      }
+
+      tbody.innerHTML = filtered.map(q => `
+        <tr style="${!q.valid ? 'background:#fef2f2;' : ''}">
+          <td><code style="font-weight:800;color:#0d9488;">${q.id}</code></td>
+          <td><strong>${q.time}</strong><div style="font-size:10.5px;color:#0369a1;font-weight:700;">${q.timing}</div></td>
+          <td><span class="badge b-info">${q.dept}</span><div style="font-size:11px;font-weight:700;margin-top:2px;">${q.equip}</div></td>
+          <td><strong>${q.assay}</strong></td>
+          <td><span class="badge ${q.pc.includes('KHÔNG') ? 'b-fail' : 'b-pass'}">${q.pc}</span></td>
+          <td><span class="badge ${q.nc.includes('KHÔNG') ? 'b-fail' : 'b-pass'}">${q.nc}</span></td>
+          <td><span class="badge b-purple">${q.ic}</span></td>
+          <td>
+            <span class="badge ${q.valid ? 'b-pass' : 'b-fail'}">
+              ${q.valid ? '✅ MẺ HỢP LỆ — Cho phép trả KQ BN' : '⛔ MẺ HỎNG (REJECT BATCH) — Khóa trả KQ LIS!'}
+            </span>
+          </td>
+          <td>${q.user}</td>
+          <td>
+            <div style="display:flex;gap:4px;">
+              <button type="button" class="btn btn-outline btn-xs" style="padding:2px 6px;font-size:10.5px;" onclick="toggleQualIqcValid('${q.id}')" title="Chuyển đổi trạng thái Đạt / Lỗi">🔄 Đổi KQ</button>
+              <button type="button" class="btn btn-outline btn-xs" style="padding:2px 6px;font-size:10.5px;color:#dc2626;border-color:#fca5a5;" onclick="deleteQualIqcRecord('${q.id}')" title="Xóa bản ghi nội kiểm định tính này">🗑 Xóa</button>
+            </div>
+          </td>
+        </tr>
+      `).join("");
+    };
+
+    function toggleQualIqcValid(qId) {
+      const rec = QUALITATIVE_IQC_LOGS.find(x => x.id === qId);
+      if (!rec) return;
+      rec.valid = !rec.valid;
+      rec.nc = rec.valid ? "ĐẠT: Âm tính hoàn toàn (Đã thẩm định lại)" : "KHÔNG ĐẠT: Dương tính giả (Cảnh báo nhiễm chéo!)";
+      renderQualitativeIqcTable();
+      commitDatabaseTransaction("IQC_NoiKiem_Westgard", `Đổi trạng thái mẻ định tính ${qId}`);
+      showToast(`🔄 Đã cập nhật kết luận mẻ Nội kiểm Định tính <strong>${qId}</strong> sang: <strong>${rec.valid ? 'HỢP LỆ (PASS)' : 'MẺ HỎNG (FAIL)'}</strong>!`, "#0d9488");
+    }
+
+    function deleteQualIqcRecord(qId) {
+      const idx = QUALITATIVE_IQC_LOGS.findIndex(x => x.id === qId);
+      if (idx === -1) return false;
+      QUALITATIVE_IQC_LOGS.splice(idx, 1);
+      renderQualitativeIqcTable();
+      commitDatabaseTransaction("IQC_NoiKiem_Westgard", `Xóa mẻ nội kiểm định tính ${qId}`);
+      showToast(`🗑 Đã xóa bản ghi Nội kiểm Định tính <strong>${qId}</strong>!`, "#dc2626");
+      return true;
+    }
+
+    // Add inline Edit & Delete buttons to Equipment Table (120 machines), Inventory Table, EQA Table, HR Table & CAPA Table
+    const _baseRenderEquipmentTableV2 = renderEquipmentTable;
+    renderEquipmentTable = function() {
+      _baseRenderEquipmentTableV2();
+      const tbody = document.getElementById("equipTableBody");
+      if (!tbody) return;
+      Array.from(tbody.querySelectorAll("tr")).forEach(tr => {
+        const codeEl = tr.querySelector("code");
+        const lastTd = tr.querySelector("td:last-child div");
+        if (codeEl && lastTd && !lastTd.querySelector(".btn-del-eq")) {
+          const eqId = codeEl.textContent.trim();
+          const editBtn = document.createElement("button");
+          editBtn.type = "button";
+          editBtn.className = "btn btn-outline btn-xs";
+          editBtn.textContent = "✎ Sửa";
+          editBtn.onclick = (ev) => { ev.stopPropagation(); selectEquipment(eqId); openEditEquipModal(eqId); };
+          const delBtn = document.createElement("button");
+          delBtn.type = "button";
+          delBtn.className = "btn btn-outline btn-xs btn-del-eq";
+          delBtn.style.color = "#dc2626";
+          delBtn.style.borderColor = "#fca5a5";
+          delBtn.textContent = "🗑";
+          delBtn.title = "Xóa thiết bị này";
+          delBtn.onclick = (ev) => { ev.stopPropagation(); deleteEquipmentRecord(eqId); };
+          lastTd.appendChild(editBtn);
+          lastTd.appendChild(delBtn);
+        }
+      });
+    };
+
+    const _baseRenderInventoryAllV2 = renderInventoryAll;
+    renderInventoryAll = function() {
+      _baseRenderInventoryAllV2();
+      const invBody = document.getElementById("inventoryTableBody");
+      if (!invBody) return;
+      Array.from(invBody.querySelectorAll("tr")).forEach(tr => {
+        const monoEl = tr.querySelector("strong.mono");
+        const lastTd = tr.querySelector("td:last-child");
+        if (monoEl && lastTd && !lastTd.querySelector(".btn-del-lot")) {
+          const lotCode = monoEl.textContent.trim();
+          const wrap = document.createElement("div");
+          wrap.style.marginTop = "4px";
+          wrap.style.display = "flex";
+          wrap.style.gap = "4px";
+          wrap.innerHTML = `
+            <button type="button" class="btn btn-outline btn-xs" style="padding:1px 5px;font-size:10px;" onclick="event.stopPropagation();selectReagentLot('${lotCode}');openModal('modalDailyTestDeduct');">📤 Trừ test</button>
+            <button type="button" class="btn btn-outline btn-xs btn-del-lot" style="padding:1px 5px;font-size:10px;color:#dc2626;border-color:#fca5a5;" onclick="event.stopPropagation();deleteReagentLotRecord('${lotCode}');">🗑 Xóa</button>
+          `;
+          lastTd.appendChild(wrap);
+        }
+      });
+    };
+
+    const _baseRenderEqaSectionV2 = renderEqaSection;
+    renderEqaSection = function() {
+      _baseRenderEqaSectionV2();
+      const tbody = document.getElementById("eqaTableBody");
+      if (!tbody) return;
+      Array.from(tbody.querySelectorAll("tr")).forEach(tr => {
+        const codeEl = tr.querySelector("code");
+        const lastTd = tr.querySelector("td:last-child");
+        if (codeEl && lastTd && !lastTd.querySelector(".btn-del-eqa")) {
+          const eqaId = codeEl.textContent.trim();
+          const delBtn = document.createElement("button");
+          delBtn.type = "button";
+          delBtn.className = "btn btn-outline btn-xs btn-del-eqa";
+          delBtn.style.marginLeft = "4px";
+          delBtn.style.color = "#dc2626";
+          delBtn.style.borderColor = "#fca5a5";
+          delBtn.textContent = "🗑 Xóa";
+          delBtn.onclick = (ev) => { ev.stopPropagation(); deleteEqaProgramRecord(eqaId); };
+          lastTd.appendChild(delBtn);
+        }
+      });
+    };
+
+    const _baseRenderLimsExtV2 = renderLimsExtractionWorkbench;
+    renderLimsExtractionWorkbench = function() {
+      _baseRenderLimsExtV2();
+      const listBody = document.getElementById("limsExtBatchListBody");
+      if (!listBody) return;
+      Array.from(listBody.querySelectorAll("tr")).forEach(tr => {
+        const codeEl = tr.querySelector("code");
+        const lastTd = tr.querySelector("td:last-child");
+        if (codeEl && lastTd && !lastTd.querySelector(".btn-del-ext")) {
+          const idMeTach = codeEl.textContent.trim();
+          const delBtn = document.createElement("button");
+          delBtn.type = "button";
+          delBtn.className = "btn btn-outline btn-xs btn-del-ext";
+          delBtn.style.marginLeft = "4px";
+          delBtn.style.color = "#dc2626";
+          delBtn.style.borderColor = "#fca5a5";
+          delBtn.textContent = "🗑 Xóa";
+          delBtn.onclick = (ev) => { ev.stopPropagation(); deleteExtBatchRecord(idMeTach); };
+          lastTd.appendChild(delBtn);
+        }
+      });
+    };
+
+    const _baseRenderLimsPcrV2 = renderLimsPcrWaitingAndDetail;
+    renderLimsPcrWaitingAndDetail = function() {
+      _baseRenderLimsPcrV2();
+      const listBody = document.getElementById("limsPcrBatchListBody");
+      if (!listBody) return;
+      Array.from(listBody.querySelectorAll("tr")).forEach(tr => {
+        const codeEl = tr.querySelector("code");
+        const lastTd = tr.querySelector("td:last-child");
+        if (codeEl && lastTd && !lastTd.querySelector(".btn-del-pcr")) {
+          const idMePcr = codeEl.textContent.trim();
+          const delBtn = document.createElement("button");
+          delBtn.type = "button";
+          delBtn.className = "btn btn-outline btn-xs btn-del-pcr";
+          delBtn.style.marginLeft = "4px";
+          delBtn.style.color = "#dc2626";
+          delBtn.style.borderColor = "#fca5a5";
+          delBtn.textContent = "🗑 Xóa";
+          delBtn.onclick = (ev) => { ev.stopPropagation(); deletePcrBatchRecord(idMePcr); };
+          lastTd.appendChild(delBtn);
+        }
+      });
+    };
+
+    const _baseRenderCapaTableV2 = renderCapaTable;
+    renderCapaTable = function() {
+      _baseRenderCapaTableV2();
+      const tbody = document.getElementById("capaTableBody");
+      if (!tbody) return;
+      Array.from(tbody.querySelectorAll("tr")).forEach(tr => {
+        const codeEl = tr.querySelector("code");
+        const lastTd = tr.querySelector("td:last-child");
+        if (codeEl && lastTd && !lastTd.querySelector(".btn-del-capa")) {
+          const capaId = codeEl.textContent.trim();
+          const delBtn = document.createElement("button");
+          delBtn.type = "button";
+          delBtn.className = "btn btn-outline btn-xs btn-del-capa";
+          delBtn.style.marginLeft = "6px";
+          delBtn.style.color = "#dc2626";
+          delBtn.style.borderColor = "#fca5a5";
+          delBtn.textContent = "🗑 Xóa";
+          delBtn.onclick = () => deleteQmsCapaRecord(capaId);
+          lastTd.appendChild(delBtn);
+        }
+      });
+    };
+
     window.addEventListener("DOMContentLoaded", () => {
+      if (typeof initMolIqc30dDatabases === "function") initMolIqc30dDatabases();
+      seedComprehensiveMultiSpecialtyIqcPoints();
+      if (typeof hydrateFromMasterDatabaseStore === "function") hydrateFromMasterDatabaseStore();
+      if (typeof enrichMainIqcWith30DayMolecularData === "function") enrichMainIqcWith30DayMolecularData();
       renderEqaSection();
       renderIqcSigmaGoalsAndChart();
       renderQualitativeIqcTable();
@@ -24929,6 +25902,10 @@ function jsonResponse(obj) {
       initIqcSelects();
       initHrSelects();
       renderAllViews();
+      if (typeof renderMolQuantIqcAll === "function") renderMolQuantIqcAll();
+      if (typeof renderMolMultiplexIqcAll === "function") renderMolMultiplexIqcAll();
+      if (typeof renderMolIqcCapaLogTable === "function") renderMolIqcCapaLogTable();
+      if (typeof renderMasterDbLiveInspector === "function") renderMasterDbLiveInspector();
     });
   </script>
 
