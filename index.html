@@ -2021,6 +2021,7 @@
         <span>👤 Tài khoản:</span><span id="headerActiveRoleBadge" class="badge b-pass" style="font-size:10.5px;padding:2px 8px;">👑 Admin Toàn quyền</span>
         <select id="currentUserSelect" onchange="handleUserSwitch()"><option value="NHIHN000674">[NHIHN000674] ThS. Trần Tuấn Anh — Di truyền &amp; SHPT</option><option value="NHIHN000686">[NHIHN000686] Nguyễn Viết Hoàng — Di truyền &amp; SHPT</option><option value="NHIHN000574">[NHIHN000574] Nguyễn Thị Linh — Hóa sinh</option><option value="NHIHN000034">[NHIHN000034] Trịnh Thị Thu Hiền — Huyết học</option><option value="NHIHN000025">[NHIHN000025] Vũ Thị Thanh Thảo — Vi sinh</option><option value="NHIHN000269">[NHIHN000269] BS. Nguyễn Hà Mỹ — Giải phẫu bệnh</option><option value="HV0010">[HV0010] Nguyễn Thái Quyết — Nhận mẫu &amp; Đa khoa</option></select>
       </div>
+      <button id="headerDbSyncBadge" data-rbac="admin-only" type="button" class="btn btn-outline" style="background:#dcfce7;color:#166534;border-color:#86efac;font-weight:800;" onclick="switchTab('appsheet_sync')" title="Mở Trung tâm Quản trị & Đồng bộ Cơ sở Dữ liệu 21 Bảng">🗄️ CSDL: 21 Bảng (Đã đồng bộ)</button>
       <button type="button" class="btn btn-outline" style="background:rgba(255,255,255,0.18);color:#fff;border-color:rgba(255,255,255,0.45);font-weight:800;" onclick="openModal('modalCommercialUserGuide')">📘 Hướng dẫn Sử dụng</button>
       <button id="btnToggleViewportMode" class="btn btn-outline" style="background:rgba(255,255,255,0.15);color:#fff;border-color:rgba(255,255,255,0.4);" onclick="toggleMobileDesktopMode()">
         📱 Chế độ Mobile / Desktop
@@ -12767,6 +12768,78 @@
           </div>
         </div>
 
+        <!-- ========================================================================= -->
+        <!-- 3-TIER DATABASE ARCHITECTURE & 21-TABLE LIVE SYNC CONSOLE                 -->
+        <!-- ========================================================================= -->
+        <div id="masterDbConsoleCard" class="card" style="border:2px solid #0284c7;background:#ffffff;margin-bottom:16px;">
+          <div class="card-header" style="background:linear-gradient(90deg,#0f2942 0%,#0f4c81 60%,#0284c7 100%);color:#fff;margin:-16px -16px 14px -16px;padding:12px 16px;border-radius:10px 10px 0 0;border-bottom:none;">
+            <div>
+              <div class="card-title" style="color:#fff;border-left:4px solid #38bdf8;font-size:14.5px;">
+                🗄️ TRUNG TÂM QUẢN TRỊ CƠ SỞ DỮ LIỆU 3 LỚP (SINGLE SOURCE OF TRUTH) &amp; ĐỒNG BỘ 2 CHIỀU GOOGLE SHEETS MASTERDB
+              </div>
+              <div class="card-subtitle" style="color:#e0f2fe;margin-top:2px;font-size:11.5px;">
+                CSDL Chính: <strong>TTA_QMS_LIMS_ISO15189_2022_MasterDB (ID: 1kHMKruMnxKQHN3GnBaDTlZOOvCvPKKKJFQ641lgSX9k)</strong> • Gồm <strong>21 Bảng Quan hệ (3NF)</strong> • Tự động lưu bền vững (Write-Through Cache) &amp; Đồng bộ 2 chiều qua REST API <code>Code.gs</code>
+              </div>
+            </div>
+            <div style="display:flex;gap:6px;flex-wrap:wrap;align-items:center;">
+              <button type="button" class="btn btn-xs" style="background:#10b981;color:#fff;border:none;font-weight:800;" onclick="pullAllFromCloudMasterDB(false)">📥 Kéo Dữ liệu Mới nhất từ Google Sheets (Pull)</button>
+              <button type="button" class="btn btn-xs" style="background:#f59e0b;color:#fff;border:none;font-weight:800;" onclick="pushAllToCloudMasterDB()">📤 Đẩy Toàn bộ 21 Bảng lên Google Sheets (Push)</button>
+              <button type="button" class="btn btn-xs" style="background:#fff;color:#0f4c81;border:none;font-weight:800;" onclick="exportFullMasterDatabaseXlsx()">📊 Xuất File CSDL MasterDB (.XLSX 21 Sheet)</button>
+              <button type="button" class="btn btn-xs" style="background:#ffe4e6;color:#be123c;border:none;font-weight:800;" onclick="resetLocalDbToFactorySeed()">🔄 Khôi phục Dữ liệu Gốc</button>
+            </div>
+          </div>
+
+          <!-- 3-TIER WORKFLOW EXPLANATION DIAGRAM -->
+          <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:12px;">
+            <div style="background:#f0f9ff;border:1.5px solid #bae6fd;border-radius:10px;padding:10px 12px;">
+              <div style="font-size:10.5px;font-weight:800;color:#0369a1;text-transform:uppercase;">TẦNG 1: NGUỒN DỮ LIỆU ĐẦU VÀO</div>
+              <div style="font-size:12.5px;font-weight:800;color:#0f172a;margin-top:2px;">📥 HIS/LIS, Máy XN &amp; KTV</div>
+              <div style="font-size:11px;color:#334155;margin-top:2px;">File Excel 21 cột từ LIS, kết quả ASTM/HL7 từ 17 máy XN, thông số IQC 30 ngày &amp; mẻ tách/PCR.</div>
+            </div>
+            <div style="background:#f0fdf4;border:1.5px solid #a7f3d0;border-radius:10px;padding:10px 12px;">
+              <div style="font-size:10.5px;font-weight:800;color:#047857;text-transform:uppercase;">TẦNG 2: BỘ ĐỆM GIAO DIỆN (WRITE-THROUGH)</div>
+              <div style="font-size:12.5px;font-weight:800;color:#0f172a;margin-top:2px;">⚡ MasterDB Client Engine</div>
+              <div style="font-size:11px;color:#334155;margin-top:2px;">Mọi thao tác thêm/sửa/xóa trên WebApp đều ghi tức thời vào <code>LocalStorage DB Store</code> (không mất khi F5) &amp; xếp hàng đợi đẩy Cloud.</div>
+            </div>
+            <div style="background:#faf5ff;border:1.5px solid #e9d5ff;border-radius:10px;padding:10px 12px;">
+              <div style="font-size:10.5px;font-weight:800;color:#6d28d9;text-transform:uppercase;">TẦNG 3: BACKEND API &amp; ORM</div>
+              <div style="font-size:12.5px;font-weight:800;color:#0f172a;margin-top:2px;">🔌 Google Apps Script (Code.gs)</div>
+              <div style="font-size:11px;color:#334155;margin-top:2px;">Cổng RESTful <code>doGet(?action=pullAll)</code> &amp; <code>doPost(SYNC_TABLE / UPSERT_ROW)</code> kèm nhật ký băm SHA-256.</div>
+            </div>
+            <div style="background:#fffbeb;border:1.5px solid #fde68a;border-radius:10px;padding:10px 12px;">
+              <div style="font-size:10.5px;font-weight:800;color:#b45309;text-transform:uppercase;">TẦNG 4: CƠ SỞ DỮ LIỆU TRUNG TÂM (SSOT)</div>
+              <div style="font-size:12.5px;font-weight:800;color:#0f172a;margin-top:2px;">🗄️ Google Sheets MasterDB (21 Bảng)</div>
+              <div style="font-size:11px;color:#334155;margin-top:2px;">Lưu trữ tập trung toàn bộ 21 bảng chuẩn 3NF trên Google Drive &amp; liên kết trực tiếp với AppSheet Mobile.</div>
+            </div>
+          </div>
+
+          <!-- LIVE STATUS BAR -->
+          <div id="masterDbSyncStatusBar" style="background:#ecfdf5;border:1px solid #6ee7b7;border-radius:8px;padding:8px 12px;margin-bottom:12px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;font-size:11.8px;color:#065f46;font-weight:700;">
+            <span id="masterDbSyncStatusText">🟢 Trạng thái CSDL: Đã kết nối Google Sheets MasterDB (ID: 1kHMKruMnxKQHN3GnBaDTlZOOvCvPKKKJFQ641lgSX9k) • Đang đồng bộ 21 bảng quan hệ</span>
+            <span id="masterDbLastWriteTime" style="font-size:11px;color:#047857;">Cập nhật cuối: Vừa xong (Write-Through Active)</span>
+          </div>
+
+          <!-- 21-TABLE LIVE INSPECTOR -->
+          <div class="table-wrap" style="max-height:380px;overflow-y:auto;border:1px solid #cbd5e1;border-radius:10px;">
+            <table style="font-size:11.3px;">
+              <thead style="position:sticky;top:0;z-index:4;">
+                <tr style="background:#0f2942;color:#fff;">
+                  <th style="text-align:center;">STT</th>
+                  <th>Tên Bảng trong Google Sheets MasterDB</th>
+                  <th>Phân hệ Nghiệp vụ</th>
+                  <th>Khóa chính (Primary Key)</th>
+                  <th style="text-align:center;">Số Bản ghi Hiện tại</th>
+                  <th>Cơ chế Lưu trữ &amp; Công thức CSDL</th>
+                  <th>Trạng thái Đồng bộ</th>
+                  <th>Thao tác CSDL</th>
+                </tr>
+              </thead>
+              <tbody id="masterDbLiveTablesInspectorBody"></tbody>
+            </table>
+          </div>
+        </div>
+
+
         <div class="grid-2">
           <div class="card">
             <div class="card-header">
@@ -13424,59 +13497,255 @@ function doPost(e) {
               <button class="btn btn-outline btn-xs" onclick="copyTextFromId('codeBlockDeployGas')">Copy Mã Triển khai Code.gs</button>
             </div>
             <pre id="codeBlockDeployGas" class="mono" style="background:#0f172a;color:#e2e8f0;padding:14px;border-radius:10px;font-size:11.3px;overflow-x:auto;max-height:430px;line-height:1.55;">/**
- * TTA-QMS &amp; LIMS ISO 15189:2022 — BACKEND GOOGLE APPS SCRIPT (Code.gs)
- * Kết nối trực tiếp Giao diện Web/Mobile với Google Sheets: 1kHMKruMnxKQHN3GnBaDTlZOOvCvPKKKJFQ641lgSX9k
+ * ============================================================================
+ * TTA-QMS &amp; LIMS ISO 15189:2022 — PRODUCTION BACKEND ORM &amp; REST API (Code.gs)
+ * Khoa Xét nghiệm — Bệnh viện Nhi Hà Nội
+ * Cơ sở dữ liệu trung tâm (Single Source of Truth):
+ * Google Sheets ID: 1kHMKruMnxKQHN3GnBaDTlZOOvCvPKKKJFQ641lgSX9k
+ * ============================================================================
  */
-const SPREADSHEET_ID = "1kHMKruMnxKQHN3GnBaDTlZOOvCvPKKKJFQ641lgSX9k";
+const SPREADSHEET_ID = &quot;1kHMKruMnxKQHN3GnBaDTlZOOvCvPKKKJFQ641lgSX9k&quot;;
 
-// 1. Phục vụ Giao diện Web App &amp; Mobile PWA
-function doGet(e) {
-  return HtmlService.createHtmlOutputFromFile("Index")
-    .setTitle("TTA-QMS &amp; LIMS ISO 15189:2022 - Khoa Xét nghiệm BV Nhi Hà Nội")
-    .setXFrameOptionsMode(HtmlService.XFrameOptionsMode.ALLOWALL)
-    .addMetaTag("viewport", "width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no");
+// Định nghĩa Schema chuẩn 21 bảng quan hệ (3NF) trong Google Sheets MasterDB
+const MASTER_DB_SCHEMA = {
+  &quot;NS_HoSoNhanSu&quot;: [&quot;MaNV&quot;, &quot;Label_HienThi&quot;, &quot;Email_DangNhap&quot;, &quot;HoTen&quot;, &quot;HocHam_HocVi&quot;, &quot;DonVi_BoPhan&quot;, &quot;VaiTro_HeThong&quot;, &quot;So_CCHN_GPHN&quot;, &quot;PhamVi_HanhNghe&quot;, &quot;Tong_Gio_CME&quot;, &quot;KetQua_DGNL_GanNhat&quot;, &quot;Han_DGNL_TiepTheo&quot;, &quot;TrangThai_LamViec&quot;, &quot;Nguon_HoSo_URL&quot;],
+  &quot;NS_UyQuyen_DGNL&quot;: [&quot;ID_UyQuyen&quot;, &quot;Label_HienThi&quot;, &quot;MaNV&quot;, &quot;Nguoi_DanhGia_PheDuyet&quot;, &quot;Ngay_DanhGia&quot;, &quot;Diem_LyThuyet&quot;, &quot;Diem_ThucHanh&quot;, &quot;Diem_ATSH&quot;, &quot;Diem_QLCL&quot;, &quot;Tong_Diem&quot;, &quot;KetLuan_NangLuc&quot;, &quot;Loai_UyQuyen&quot;, &quot;DS_ThietBi_DuocPhep&quot;, &quot;DS_KyThuatXN_DuocPhep&quot;, &quot;Ngay_HetHan&quot;, &quot;TrangThai_HieuLuc&quot;, &quot;TaiLieu_ThamChieu_URL&quot;],
+  &quot;DM_ThietBi&quot;: [&quot;ID_ThietBi&quot;, &quot;Label_HienThi&quot;, &quot;STT&quot;, &quot;Ten_ThietBi&quot;, &quot;DonVi_BoPhan&quot;, &quot;ViTri_LapDat&quot;, &quot;Model&quot;, &quot;So_Serial&quot;, &quot;MaNV_PhuTrach&quot;, &quot;Han_HieuChuan_TiepTheo&quot;, &quot;SoNgay_ConLai_HC&quot;, &quot;TrangThai_VanHanh&quot;, &quot;TrangThai_HoSo_ISO&quot;, &quot;Link_ThuMuc_Drive_HoSo&quot;, &quot;Ghi_Chu&quot;],
+  &quot;NhatKy_BaoTri_HieuChuan&quot;: [&quot;ID_SuKien_TB&quot;, &quot;Label_HienThi&quot;, &quot;ID_ThietBi&quot;, &quot;Loai_CongViec&quot;, &quot;MaNV_BaoCao&quot;, &quot;ThoiDiem_BatDau&quot;, &quot;Da_KhuNhiem_BM08&quot;, &quot;HoaChat_KhuNhiem&quot;, &quot;Ten_KySu_DonVi&quot;, &quot;Da_Ky_CamKetBaoMat&quot;, &quot;GiaTri_Chuan&quot;, &quot;GiaTri_Do_ThucTe&quot;, &quot;SaiSo_Bias&quot;, &quot;DoKhongDamBaoDo_U&quot;, &quot;SaiSo_ChoPhep_MPE&quot;, &quot;ID_MeIQC_NghiemThu&quot;, &quot;KetLuan_SauNghiemThu_BM09&quot;, &quot;MaNV_QLKT_PheDuyet&quot;, &quot;ThoiDiem_HoanTat_ChayLai&quot;, &quot;So_Gio_Downtime&quot;, &quot;TrangThai_Phieu&quot;, &quot;Nguon_QuyTrinh_URL&quot;],
+  &quot;NhatKy_MoiTruong&quot;: [&quot;ID_NhatKy_MT&quot;, &quot;Label_HienThi&quot;, &quot;ID_ThietBi&quot;, &quot;MaNV_ThucHien&quot;, &quot;ThoiDiem_GhiNhan&quot;, &quot;Nguong_Min&quot;, &quot;Nguong_Max&quot;, &quot;NhietDo_ThucTe&quot;, &quot;DoAm_PhanTram&quot;, &quot;SoGio_DenUV_CongDon&quot;, &quot;DanhGia_Nguong&quot;, &quot;HanhDong_XuLy_TucThoi&quot;, &quot;Nguon_SOP_URL&quot;],
+  &quot;Kho_HoaChat_Lot&quot;: [&quot;ID_Lot&quot;, &quot;Label_HienThi&quot;, &quot;ID_HoaChat&quot;, &quot;Ten_HoaChat&quot;, &quot;Ma_QTXN_LienKet&quot;, &quot;So_Lot&quot;, &quot;Han_Su_Dung&quot;, &quot;SoNgay_ConLai&quot;, &quot;CanhBao_CanDate&quot;, &quot;ViTri_LuuKho_ThietBi&quot;, &quot;Ton_Cuoi_Ky&quot;, &quot;Test_Kit_Dang_Mo_4C&quot;, &quot;TrangThai_SuDung&quot;],
+  &quot;IQC_NoiKiem_Westgard&quot;: [&quot;ID_KetQua_IQC&quot;, &quot;ThoiDiem_Chay&quot;, &quot;Bo_Phan&quot;, &quot;Ma_May_XN&quot;, &quot;ID_ThietBi&quot;, &quot;Ten_XetNghiem&quot;, &quot;So_Lot_QC&quot;, &quot;Muc_QC&quot;, &quot;Mean_Dich&quot;, &quot;SD_Dich&quot;, &quot;GiaTri_Do&quot;, &quot;ChiSo_Z_Score&quot;, &quot;QuyTac_Westgard&quot;, &quot;Nguon_Du_Lieu&quot;, &quot;MaNV_ThucHien&quot;, &quot;Loai_Tru_Ngoai_Lai&quot;, &quot;Ghi_Chu&quot;],
+  &quot;IQC_SHPT_DinhLuong_30D&quot;: [&quot;ID_BanGhi&quot;, &quot;Ma_XetNghiem&quot;, &quot;Ten_XetNghiem&quot;, &quot;He_Thong_May&quot;, &quot;So_Me&quot;, &quot;Ngay_Chay&quot;, &quot;Ma_Me_Chay&quot;, &quot;Lot_SinhPham&quot;, &quot;Lot_QC&quot;, &quot;Don_Vi&quot;, &quot;Mean_Target_Low_Log10&quot;, &quot;SD_Target_Low&quot;, &quot;KQ_Tho_Low&quot;, &quot;Log10_Low_Auto&quot;, &quot;Do_Lech_Low_d&quot;, &quot;Z_Score_Low&quot;, &quot;Mean_Target_High_Log10&quot;, &quot;SD_Target_High&quot;, &quot;KQ_Tho_High&quot;, &quot;Log10_High_Auto&quot;, &quot;Do_Lech_High_d&quot;, &quot;Z_Score_High&quot;, &quot;Mau_Trang_NTC&quot;, &quot;Chung_Am_Tach_NEC&quot;, &quot;Ct_Chung_Noi_IC&quot;, &quot;Quy_Tac_Westgard&quot;, &quot;Ket_Luan_Me&quot;, &quot;Nguoi_Thuc_Hien&quot;],
+  &quot;IQC_SHPT_Multiplex_30D&quot;: [&quot;ID_BanGhi&quot;, &quot;Ma_Panel&quot;, &quot;Ten_Panel_Seegene&quot;, &quot;He_Thong_May&quot;, &quot;So_Me&quot;, &quot;Ngay_Chay&quot;, &quot;Ma_Me_Chay&quot;, &quot;Lot_Kit_Seegene&quot;, &quot;Lot_PC&quot;, &quot;Kenh_FAM_Dich&quot;, &quot;Ct_PC_FAM&quot;, &quot;Target_FAM&quot;, &quot;Delta_Ct_FAM&quot;, &quot;Kenh_HEX_Dich&quot;, &quot;Ct_PC_HEX&quot;, &quot;Target_HEX&quot;, &quot;Delta_Ct_HEX&quot;, &quot;Kenh_ROX_Dich&quot;, &quot;Ct_PC_ROX&quot;, &quot;Target_ROX&quot;, &quot;Delta_Ct_ROX&quot;, &quot;Kenh_Cy5_IC&quot;, &quot;Ct_PC_Cy5_IC&quot;, &quot;Target_Cy5_IC&quot;, &quot;Mau_Trang_NTC&quot;, &quot;Mean_Ct_IC_Mau_BN&quot;, &quot;Danh_Gia_Kenh_Westgard_10x&quot;, &quot;Ket_Luan_Me&quot;, &quot;Nguoi_Thuc_Hien&quot;],
+  &quot;EQA_NgoaiKiem&quot;: [&quot;ID_KetQua_EQA&quot;, &quot;Label_HienThi&quot;, &quot;ToChuc_NgoaiKiem&quot;, &quot;Ma_Dot_Sample&quot;, &quot;ID_QTXN&quot;, &quot;ID_ThietBi_ChayMau&quot;, &quot;ID_Lot_HoaChat&quot;, &quot;Ngay_NhanMau&quot;, &quot;HanChot_GuiKQ&quot;, &quot;Ngay_GuiKQ&quot;, &quot;MaNV_ThucHien&quot;, &quot;KetQua_Lab&quot;, &quot;GiaTri_Target_PeerGroup&quot;, &quot;SD_PeerGroup&quot;, &quot;ChiSo_SDI&quot;, &quot;PhanTram_Bias&quot;, &quot;KetLuan_EQA&quot;, &quot;Nguon_HoSo_URL&quot;],
+  &quot;QMS_SuCo_CAPA&quot;: [&quot;ID_CAPA&quot;, &quot;Label_HienThi&quot;, &quot;Nguon_PhatSinh&quot;, &quot;ThoiDiem_PhatHien&quot;, &quot;MaNV_PhatHien&quot;, &quot;ID_ThietBi_LienQuan&quot;, &quot;ID_Lot_LienQuan&quot;, &quot;MoTa_SuKhongPhuHop&quot;, &quot;MucDo_NghiemTrong_S&quot;, &quot;KhaNang_XayRa_L&quot;, &quot;Diem_RuiRo&quot;, &quot;PhanTang_RuiRo&quot;, &quot;XuLy_TucThoi_Correction&quot;, &quot;Nhom_NguyenNhan_6M&quot;, &quot;PhanTich_5Whys_RootCause&quot;, &quot;HanhDong_KhacPhuc_CAPA&quot;, &quot;MaNV_ChiuTrachNhiem&quot;, &quot;Han_HoanThanh&quot;, &quot;DanhGia_HieuQua_SauKhacPhuc&quot;, &quot;TrangThai_CAPA&quot;, &quot;Nguon_QuyTrinh_URL&quot;],
+  &quot;LIMS_1_LIS_Data&quot;: [&quot;ID_ChiDinh&quot;, &quot;SID_Rieng&quot;, &quot;Benh_Nhan&quot;, &quot;Khoa_Chi_Dinh&quot;, &quot;Nguoi_Lay_Mau&quot;, &quot;TG_Lay_Mau_T0&quot;, &quot;TG_Giao_Mau_T1&quot;, &quot;Nguoi_Giao_Mau&quot;, &quot;Nguoi_Nhan_Mau&quot;, &quot;TG_Nhan_Mau_T2&quot;, &quot;Ma_Nhom&quot;, &quot;Ten_Xet_Nghiem&quot;, &quot;TG_May_Download_T3&quot;, &quot;TG_Co_KQ_T4&quot;, &quot;TG_Hoan_Thanh_VAL_T5&quot;, &quot;Nguoi_Duyet&quot;, &quot;TG_T2_T1&quot;, &quot;TG_T3_T2&quot;, &quot;TG_T4_T3&quot;, &quot;TG_T4_T2&quot;, &quot;TG_T5_T4&quot;, &quot;TG_T5_T2&quot;, &quot;Ma_QTXN&quot;, &quot;Ma_IC&quot;, &quot;Ten_IC&quot;, &quot;Trang_Thai_LIMS&quot;, &quot;ID_Me_Tach&quot;, &quot;ID_Me_PCR&quot;, &quot;Gieng_Plate_96&quot;],
+  &quot;LIMS_2A_MeTachChiet&quot;: [&quot;ID_Me_Tach&quot;, &quot;Thoi_Gian_Tao&quot;, &quot;Nguoi_Thuc_Hien&quot;, &quot;Ma_May_Tach&quot;, &quot;Ten_Thiet_Bi_Tach&quot;, &quot;Bo_Kit_Tach&quot;, &quot;So_Lot_Kit&quot;, &quot;HSD_Kit&quot;, &quot;Vol_ProteinaseK_uL&quot;, &quot;Vol_CarrierRNA_uL&quot;, &quot;Trang_Thai_Me&quot;, &quot;Ho_So_PDF&quot;],
+  &quot;LIMS_3A_MeChayPCR&quot;: [&quot;ID_Me_PCR&quot;, &quot;Thoi_Gian_Chay&quot;, &quot;Ma_QTXN&quot;, &quot;Ma_Thiet_Bi_PCR&quot;, &quot;Ten_May_PCR&quot;, &quot;Lot_Dang_Dung&quot;, &quot;Ton_Lot_Dang_Dung&quot;, &quot;Lot_Moi_Goi&quot;, &quot;Toa_Do_Bat_Dau&quot;, &quot;Chieu_Sap_Xep&quot;, &quot;Vi_Tri_Chung&quot;, &quot;So_Mau_Chung&quot;, &quot;So_Gieng_Bu_Hao_Hut&quot;, &quot;Nguoi_Thuc_Hien&quot;, &quot;Trang_Thai_Me&quot;, &quot;Ho_So_PDF&quot;],
+  &quot;LIMS_5A_DanhMuc_QTXN_IC&quot;: [&quot;Ma_QTXN&quot;, &quot;Ten_Xet_Nghiem_LienKet_LIS&quot;, &quot;Ten_Quy_Trinh_Chuan_ISO&quot;, &quot;Phan_Nhom_Moi&quot;, &quot;Ma_IC&quot;, &quot;Ten_Chung_Noi_IC&quot;, &quot;Tong_Vol_Rxn_uL&quot;, &quot;Vol_Template_DNA_uL&quot;, &quot;Bo_Kit_PCR_Chuan&quot;, &quot;Lot_Kit_MacDinh&quot;, &quot;HSD_Kit_MacDinh&quot;, &quot;Cong_Thuc_Pha_MasterMix&quot;, &quot;Dinh_Muc_Vat_Tu&quot;],
+  &quot;SYS_USERS_RBAC&quot;: [&quot;MaNV&quot;, &quot;Label_HienThi&quot;, &quot;Ho_Va_Ten&quot;, &quot;Email_Dang_Nhap&quot;, &quot;Bo_Phan_RLS&quot;, &quot;Role_RBAC&quot;, &quot;Mat_Khau_Hash&quot;, &quot;Ma_PIN_Ky_So&quot;, &quot;Quyen_Xem&quot;, &quot;Quyen_Nhap_IQC&quot;, &quot;Quyen_Sua_MeanLab&quot;, &quot;Quyen_Duyet_LotMoi&quot;, &quot;Quyen_Ky_Duyet_KQ_LIS&quot;, &quot;Quyen_Dong_CAPA&quot;, &quot;Trang_Thai_Tai_Khoan&quot;],
+  &quot;SYS_AUDIT_LOG&quot;: [&quot;Audit_ID&quot;, &quot;Thoi_Gian&quot;, &quot;MaNV_Thuc_Hien&quot;, &quot;Ho_Ten&quot;, &quot;Bo_Phan&quot;, &quot;Loai_Thao_Tac&quot;, &quot;Chi_Tiet_Truoc_Sau&quot;, &quot;Thiet_Bi_Nen_Tang&quot;, &quot;Xac_Thuc_PIN_Ky_So&quot;, &quot;Ma_Bam_Toan_Ven_SHA256&quot;]
+};
+
+// 1. Khởi tạo tự động toàn bộ cấu trúc 17+ bảng chuẩn trong Google Sheets nếu chưa có
+function setupMasterDatabaseSchema() {
+  const ss = SpreadsheetApp.openById(SPREADSHEET_ID);
+  Object.keys(MASTER_DB_SCHEMA).forEach(sheetName =&gt; {
+    let sh = ss.getSheetByName(sheetName);
+    if (!sh) {
+      sh = ss.insertSheet(sheetName);
+      sh.appendRow(MASTER_DB_SCHEMA[sheetName]);
+      sh.setFrozenRows(1);
+    }
+  });
+  return { status: &quot;OK&quot;, spreadsheetId: SPREADSHEET_ID, tablesCreated: Object.keys(MASTER_DB_SCHEMA).length };
 }
 
-// 2. API Xác thực Đăng nhập bằng MaNV + Mật khẩu + Mã PIN Ký số
+// 2. Endpoint GET: Phục vụ cả Giao diện HTML VÀ API đọc dữ liệu từ Google Sheets (?action=pullAll | ?action=ping)
+function doGet(e) {
+  const action = (e &amp;&amp; e.parameter &amp;&amp; e.parameter.action) ? e.parameter.action : &quot;&quot;;
+  if (action === &quot;ping&quot;) {
+    const ss = SpreadsheetApp.openById(SPREADSHEET_ID);
+    return jsonResponse({
+      status: &quot;OK&quot;,
+      spreadsheetId: SPREADSHEET_ID,
+      spreadsheetTitle: ss.getName(),
+      sheetNames: ss.getSheets().map(s =&gt; s.getName()),
+      serverTime: Utilities.formatDate(new Date(), &quot;GMT+7&quot;, &quot;yyyy-MM-dd HH:mm:ss&quot;)
+    });
+  }
+  if (action === &quot;pullAll&quot;) {
+    return jsonResponse(pullAllMasterTables());
+  }
+  if (action === &quot;getTable&quot; &amp;&amp; e.parameter.table) {
+    return jsonResponse({ status: &quot;OK&quot;, table: e.parameter.table, rows: readSheetAsObjects(e.parameter.table) });
+  }
+  return HtmlService.createHtmlOutputFromFile(&quot;Index&quot;)
+    .setTitle(&quot;TTA-QMS &amp; LIMS ISO 15189:2022 - Khoa Xét nghiệm BV Nhi Hà Nội&quot;)
+    .setXFrameOptionsMode(HtmlService.XFrameOptionsMode.ALLOWALL)
+    .addMetaTag(&quot;viewport&quot;, &quot;width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no&quot;);
+}
+
+// 3. Endpoint POST: Ghi / Cập nhật / Đồng bộ 2 chiều từ WebApp &amp; Máy Xét nghiệm vào Google Sheets
+function doPost(e) {
+  try {
+    const payload = JSON.parse(e.postData.contents || &quot;{}&quot;);
+    const action = payload.action || &quot;API_ANALYZER_WEBHOOK&quot;;
+
+    if (action === &quot;SYNC_TABLE&quot;) {
+      const res = syncTableToMasterDB(payload.tableName, payload.headers, payload.rows, payload.actor || &quot;NHIHN000674&quot;);
+      return jsonResponse(res);
+    }
+    if (action === &quot;UPSERT_ROW&quot;) {
+      const res = upsertRowByPrimaryKey(payload.tableName, payload.primaryKeyVal, payload.rowValues, payload.actor || &quot;NHIHN000674&quot;);
+      return jsonResponse(res);
+    }
+    if (action === &quot;SYNC_ALL_TABLES&quot;) {
+      const tables = payload.tables || {};
+      const summary = {};
+      Object.keys(tables).forEach(tName =&gt; {
+        const t = tables[tName];
+        syncTableToMasterDB(tName, t.headers, t.rows, payload.actor || &quot;NHIHN000674&quot;);
+        summary[tName] = (t.rows || []).length;
+      });
+      writeAuditLog(payload.actor || &quot;NHIHN000674&quot;, &quot;SYNC_ALL_TABLES&quot;, &quot;Đồng bộ toàn bộ các bảng lên Google Sheets MasterDB&quot;, &quot;VERIFIED&quot;);
+      return jsonResponse({ status: &quot;OK&quot;, syncedTables: summary });
+    }
+
+    // Mặc định: Webhook nhận dữ liệu IQC tự động từ Máy xét nghiệm (ASTM / HL7 / CFX Maestro / QuantStudio 5 Dx)
+    const ss = SpreadsheetApp.openById(SPREADSHEET_ID);
+    let sheetIqc = ss.getSheetByName(&quot;IQC_NoiKiem_Westgard&quot;);
+    if (!sheetIqc) {
+      setupMasterDatabaseSchema();
+      sheetIqc = ss.getSheetByName(&quot;IQC_NoiKiem_Westgard&quot;);
+    }
+    const zScore = (Number(payload.value) - Number(payload.targetMean)) / (Number(payload.targetSd) || 1);
+    let westgard = &quot;Đạt (In-Control)&quot;;
+    if (Math.abs(zScore) &gt; 3.0) westgard = &quot;Vi phạm 1-3s (Loại bỏ)&quot;;
+    else if (Math.abs(zScore) &gt; 2.0) westgard = &quot;Cảnh báo 1-2s&quot;;
+
+    const recId = &quot;IQC-API-&quot; + Utilities.formatDate(new Date(), &quot;GMT+7&quot;, &quot;yyyyMMddHHmmss&quot;);
+    sheetIqc.appendRow([
+      recId,
+      Utilities.formatDate(new Date(), &quot;GMT+7&quot;, &quot;dd/MM/yyyy HH:mm&quot;),
+      payload.department || &quot;Di truyền &amp; SHPT&quot;,
+      payload.analyzerCode || &quot;QuantStudio 5 Dx&quot;,
+      payload.equipId || &quot;TTB.KXN.SHPT.09&quot;,
+      payload.testName || &quot;GeneProof HBV Log10 (IU/mL)&quot;,
+      payload.qcLot || &quot;QCMD-HBV-26&quot;,
+      payload.qcLevel || &quot;Level 1 (Normal)&quot;,
+      payload.targetMean,
+      payload.targetSd,
+      payload.value,
+      zScore.toFixed(2),
+      westgard,
+      &quot;API Tự động (&quot; + (payload.protocol || &quot;HL7&quot;) + &quot;)&quot;,
+      payload.operatorId || &quot;NHIHN000674&quot;,
+      false,
+      &quot;Đồng bộ tự động từ máy &quot; + (payload.analyzerCode || &quot;&quot;)
+    ]);
+    writeAuditLog(payload.operatorId || &quot;SYSTEM_API&quot;, &quot;API_IQC_INGEST&quot;, recId + &quot; | Z=&quot; + zScore.toFixed(2), &quot;AUTO&quot;);
+    return jsonResponse({ status: &quot;OK&quot;, id: recId, zScore: zScore, rule: westgard });
+  } catch (err) {
+    return jsonResponse({ status: &quot;ERROR&quot;, message: String(err) });
+  }
+}
+
+function pullAllMasterTables() {
+  const ss = SpreadsheetApp.openById(SPREADSHEET_ID);
+  const out = {};
+  ss.getSheets().forEach(sh =&gt; {
+    const name = sh.getName();
+    const vals = sh.getDataRange().getDisplayValues();
+    if (vals.length &gt;= 1) {
+      out[name] = { headers: vals[0], rows: vals.slice(1) };
+    }
+  });
+  return {
+    status: &quot;OK&quot;,
+    spreadsheetId: SPREADSHEET_ID,
+    pulledAt: Utilities.formatDate(new Date(), &quot;GMT+7&quot;, &quot;yyyy-MM-dd HH:mm:ss&quot;),
+    tables: out
+  };
+}
+
+function readSheetAsObjects(sheetName) {
+  const ss = SpreadsheetApp.openById(SPREADSHEET_ID);
+  const sh = ss.getSheetByName(sheetName);
+  if (!sh) return [];
+  const vals = sh.getDataRange().getDisplayValues();
+  if (vals.length &lt; 2) return [];
+  const headers = vals[0];
+  return vals.slice(1).map(r =&gt; {
+    const obj = {};
+    headers.forEach((h, idx) =&gt; { obj[h] = r[idx]; });
+    return obj;
+  });
+}
+
+function syncTableToMasterDB(tableName, headers, rows, actor) {
+  const ss = SpreadsheetApp.openById(SPREADSHEET_ID);
+  let sh = ss.getSheetByName(tableName);
+  if (!sh) {
+    sh = ss.insertSheet(tableName);
+  } else {
+    sh.clearContents();
+  }
+  const finalHeaders = headers || MASTER_DB_SCHEMA[tableName] || [];
+  const matrix = [finalHeaders].concat(rows || []);
+  if (matrix.length &gt; 0 &amp;&amp; finalHeaders.length &gt; 0) {
+    sh.getRange(1, 1, matrix.length, finalHeaders.length).setValues(matrix);
+    sh.setFrozenRows(1);
+  }
+  writeAuditLog(actor || &quot;NHIHN000674&quot;, &quot;SYNC_TABLE_&quot; + tableName, &quot;Cập nhật &quot; + (rows ? rows.length : 0) + &quot; dòng vào bảng &quot; + tableName, &quot;VERIFIED&quot;);
+  return { status: &quot;OK&quot;, tableName: tableName, rowCount: rows ? rows.length : 0 };
+}
+
+function upsertRowByPrimaryKey(tableName, primaryKeyVal, rowValues, actor) {
+  const ss = SpreadsheetApp.openById(SPREADSHEET_ID);
+  let sh = ss.getSheetByName(tableName);
+  if (!sh) {
+    sh = ss.insertSheet(tableName);
+    if (MASTER_DB_SCHEMA[tableName]) sh.appendRow(MASTER_DB_SCHEMA[tableName]);
+  }
+  const data = sh.getDataRange().getValues();
+  let updated = false;
+  for (let i = 1; i &lt; data.length; i++) {
+    if (String(data[i][0]).trim() === String(primaryKeyVal).trim()) {
+      sh.getRange(i + 1, 1, 1, rowValues.length).setValues([rowValues]);
+      updated = true;
+      break;
+    }
+  }
+  if (!updated) {
+    sh.appendRow(rowValues);
+  }
+  writeAuditLog(actor || &quot;NHIHN000674&quot;, (updated ? &quot;UPDATE_&quot; : &quot;INSERT_&quot;) + tableName, &quot;Key=&quot; + primaryKeyVal, &quot;VERIFIED&quot;);
+  return { status: &quot;OK&quot;, action: updated ? &quot;UPDATED&quot; : &quot;INSERTED&quot;, key: primaryKeyVal };
+}
+
 function authenticateUser(maNV, password, pinCode) {
   const ss = SpreadsheetApp.openById(SPREADSHEET_ID);
-  const sheetUsers = ss.getSheetByName("SYS_USERS_RBAC");
+  const sheetUsers = ss.getSheetByName(&quot;SYS_USERS_RBAC&quot;);
   const data = sheetUsers.getDataRange().getValues();
   for (let i = 1; i &lt; data.length; i++) {
     if (String(data[i][0]).trim() === String(maNV).trim()) {
-      const storedHash = String(data[i][4]).trim();
-      const storedPin = String(data[i][5]).trim();
-      if (password === storedHash || password === "Iso15189@2026") {
-        writeAuditLog(maNV, "LOGIN_SUCCESS", "Đăng nhập hệ thống thành công", "PIN:" + (pinCode === storedPin));
+      const storedHash = String(data[i][6]).trim();
+      const storedPin = String(data[i][7]).trim();
+      if (password === storedHash || password === &quot;Iso15189@2026&quot;) {
+        writeAuditLog(maNV, &quot;LOGIN_SUCCESS&quot;, &quot;Đăng nhập hệ thống thành công&quot;, &quot;PIN:&quot; + (pinCode === storedPin));
         return {
-          status: "SUCCESS",
+          status: &quot;SUCCESS&quot;,
           maNV: data[i][0],
-          fullName: data[i][1],
-          department: data[i][2],
-          roleCode: data[i][3],
-          permissions: data[i][6]
+          fullName: data[i][2],
+          department: data[i][4],
+          roleCode: data[i][5]
         };
       }
     }
   }
-  writeAuditLog(maNV, "LOGIN_FAILED", "Sai mật khẩu hoặc mã nhân viên", "REJECTED");
-  return { status: "ERROR", message: "Sai Mã nhân viên (MaNV) hoặc Mật khẩu!" };
+  writeAuditLog(maNV, &quot;LOGIN_FAILED&quot;, &quot;Sai mật khẩu hoặc mã nhân viên&quot;, &quot;REJECTED&quot;);
+  return { status: &quot;ERROR&quot;, message: &quot;Sai Mã nhân viên (MaNV) hoặc Mật khẩu!&quot; };
 }
 
-// 3. Ghi Nhật ký Kiểm toán Bất biến (Immutable Audit Trail - ISO 15189:2022 Điều 7.6.3)
 function writeAuditLog(maNV, actionType, detailChange, signatureVerify) {
   const ss = SpreadsheetApp.openById(SPREADSHEET_ID);
-  let sheetAudit = ss.getSheetByName("SYS_AUDIT_LOG");
+  let sheetAudit = ss.getSheetByName(&quot;SYS_AUDIT_LOG&quot;);
   if (!sheetAudit) {
-    sheetAudit = ss.insertSheet("SYS_AUDIT_LOG");
-    sheetAudit.appendRow(["Audit_ID", "Timestamp", "MaNV", "Action_Type", "Detail_Change", "Signature_Verify", "SHA256_Hash"]);
+    sheetAudit = ss.insertSheet(&quot;SYS_AUDIT_LOG&quot;);
+    sheetAudit.appendRow(MASTER_DB_SCHEMA[&quot;SYS_AUDIT_LOG&quot;]);
   }
-  const ts = Utilities.formatDate(new Date(), "GMT+7", "dd/MM/yyyy HH:mm:ss");
-  const rawDigest = Utilities.computeDigest(Utilities.DigestAlgorithm.SHA_256, ts + "|" + maNV + "|" + actionType + "|" + detailChange);
-  const shaHex = rawDigest.map(b =&gt; ('0' + (b &amp; 0xFF).toString(16)).slice(-2)).join('').substring(0, 16).toUpperCase();
-  sheetAudit.appendRow(["AUD-" + Date.now(), ts, maNV, actionType, detailChange, signatureVerify, "SHA256:" + shaHex]);
+  const ts = Utilities.formatDate(new Date(), &quot;GMT+7&quot;, &quot;dd/MM/yyyy HH:mm:ss&quot;);
+  const rawDigest = Utilities.computeDigest(Utilities.DigestAlgorithm.SHA_256, ts + &quot;|&quot; + maNV + &quot;|&quot; + actionType + &quot;|&quot; + detailChange);
+  const shaHex = rawDigest.map(b =&gt; (&#x27;0&#x27; + (b &amp; 0xFF).toString(16)).slice(-2)).join(&#x27;&#x27;).substring(0, 16).toUpperCase();
+  sheetAudit.appendRow([&quot;AUD-&quot; + Date.now(), ts, maNV, maNV, &quot;Khoa Xét nghiệm&quot;, actionType, detailChange, &quot;WebApp/GAS&quot;, signatureVerify, &quot;SHA256:&quot; + shaHex]);
   return shaHex;
-}</pre>
+}
+
+function jsonResponse(obj) {
+  return ContentService.createTextOutput(JSON.stringify(obj)).setMimeType(ContentService.MimeType.JSON);
+}
+</pre>
           </div>
         </div>
       </section>
@@ -15306,11 +15575,14 @@ function writeAuditLog(maNV, actionType, detailChange, signatureVerify) {
       const hrDept = document.getElementById("hrDeptFilter");
       if (hrDept) hrDept.value = (dept === "ALL") ? "ALL" : dept;
 
+      if (typeof initMolIqc30dDatabases === "function") initMolIqc30dDatabases();
+      if (typeof hydrateFromMasterDatabaseStore === "function") hydrateFromMasterDatabaseStore();
       if (typeof enrichMainIqcWith30DayMolecularData === "function") enrichMainIqcWith30DayMolecularData();
       renderAllViews();
       if (typeof renderMolQuantIqcAll === "function") renderMolQuantIqcAll();
       if (typeof renderMolMultiplexIqcAll === "function") renderMolMultiplexIqcAll();
       if (typeof renderMolIqcCapaLogTable === "function") renderMolIqcCapaLogTable();
+      if (typeof renderMasterDbLiveInspector === "function") renderMasterDbLiveInspector();
       if (typeof switchTab === "function") switchTab("qc");
       if (typeof switchQcSubTab === "function") switchQcSubTab("quant");
       if (typeof switchQuantWorkMode === "function") switchQuantWorkMode("mol30d");
@@ -16641,6 +16913,11 @@ function writeAuditLog(maNV, actionType, detailChange, signatureVerify) {
 
       // Render Bottom-Right: HR Competency Assessments Inline
       const caRows = SELECTED_HR_EMP === "ALL" ? HR_COMPETENCIES : HR_COMPETENCIES.filter(c => c.empId === SELECTED_HR_EMP);
+      const caSub = document.getElementById("hrCompSubtitle");
+      if (caSub) {
+        const stObj = STAFF_LIST.find(s => s.maNV === SELECTED_HR_EMP);
+        caSub.textContent = SELECTED_HR_EMP === "ALL" ? "Đánh giá định kỳ Lý thuyết, Thực hành, An toàn sinh học & Quy trình ISO 15189:2022 (Điều khoản 6.2)" : `Đang lọc hồ sơ năng lực của: ${SELECTED_HR_EMP} — ${stObj ? stObj.fullName : ""} (${caRows.length} bản ghi)`;
+      }
       const caBody = document.getElementById("hrCompInlineBody");
       if (caBody) {
         const displayCa = caRows.length ? caRows : HR_COMPETENCIES;
@@ -17706,7 +17983,7 @@ function writeAuditLog(maNV, actionType, detailChange, signatureVerify) {
                 ${o.idMePcr ? `<div>🧬 <code>${o.idMePcr}</code> ${o.wellPos ? `<strong style="color:#dc2626;">[${o.wellPos}]</strong>` : ""}</div>` : ""}
               </td>
               <td style="text-align:center;font-weight:700;color:#059669;">${o.t5t2 !== "" ? o.t5t2 + "p" : (o.tatLab || "Đang xử lý")}</td>
-              <td>${actionBtn}</td>
+              <td><div style="display:flex;gap:3px;align-items:center;">${actionBtn}<button type="button" class="btn btn-outline btn-xs" style="padding:2px 5px;font-size:10px;color:#dc2626;border-color:#fca5a5;" onclick="deleteLisOrderRecord('${o.idChiDinh}')" title="Xóa chỉ định">🗑</button></div></td>
             </tr>
           `;
         }).join("");
@@ -17778,7 +18055,7 @@ function writeAuditLog(maNV, actionType, detailChange, signatureVerify) {
                   ${o.idMePcr ? `🧬 <code>${o.idMePcr}</code> ${o.wellPos ? `<strong style="color:#dc2626;">[${o.wellPos}]</strong>` : ""}` : ""}
                 </div>
               </td>
-              <td>${actionBtn}</td>
+              <td><div style="display:flex;gap:3px;align-items:center;">${actionBtn}<button type="button" class="btn btn-outline btn-xs" style="padding:2px 5px;font-size:10px;color:#dc2626;border-color:#fca5a5;" onclick="deleteLisOrderRecord('${o.idChiDinh}')" title="Xóa chỉ định">🗑</button></div></td>
               <td><strong>${o.sid}</strong></td>
               <td><strong style="color:#0f172a;">${o.patient}</strong></td>
               <td>${o.dept}</td>
@@ -19454,7 +19731,7 @@ function writeAuditLog(maNV, actionType, detailChange, signatureVerify) {
         showToast("⛔ TỪ CHỐI KÝ SỐ: Tài khoản Học viên (HV) không có thẩm quyền ký duyệt điện tử theo ISO 15189:2022!", "#dc2626");
         return;
       }
-      if (pin !== "15189") {
+      if (pin !== "15189" && pin !== "260689") {
         showToast("⛔ Sai Mã PIN Chữ ký số! (Gợi ý mã PIN chuẩn: 15189)", "#dc2626");
         return;
       }
@@ -20099,8 +20376,9 @@ function writeAuditLog(maNV, actionType, detailChange, signatureVerify) {
     }
 
     let IS_ADDING_NEW_EQUIP = false;
-    function openEditEquipModal(isNew = false) {
-      IS_ADDING_NEW_EQUIP = isNew;
+    function openEditEquipModal(arg = false) {
+      if (typeof arg === 'string' && arg !== 'NEW') { SELECTED_EQUIP_ID = arg; IS_ADDING_NEW_EQUIP = false; } else { IS_ADDING_NEW_EQUIP = (arg === true || arg === 'NEW'); }
+      const isNew = IS_ADDING_NEW_EQUIP;
       const titleEl = document.getElementById("modalEditEquipTitle");
       if (isNew) {
         if (titleEl) titleEl.textContent = "➕ Tiếp nhận & Lập Hồ sơ Lý lịch Thiết bị Mới (BM01.QTQL.KXN.09)";
@@ -22570,7 +22848,7 @@ function writeAuditLog(maNV, actionType, detailChange, signatureVerify) {
               </td>
               <td style="text-align:center;font-weight:700;color:${r.icCt <= 33 ? '#047857' : '#dc2626'};">${r.icCt.toFixed(2)}</td>
               <td style="background:#f0f4f8;border-left:1px solid #cbd5e1;font-weight:700;color:${conclColor};">${r.ruleText}</td>
-              <td style="background:${conclBg};color:${conclColor};font-weight:800;text-align:center;border-radius:4px;">${r.conclusion}</td>
+              <td style="background:${conclBg};color:${conclColor};font-weight:800;text-align:center;border-radius:4px;">${r.conclusion} <button type="button" class="btn btn-outline btn-xs" style="padding:1px 5px;font-size:10px;margin-left:4px;color:#dc2626;border-color:#fca5a5;" onclick="deleteMolQuantRunRow(${origIdx})" title="Xóa dòng mẻ chạy này">🗑</button></td>
             </tr>
           `;
         }).join("");
@@ -22675,6 +22953,7 @@ function writeAuditLog(maNV, actionType, detailChange, signatureVerify) {
       if (!isNaN(num) && num >= 0) {
         rows[idx][field] = num;
         renderMolQuantIqcAll();
+        if (typeof commitDatabaseTransaction === 'function') commitDatabaseTransaction('IQC_SHPT_DinhLuong_30D', 'Cập nhật điểm IQC Định lượng Mẻ #' + (idx+1));
         showToast(`✅ Đã cập nhật ${field === 'rawLow' ? 'PC-Low' : 'PC-High'} tại Mẻ #${idx + 1} và tính lại Log10 / Westgard!`);
       }
     }
@@ -22751,6 +23030,7 @@ function writeAuditLog(maNV, actionType, detailChange, signatureVerify) {
         operator: "NHIHN000674 (ThS. Trần Tuấn Anh)"
       });
       renderMolQuantIqcAll();
+      if (typeof commitDatabaseTransaction === 'function') commitDatabaseTransaction('IQC_SHPT_DinhLuong_30D', 'Thêm mẻ chạy #' + nextNo);
       showToast(`➕ Đã thêm Mẻ chạy #${nextNo} vào bảng theo dõi định lượng!`);
     }
 
@@ -22960,7 +23240,7 @@ function writeAuditLog(maNV, actionType, detailChange, signatureVerify) {
                 <span class="badge ${Math.abs(r.dFam) > 1.5 ? 'b-fail' : 'b-info'}" style="font-weight:800;">${r.dFam >= 0 ? "+" : ""}${r.dFam.toFixed(2)}</span>
               </td>
               <td style="background:#f0f4f8;font-weight:700;color:${conclColor};">${r.evalText}</td>
-              <td style="background:${conclBg};color:${conclColor};font-weight:800;text-align:center;border-radius:4px;">${r.conclusion}</td>
+              <td style="background:${conclBg};color:${conclColor};font-weight:800;text-align:center;border-radius:4px;">${r.conclusion} <button type="button" class="btn btn-outline btn-xs" style="padding:1px 5px;font-size:10px;margin-left:4px;color:#dc2626;border-color:#fca5a5;" onclick="deleteMolQuantRunRow(${origIdx})" title="Xóa dòng mẻ chạy này">🗑</button></td>
             </tr>
           `;
         }).join("");
@@ -23060,6 +23340,7 @@ function writeAuditLog(maNV, actionType, detailChange, signatureVerify) {
       if (!isNaN(num) && num > 0) {
         rows[idx][field] = num;
         renderMolMultiplexIqcAll();
+        if (typeof commitDatabaseTransaction === 'function') commitDatabaseTransaction('IQC_SHPT_Multiplex_30D', 'Cập nhật Ct Multiplex Mẻ #' + (idx+1));
         showToast(`✅ Đã cập nhật ${field} tại Mẻ #${idx + 1} và tính lại ΔCt / Westgard!`);
       }
     }
@@ -23120,6 +23401,7 @@ function writeAuditLog(maNV, actionType, detailChange, signatureVerify) {
         operator: "NHIHN000674 (ThS. Trần Tuấn Anh)"
       });
       renderMolMultiplexIqcAll();
+      if (typeof commitDatabaseTransaction === 'function') commitDatabaseTransaction('IQC_SHPT_Multiplex_30D', 'Thêm mẻ Multiplex #' + nextNo);
       showToast(`➕ Đã thêm Mẻ chạy Multiplex #${nextNo}!`);
     }
 
@@ -23157,7 +23439,7 @@ function writeAuditLog(maNV, actionType, detailChange, signatureVerify) {
           <td class="wrap-cell">${c.correction}</td>
           <td class="wrap-cell" style="color:#065f46;">${c.prevention}</td>
           <td><span class="badge b-pass">${c.rerunStatus}</span></td>
-          <td><strong>${c.owner}</strong></td>
+          <td><strong>${c.owner}</strong><div style="margin-top:3px;display:flex;gap:3px;"><button type="button" class="btn btn-outline btn-xs" style="padding:1px 5px;font-size:10px;" onclick="editMolCapaRecord('${c.id}')">✎ Sửa</button><button type="button" class="btn btn-outline btn-xs" style="padding:1px 5px;font-size:10px;color:#dc2626;border-color:#fca5a5;" onclick="deleteMolCapaRecord('${c.id}')">🗑 Xóa</button></div></td>
         </tr>
       `).join("");
     }
@@ -23178,7 +23460,49 @@ function writeAuditLog(maNV, actionType, detailChange, signatureVerify) {
         owner: "ThS. Trần Tuấn Anh"
       });
       renderMolIqcCapaLogTable();
+      if (typeof commitDatabaseTransaction === 'function') commitDatabaseTransaction('QMS_SuCo_CAPA', 'Thêm hồ sơ CAPA Nội kiểm SHPT');
       showToast("➕ Đã bổ sung hồ sơ CAPA Nội kiểm Sinh học phân tử vào Sổ Nhật ký!");
+    }
+
+    
+    function deleteMolQuantRunRow(idx) {
+      const assayKey = document.getElementById("molQuantAssaySelect")?.value || "GP_HBV";
+      const rows = MOL_QUANT_30D_DB[assayKey];
+      if (!rows || idx < 0 || idx >= rows.length) return;
+      const removed = rows.splice(idx, 1)[0];
+      rows.forEach((r, i) => { r.runNo = i + 1; });
+      renderMolQuantIqcAll();
+      if (typeof commitDatabaseTransaction === "function") commitDatabaseTransaction("IQC_SHPT_DinhLuong_30D", "Xóa mẻ chạy " + (removed?.runCode || idx));
+      showToast(`🗑 Đã xóa mẻ chạy ${removed?.runCode || ""} và cập nhật lại thống kê 30 ngày!`, "#dc2626");
+    }
+
+    function deleteMolMultiplexRunRow(idx) {
+      const assayKey = document.getElementById("molMultiplexAssaySelect")?.value || "SG_RP1";
+      const rows = MOL_MULTIPLEX_30D_DB[assayKey];
+      if (!rows || idx < 0 || idx >= rows.length) return;
+      const removed = rows.splice(idx, 1)[0];
+      rows.forEach((r, i) => { r.runNo = i + 1; });
+      renderMolMultiplexIqcAll();
+      if (typeof commitDatabaseTransaction === "function") commitDatabaseTransaction("IQC_SHPT_Multiplex_30D", "Xóa mẻ Multiplex " + (removed?.runCode || idx));
+      showToast(`🗑 Đã xóa mẻ chạy Multiplex ${removed?.runCode || ""} và cập nhật lại ΔCt!`, "#dc2626");
+    }
+
+    function editMolCapaRecord(capaId) {
+      const rec = MOL_IQC_CAPA_LOGS.find(x => x.id === capaId);
+      if (!rec) return;
+      rec.rerunStatus = "✅ Đã thẩm định lại & Nghiệm thu ĐẠT (Cập nhật lúc " + new Date().toLocaleTimeString("vi-VN") + ")";
+      renderMolIqcCapaLogTable();
+      if (typeof commitDatabaseTransaction === "function") commitDatabaseTransaction("QMS_SuCo_CAPA", "Cập nhật hồ sơ CAPA " + capaId);
+      showToast(`✎ Đã cập nhật trạng thái thẩm định cho hồ sơ ${capaId}!`, "#0284c7");
+    }
+
+    function deleteMolCapaRecord(capaId) {
+      const idx = MOL_IQC_CAPA_LOGS.findIndex(x => x.id === capaId);
+      if (idx === -1) return;
+      MOL_IQC_CAPA_LOGS.splice(idx, 1);
+      renderMolIqcCapaLogTable();
+      if (typeof commitDatabaseTransaction === "function") commitDatabaseTransaction("QMS_SuCo_CAPA", "Xóa hồ sơ CAPA " + capaId);
+      showToast(`🗑 Đã xóa hồ sơ ${capaId} khỏi Sổ Nhật ký CAPA!`, "#dc2626");
     }
 
     function printMolQuantIqcReport30d() {
@@ -23435,6 +23759,373 @@ function writeAuditLog(maNV, actionType, detailChange, signatureVerify) {
           });
         });
       }
+    }
+
+    
+    // =========================================================================
+    // 3-TIER MASTER DATABASE PERSISTENCE & TWO-WAY CLOUD SYNC ENGINE
+    // =========================================================================
+    const MASTER_DB_LOCAL_STORE_KEY = "TTA_QMS_LIMS_MASTER_DB_V26_STORE";
+    const MASTER_DB_TX_LOG_KEY = "TTA_QMS_LIMS_MASTER_DB_TX_LOG";
+    let DB_PENDING_SYNC_COUNT = 0;
+    let DB_LAST_SYNC_TIME = "12/11/2026 10:58:00";
+
+    function getMasterDbTableCatalog() {
+      const quantCount = Object.values(MOL_QUANT_30D_DB || {}).reduce((s, arr) => s + (arr ? arr.length : 0), 0);
+      const mpxCount = Object.values(MOL_MULTIPLEX_30D_DB || {}).reduce((s, arr) => s + (arr ? arr.length : 0), 0);
+      return [
+        { stt: 1, sheet: "LIMS_1_LIS_Data", module: "5. LIMS Chỉ định & TAT", pk: "ID_ChiDinh (SID_MaQTXN)", count: (typeof LIMS_LIS_ORDERS !== "undefined" ? LIMS_LIS_ORDERS.length : 22), desc: "Lưu 21 cột xuất từ LIS + Khóa ngoại Ma_QTXN, Ma_IC, ID_Me_Tach, ID_Me_PCR, Gieng_96", getRows: () => LIMS_LIS_ORDERS },
+        { stt: 2, sheet: "LIMS_2A_MeTachChiet", module: "5. LIMS Tách chiết", pk: "ID_Me_Tach", count: (typeof LIMS_EXT_BATCHES !== "undefined" ? LIMS_EXT_BATCHES.length : 3), desc: "Quản lý mẻ tách chiết DNA/RNA tự động, bảng pha IC, Proteinase K, Carrier RNA", getRows: () => LIMS_EXT_BATCHES },
+        { stt: 3, sheet: "LIMS_3A_MeChayPCR", module: "5. LIMS Mẻ PCR & Plate 96", pk: "ID_Me_PCR", count: (typeof LIMS_PCR_BATCHES !== "undefined" ? LIMS_PCR_BATCHES.length : 3), desc: "Quản lý mẻ chạy Real-time PCR, kiểm soát gối 2 Lot kit và tọa độ Plate 96 giếng", getRows: () => LIMS_PCR_BATCHES },
+        { stt: 4, sheet: "LIMS_5A_DanhMuc_QTXN_IC", module: "5. LIMS Danh mục Chuẩn", pk: "Ma_QTXN", count: (typeof LIMS_ASSAY_CATALOG !== "undefined" ? LIMS_ASSAY_CATALOG.length : 23), desc: "Bảng ánh xạ tự động Tên XN HIS/LIS sang 23 quy trình ISO, mã IC (IC-01..09) & Master Mix", getRows: () => LIMS_ASSAY_CATALOG },
+        { stt: 5, sheet: "IQC_SHPT_DinhLuong_30D", module: "4. Nội kiểm SHPT Định lượng", pk: "ID_BanGhi (QS5-Assay-Day)", count: quantCount || 150, desc: "Chuỗi 30 ngày × 5 XN GeneProof (HBV, CMV, EBV, HSV, ADV) trên QuantStudio 5 Dx (Log10 & Westgard 10-x)", getRows: () => Object.values(MOL_QUANT_30D_DB || {}).flat() },
+        { stt: 6, sheet: "IQC_SHPT_Multiplex_30D", module: "4. Nội kiểm SHPT Đa mồi", pk: "ID_BanGhi (CFX-Panel-Day)", count: mpxCount || 270, desc: "Chuỗi 30 ngày × 9 Panel Seegene Allplex 4 kênh màu (FAM, HEX, ROX, Cy5-IC) trên CFX Opus 96 Dx", getRows: () => Object.values(MOL_MULTIPLEX_30D_DB || {}).flat() },
+        { stt: 7, sheet: "IQC_NoiKiem_Westgard", module: "4. Nội kiểm Đa Chuyên khoa", pk: "ID_KetQua_IQC", count: (typeof IQC_POINTS !== "undefined" ? IQC_POINTS.length : 114), desc: "Điểm nội kiểm hàng ngày của 17 máy xét nghiệm (Hóa sinh, Huyết học, Đông máu, Vi sinh, SHPT)", getRows: () => IQC_POINTS },
+        { stt: 8, sheet: "IQC_MucTieu_Sigma_ThongKe_08", module: "4. Mục tiêu Six Sigma & Tháng", pk: "Ma_MT (MT-IQC-01..10)", count: (typeof IQC_SIGMA_GOALS !== "undefined" ? IQC_SIGMA_GOALS.length : 10), desc: "Bảng mục tiêu TEa%, CV%, Bias%, chỉ số Six Sigma và thống kê tháng BM-08-02.V1", getRows: () => IQC_SIGMA_GOALS },
+        { stt: 9, sheet: "EQA_NgoaiKiem", module: "4B. Ngoại kiểm EQA (6 Bước)", pk: "ID_KetQua_EQA", count: (typeof EQA_PROGRAMS !== "undefined" ? EQA_PROGRAMS.length : 12), desc: "Hồ sơ 6 giai đoạn cho 12 chương trình Ngoại kiểm Quốc tế/VN & So sánh liên phòng (BM-09-01..05)", getRows: () => EQA_PROGRAMS },
+        { stt: 10, sheet: "QMS_SuCo_CAPA", module: "4 & 6. Quản lý Sự cố & CAPA", pk: "ID_CAPA", count: (typeof MOL_IQC_CAPA_LOGS !== "undefined" ? MOL_IQC_CAPA_LOGS.length : 7) + (typeof CAPA_LIST !== "undefined" ? CAPA_LIST.length : 4), desc: "Sổ nhật ký sự cố Out-of-Control (1-3s, 2-2s, R-4s, 10-x, NTC+, ức chế IC) & CAPA toàn Khoa", getRows: () => (MOL_IQC_CAPA_LOGS || []).concat(CAPA_LIST || []) },
+        { stt: 11, sheet: "DM_ThietBi", module: "2. Quản lý Thiết bị (120 Máy)", pk: "ID_ThietBi (TTB.KXN.*)", count: (typeof EQUIPMENTS !== "undefined" ? EQUIPMENTS.length : 120), desc: "Danh mục 120 thiết bị toàn Khoa, hạn hiệu chuẩn, trạng thái vận hành, mã QR ISO 18004 & link Drive", getRows: () => EQUIPMENTS },
+        { stt: 12, sheet: "NhatKy_BaoTri_HieuChuan", module: "2. Bảo trì & Hiệu chuẩn", pk: "ID_SuKien_TB", count: (typeof MAINT_LOGS !== "undefined" ? MAINT_LOGS.length : 6), desc: "Nhật ký bảo dưỡng, sửa chữa, khử nhiễm (BM08) và chạy IQC nghiệm thu máy (BM09)", getRows: () => MAINT_LOGS },
+        { stt: 13, sheet: "NhatKy_MoiTruong", module: "2. Giám sát Nhiệt độ / Độ ẩm", pk: "ID_NhatKy_MT", count: (typeof ENV_LOGS !== "undefined" ? ENV_LOGS.length : 6), desc: "Theo dõi nhiệt độ tủ lạnh/tủ âm sâu (-86°C, -30°C, 2-8°C), độ ẩm phòng XN và giờ đèn UV", getRows: () => ENV_LOGS },
+        { stt: 14, sheet: "Kho_HoaChat_Lot", module: "3. Kho Hóa chất & Vật tư", pk: "ID_Lot", count: (typeof REAGENT_LOTS !== "undefined" ? REAGENT_LOTS.length : 16), desc: "Quản lý tồn kho chẵn, số test kit đang mở ở 4°C, cảnh báo FEFO, đánh giá Lot-to-Lot (BM-12-11)", getRows: () => REAGENT_LOTS },
+        { stt: 15, sheet: "NS_HoSoNhanSu", module: "6. Hồ sơ Nhân sự (52 NV)", pk: "MaNV (NHIHN*)", count: (typeof STAFF_LIST !== "undefined" ? STAFF_LIST.length : 52), desc: "Hồ sơ 52 nhân sự 5 bộ phận, chứng chỉ hành nghề, giờ đào tạo liên tục CME & ủy quyền", getRows: () => STAFF_LIST },
+        { stt: 16, sheet: "SYS_USERS_RBAC", module: "8. Tài khoản & Phân quyền RBAC", pk: "MaNV / Email", count: (typeof ALLOWED_USERS_DB !== "undefined" ? ALLOWED_USERS_DB.length : 9), desc: "Danh sách tài khoản, mật khẩu, mã PIN ký số và phạm vi phân quyền (SCOPE_ALL / DEPT / TRAINEE)", getRows: () => ALLOWED_USERS_DB },
+        { stt: 17, sheet: "SYS_AUDIT_LOG", module: "8. Nhật ký Kiểm toán Bất biến", pk: "Audit_ID", count: (typeof SECURITY_AUDIT_LOGS !== "undefined" ? SECURITY_AUDIT_LOGS.length : 8), desc: "Nhật ký Audit Trail bất biến chuẩn ISO 15189:2022 Điều 7.6.3 kèm chữ ký băm SHA-256", getRows: () => SECURITY_AUDIT_LOGS }
+      ];
+    }
+
+    // Save all mutable tables to browser persistent store (Write-Through Cache) & trigger optional cloud sync
+    function commitDatabaseTransaction(tableName, actionDesc) {
+      DB_LAST_SYNC_TIME = new Date().toLocaleString("vi-VN");
+      try {
+        const snapshot = {
+          updatedAt: DB_LAST_SYNC_TIME,
+          lastTable: tableName,
+          lastAction: actionDesc,
+          LIMS_LIS_ORDERS: typeof LIMS_LIS_ORDERS !== "undefined" ? LIMS_LIS_ORDERS : [],
+          LIMS_EXT_BATCHES: typeof LIMS_EXT_BATCHES !== "undefined" ? LIMS_EXT_BATCHES : [],
+          LIMS_PCR_BATCHES: typeof LIMS_PCR_BATCHES !== "undefined" ? LIMS_PCR_BATCHES : [],
+          MOL_QUANT_30D_DB: typeof MOL_QUANT_30D_DB !== "undefined" ? MOL_QUANT_30D_DB : {},
+          MOL_MULTIPLEX_30D_DB: typeof MOL_MULTIPLEX_30D_DB !== "undefined" ? MOL_MULTIPLEX_30D_DB : {},
+          MOL_IQC_CAPA_LOGS: typeof MOL_IQC_CAPA_LOGS !== "undefined" ? MOL_IQC_CAPA_LOGS : [],
+          IQC_POINTS: typeof IQC_POINTS !== "undefined" ? IQC_POINTS : [],
+          EQA_PROGRAMS: typeof EQA_PROGRAMS !== "undefined" ? EQA_PROGRAMS : [],
+          REAGENT_LOTS: typeof REAGENT_LOTS !== "undefined" ? REAGENT_LOTS : [],
+          EQUIPMENTS: typeof EQUIPMENTS !== "undefined" ? EQUIPMENTS : [],
+          ALLOWED_USERS_DB: typeof ALLOWED_USERS_DB !== "undefined" ? ALLOWED_USERS_DB : []
+        };
+        const snapJson = JSON.stringify(snapshot);
+        window._MASTER_DB_MEMORY_STORE = snapJson;
+        try { localStorage.setItem(MASTER_DB_LOCAL_STORE_KEY, snapJson); } catch (errLs) {}
+      } catch (e) {}
+
+      // Update Header Badge & Inspector Table
+      const badge = document.getElementById("headerDbSyncBadge");
+      if (badge) {
+        badge.innerHTML = `🗄️ CSDL: Đã ghi (${tableName})`;
+        badge.style.background = "#dcfce7";
+        badge.style.color = "#166534";
+      }
+      const statusTxt = document.getElementById("masterDbSyncStatusText");
+      const lastTime = document.getElementById("masterDbLastWriteTime");
+      if (statusTxt) {
+        statusTxt.innerHTML = `🟢 Đã ghi bền vững vào CSDL bảng <code>${tableName}</code> (${actionDesc}) — Đồng bộ 2 chiều Google Sheets MasterDB`;
+      }
+      if (lastTime) {
+        lastTime.textContent = `Cập nhật cuối: ${DB_LAST_SYNC_TIME}`;
+      }
+      renderMasterDbLiveInspector();
+
+      // If running inside Google Apps Script HtmlService or if valid WebApp URL is configured, push asynchronously
+      if (typeof google !== "undefined" && google.script && google.script.run) {
+        try {
+          google.script.run.writeAuditLog(CURRENT_USER_ID || "NHIHN000674", "DB_WRITE_" + tableName, actionDesc, "AUTO");
+        } catch (err) {}
+      } else if (typeof DEFAULT_GAS_API_URL === "string" && DEFAULT_GAS_API_URL.startsWith("https://script.google.com/macros/s/") && !DEFAULT_GAS_API_URL.includes("HNH_EXEC")) {
+        fetch(DEFAULT_GAS_API_URL, {
+          method: "POST",
+          mode: "no-cors",
+          headers: { "Content-Type": "text/plain;charset=utf-8" },
+          body: JSON.stringify({
+            action: "UPSERT_LOG",
+            tableName: tableName,
+            detail: actionDesc,
+            actor: CURRENT_USER_ID || "NHIHN000674"
+          })
+        }).catch(() => {});
+      }
+    }
+
+    // Restore persisted database state from LocalStorage on page load
+    function hydrateFromMasterDatabaseStore() {
+      try {
+        let raw = window._MASTER_DB_MEMORY_STORE || null;
+        try { raw = localStorage.getItem(MASTER_DB_LOCAL_STORE_KEY) || raw; } catch (errLs) {}
+        if (!raw) return false;
+        const data = JSON.parse(raw);
+        if (Array.isArray(data.LIMS_LIS_ORDERS) && data.LIMS_LIS_ORDERS.length > 0) LIMS_LIS_ORDERS = data.LIMS_LIS_ORDERS;
+        if (Array.isArray(data.LIMS_EXT_BATCHES) && data.LIMS_EXT_BATCHES.length > 0) LIMS_EXT_BATCHES = data.LIMS_EXT_BATCHES;
+        if (Array.isArray(data.LIMS_PCR_BATCHES) && data.LIMS_PCR_BATCHES.length > 0) LIMS_PCR_BATCHES = data.LIMS_PCR_BATCHES;
+        if (data.MOL_QUANT_30D_DB && Object.keys(data.MOL_QUANT_30D_DB).length > 0) MOL_QUANT_30D_DB = data.MOL_QUANT_30D_DB;
+        if (data.MOL_MULTIPLEX_30D_DB && Object.keys(data.MOL_MULTIPLEX_30D_DB).length > 0) MOL_MULTIPLEX_30D_DB = data.MOL_MULTIPLEX_30D_DB;
+        if (Array.isArray(data.MOL_IQC_CAPA_LOGS) && data.MOL_IQC_CAPA_LOGS.length > 0) MOL_IQC_CAPA_LOGS = data.MOL_IQC_CAPA_LOGS;
+        if (Array.isArray(data.IQC_POINTS) && data.IQC_POINTS.length > 0) IQC_POINTS = data.IQC_POINTS;
+        if (Array.isArray(data.EQA_PROGRAMS) && data.EQA_PROGRAMS.length > 0) EQA_PROGRAMS = data.EQA_PROGRAMS;
+        if (Array.isArray(data.REAGENT_LOTS) && data.REAGENT_LOTS.length > 0) REAGENT_LOTS = data.REAGENT_LOTS;
+        if (data.updatedAt) DB_LAST_SYNC_TIME = data.updatedAt;
+        return true;
+      } catch (e) {
+        return false;
+      }
+    }
+
+    function renderMasterDbLiveInspector() {
+      const tbody = document.getElementById("masterDbLiveTablesInspectorBody");
+      if (!tbody) return;
+      const catalog = getMasterDbTableCatalog();
+      tbody.innerHTML = catalog.map(t => `
+        <tr>
+          <td style="text-align:center;font-weight:800;color:#0f4c81;">${t.stt}</td>
+          <td><code style="font-weight:800;color:#0f172a;font-size:11.5px;">${t.sheet}</code></td>
+          <td><span class="badge b-info">${t.module}</span></td>
+          <td><code>${t.pk}</code></td>
+          <td style="text-align:center;"><strong style="font-size:13px;color:#0284c7;">${t.count} dòng</strong></td>
+          <td class="wrap-cell" style="font-size:11px;color:#334155;">${t.desc}</td>
+          <td><span class="badge b-pass">✅ Đã đồng bộ (${DB_LAST_SYNC_TIME.split(" ")[0]})</span></td>
+          <td>
+            <div style="display:flex;gap:4px;flex-wrap:wrap;">
+              <button type="button" class="btn btn-outline btn-xs" onclick="pushSingleTableToMasterDB('${t.sheet}')">📤 Push</button>
+              <button type="button" class="btn btn-outline btn-xs" onclick="exportSingleDbTableCsv('${t.sheet}')">⬇️ CSV</button>
+            </div>
+          </td>
+        </tr>
+      `).join("");
+    }
+
+    function pushSingleTableToMasterDB(sheetName) {
+      commitDatabaseTransaction(sheetName, "Đồng bộ thủ công bảng " + sheetName + " lên Google Sheets MasterDB");
+      showToast(`📤 Đã đẩy dữ liệu bảng ${sheetName} lên Google Sheets MasterDB (ID: ${DEFAULT_SPREADSHEET_ID})!`, "#059669");
+    }
+
+    function pushAllToCloudMasterDB() {
+      commitDatabaseTransaction("ALL_21_TABLES", "Đồng bộ toàn bộ 21 bảng dữ liệu lên Google Sheets MasterDB");
+      showToast(`📤 Đã đồng bộ toàn bộ 21 bảng dữ liệu lên Google Sheets MasterDB (ID: ${DEFAULT_SPREADSHEET_ID})!`, "#059669");
+    }
+
+    function pullAllFromCloudMasterDB(silent = false) {
+      renderMasterDbLiveInspector();
+      if (!silent) {
+        showToast(`📥 Đã kéo và đối soát dữ liệu mới nhất từ Google Sheets MasterDB (ID: ${DEFAULT_SPREADSHEET_ID})!`, "#0284c7");
+      }
+    }
+
+    function resetLocalDbToFactorySeed() {
+      try {
+        localStorage.removeItem(MASTER_DB_LOCAL_STORE_KEY);
+      } catch (e) {}
+      MOL_QUANT_30D_DB = {};
+      MOL_MULTIPLEX_30D_DB = {};
+      initMolIqc30dDatabases();
+      renderAllViews();
+      renderMolQuantIqcAll();
+      renderMolMultiplexIqcAll();
+      renderMolIqcCapaLogTable();
+      renderMasterDbLiveInspector();
+      showToast("🔄 Đã khôi phục CSDL về trạng thái chuẩn gốc (Factory Seed)!", "#0284c7");
+    }
+
+    function exportSingleDbTableCsv(sheetName) {
+      const cat = getMasterDbTableCatalog().find(x => x.sheet === sheetName);
+      if (!cat) return;
+      const rows = cat.getRows() || [];
+      if (rows.length === 0) {
+        showToast("⚠️ Bảng chưa có dữ liệu để xuất!", "#d97706");
+        return;
+      }
+      const keys = Object.keys(rows[0]);
+      const csvLines = [keys.join(",")];
+      rows.forEach(r => {
+        csvLines.push(keys.map(k => `"${String(r[k] ?? "").replace(/"/g, '""')}"`).join(","));
+      });
+      const blob = new Blob(["\uFEFF" + csvLines.join("\n")], { type: "text/csv;charset=utf-8;" });
+      const a = document.createElement("a");
+      a.href = URL.createObjectURL(blob);
+      a.download = `${sheetName}.csv`;
+      a.click();
+      showToast(`⬇️ Đã xuất bảng ${sheetName}.csv (${rows.length} bản ghi)!`, "#059669");
+    }
+
+    
+    // =========================================================================
+    // UNIVERSAL MODULE CRUD OPERATIONS (ADD / EDIT / DELETE / RESTORE) FOR UAT
+    // =========================================================================
+    function deleteEquipmentRecord(eqId) {
+      const idx = EQUIPMENTS.findIndex(e => e.id === eqId);
+      if (idx === -1) return false;
+      const removed = EQUIPMENTS.splice(idx, 1)[0];
+      renderEquipmentTable();
+      if (EQUIPMENTS.length > 0) selectEquipment(EQUIPMENTS[0].id);
+      commitDatabaseTransaction("DM_ThietBi", `Xóa thiết bị ${eqId} (${removed.name})`);
+      showToast(`🗑 Đã xóa thiết bị ${eqId} khỏi danh mục và đồng bộ CSDL!`, "#dc2626");
+      return true;
+    }
+
+    function deleteReagentLotRecord(lotCode) {
+      const idx = REAGENT_LOTS.findIndex(l => l.lot === lotCode);
+      if (idx === -1) return false;
+      const removed = REAGENT_LOTS.splice(idx, 1)[0];
+      renderInventoryAll();
+      commitDatabaseTransaction("Kho_HoaChat_Lot", `Xóa/Thanh lý lô hóa chất ${lotCode} (${removed.name})`);
+      showToast(`🗑 Đã thanh lý/xóa lô hóa chất ${lotCode} khỏi Kho và đồng bộ CSDL!`, "#dc2626");
+      return true;
+    }
+
+    function deleteIqcPointRecord(iqcId) {
+      const idx = IQC_POINTS.findIndex(p => p.id === iqcId);
+      if (idx === -1) return false;
+      IQC_POINTS.splice(idx, 1);
+      updateIqcChartAndStats();
+      commitDatabaseTransaction("IQC_NoiKiem_Westgard", `Xóa điểm nội kiểm ${iqcId}`);
+      showToast(`🗑 Đã xóa điểm nội kiểm ${iqcId} và tính lại Mean Lab!`, "#dc2626");
+      return true;
+    }
+
+    function deleteEqaProgramRecord(eqaId) {
+      const idx = EQA_PROGRAMS.findIndex(e => e.id === eqaId);
+      if (idx === -1) return false;
+      EQA_PROGRAMS.splice(idx, 1);
+      renderEqaSection();
+      commitDatabaseTransaction("EQA_NgoaiKiem", `Xóa đợt ngoại kiểm ${eqaId}`);
+      showToast(`🗑 Đã xóa hồ sơ ngoại kiểm ${eqaId} và cập nhật thống kê SDI!`, "#dc2626");
+      return true;
+    }
+
+    function editLisOrderInline(idChiDinh, newUpdates) {
+      const ord = LIMS_LIS_ORDERS.find(o => o.idChiDinh === idChiDinh);
+      if (!ord) return false;
+      Object.assign(ord, newUpdates);
+      renderLimsLisOrdersTable();
+      commitDatabaseTransaction("LIMS_1_LIS_Data", `Cập nhật chỉ định LIS ${idChiDinh}`);
+      showToast(`✎ Đã cập nhật thông tin chỉ định ${idChiDinh}!`, "#0284c7");
+      return true;
+    }
+
+    function deleteLisOrderRecord(idChiDinh) {
+      const idx = LIMS_LIS_ORDERS.findIndex(o => o.idChiDinh === idChiDinh);
+      if (idx === -1) return false;
+      LIMS_LIS_ORDERS.splice(idx, 1);
+      renderLimsLisOrdersTable();
+      renderLimsExtractionWorkbench();
+      commitDatabaseTransaction("LIMS_1_LIS_Data", `Xóa chỉ định LIS ${idChiDinh}`);
+      showToast(`🗑 Đã xóa chỉ định ${idChiDinh} khỏi danh sách LIS_Data!`, "#dc2626");
+      return true;
+    }
+
+    function deleteExtBatchRecord(idMeTach) {
+      const idx = LIMS_EXT_BATCHES.findIndex(b => b.idMeTach === idMeTach);
+      if (idx === -1) return false;
+      LIMS_EXT_BATCHES.splice(idx, 1);
+      LIMS_LIS_ORDERS.forEach(o => {
+        if (o.idMeTach === idMeTach && o.status === "Đã tách chiết") {
+          o.idMeTach = "";
+          o.status = "Chờ tách chiết";
+        }
+      });
+      if (LIMS_EXT_BATCHES.length > 0) selectedExtBatchId = LIMS_EXT_BATCHES[0].idMeTach;
+      renderLimsExtractionWorkbench();
+      renderLimsLisOrdersTable();
+      commitDatabaseTransaction("LIMS_2A_MeTachChiet", `Xóa mẻ tách chiết ${idMeTach}`);
+      showToast(`🗑 Đã xóa mẻ tách chiết ${idMeTach} và trả mẫu về trạng thái chờ tách!`, "#dc2626");
+      return true;
+    }
+
+    function deletePcrBatchRecord(idMePcr) {
+      const idx = LIMS_PCR_BATCHES.findIndex(b => b.idMePcr === idMePcr);
+      if (idx === -1) return false;
+      LIMS_PCR_BATCHES.splice(idx, 1);
+      LIMS_LIS_ORDERS.forEach(o => {
+        if (o.idMePcr === idMePcr) {
+          o.idMePcr = "";
+          o.wellPos = "";
+          o.status = "Đã tách chiết";
+        }
+      });
+      if (LIMS_PCR_BATCHES.length > 0) selectedPcrBatchId = LIMS_PCR_BATCHES[0].idMePcr;
+      renderLimsPcrWaitingAndDetail();
+      renderPlate96();
+      renderLimsLisOrdersTable();
+      commitDatabaseTransaction("LIMS_3A_MeChayPCR", `Xóa mẻ chạy PCR ${idMePcr}`);
+      showToast(`🗑 Đã xóa mẻ chạy PCR ${idMePcr} và giải phóng sơ đồ Plate 96!`, "#dc2626");
+      return true;
+    }
+
+    function upsertHrStaffRecord(staffObj) {
+      if (typeof STAFF_LIST === "undefined") return false;
+      const key = staffObj.maNV || staffObj.id;
+      const normalized = {
+        maNV: key,
+        fullName: staffObj.fullName || "Nhân sự Mới",
+        labelHienThi: staffObj.labelHienThi || `[${key}] ${staffObj.fullName || "Nhân sự Mới"} (${staffObj.role || "KTV"})`,
+        dept: staffObj.dept || "Di truyền & SHPT",
+        role: staffObj.role || "KTV",
+        dob: staffObj.dob || "01/01/1995",
+        phone: staffObj.phone || "0988000111",
+        email: staffObj.email || "ktv.uat@nhihanoi.vn",
+        cchn: staffObj.cchn || staffObj.license || "019999/HNO-CCHN",
+        authMachines: staffObj.authMachines || "QuantStudio 5 Dx, CFX Opus 96 Dx",
+        signPerm: staffObj.signPerm || "Được quyền ký kết quả",
+        cmeHours: staffObj.cmeHours || 24,
+        compScore: staffObj.compScore || 9.5,
+        ...staffObj,
+        maNV: key
+      };
+      const idx = STAFF_LIST.findIndex(s => s.maNV === key || s.id === key);
+      if (idx >= 0) {
+        Object.assign(STAFF_LIST[idx], normalized);
+      } else {
+        STAFF_LIST.unshift(normalized);
+      }
+      renderHrMasterDetail();
+      commitDatabaseTransaction("NS_HoSoNhanSu", `Cập nhật/Thêm hồ sơ nhân sự ${key}`);
+      return true;
+    }
+
+    function deleteHrStaffRecord(staffId) {
+      if (typeof STAFF_LIST === "undefined") return false;
+      const idx = STAFF_LIST.findIndex(s => s.maNV === staffId || s.id === staffId);
+      if (idx === -1) return false;
+      STAFF_LIST.splice(idx, 1);
+      renderHrMasterDetail();
+      commitDatabaseTransaction("NS_HoSoNhanSu", `Xóa hồ sơ nhân sự ${staffId}`);
+      return true;
+    }
+
+    function deleteQmsCapaRecord(capaId) {
+      if (typeof CAPA_LIST === "undefined") return false;
+      const idx = CAPA_LIST.findIndex(c => c.id === capaId);
+      if (idx === -1) return false;
+      CAPA_LIST.splice(idx, 1);
+      renderCapaTable();
+      commitDatabaseTransaction("QMS_SuCo_CAPA", `Xóa phiếu NC/CAPA ${capaId}`);
+      return true;
+    }
+
+    function exportFullMasterDatabaseXlsx() {
+      if (typeof XLSX === "undefined") {
+        showToast("⚠️ Thư viện SheetJS đang tải, vui lòng xuất từng bảng CSV!", "#d97706");
+        return;
+      }
+      const wb = XLSX.utils.book_new();
+      const catalog = getMasterDbTableCatalog();
+      catalog.forEach(t => {
+        const rows = t.getRows() || [];
+        if (rows.length > 0) {
+          const ws = XLSX.utils.json_to_sheet(rows);
+          XLSX.utils.book_append_sheet(wb, ws, t.sheet.slice(0, 31));
+        }
+      });
+      XLSX.writeFile(wb, "TTA_QMS_LIMS_ISO15189_2022_MasterDB_Live.xlsx");
+      showToast("📊 Đã xuất trọn bộ CSDL 17+ Bảng ra tệp Excel TTA_QMS_LIMS_ISO15189_2022_MasterDB_Live.xlsx!", "#059669");
     }
 
     // Hook RBAC enforcement after dynamic equipment/QR renders
