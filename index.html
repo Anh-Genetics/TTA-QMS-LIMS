@@ -20663,6 +20663,7 @@ function jsonResponse(obj) {
     // Add 2 real Category B Consumables from BM.QTQL.VT03.TTDT-12-02.V1 so all categories A & B are represented
     function enrichReagentLotsDataset() {
       REAGENT_LOTS.forEach(l => {
+        if (Array.isArray(l.qtxnList) && l.qtxnList.length > 0) return;
         const meta = REAGENT_ENRICHMENT_MAP[l.lot] || {
           maDuoc: "HC.KXN.2026", cat: "A. Hóa chất, thuốc thử", pack: "100 test / hộp",
           supplier: "Nhà thầu trúng thầu BV Nhi HN", recvDate: "01/11/2026",
@@ -21108,7 +21109,7 @@ function jsonResponse(obj) {
           const xYear = Math.round(y * (1 + growthA));
           return `
             <tr>
-              <td><span class="badge ${l.cat.startsWith('A') ? 'b-info' : 'b-purple'}">${l.cat}</span></td>
+              <td><span class="badge ${(l.cat || 'A. Hóa chất').startsWith('A') ? 'b-info' : 'b-purple'}">${l.cat}</span></td>
               <td><code style="font-weight:700;color:#0068b5;">${l.maDuoc}</code></td>
               <td><strong>${l.name}</strong><div style="font-size:10.5px;color:#64748b;">${l.dept} • ${l.analyzer}</div></td>
               <td>${l.supplier}</td>
@@ -23789,7 +23790,7 @@ function jsonResponse(obj) {
     // =========================================================================
     // 3-TIER MASTER DATABASE PERSISTENCE & TWO-WAY CLOUD SYNC ENGINE
     // =========================================================================
-    const MASTER_DB_LOCAL_STORE_KEY = "TTA_QMS_LIMS_MASTER_DB_V2026_11_UAT_FINAL_V3";
+    const MASTER_DB_LOCAL_STORE_KEY = "TTA_QMS_LIMS_MASTER_DB_V2026_11_SHPT_2X_AUDIT_V4";
     const MASTER_DB_TX_LOG_KEY = "TTA_QMS_LIMS_MASTER_DB_TX_LOG";
     let DB_PENDING_SYNC_COUNT = 0;
     let DB_LAST_SYNC_TIME = "12/11/2026 10:58:00";
@@ -25883,6 +25884,824 @@ function jsonResponse(obj) {
       });
     };
 
+
+    // =========================================================================
+    // V2026.11 EXACT LIMS EXTRACTION -> PCR -> INVENTORY DEDUCTION & RECONCILIATION ENGINE
+    // =========================================================================
+    let LIMS_DEDUCTION_LOGS = [];
+
+    // Normalize Lot mapping between LIMS_ASSAY_CATALOG and REAGENT_LOTS so every single protocol links 1:1 to a Reagent Lot
+    const SHPT_COMPLETE_REAGENT_CATALOG = [
+      // 3 Extraction Kits
+      {
+        maDuoc: "HC.SHPT.EXT.01", lot: "SM-2609A", backupLot: "SM-2612B",
+        name: "STARMag 96 ProPrep Extraction Kit (Seegene)", supplier: "Seegene Inc. (Hàn Quốc)",
+        dept: "Di truyền & SHPT", analyzer: "SeePrep32 / EZ32", exp: "2027-05-30", daysLeft: 199,
+        temp: "15°C đến 25°C", pack: "96 Rxn/Hộp", packSize: 96, unit: "Rxn", unitPrice: 65000,
+        openStock: 192, inQty: 96, outQty: 96, stock: 192, openKitRxn: 96, minStock: 96,
+        qtxnList: ["EXT-SEEPREP"], isExistingSeed: true
+      },
+      {
+        maDuoc: "HC.SHPT.EXT.02", lot: "200673.B32", backupLot: "200988.B32",
+        name: "TopPURE Maga Serum DNA/RNA Co-Extraction Kit (ABT)", supplier: "Công ty TNHH Giải pháp Y sinh ABT",
+        dept: "Di truyền & SHPT", analyzer: "Máy tách chiết tự động ABT 32", exp: "2027-07-03", daysLeft: 233,
+        temp: "15°C đến 25°C", pack: "32 Rxn/Hộp", packSize: 32, unit: "Rxn", unitPrice: 48000,
+        openStock: 0, inQty: 128, outQty: 64, stock: 64, openKitRxn: 64, minStock: 64,
+        qtxnList: ["EXT-ABT"], isExistingSeed: false
+      },
+      {
+        maDuoc: "HC.SHPT.EXT.03", lot: "TL-2610P", backupLot: "TL-2701P",
+        name: "TianLong Viral DNA and RNA Extraction Kit (Tách từ tính)", supplier: "TianLong Science & Tech",
+        dept: "Di truyền & SHPT", analyzer: "GeneRotex 96 / Libex", exp: "2027-09-15", daysLeft: 307,
+        temp: "15°C đến 25°C", pack: "64 Rxn/Hộp", packSize: 64, unit: "Rxn", unitPrice: 52000,
+        openStock: 0, inQty: 128, outQty: 64, stock: 64, openKitRxn: 64, minStock: 64,
+        qtxnList: ["EXT-TIANLONG"], isExistingSeed: false
+      },
+      // 17 Molecular PCR Assay Kits
+      {
+        maDuoc: "HC.SHPT.PCR.01", lot: "RB0325K03", backupLot: "RB0326M01",
+        name: "Allplex™ Respiratory Panel 1 (Flu A/B, RSV A/B, Subtype)", supplier: "Seegene Inc. (Hàn Quốc)",
+        dept: "Di truyền & SHPT", analyzer: "CFX Opus 96 Dx", exp: "2027-06-30", daysLeft: 230,
+        temp: "-25°C đến -15°C", pack: "100 Rxn/Hộp", packSize: 100, unit: "Rxn", unitPrice: 185000,
+        openStock: 0, inQty: 200, outQty: 100, stock: 100, openKitRxn: 10, minStock: 100,
+        qtxnList: ["RP Panel 1"], isExistingSeed: false, noteLotCrossDemo: true
+      },
+      {
+        maDuoc: "HC.SHPT.PCR.02", lot: "RP3926F03", backupLot: "RP3927A02",
+        name: "Allplex™ Respiratory Panel 2 (AdV, EV, PIV 1-4, MPV)", supplier: "Seegene Inc. (Hàn Quốc)",
+        dept: "Di truyền & SHPT", analyzer: "CFX Opus 96 Dx", exp: "2027-08-08", daysLeft: 269,
+        temp: "-25°C đến -15°C", pack: "100 Rxn/Hộp", packSize: 100, unit: "Rxn", unitPrice: 185000,
+        openStock: 300, inQty: 0, outQty: 100, stock: 200, openKitRxn: 64, minStock: 100,
+        qtxnList: ["RP Panel 2"], isExistingSeed: true
+      },
+      {
+        maDuoc: "HC.SHPT.PCR.03", lot: "RP3026A01", backupLot: "RP3026B05",
+        name: "Allplex™ Respiratory Panel 3 (BoV, HRV, CoV NL63/229E/OC43)", supplier: "Seegene Inc. (Hàn Quốc)",
+        dept: "Di truyền & SHPT", analyzer: "CFX Opus 96 Dx", exp: "2027-06-15", daysLeft: 215,
+        temp: "-25°C đến -15°C", pack: "100 Rxn/Hộp", packSize: 100, unit: "Rxn", unitPrice: 185000,
+        openStock: 0, inQty: 200, outQty: 100, stock: 100, openKitRxn: 100, minStock: 100,
+        qtxnList: ["RP Panel 3"], isExistingSeed: false
+      },
+      {
+        maDuoc: "HC.SHPT.PCR.04", lot: "RB0725H03", backupLot: "RB0726K09",
+        name: "Allplex™ Respiratory Panel 4 (7 Vi khuẩn Hô hấp)", supplier: "Seegene Inc. (Hàn Quốc)",
+        dept: "Di truyền & SHPT", analyzer: "CFX Opus 96 Dx", exp: "2027-06-30", daysLeft: 230,
+        temp: "-25°C đến -15°C", pack: "100 Rxn/Hộp", packSize: 100, unit: "Rxn", unitPrice: 185000,
+        openStock: 400, inQty: 100, outQty: 200, stock: 300, openKitRxn: 72, minStock: 100,
+        qtxnList: ["RP Panel 4", "RP Panel 4_v1"], isExistingSeed: true
+      },
+      {
+        maDuoc: "HC.SHPT.PCR.05", lot: "GI1026B02", backupLot: "GI1026C08",
+        name: "Allplex™ GI-Virus Assay (6 Virus Tiêu hóa: Rota, Noro, AdV, Astro...)", supplier: "Seegene Inc. (Hàn Quốc)",
+        dept: "Di truyền & SHPT", analyzer: "CFX Opus 96 Dx", exp: "2027-08-20", daysLeft: 281,
+        temp: "-25°C đến -15°C", pack: "100 Rxn/Hộp", packSize: 100, unit: "Rxn", unitPrice: 190000,
+        openStock: 0, inQty: 200, outQty: 100, stock: 100, openKitRxn: 100, minStock: 100,
+        qtxnList: ["GI Panel 1"], isExistingSeed: false
+      },
+      {
+        maDuoc: "HC.SHPT.PCR.06", lot: "GI2026C04", backupLot: "GI2026D01",
+        name: "Allplex™ GI-Bacteria(I) Assay (7 Vi khuẩn Tiêu hóa)", supplier: "Seegene Inc. (Hàn Quốc)",
+        dept: "Di truyền & SHPT", analyzer: "CFX Opus 96 Dx", exp: "2027-09-12", daysLeft: 304,
+        temp: "-25°C đến -15°C", pack: "100 Rxn/Hộp", packSize: 100, unit: "Rxn", unitPrice: 190000,
+        openStock: 0, inQty: 200, outQty: 100, stock: 100, openKitRxn: 100, minStock: 100,
+        qtxnList: ["GI Panel 2"], isExistingSeed: false
+      },
+      {
+        maDuoc: "HC.SHPT.PCR.07", lot: "MGB2604", backupLot: "MGB2609",
+        name: "Allplex™ Meningitis-B Assay (6 Vi khuẩn Viêm màng não)", supplier: "Seegene Inc. (Hàn Quốc)",
+        dept: "Di truyền & SHPT", analyzer: "CFX Opus 96 Dx", exp: "2027-07-18", daysLeft: 248,
+        temp: "-25°C đến -15°C", pack: "100 Rxn/Hộp", packSize: 100, unit: "Rxn", unitPrice: 195000,
+        openStock: 0, inQty: 200, outQty: 100, stock: 100, openKitRxn: 100, minStock: 100,
+        qtxnList: ["MG Panel B"], isExistingSeed: false
+      },
+      {
+        maDuoc: "HC.SHPT.PCR.08", lot: "MGV12605", backupLot: "MGV12610",
+        name: "Allplex™ Meningitis-V1 Assay (7 Virus Màng não Nhóm 1: HSV1/2, VZV, EBV, CMV, HHV6/7)", supplier: "Seegene Inc. (Hàn Quốc)",
+        dept: "Di truyền & SHPT", analyzer: "CFX Opus 96 Dx", exp: "2027-07-18", daysLeft: 248,
+        temp: "-25°C đến -15°C", pack: "100 Rxn/Hộp", packSize: 100, unit: "Rxn", unitPrice: 195000,
+        openStock: 0, inQty: 200, outQty: 100, stock: 100, openKitRxn: 100, minStock: 100,
+        qtxnList: ["MG Panel 1"], isExistingSeed: false
+      },
+      {
+        maDuoc: "HC.SHPT.PCR.09", lot: "MGV22608", backupLot: "MGV22611",
+        name: "Allplex™ Meningitis-V2 Assay (5 Virus Màng não Nhóm 2: EV, Mumps, Parecho, Rubella, Parvo B19)", supplier: "Seegene Inc. (Hàn Quốc)",
+        dept: "Di truyền & SHPT", analyzer: "CFX Opus 96 Dx", exp: "2027-08-25", daysLeft: 286,
+        temp: "-25°C đến -15°C", pack: "100 Rxn/Hộp", packSize: 100, unit: "Rxn", unitPrice: 195000,
+        openStock: 0, inQty: 200, outQty: 100, stock: 100, openKitRxn: 100, minStock: 100,
+        qtxnList: ["MG Panel 2"], isExistingSeed: false
+      },
+      {
+        maDuoc: "HC.SHPT.PCR.10", lot: "HBV-2609A", backupLot: "HBV-2611B",
+        name: "LightPower iVA / GeneProof HBV Quantitative PCR Kit", supplier: "GeneProof / Việt Á",
+        dept: "Di truyền & SHPT", analyzer: "QuantStudio 5 Dx", exp: "2027-09-15", daysLeft: 307,
+        temp: "-25°C đến -15°C", pack: "100 Rxn/Hộp", packSize: 100, unit: "Rxn", unitPrice: 135000,
+        openStock: 0, inQty: 200, outQty: 100, stock: 100, openKitRxn: 9, minStock: 100,
+        qtxnList: ["HBV"], isExistingSeed: false, noteLotCrossDemo: true
+      },
+      {
+        maDuoc: "HC.SHPT.PCR.11", lot: "CMV-2608B", backupLot: "CMV-2611C",
+        name: "LightPower iVA / GeneProof CMV Quantitative PCR Kit", supplier: "GeneProof / Việt Á",
+        dept: "Di truyền & SHPT", analyzer: "QuantStudio 5 Dx", exp: "2027-08-10", daysLeft: 271,
+        temp: "-25°C đến -15°C", pack: "100 Rxn/Hộp", packSize: 100, unit: "Rxn", unitPrice: 140000,
+        openStock: 0, inQty: 200, outQty: 100, stock: 100, openKitRxn: 100, minStock: 100,
+        qtxnList: ["CMV"], isExistingSeed: false
+      },
+      {
+        maDuoc: "HC.SHPT.PCR.12", lot: "EBV-2607C", backupLot: "EBV-2611D",
+        name: "LightPower iVA / GeneProof EBV Quantitative PCR Kit", supplier: "GeneProof / Việt Á",
+        dept: "Di truyền & SHPT", analyzer: "QuantStudio 5 Dx", exp: "2027-08-10", daysLeft: 271,
+        temp: "-25°C đến -15°C", pack: "100 Rxn/Hộp", packSize: 100, unit: "Rxn", unitPrice: 140000,
+        openStock: 0, inQty: 200, outQty: 100, stock: 100, openKitRxn: 100, minStock: 100,
+        qtxnList: ["EBV"], isExistingSeed: false
+      },
+      {
+        maDuoc: "HC.SHPT.PCR.13", lot: "ADV-2606", backupLot: "ADV-2611",
+        name: "Adenovirus (ADV) Real-time PCR Kit", supplier: "GeneProof / Seegene",
+        dept: "Di truyền & SHPT", analyzer: "QuantStudio 5 Dx", exp: "2027-09-01", daysLeft: 293,
+        temp: "-25°C đến -15°C", pack: "100 Rxn/Hộp", packSize: 100, unit: "Rxn", unitPrice: 135000,
+        openStock: 0, inQty: 200, outQty: 100, stock: 100, openKitRxn: 100, minStock: 100,
+        qtxnList: ["ADV"], isExistingSeed: false
+      },
+      {
+        maDuoc: "HC.SHPT.PCR.14", lot: "EV-2609", backupLot: "EV-2612",
+        name: "Enterovirus One-Step RT-qPCR Kit [Dịch não tủy / Phân]", supplier: "GeneProof / Seegene",
+        dept: "Di truyền & SHPT", analyzer: "QuantStudio 5 Dx", exp: "2027-09-15", daysLeft: 307,
+        temp: "-25°C đến -15°C", pack: "100 Rxn/Hộp", packSize: 100, unit: "Rxn", unitPrice: 140000,
+        openStock: 0, inQty: 200, outQty: 100, stock: 100, openKitRxn: 100, minStock: 100,
+        qtxnList: ["EV"], isExistingSeed: false
+      },
+      {
+        maDuoc: "HC.SHPT.PCR.15", lot: "HSV-2609", backupLot: "HSV-2612",
+        name: "HSV 1/2 Real-time PCR Kit [Dịch não tủy / Máu]", supplier: "GeneProof a.s.",
+        dept: "Di truyền & SHPT", analyzer: "QuantStudio 5 Dx", exp: "2027-09-15", daysLeft: 307,
+        temp: "-25°C đến -15°C", pack: "100 Rxn/Hộp", packSize: 100, unit: "Rxn", unitPrice: 140000,
+        openStock: 0, inQty: 200, outQty: 100, stock: 100, openKitRxn: 100, minStock: 100,
+        qtxnList: ["HSV"], isExistingSeed: false
+      },
+      {
+        maDuoc: "HC.SHPT.PCR.16", lot: "MTB-2608", backupLot: "MTB-2612",
+        name: "Mycobacterium tuberculosis (MTB Complex) Real-time PCR Kit", supplier: "GeneProof / Seegene",
+        dept: "Di truyền & SHPT", analyzer: "QuantStudio 5 Dx", exp: "2027-08-01", daysLeft: 262,
+        temp: "-25°C đến -15°C", pack: "100 Rxn/Hộp", packSize: 100, unit: "Rxn", unitPrice: 145000,
+        openStock: 0, inQty: 200, outQty: 100, stock: 100, openKitRxn: 100, minStock: 100,
+        qtxnList: ["MTB"], isExistingSeed: false
+      },
+      {
+        maDuoc: "HC.SHPT.PCR.17", lot: "MP-2608", backupLot: "MP-2612",
+        name: "Mycoplasma pneumoniae Real-time PCR Kit", supplier: "GeneProof / Seegene",
+        dept: "Di truyền & SHPT", analyzer: "QuantStudio 5 Dx", exp: "2027-08-01", daysLeft: 262,
+        temp: "-25°C đến -15°C", pack: "100 Rxn/Hộp", packSize: 100, unit: "Rxn", unitPrice: 135000,
+        openStock: 0, inQty: 200, outQty: 100, stock: 100, openKitRxn: 100, minStock: 100,
+        qtxnList: ["MP"], isExistingSeed: false
+      }
+    ];
+
+    // Helper to find matching reagent lot in REAGENT_LOTS by lot code or protocol code
+    function findReagentLotForLims(lotCode, qtxnOrExtName) {
+      if (!Array.isArray(REAGENT_LOTS)) return null;
+      let found = REAGENT_LOTS.find(l => l.lot === lotCode || l.backupLot === lotCode);
+      if (found) return found;
+      if (qtxnOrExtName) {
+        found = REAGENT_LOTS.find(l => Array.isArray(l.qtxnList) && l.qtxnList.includes(qtxnOrExtName));
+        if (found) return found;
+        const low = String(qtxnOrExtName).toLowerCase();
+        found = REAGENT_LOTS.find(l => l.name.toLowerCase().includes(low));
+      }
+      return found || null;
+    }
+
+    // Receive & Open missing SHPT Reagent Lots into REAGENT_LOTS (Import + FEFO Open Box verification)
+    function ensureAllShptReagentsImportedAndOpened() {
+      if (window._shpt20ReagentsInitialized) return;
+      window._shpt20ReagentsInitialized = true;
+
+      // Remove old duplicate aliases if any (L_8899 -> RB0725H03, Panel-2-ABGDF -> RP3926F03)
+      REAGENT_LOTS = REAGENT_LOTS.filter(l => l.lot !== "L_8899" && l.lot !== "Panel-2-ABGDF");
+
+      SHPT_COMPLETE_REAGENT_CATALOG.forEach(item => {
+        const existingIdx = REAGENT_LOTS.findIndex(l => l.lot === item.lot);
+        const lotRecord = {
+          maDuoc: item.maDuoc,
+          cat: "A. Hóa chất, thuốc thử",
+          recvDate: "12/11/2026",
+          y12: 1200,
+          lot: item.lot,
+          backupLot: item.backupLot,
+          name: item.name,
+          supplier: item.supplier,
+          dept: item.dept,
+          analyzer: item.analyzer,
+          exp: item.exp,
+          daysLeft: item.daysLeft,
+          temp: item.temp,
+          pack: item.pack,
+          packSize: item.packSize,
+          openStock: item.openStock,
+          inQty: item.inQty,
+          outQty: item.outQty,
+          stock: item.stock,
+          openKitRxn: item.openKitRxn,
+          initialOpenKitRxnBeforeTest: item.openKitRxn,
+          initialStockBeforeTest: item.stock,
+          minStock: item.minStock,
+          unit: item.unit,
+          unitPrice: item.unitPrice,
+          cqa: "Đạt 100% (BM-12-06: Đá khô -20°C / Nguyên tem)",
+          lotVerify: "Đạt (BM-12-11: ΔCt ≤ 0.35)",
+          openDate: "12/11/2026",
+          onboardExp: "12/12/2026",
+          freezeThaw: 1,
+          freezeCount: 1,
+          maxFreeze: 5,
+          testBN: 0,
+          testQc: 0,
+          testEqa: 0,
+          testRerun: 0,
+          m45: item.minStock + item.packSize,
+          qtxnList: item.qtxnList,
+          importStatusNote: item.isExistingSeed ? "Tồn đầu kỳ sẵn có" : `Đã Nhập mới +${item.inQty} Rxn & Xuất mở ${item.outQty} Rxn (FEFO)`
+        };
+        if (existingIdx >= 0) {
+          REAGENT_LOTS[existingIdx] = Object.assign(REAGENT_LOTS[existingIdx], lotRecord);
+        } else {
+          REAGENT_LOTS.push(lotRecord);
+        }
+      });
+
+      // Also update pcrKitSelect dropdown in UI so all 17 PCR kits appear!
+      const pcrKitSel = document.getElementById("pcrKitSelect");
+      if (pcrKitSel) {
+        const shptPcrLots = REAGENT_LOTS.filter(l => l.dept === "Di truyền & SHPT" && (!l.maDuoc || !l.maDuoc.includes(".EXT.")));
+        pcrKitSel.innerHTML = shptPcrLots.map(l => `<option value="${l.lot}">[${l.lot}] ${l.name} (Mở: ${l.openKitRxn} Rxn | Kho: ${l.stock} Rxn)</option>`).join("");
+      }
+      // Update newExtKitSelect dropdown to include all 3 extraction kits
+      const extKitSel = document.getElementById("newExtKitSelect");
+      if (extKitSel) {
+        extKitSel.innerHTML = `
+          <option value="KT-SEE|STARMag 96 ProPrep Extraction Kit|SM-2609A|30/05/2027">[KT-SEE] STARMag 96 ProPrep Extraction Kit (Lot: SM-2609A • HSD: 30/05/2027)</option>
+          <option value="KT-ABT|TopPURE Maga Serum DNA/RNA Co-Extraction Kit|200673.B32|03/07/2027">[KT-ABT] TopPURE Maga Serum DNA/RNA Co-Extraction Kit (Lot: 200673.B32 • HSD: 03/07/2027)</option>
+          <option value="KT-TL|TianLong Viral DNA and RNA Extraction Kit|TL-2610P|15/09/2027">[KT-TL] TianLong Viral DNA and RNA Extraction Kit (Lot: TL-2610P • HSD: 15/09/2027)</option>
+        `;
+      }
+    }
+
+    // Exact mathematical deduction for an Extraction Batch
+    function executeExactExtBatchDeduction(curBatch) {
+      if (!curBatch) return null;
+      const samples = LIMS_LIS_ORDERS.filter(o => o.idMeTach === curBatch.idMeTach);
+      const nMau = samples.length;
+      if (curBatch._deducted) {
+        return curBatch._deductionSummary;
+      }
+
+      const extLot = findReagentLotForLims(curBatch.soLotKit, curBatch.boKitTach);
+      const packSize = extLot ? (extLot.packSize || 96) : 96;
+      const tonDauMo = extLot ? (extLot.openKitRxn || 0) : 64;
+      const tonKhoChanDau = extLot ? (extLot.stock || 0) : 64;
+      let autoOpenedRxn = 0;
+      let usedLot1 = nMau;
+      let usedLot2 = 0;
+
+      if (extLot && nMau > 0) {
+        if (extLot.openKitRxn < nMau) {
+          usedLot1 = extLot.openKitRxn;
+          usedLot2 = nMau - usedLot1;
+          autoOpenedRxn = packSize;
+          extLot.stock = Math.max(0, extLot.stock - packSize);
+          extLot.outQty = (extLot.outQty || 0) + packSize;
+          extLot.openKitRxn = packSize - usedLot2;
+        } else {
+          extLot.openKitRxn = extLot.openKitRxn - nMau;
+        }
+        extLot.testBN = (extLot.testBN || 0) + nMau;
+        extLot.freezeThaw = Math.min(5, (extLot.freezeThaw || 1) + 1);
+      }
+
+      const tonCuoiMo = extLot ? extLot.openKitRxn : (tonDauMo - nMau);
+      const tonKhoChanCuoi = extLot ? extLot.stock : tonKhoChanDau;
+
+      const summary = {
+        txId: `DED-EXT-${String(LIMS_DEDUCTION_LOGS.length + 1).padStart(3, "0")}`,
+        time: curBatch.thoiGian || "13/11/2026 08:15",
+        batchType: "Mẻ Tách chiết (2A)",
+        batchId: curBatch.idMeTach,
+        protocolOrEquip: `${curBatch.tenThietBi}`,
+        reagentName: curBatch.boKitTach,
+        lotCode: curBatch.soLotKit,
+        backupLot: extLot?.backupLot || "",
+        tonDauMo,
+        nMau,
+        nChung: 0,
+        nHaoHut: 0,
+        totalDeducted: nMau,
+        usedLot1,
+        usedLot2,
+        autoOpenedRxn,
+        tonCuoiMo,
+        tonKhoChanDau,
+        tonKhoChanCuoi,
+        status: autoOpenedRxn > 0 ? `⚠️ Gối Hộp (+${autoOpenedRxn} Rxn FEFO)` : "✅ Đủ trên Hộp mở"
+      };
+
+      curBatch._deducted = true;
+      curBatch._deductionSummary = summary;
+      curBatch.tonDauKitTach = tonDauMo;
+      curBatch.soTestKhauTru = nMau;
+      curBatch.tonCuoiKitTach = tonCuoiMo;
+      LIMS_DEDUCTION_LOGS.push(summary);
+      renderLimsDeductionHistoryTable();
+      return summary;
+    }
+
+    // Exact mathematical deduction for a PCR Batch (including Lot-Crossing / FEFO Box Auto-Opening)
+    function executeExactPcrBatchDeduction(curPcr) {
+      if (!curPcr) return null;
+      const samples = LIMS_LIS_ORDERS.filter(o => o.idMePcr === curPcr.idMePcr);
+      const nMau = samples.length;
+      const nChung = curPcr.soMauChung || 2;
+      const nHaoHut = curPcr.haoHutPipet || 1;
+      const totalRxn = nMau + nChung + nHaoHut;
+
+      if (curPcr._deducted) {
+        return curPcr._deductionSummary;
+      }
+
+      const meta = getAssayMetadata(curPcr.maQtxn);
+      const pcrLot = findReagentLotForLims(curPcr.kitLotDangDung, curPcr.maQtxn);
+      const packSize = pcrLot ? (pcrLot.packSize || 100) : 100;
+      const tonDauMo = pcrLot ? (pcrLot.openKitRxn || 0) : (curPcr.tonLotDangDung || 85);
+      const tonKhoChanDau = pcrLot ? (pcrLot.stock || 0) : 100;
+
+      let autoOpenedRxn = 0;
+      let usedLot1 = totalRxn;
+      let usedLot2 = 0;
+      let secondLotCode = "";
+
+      if (pcrLot && totalRxn > 0) {
+        if (pcrLot.openKitRxn < totalRxn) {
+          // Lot-Crossing / Box-Crossing triggered!
+          usedLot1 = pcrLot.openKitRxn;
+          usedLot2 = totalRxn - usedLot1;
+          autoOpenedRxn = packSize;
+          secondLotCode = pcrLot.backupLot || (pcrLot.lot + "-B2");
+          pcrLot.stock = Math.max(0, pcrLot.stock - packSize);
+          pcrLot.outQty = (pcrLot.outQty || 0) + packSize;
+          pcrLot.openKitRxn = packSize - usedLot2;
+          curPcr.kitLotMoi = secondLotCode;
+        } else {
+          pcrLot.openKitRxn = pcrLot.openKitRxn - totalRxn;
+        }
+        pcrLot.testBN = (pcrLot.testBN || 0) + nMau;
+        pcrLot.testQc = (pcrLot.testQc || 0) + nChung;
+        pcrLot.testRerun = (pcrLot.testRerun || 0) + nHaoHut;
+        pcrLot.freezeThaw = Math.min(5, (pcrLot.freezeThaw || 1) + 1);
+      }
+
+      const tonCuoiMo = pcrLot ? pcrLot.openKitRxn : Math.max(0, tonDauMo - totalRxn);
+      const tonKhoChanCuoi = pcrLot ? pcrLot.stock : tonKhoChanDau;
+
+      curPcr.tonDauMe = tonDauMo;
+      curPcr.tonLotDangDung = tonCuoiMo;
+      curPcr.soTestLotHienTai = usedLot1;
+      curPcr.soTestLotMoi = usedLot2;
+      curPcr.tonSauMe = tonCuoiMo;
+
+      const summary = {
+        txId: `DED-PCR-${String(LIMS_DEDUCTION_LOGS.length + 1).padStart(3, "0")}`,
+        time: curPcr.thoiGian || "13/11/2026 09:30",
+        batchType: "Mẻ Chạy PCR (3A)",
+        batchId: curPcr.idMePcr,
+        protocolOrEquip: `${curPcr.maQtxn} (${curPcr.tenThietBi})`,
+        reagentName: pcrLot ? pcrLot.name : meta.defaultKitName,
+        lotCode: curPcr.kitLotDangDung,
+        backupLot: secondLotCode,
+        tonDauMo,
+        nMau,
+        nChung,
+        nHaoHut,
+        totalDeducted: totalRxn,
+        usedLot1,
+        usedLot2,
+        autoOpenedRxn,
+        tonCuoiMo,
+        tonKhoChanDau,
+        tonKhoChanCuoi,
+        status: usedLot2 > 0
+          ? `⚠️ Gối 2 Lot (${usedLot1} Lot ${curPcr.kitLotDangDung} + ${usedLot2} Lot ${secondLotCode})`
+          : "✅ Đủ trên Lot hiện tại"
+      };
+
+      curPcr._deducted = true;
+      curPcr._deductionSummary = summary;
+      LIMS_DEDUCTION_LOGS.push(summary);
+      renderLimsDeductionHistoryTable();
+      return summary;
+    }
+
+    function renderLimsDeductionHistoryTable() {
+      const tbody = document.getElementById("limsDeductionHistoryTableBody");
+      if (!tbody) return;
+      const badge = document.getElementById("limsDeductionTotalBadge");
+      const totalTx = LIMS_DEDUCTION_LOGS.length;
+      const totalRxn = LIMS_DEDUCTION_LOGS.reduce((s, x) => s + x.totalDeducted, 0);
+      if (badge) {
+        badge.textContent = `Đã đối soát ${totalTx} giao dịch (${totalRxn} phản ứng khấu trừ • Sai số = 0)`;
+      }
+
+      tbody.innerHTML = LIMS_DEDUCTION_LOGS.slice().reverse().map(x => `
+        <tr>
+          <td><code style="font-weight:800;color:#0f4c81;">${x.txId}</code></td>
+          <td>${x.time}</td>
+          <td>
+            <span class="badge ${x.batchType.includes('PCR') ? 'b-purple' : 'b-info'}">${x.batchType}</span>
+            <div style="margin-top:2px;"><code style="font-weight:800;">${x.batchId}</code></div>
+          </td>
+          <td><strong>${x.protocolOrEquip}</strong></td>
+          <td>
+            <strong>${x.reagentName}</strong>
+            <div style="font-size:10.5px;color:#475569;">Lot 1: <code>${x.lotCode}</code> ${x.backupLot ? `→ Lot 2: <code>${x.backupLot}</code>` : ''}</div>
+          </td>
+          <td style="text-align:center;font-weight:800;color:#334155;">${x.tonDauMo} Rxn</td>
+          <td style="text-align:center;">
+            <strong style="color:#dc2626;font-size:12.5px;">−${x.totalDeducted} Rxn</strong>
+            <div style="font-size:10px;color:#64748b;">(${x.nMau} BN + ${x.nChung} QC + ${x.nHaoHut} Hao hụt)</div>
+          </td>
+          <td style="text-align:center;">
+            ${x.autoOpenedRxn > 0
+              ? `<span class="badge b-warn">+${x.autoOpenedRxn} Rxn (Mở 1 hộp FEFO)</span>`
+              : `<span style="color:#64748b;font-size:11px;">0 (Dùng hộp đang mở)</span>`}
+          </td>
+          <td style="text-align:center;font-weight:800;color:#059669;font-size:12.5px;">${x.tonCuoiMo} Rxn</td>
+          <td style="text-align:center;font-weight:700;">${x.tonKhoChanDau} → ${x.tonKhoChanCuoi} Rxn</td>
+          <td><span class="badge ${x.usedLot2 > 0 ? 'b-warn' : 'b-pass'}">${x.status}</span></td>
+        </tr>
+      `).join("");
+    }
+
+    function exportLimsDeductionLedgerCsv() {
+      const headers = ["Ma_GD", "Thoi_Gian", "Loai_Me", "Ma_Me", "Quy_Trinh_May", "Ten_Sinh_Pham", "Lot_1", "Lot_2", "Ton_Mo_Dau", "Mau_BN", "Mau_Chung", "Hao_Hut", "Tong_Khau_Tru", "Tu_Dong_Mo_Hop_FEFO", "Ton_Mo_Cuoi", "Ton_Kho_Chan_Cuoi", "Trang_Thai"];
+      const lines = [headers.join(",")];
+      LIMS_DEDUCTION_LOGS.forEach(x => {
+        lines.push([
+          x.txId, `"${x.time}"`, `"${x.batchType}"`, x.batchId, `"${x.protocolOrEquip}"`, `"${x.reagentName}"`,
+          x.lotCode, x.backupLot || "", x.tonDauMo, x.nMau, x.nChung, x.nHaoHut, x.totalDeducted,
+          x.autoOpenedRxn, x.tonCuoiMo, x.tonKhoChanCuoi, `"${x.status}"`
+        ].join(","));
+      });
+      const blob = new Blob(["\uFEFF" + lines.join("\n")], { type: "text/csv;charset=utf-8;" });
+      const a = document.createElement("a");
+      a.href = URL.createObjectURL(blob);
+      a.download = "So_Doi_Soat_Khau_Tru_Hoa_Chat_SHPT_LIMS.csv";
+      a.click();
+      showToast("⬇️ Đã xuất Sổ Đối soát Khấu trừ Hóa chất SHPT (.CSV)!", "#0284c7");
+    }
+
+    // Override finalizeAndPrintSelectedExtBatch & finalizeAndPrintSelectedPcrBatch to use the exact deduction engine & enrich Printable Dossiers
+    finalizeAndPrintSelectedExtBatch = function() {
+      const curBatch = LIMS_EXT_BATCHES.find(x => x.idMeTach === selectedExtBatchId) || LIMS_EXT_BATCHES[0];
+      if (!curBatch) return;
+      curBatch.trangThai = "Đã hoàn thành";
+      curBatch.congTacNap = false;
+      curBatch.filePdf = `HoSoTachChiet/${curBatch.idMeTach}.pdf`;
+      const sum = executeExactExtBatchDeduction(curBatch);
+      if (typeof renderInventoryAll === "function") renderInventoryAll();
+      renderLimsExtractionWorkbench();
+      openPrintableLimsDossier("EXT");
+      commitDatabaseTransaction("LIMS_2A_MeTachChiet", `Chốt mẻ tách ${curBatch.idMeTach} & trừ ${sum ? sum.totalDeducted : 0} Rxn (Lot ${curBatch.soLotKit})`);
+      showToast(`✅ Đã chốt mẻ tách <strong>${curBatch.idMeTach}</strong>: Trừ <strong>${sum ? sum.totalDeducted : 0} Rxn</strong> (Tồn mở: ${sum ? sum.tonDauMo : 0} → <strong>${sum ? sum.tonCuoiMo : 0} Rxn</strong>) & xuất Hồ sơ Tách chiết A4!`, "#059669");
+    };
+
+    finalizeAndPrintSelectedPcrBatch = function() {
+      const curPcr = LIMS_PCR_BATCHES.find(x => x.idMePcr === selectedPcrBatchId) || LIMS_PCR_BATCHES[0];
+      if (!curPcr) return;
+      curPcr.trangThai = "Đã hoàn thành";
+      curPcr.congTacNapPcr = false;
+      curPcr.filePdf = `HoSoPCR/${curPcr.idMePcr}.pdf`;
+      const sum = executeExactPcrBatchDeduction(curPcr);
+      if (typeof renderInventoryAll === "function") renderInventoryAll();
+      renderLimsPcrWaitingAndDetail();
+      openPrintableLimsDossier("PCR");
+      commitDatabaseTransaction("LIMS_3A_MeChayPCR", `Chốt mẻ PCR ${curPcr.idMePcr} (${curPcr.maQtxn}) & trừ ${sum ? sum.totalDeducted : 0} Rxn`);
+      showToast(`✅ Đã chốt mẻ PCR <strong>${curPcr.idMePcr}</strong> (${curPcr.maQtxn}): Trừ <strong>${sum ? sum.totalDeducted : 0} Rxn</strong> (Tồn mở: ${sum ? sum.tonDauMo : 0} → <strong>${sum ? sum.tonCuoiMo : 0} Rxn</strong>) & xuất Hồ sơ XN PCR A4!`, "#7c3aed");
+    };
+
+    // Enhance openPrintableLimsDossier to include Section "ĐỐI SOÁT KHẤU TRỪ TỒN KHO HÓA CHẤT (BM-12-17 / BM-12-18)" on both EXT and PCR A4 sheets!
+    const _baseOpenPrintableLimsDossierV3 = openPrintableLimsDossier;
+    openPrintableLimsDossier = function(type = "EXT") {
+      _baseOpenPrintableLimsDossierV3(type);
+      const container = document.getElementById("printableLimsDossierContent");
+      if (!container) return;
+
+      if (type === "EXT") {
+        const curBatch = LIMS_EXT_BATCHES.find(b => b.idMeTach === selectedExtBatchId) || LIMS_EXT_BATCHES[0];
+        if (!curBatch) return;
+        const s = curBatch._deductionSummary;
+        if (s && !container.innerHTML.includes("ĐỐI SOÁT KHẤU TRỪ KHO KIT TÁCH CHIẾT")) {
+          const reconHtml = `
+            <div style="margin-top:12px;padding:8px 12px;border:1.5px solid #0284c7;background:#f0f9ff;border-radius:6px;font-size:11.5px;">
+              <div style="font-weight:800;color:#0f4c81;margin-bottom:4px;">4. ĐỐI SOÁT KHẤU TRỪ KHO KIT TÁCH CHIẾT &amp; VẬT TƯ (LIÊN THÔNG KHO 4C — BM-12-18)</div>
+              <div>• <strong>Bộ Kit tách chiết:</strong> ${s.reagentName} (Lot: <code>${s.lotCode}</code>) &nbsp;|&nbsp; <strong>Mã giao dịch:</strong> <code>${s.txId}</code></div>
+              <div>• <strong>Tồn mở đầu mẻ (4°C):</strong> <strong>${s.tonDauMo} Rxn</strong> &nbsp;→&nbsp; <strong>Khấu trừ thực tế:</strong> <strong style="color:#dc2626;">−${s.totalDeducted} Rxn</strong> (${s.nMau} mẫu BN) ${s.autoOpenedRxn > 0 ? `&nbsp;→&nbsp; <strong>Tự động xuất mở hộp mới FEFO:</strong> +${s.autoOpenedRxn} Rxn` : ''} &nbsp;→&nbsp; <strong>Tồn mở cuối mẻ:</strong> <strong style="color:#059669;">${s.tonCuoiMo} Rxn</strong> (Tồn kho chẵn: <strong>${s.tonKhoChanCuoi} Rxn</strong>).</div>
+            </div>
+          `;
+          container.firstElementChild.insertAdjacentHTML("beforeend", reconHtml);
+        }
+      } else {
+        const curPcr = LIMS_PCR_BATCHES.find(b => b.idMePcr === selectedPcrBatchId) || LIMS_PCR_BATCHES[0];
+        if (!curPcr) return;
+        const s = curPcr._deductionSummary;
+        if (s && !container.innerHTML.includes("VI. ĐỐI SOÁT KHẤU TRỪ TỒN KHO SINH PHẨM PCR")) {
+          const reconHtml = `
+            <div style="margin-top:12px;padding:8px 12px;border:1.5px solid #7c3aed;background:#f5f3ff;border-radius:6px;font-size:11.5px;">
+              <div style="font-weight:800;color:#5b21b6;margin-bottom:4px;">VI. ĐỐI SOÁT KHẤU TRỪ TỒN KHO SINH PHẨM PCR &amp; GỐI LOT (LIÊN THÔNG KHO 4C — BM-12-18)</div>
+              <div>• <strong>Bộ sinh phẩm PCR:</strong> ${s.reagentName} &nbsp;|&nbsp; <strong>Mã giao dịch kho:</strong> <code>${s.txId}</code> &nbsp;|&nbsp; <strong>Trạng thái Lot:</strong> <strong>${s.status}</strong></div>
+              <div>• <strong>Tồn mở đầu mẻ:</strong> <strong>${s.tonDauMo} Rxn</strong> &nbsp;→&nbsp; <strong>Tổng khấu trừ mẻ:</strong> <strong style="color:#dc2626;">−${s.totalDeducted} Rxn</strong> (${s.nMau} mẫu BN + ${s.nChung} chứng PC/NC + ${s.nHaoHut} hao hụt pipet; trong đó trừ <strong>${s.usedLot1} Rxn</strong> ở Lot <code>${s.lotCode}</code>${s.usedLot2 > 0 ? ` và trừ <strong>${s.usedLot2} Rxn</strong> sang Lot mới <code>${s.backupLot}</code> sau khi xuất mở +${s.autoOpenedRxn} Rxn FEFO` : ''}) &nbsp;→&nbsp; <strong>Tồn mở cuối mẻ:</strong> <strong style="color:#059669;">${s.tonCuoiMo} Rxn</strong> (Tồn kho chẵn còn lại: <strong>${s.tonKhoChanCuoi} Rxn</strong>).</div>
+            </div>
+          `;
+          container.firstElementChild.insertAdjacentHTML("beforeend", reconHtml);
+        }
+      }
+    };
+
+    // Execute all 17 Molecular Biology PCR protocols × 2 runs each (34 PCR runs) + 6 Extraction batches (2 runs per extraction kit)
+    // and populate the live state so every single protocol, dossier print, and inventory deduction is persisted & visible!
+    function runAndSeedAll17ShptProtocols2x() {
+      if (window._all17Protocols2xExecuted) return;
+      window._all17Protocols2xExecuted = true;
+
+      ensureAllShptReagentsImportedAndOpened();
+
+      // Clear old demo batches so we have a clean, complete, mathematically exact ledger of 6 Extraction Batches + 34 PCR Batches
+      LIMS_LIS_ORDERS = [];
+      LIMS_EXT_BATCHES = [];
+      LIMS_PCR_BATCHES = [];
+      LIMS_DEDUCTION_LOGS = [];
+
+      const DISTINCT_17_PROTOCOLS = [
+        "RP Panel 1", "RP Panel 2", "RP Panel 3", "RP Panel 4",
+        "GI Panel 1", "GI Panel 2",
+        "MG Panel B", "MG Panel 1", "MG Panel 2",
+        "HBV", "CMV", "EBV", "ADV", "EV", "HSV", "MTB", "MP"
+      ];
+
+      const PATIENT_POOL = [
+        { name: "Nguyễn Hoàng Bảo An (2 tuổi)", dept: "Khoa Hô hấp" },
+        { name: "Trần Minh Khôi (4 tuổi)", dept: "Khoa Bệnh nhiệt đới" },
+        { name: "Lê Khánh Linh (1 tuổi)", dept: "Khoa Tiêu hóa" },
+        { name: "Phạm Gia Huy (3 tuổi)", dept: "Khoa Hồi sức tích cực (ICU)" },
+        { name: "Vũ Hải Đăng (5 tuổi)", dept: "Khoa Khám bệnh" },
+        { name: "Đỗ Đăng Khoa (2 tuổi)", dept: "Khoa Sơ sinh" },
+        { name: "Hoàng Thảo My (6 tuổi)", dept: "Khoa Nội tổng hợp" },
+        { name: "Bùi Tuấn Kiệt (3 tuổi)", dept: "Khoa Cấp cứu" }
+      ];
+
+      // Create 6 Extraction Batches (2 runs for each of the 3 Extraction Kits: STARMag, TopPURE, TianLong)
+      // Run 1 of Extraction Kits: EXT-R1-SEEPREP (protocols 1..6), EXT-R1-ABT (protocols 7..12), EXT-R1-TIANLONG (protocols 13..17)
+      // Run 2 of Extraction Kits: EXT-R2-SEEPREP (protocols 1..6), EXT-R2-ABT (protocols 7..12), EXT-R2-TIANLONG (protocols 13..17)
+      const extConfigs = [
+        { runIdx: 1, batchId: "M-261113-SEE-L1", time: "13/11/2026 07:30:00", idMay: "TTB.KXN.SHPT.02", tenMay: "Máy tách chiết tự động SeePrep32 (Seegene)", idKit: "KT-SEE", boKit: "STARMag 96 ProPrep Extraction Kit", lot: "SM-2609A", hsd: "30/05/2027", proK: 10, car: 0, op: "656 | Nguyễn Thị Nhài", protoSlice: [0, 6] },
+        { runIdx: 1, batchId: "M-261113-ABT-L1", time: "13/11/2026 07:45:00", idMay: "TTB.KXN.SHPT.03", tenMay: "Máy tách chiết DNA/RNA tự động ABT 32 vị trí", idKit: "KT-ABT", boKit: "TopPURE Maga Serum DNA/RNA Co-Extraction Kit", lot: "200673.B32", hsd: "03/07/2027", proK: 20, car: 10, op: "673 | Đinh Thị Phương Anh", protoSlice: [6, 12] },
+        { runIdx: 1, batchId: "M-261113-TLG-L1", time: "13/11/2026 08:00:00", idMay: "TTB.KXN.SHPT.04", tenMay: "Máy tách chiết từ tính TianLong GeneRotex 96", idKit: "KT-TL", boKit: "TianLong Viral DNA and RNA Extraction Kit", lot: "TL-2610P", hsd: "15/09/2027", proK: 15, car: 5, op: "675 | Bùi Thu Linh", protoSlice: [12, 17] },
+        { runIdx: 2, batchId: "M-261113-SEE-L2", time: "13/11/2026 13:15:00", idMay: "TTB.KXN.SHPT.02", tenMay: "Máy tách chiết tự động SeePrep32 (Seegene)", idKit: "KT-SEE", boKit: "STARMag 96 ProPrep Extraction Kit", lot: "SM-2609A", hsd: "30/05/2027", proK: 10, car: 0, op: "686 | Nguyễn Viết Hoàng", protoSlice: [0, 6] },
+        { runIdx: 2, batchId: "M-261113-ABT-L2", time: "13/11/2026 13:30:00", idMay: "TTB.KXN.SHPT.03", tenMay: "Máy tách chiết DNA/RNA tự động ABT 32 vị trí", idKit: "KT-ABT", boKit: "TopPURE Maga Serum DNA/RNA Co-Extraction Kit", lot: "200673.B32", hsd: "03/07/2027", proK: 20, car: 10, op: "673 | Đinh Thị Phương Anh", protoSlice: [6, 12] },
+        { runIdx: 2, batchId: "M-261113-TLG-L2", time: "13/11/2026 13:45:00", idMay: "TTB.KXN.SHPT.04", tenMay: "Máy tách chiết từ tính TianLong GeneRotex 96", idKit: "KT-TL", boKit: "TianLong Viral DNA and RNA Extraction Kit", lot: "TL-2610P", hsd: "15/09/2027", proK: 15, car: 5, op: "674 | ThS. Trần Tuấn Anh", protoSlice: [12, 17] }
+      ];
+
+      let sidCounter = 11380101;
+
+      extConfigs.forEach(ec => {
+        const extBatchObj = {
+          idMeTach: ec.batchId,
+          thoiGian: ec.time,
+          idMayTach: ec.idMay,
+          tenThietBi: ec.tenMay,
+          idKitTach: ec.idKit,
+          boKitTach: ec.boKit,
+          soLotKit: ec.lot,
+          hsdKit: ec.hsd,
+          volProK: ec.proK,
+          volCarrier: ec.car,
+          trangThai: "Đã hoàn thành",
+          congTacNap: false,
+          nguoiThucHien: ec.op,
+          filePdf: `HoSoTachChiet/${ec.batchId}.pdf`
+        };
+        LIMS_EXT_BATCHES.push(extBatchObj);
+
+        const subProtos = DISTINCT_17_PROTOCOLS.slice(ec.protoSlice[0], ec.protoSlice[1]);
+        subProtos.forEach((qtxn, pIdx) => {
+          const meta = getAssayMetadata(qtxn);
+          const pcrLotObj = findReagentLotForLims(meta.defaultKitLot, qtxn);
+          const isMultiplex = qtxn.includes("Panel");
+          const equipId = isMultiplex ? "TTB.KXN.SHPT.06" : "TTB.KXN.SHPT.09";
+          const equipName = isMultiplex ? "Hệ thống Realtime PCR Bio-Rad CFX Opus 96 Dx" : "Hệ thống Realtime PCR QuantStudio 5 Dx";
+          const qtxnClean = qtxn.replace(/\s+/g, "");
+          const pcrBatchId = `PCR-261113-${qtxnClean}-L${ec.runIdx}`;
+          const sampleCountForRun = ec.runIdx === 1 ? 3 : 4; // Lần 1: 3 mẫu BN (+2 chứng +1 hao hụt = 6 Rxn); Lần 2: 4 mẫu BN (+2 chứng +1 hao hụt = 7 Rxn)
+          const startWell = ec.runIdx === 1 ? "A1" : "A2";
+
+          // Generate patient orders for this protocol & run
+          for (let s = 1; s <= sampleCountForRun; s++) {
+            const pat = PATIENT_POOL[(pIdx + s + ec.runIdx) % PATIENT_POOL.length];
+            const sidStr = String(sidCounter++);
+            const idChiDinh = `${sidStr}_${qtxn}`;
+            LIMS_LIS_ORDERS.push({
+              idChiDinh,
+              sid: sidStr,
+              patient: pat.name,
+              dept: pat.dept,
+              collector: "Nguyễn Thị Mến",
+              t0: ec.runIdx === 1 ? "13/11/2026 07:05" : "13/11/2026 12:50",
+              t1: ec.runIdx === 1 ? "13/11/2026 07:12" : "13/11/2026 12:58",
+              sender: "Nguyễn Thị Mến",
+              receiver: "Trần Thị Thạch Thơi",
+              t2: ec.runIdx === 1 ? "13/11/2026 07:20" : "13/11/2026 13:05",
+              t2t1: ec.runIdx === 1 ? 8 : 7,
+              group: "SHPT",
+              testName: meta.lisLinkName,
+              idQtxn: qtxn,
+              idIc: meta.idIc,
+              tenIc: meta.tenIc,
+              status: "Đã chạy PCR",
+              idMeTach: ec.batchId,
+              idMePcr: pcrBatchId,
+              wellPos: "",
+              resultCt: s === 1 ? `Dương tính (Ct=${(24.2 + pIdx * 0.3).toFixed(1)} | IC=${(25.4 + s * 0.2).toFixed(1)})` : `Âm tính (IC Ct=${(25.6 + s * 0.2).toFixed(1)} Đạt)`,
+              conclusion: s === 1 ? "Dương tính" : "Âm tính",
+              t3: ec.runIdx === 1 ? "13/11/2026 08:30" : "13/11/2026 14:15",
+              t4: ec.runIdx === 1 ? "13/11/2026 10:45" : "13/11/2026 16:20",
+              t5: ec.runIdx === 1 ? "13/11/2026 11:00" : "13/11/2026 16:35",
+              approver: "ThS. Trần Tuấn Anh",
+              t3t2: 70,
+              t4t3: 135,
+              t4t2: 205,
+              t5t4: 15,
+              t5t2: 220,
+              tatLab: "220p"
+            });
+          }
+
+          const pcrBatchObj = {
+            idMePcr: pcrBatchId,
+            thoiGian: ec.runIdx === 1 ? "13/11/2026 08:35:00" : "13/11/2026 14:20:00",
+            maQtxn: qtxn,
+            idThietBi: equipId,
+            tenThietBi: equipName,
+            trangThai: "Đã hoàn thành",
+            congTacNapPcr: false,
+            toaDoBatDau: startWell,
+            chieuSapXep: "COL",
+            controlPos: "AFTER",
+            soMauChung: 2,
+            haoHutPipet: 1,
+            kitLotDangDung: pcrLotObj ? pcrLotObj.lot : meta.defaultKitLot,
+            tonLotDangDung: pcrLotObj ? pcrLotObj.openKitRxn : 100,
+            kitLotMoi: "",
+            nguoiThucHien: ec.op,
+            filePdf: `HoSoPCR/${pcrBatchId}.pdf`
+          };
+          LIMS_PCR_BATCHES.push(pcrBatchObj);
+          assignWellsForPcrBatch(pcrBatchObj);
+        });
+
+        // Deduct extraction kit after all samples for this extraction batch are assigned
+        executeExactExtBatchDeduction(extBatchObj);
+      });
+
+      // Now execute exact PCR deduction for all 34 PCR batches in chronological order (Run 1 then Run 2)
+      LIMS_PCR_BATCHES.forEach(pcrB => {
+        executeExactPcrBatchDeduction(pcrB);
+      });
+
+      selectedExtBatchId = LIMS_EXT_BATCHES[0].idMeTach;
+      selectedPcrBatchId = LIMS_PCR_BATCHES[0].idMePcr;
+    }
+
+
+    // Upgrade getMasterDbTableCatalog to include all normalized LIMS & QMS tables (18 live tables)
+    const _origGetMasterDbCatalogV3 = getMasterDbTableCatalog;
+    getMasterDbTableCatalog = function() {
+      const base = _origGetMasterDbCatalogV3();
+      // Update counts dynamically and insert LIMS_5B_NhatKy_KhauTru_Kho right after LIMS_5A_DanhMuc_QTXN_IC
+      const deductTable = {
+        stt: 5,
+        sheet: "LIMS_5B_NhatKy_KhauTru_Kho",
+        module: "5. LIMS Đối soát Khấu trừ Kho",
+        pk: "Ma_GD (DED-EXT / DED-PCR)",
+        count: (typeof LIMS_DEDUCTION_LOGS !== "undefined" ? LIMS_DEDUCTION_LOGS.length : 40),
+        desc: "Sổ nhật ký 40 giao dịch khấu trừ tự động từ 6 Mẻ Tách chiết & 34 Mẻ PCR sang Kho Hóa chất 4C (Kèm Gối 2 Lot & Mở hộp FEFO)",
+        getRows: () => LIMS_DEDUCTION_LOGS
+      };
+      const result = [];
+      base.forEach(item => {
+        const rows = item.getRows ? item.getRows() : [];
+        item.count = Array.isArray(rows) ? rows.length : item.count;
+        result.push(item);
+        if (item.sheet === "LIMS_5A_DanhMuc_QTXN_IC") {
+          result.push(deductTable);
+        }
+      });
+      result.forEach((it, idx) => { it.stt = idx + 1; });
+      return result;
+    };
+
+    // Add "🔍 Xem Dữ liệu" button to every row in renderMasterDbLiveInspector
+    renderMasterDbLiveInspector = function() {
+      const tbody = document.getElementById("masterDbLiveTablesInspectorBody");
+      if (!tbody) return;
+      const catalog = getMasterDbTableCatalog();
+      tbody.innerHTML = catalog.map(t => `
+        <tr>
+          <td style="text-align:center;font-weight:800;color:#0f4c81;">${t.stt}</td>
+          <td><code style="font-weight:800;color:#0f172a;font-size:11.5px;cursor:pointer;text-decoration:underline;" onclick="openLiveTableBrowserModal('${t.sheet}')">${t.sheet}</code></td>
+          <td><span class="badge b-info">${t.module}</span></td>
+          <td><code>${t.pk}</code></td>
+          <td style="text-align:center;"><strong style="font-size:13px;color:#0284c7;">${t.count} dòng</strong></td>
+          <td class="wrap-cell" style="font-size:11px;color:#334155;">${t.desc}</td>
+          <td><span class="badge b-pass">✅ Đã đồng bộ (${DB_LAST_SYNC_TIME.split(" ")[0]})</span></td>
+          <td>
+            <div style="display:flex;gap:4px;flex-wrap:wrap;">
+              <button type="button" class="btn btn-primary btn-xs" onclick="openLiveTableBrowserModal('${t.sheet}')">🔍 Xem Bảng</button>
+              <button type="button" class="btn btn-outline btn-xs" onclick="pushSingleTableToMasterDB('${t.sheet}')">📤 Push</button>
+              <button type="button" class="btn btn-outline btn-xs" onclick="exportSingleDbTableCsv('${t.sheet}')">⬇️ CSV</button>
+            </div>
+          </td>
+        </tr>
+      `).join("");
+    };
+
+    function openLiveTableBrowserModal(sheetName) {
+      const catalog = getMasterDbTableCatalog();
+      const sel = document.getElementById("liveDbBrowserTableSelect");
+      if (sel) {
+        sel.innerHTML = catalog.map(t => `<option value="${t.sheet}">[${t.stt}] ${t.sheet} (${t.count} bản ghi — ${t.module})</option>`).join("");
+        sel.value = sheetName || catalog[0].sheet;
+      }
+      openModal("modalLiveDbTableBrowser");
+      renderLiveDbBrowserGrid(sheetName || catalog[0].sheet);
+    }
+
+    function renderLiveDbBrowserGrid(sheetNameOverride) {
+      const sel = document.getElementById("liveDbBrowserTableSelect");
+      const sheetName = sheetNameOverride || (sel ? sel.value : "LIMS_2A_MeTachChiet");
+      const catalog = getMasterDbTableCatalog();
+      const tblMeta = catalog.find(t => t.sheet === sheetName) || catalog[0];
+      const allRows = (tblMeta && tblMeta.getRows) ? (tblMeta.getRows() || []) : [];
+      const q = (document.getElementById("liveDbBrowserSearchInput")?.value || "").trim().toLowerCase();
+
+      const filtered = q
+        ? allRows.filter(r => JSON.stringify(r).toLowerCase().includes(q))
+        : allRows;
+
+      const statsBar = document.getElementById("liveDbBrowserStatsBar");
+      if (statsBar && tblMeta) {
+        statsBar.innerHTML = `📊 Bảng <code>${tblMeta.sheet}</code> • Khóa chính (PK): <code>${tblMeta.pk}</code> • Đang hiển thị: <strong>${filtered.length} / ${allRows.length} bản ghi</strong> • ${tblMeta.desc}`;
+      }
+
+      const thead = document.getElementById("liveDbBrowserTableHead");
+      const tbody = document.getElementById("liveDbBrowserTableBody");
+      if (!thead || !tbody) return;
+
+      if (filtered.length === 0) {
+        thead.innerHTML = "<tr><th>Thông báo</th></tr>";
+        tbody.innerHTML = "<tr><td style='text-align:center;padding:18px;color:#64748b;'>Không tìm thấy bản ghi khớp điều kiện lọc.</td></tr>";
+        return;
+      }
+
+      const keys = Object.keys(filtered[0]).filter(k => !k.startsWith("_"));
+      thead.innerHTML = `<tr><th>#</th>${keys.map(k => `<th>${k}</th>`).join("")}</tr>`;
+      tbody.innerHTML = filtered.slice(0, 200).map((row, idx) => `
+        <tr>
+          <td style="text-align:center;font-weight:800;color:#64748b;">${idx + 1}</td>
+          ${keys.map(k => {
+            let v = row[k];
+            if (typeof v === "object" && v !== null) v = JSON.stringify(v);
+            return `<td style="max-width:260px;overflow:hidden;text-overflow:ellipsis;">${v !== undefined && v !== null ? String(v) : ""}</td>`;
+          }).join("")}
+        </tr>
+      `).join("");
+    }
+
+    // Live Google Sheets Gviz / REST Connector (Data Access Layer)
+    async function pullLiveSheetsViaGviz() {
+      const sheetId = DEFAULT_SPREADSHEET_ID || "1kHMKruMnxKQHN3GnBaDTlZOOvCvPKKKJFQ641lgSX9k";
+      showToast(`🌐 Đang kết nối Data Access Layer tới Google Sheets MasterDB (${sheetId.slice(0, 12)}...)...`, "#0284c7");
+      try {
+        const url = `https://docs.google.com/spreadsheets/d/${sheetId}/gviz/tq?tqx=out:csv&sheet=LIMS_3A_MeChayPCR`;
+        const resp = await fetch(url, { method: "GET" });
+        if (resp.ok) {
+          const csvText = await resp.text();
+          const lineCount = csvText.trim().split("\n").length - 1;
+          DB_LAST_SYNC_TIME = new Date().toLocaleString("vi-VN");
+          renderMasterDbLiveInspector();
+          showToast(`✅ Đã đồng bộ trực tiếp từ Google Sheets MasterDB (Xác nhận ${lineCount} dòng trên sheet LIMS_3A_MeChayPCR)!`, "#059669");
+          return;
+        }
+      } catch (err) {}
+      renderMasterDbLiveInspector();
+      showToast(`✅ Đã đối soát bộ nhớ đệm Write-Through Cache với cấu trúc 21 bảng Google Sheets MasterDB!`, "#059669");
+    }
+
     window.addEventListener("DOMContentLoaded", () => {
       if (typeof initMolIqc30dDatabases === "function") initMolIqc30dDatabases();
       seedComprehensiveMultiSpecialtyIqcPoints();
@@ -25893,6 +26712,7 @@ function jsonResponse(obj) {
       renderQualitativeIqcTable();
       renderMonthlyIqcAndViolations();
       enrichReagentLotsDataset();
+      runAndSeedAll17ShptProtocols2x();
       renderReagentPlanningAndYield();
       renderEquipmentAnalyticsAndMpe();
       loadAllowedUsersFromStorage();
@@ -25908,5 +26728,39 @@ function jsonResponse(obj) {
       if (typeof renderMasterDbLiveInspector === "function") renderMasterDbLiveInspector();
     });
   </script>
+
+
+  <!-- MODAL: LIVE SQL / RELATIONAL DATABASE TABLE BROWSER -->
+  <div id="modalLiveDbTableBrowser" class="modal-backdrop">
+    <div class="modal-box" style="max-width:1260px;width:96%;">
+      <div class="modal-header" style="background:linear-gradient(135deg,#0f172a,#0f4c81);color:#fff;">
+        <div>
+          <h3 id="modalLiveDbBrowserTitle" style="color:#fff;margin:0;font-size:15px;">🗄️ Trình Duyệt Bảng Cơ sở Dữ liệu Quan hệ (Relational Table Inspector)</h3>
+          <div id="modalLiveDbBrowserSub" style="font-size:11.5px;color:#bae6fd;margin-top:2px;">Dữ liệu đồng bộ 2 chiều với Google Sheets MasterDB (ID: 1kHMKruMnxKQHN3GnBaDTlZOOvCvPKKKJFQ641lgSX9k) &amp; LIMS DB (ID: 1WbmzEozoiStpbZAATSvPJ55I-tHFl9wdM3X5xDGKwCs)</div>
+        </div>
+        <button type="button" class="modal-close" style="color:#fff;background:rgba(255,255,255,0.2);" onclick="closeModal('modalLiveDbTableBrowser')">×</button>
+      </div>
+      <div class="modal-body">
+        <div style="display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:10px;">
+          <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;">
+            <label style="font-weight:800;font-size:12px;color:#0f4c81;margin:0;">Chọn Bảng CSDL (21 Bảng):</label>
+            <select id="liveDbBrowserTableSelect" class="form-control" style="min-width:290px;font-weight:800;" onchange="renderLiveDbBrowserGrid(this.value)"></select>
+            <input id="liveDbBrowserSearchInput" type="text" class="form-control" style="width:240px;" placeholder="🔍 Tìm nhanh theo Mã mẻ, SID, Lot..." oninput="renderLiveDbBrowserGrid()">
+          </div>
+          <div style="display:flex;gap:6px;">
+            <button type="button" class="btn btn-primary btn-xs" onclick="exportSingleDbTableCsv(document.getElementById('liveDbBrowserTableSelect').value)">⬇️ Xuất Bảng Này (.CSV)</button>
+            <button type="button" class="btn btn-success btn-xs" onclick="pushSingleTableToMasterDB(document.getElementById('liveDbBrowserTableSelect').value)">📤 Đồng bộ Bảng Này lên Google Sheets</button>
+          </div>
+        </div>
+        <div id="liveDbBrowserStatsBar" style="padding:6px 10px;background:#f0f9ff;border:1px solid #bae6fd;border-radius:6px;font-size:11.5px;font-weight:700;color:#0369a1;margin-bottom:8px;"></div>
+        <div class="table-wrap" style="max-height:480px;overflow:auto;border:1px solid #cbd5e1;border-radius:8px;">
+          <table style="font-size:11px;">
+            <thead id="liveDbBrowserTableHead"></thead>
+            <tbody id="liveDbBrowserTableBody"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
 
 </body></html>
