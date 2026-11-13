@@ -5302,334 +5302,228 @@
       <!-- TAB 4B: DEDICATED EXTERNAL QUALITY ASSESSMENT (EQA/PT)    -->
       <!-- ========================================================= -->
       <section id="tab-eqa" class="tab-pane">
-        <div class="section-banner" style="background:linear-gradient(135deg,#2e1065 0%,#4c1d95 52%,#6d28d9 100%);color:#fff;border:none;box-shadow:0 6px 18px rgba(76,29,149,0.25);">
+        <style>
+          .eqa-stepper-grid {
+            display: grid;
+            grid-template-columns: repeat(6, 1fr);
+            gap: 10px;
+            margin-bottom: 14px;
+          }
+          .eqa-step-node {
+            background: #ffffff;
+            border: 1.5px solid #cbd5e1;
+            border-radius: 11px;
+            padding: 10px 12px;
+            cursor: pointer;
+            transition: all 0.18s ease;
+            position: relative;
+            box-shadow: 0 2px 6px rgba(15,23,42,0.04);
+          }
+          .eqa-step-node:hover {
+            transform: translateY(-2px);
+            border-color: #7c3aed;
+            box-shadow: 0 6px 16px rgba(124,58,237,0.14);
+          }
+          .eqa-step-node.active-step-filter {
+            background: linear-gradient(135deg, #f5f3ff 0%, #ede9fe 100%);
+            border: 2px solid #6d28d9;
+            box-shadow: 0 6px 18px rgba(109,40,217,0.2);
+          }
+          .eqa-step-cards-6 {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+          }
+          .eqa-wf-card {
+            background: #ffffff;
+            border: 1.5px solid #e2e8f0;
+            border-radius: 10px;
+            padding: 12px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            transition: all 0.15s ease;
+          }
+          .eqa-wf-card.wf-done {
+            border-left: 4px solid #059669;
+            background: #f8fafc;
+          }
+          .eqa-wf-card.wf-current {
+            border: 2px solid #7c3aed;
+            border-left: 5px solid #7c3aed;
+            background: #faf5ff;
+            box-shadow: 0 4px 14px rgba(124,58,237,0.12);
+          }
+          .eqa-wf-card.wf-pending {
+            border-left: 4px solid #94a3b8;
+            background: #f8fafc;
+            opacity: 0.9;
+          }
+          .eqa-wf-card.wf-alert {
+            border: 2px solid #dc2626;
+            border-left: 5px solid #dc2626;
+            background: #fff1f2;
+          }
+          .eqa-mini-progress {
+            display: flex;
+            align-items: center;
+            gap: 3px;
+            margin-top: 4px;
+          }
+          .eqa-mini-dot {
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            font-size: 9.5px;
+            font-weight: 800;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            border: 1px solid transparent;
+          }
+          .eqa-clean-table th {
+            background: #1e293b !important;
+            color: #ffffff !important;
+            position: sticky;
+            top: 0;
+            z-index: 4;
+            padding: 8px 10px !important;
+            font-size: 11.2px !important;
+            white-space: nowrap;
+          }
+          .eqa-clean-table td {
+            padding: 8px 10px !important;
+            vertical-align: middle !important;
+            font-size: 11.8px !important;
+          }
+          @media (max-width: 1280px) {
+            .eqa-stepper-grid { grid-template-columns: repeat(3, 1fr); }
+            .eqa-step-cards-6 { grid-template-columns: repeat(2, 1fr); }
+          }
+        </style>
+
+        <!-- ZONE 1: CONCISE AUTHORITATIVE HEADER BANNER -->
+        <div class="section-banner" style="background:linear-gradient(135deg,#2e1065 0%,#4c1d95 52%,#6d28d9 100%);color:#fff;border:none;box-shadow:0 6px 18px rgba(76,29,149,0.22);margin-bottom:12px;padding:14px 18px;">
           <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;width:100%;">
             <div>
-              <h2 style="color:#fff;margin:0 0 3px 0;font-size:17px;">🏅 PHÂN HỆ QUẢN LÝ NGOẠI KIỂM (EQA/PT) &amp; SO SÁNH LIÊN PHÒNG KHÉP KÍN 6 GIAI ĐOẠN (QT.VT03.TTDT-09)</h2>
-              <p style="color:#ede9fe;margin:0;font-size:12px;">Chu trình 6 bước chuẩn ISO 15189:2022 (Điều 7.3.7.3): 1. Kế hoạch Năm (BM-09-01) ➔ 2. Giao nhận Mẫu (BM-09-02) ➔ 3. Phân tích 4 Nguyên tắc (BM-09-03) ➔ 4. Gửi KQ (BM-09-04) ➔ 5. Đánh giá SDI/%Bias (BM-09-05) ➔ 6. Rủi ro Lâm sàng</p>
+              <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
+                <h2 style="color:#fff;margin:0;font-size:16.5px;font-weight:800;">🏅 QUẢN LÝ NGOẠI KIỂM (EQA/PT) &amp; SO SÁNH LIÊN PHÒNG (ILC/AAP) — CHU TRÌNH KHÉP KÍN 6 BƯỚC</h2>
+                <span class="badge" style="background:rgba(255,255,255,0.18);color:#fff;border:1px solid rgba(255,255,255,0.35);font-size:10.5px;">ISO 15189:2022 Điều 7.3.7.3 • SOP QT.VT03.TTDT-09</span>
+              </div>
+              <p style="color:#ede9fe;margin:4px 0 0 0;font-size:11.8px;">
+                4 Nguyên tắc Chính trực: <strong>① Xử lý y hệt mẫu bệnh nhân</strong> • <strong>② Luân phiên KTV đứng máy</strong> • <strong>③ Chạy đúng 1 lần khi IQC Đạt</strong> • <strong>④ Cấm thông đồng kết quả</strong>
+              </p>
             </div>
-            <div style="display:flex;flex-wrap:wrap;gap:6px;">
-              <button type="button" class="btn" style="background:#fff;color:#4c1d95;font-weight:800;border:none;" onclick="openModal('modalEqa')">➕ Nhập Đợt Ngoại kiểm Mới</button>
-              <button type="button" class="btn" style="background:#f59e0b;color:#fff;font-weight:800;border:none;" onclick="openModal('modalEqaReceiveSample')">📦 Giao nhận Mẫu (BM-09-02)</button>
-              <button type="button" class="btn" style="background:#10b981;color:#fff;font-weight:800;border:none;" onclick="openPrintableEqaForm('BM_09_05_EVAL')">🖨️ In Đánh giá (BM-09-05)</button>
-              <button type="button" class="btn" style="background:#ef4444;color:#fff;font-weight:800;border:none;" onclick="simulateEqaFailureAndClinicalReview()">🚨 Giả lập EQA Trượt (|SDI|=3.45)</button>
+            <div style="display:flex;flex-wrap:wrap;gap:7px;">
+              <button type="button" class="btn" style="background:#ffffff;color:#4c1d95;font-weight:800;border:none;padding:6px 12px;" onclick="openModal('modalEqa')">➕ Đăng ký / Nhập Đợt Mới</button>
+              <button type="button" class="btn" style="background:#f59e0b;color:#fff;font-weight:800;border:none;padding:6px 12px;" onclick="openModal('modalEqaReceiveSample')">📦 Giao nhận Mẫu (Bước 2)</button>
+              <button type="button" class="btn" style="background:#ef4444;color:#fff;font-weight:800;border:none;padding:6px 12px;" onclick="simulateEqaFailureAndClinicalReview()">🚨 Giả lập EQA Trượt (|SDI|=3.45)</button>
+              <button type="button" class="btn" style="background:#10b981;color:#fff;font-weight:800;border:none;padding:6px 12px;" onclick="openPrintableEqaForm('BM_09_05_EVAL')">🖨️ In Hồ sơ BM-09-01..05</button>
             </div>
           </div>
         </div>
 
-        <!-- 6-CARD DEDICATED EQA KPI STRIP (BALANCED 6-COLUMN GRID) -->
-        <div class="lims-kpi-strip">
-          <div class="lims-kpi-card" style="border-top:4px solid #7c3aed;" onclick="switchEqaSubView('programs'); renderEqaSection()">
-            <div class="lims-kpi-top">
-              <span class="lims-kpi-num-tag" style="background:#ede9fe;color:#5b21b6;">Bước 1 • BM-09-01</span>
-              <span class="badge b-purple">5 Bộ phận</span>
-            </div>
-            <div class="lims-kpi-label">KẾ HOẠCH NĂM EQA &amp; SSLP</div>
-            <div class="lims-kpi-value" style="color:#4c1d95;">12 Chương trình</div>
-            <div class="lims-kpi-sub" style="color:#6d28d9;">9 Ngoại kiểm QT/VN + 3 SSLP</div>
+        <!-- ZONE 2: UNIFIED NAVIGATION & FILTER BAR (SINGLE CLEAN BAR) -->
+        <div style="background:#ffffff;border:1.5px solid #cbd5e1;border-radius:11px;padding:8px 12px;margin-bottom:12px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;box-shadow:0 2px 6px rgba(15,23,42,0.04);">
+          <div style="display:flex;gap:6px;flex-wrap:wrap;align-items:center;">
+            <button id="eqaSubBtn-all" type="button" class="sub-nav-btn active" style="padding:5px 11px;font-size:11.8px;" onclick="switchEqaSubView('all')">🌐 Toàn bộ Không gian Ngoại kiểm</button>
+            <button id="eqaSubBtn-workflow6" type="button" class="sub-nav-btn" style="padding:5px 11px;font-size:11.8px;" onclick="switchEqaSubView('workflow6')">🔄 1. Chu trình Ngoại kiểm 6 Bước (Tương tác)</button>
+            <button id="eqaSubBtn-programs" type="button" class="sub-nav-btn" style="padding:5px 11px;font-size:11.8px;" onclick="switchEqaSubView('programs')">📋 2. Danh mục 12 Chương trình &amp; Hồ sơ 360°</button>
+            <button id="eqaSubBtn-trend" type="button" class="sub-nav-btn" style="padding:5px 11px;font-size:11.8px;" onclick="switchEqaSubView('trend')">📈 3. Biểu đồ SDI &amp; Luân phiên KTV</button>
           </div>
-
-          <div class="lims-kpi-card" style="border-top:4px solid #0284c7;" onclick="openModal('modalEqaReceiveSample')">
-            <div class="lims-kpi-top">
-              <span class="lims-kpi-num-tag" style="background:#e0f2fe;color:#0369a1;">Bước 2 • BM-09-02</span>
-              <span class="badge b-info">Kiểm tra mẫu</span>
-            </div>
-            <div class="lims-kpi-label">GIAO NHẬN &amp; BẢO QUẢN MẪU</div>
-            <div class="lims-kpi-value" style="color:#0369a1;">100% Đạt chuẩn</div>
-            <div class="lims-kpi-sub" style="color:#0284c7;">Đúng hạn • Hoàn nguyên chuẩn SOP</div>
+          <div style="display:flex;gap:5px;flex-wrap:wrap;align-items:center;">
+            <button id="eqaChip-ALL" type="button" class="filter-chip active" style="font-size:11px;padding:4px 9px;" onclick="setEqaQuickFilter('ALL')">Tất cả</button>
+            <button id="eqaChip-EQA_PT" type="button" class="filter-chip" style="font-size:11px;padding:4px 9px;" onclick="setEqaQuickFilter('EQA_PT')">🏆 Ngoại kiểm (EQA/PT)</button>
+            <button id="eqaChip-ILC_AAP" type="button" class="filter-chip" style="font-size:11px;padding:4px 9px;" onclick="setEqaQuickFilter('ILC_AAP')">🤝 Liên phòng (ILC/AAP)</button>
+            <button id="eqaChip-DUE_SOON" type="button" class="filter-chip" style="font-size:11px;padding:4px 9px;" onclick="setEqaQuickFilter('DUE_SOON')">⏳ Đang thực hiện (Bước 1–5)</button>
+            <button id="eqaChip-FAIL" type="button" class="filter-chip" style="font-size:11px;padding:4px 9px;" onclick="setEqaQuickFilter('FAIL')">🚨 Cần CAPA (|SDI| &gt; 2.0)</button>
+            <button type="button" class="btn btn-outline btn-xs" style="padding:4px 9px;" onclick="exportEqaMasterCsv()">⬇️ CSV</button>
           </div>
-
-          <div class="lims-kpi-card" style="border-top:4px solid #059669;" onclick="switchEqaSubView('programs')">
-            <div class="lims-kpi-top">
-              <span class="lims-kpi-num-tag" style="background:#d1fae5;color:#047857;">Bước 3 • BM-09-03</span>
-              <span class="badge b-pass">IQC Pass 100%</span>
-            </div>
-            <div class="lims-kpi-label">PHÂN TÍCH 4 NGUYÊN TẮC VÀNG</div>
-            <div class="lims-kpi-value" style="color:#059669;">Chạy 1 Lần</div>
-            <div class="lims-kpi-sub" style="color:#047857;">Cùng mẫu BN • Cấm thông đồng</div>
-          </div>
-
-          <div class="lims-kpi-card" style="border-top:4px solid #d97706;" onclick="openPrintableEqaForm('BM_09_04_REPORT')">
-            <div class="lims-kpi-top">
-              <span class="lims-kpi-num-tag" style="background:#fef3c7;color:#b45309;">Bước 4 • BM-09-04</span>
-              <span class="badge b-warn">Đúng hạn 100%</span>
-            </div>
-            <div class="lims-kpi-label">BÁO CÁO &amp; GỬI KẾT QUẢ EQA</div>
-            <div class="lims-kpi-value" style="color:#d97706;">12/12 Đúng hạn</div>
-            <div class="lims-kpi-sub" style="color:#b45309;">Khai chuẩn Máy / Hóa chất / Đơn vị</div>
-          </div>
-
-          <div class="lims-kpi-card" style="border-top:4px solid #0d9488;" onclick="switchEqaSubView('trend')">
-            <div class="lims-kpi-top">
-              <span class="lims-kpi-num-tag" style="background:#ccfbf1;color:#0f766e;">Bước 5 • BM-09-05</span>
-              <span class="badge b-pass">|SDI| ≤ 2.0</span>
-            </div>
-            <div class="lims-kpi-label">ĐÁNH GIÁ SDI / Z-SCORE / %BIAS</div>
-            <div class="lims-kpi-value" style="color:#0f766e;">|SDI| TB: 0.48</div>
-            <div class="lims-kpi-sub" style="color:#0f766e;">100% Tương đồng • Không trượt</div>
-          </div>
-
-          <div class="lims-kpi-card" style="border-top:4px solid #dc2626;" onclick="switchEqaSubView('rotation')">
-            <div class="lims-kpi-top">
-              <span class="lims-kpi-num-tag" style="background:#fee2e2;color:#b91c1c;">Bước 6 • ISO 7.3.7.3i</span>
-              <span class="badge b-pass">0 Mẫu thu hồi</span>
-            </div>
-            <div class="lims-kpi-label">RỦI RO LÂM SÀNG &amp; LUÂN PHIÊN</div>
-            <div class="lims-kpi-value" style="color:#b91c1c;">An toàn 100%</div>
-            <div class="lims-kpi-sub" style="color:#b91c1c;">Luân phiên KTV • Lưu hồ sơ ≥ 5 năm</div>
-          </div>
-        </div>
-
-        <!-- STICKY SUB-NAVIGATION BAR FOR DEDICATED EQA WORKSPACE ('Xem Toàn bộ' FIRST) -->
-        <div class="sub-nav-bar sticky-subnav">
-          <button id="eqaSubBtn-all" type="button" class="sub-nav-btn active" onclick="switchEqaSubView('all')">🌐 Xem Toàn bộ Chu trình Ngoại kiểm 6 Bước</button>
-          <button id="eqaSubBtn-programs" type="button" class="sub-nav-btn" onclick="switchEqaSubView('programs')">📋 1. Danh mục 12 Chương trình &amp; Hồ sơ 6 Giai đoạn (Master-Detail)</button>
-          <button id="eqaSubBtn-trend" type="button" class="sub-nav-btn" onclick="switchEqaSubView('trend')">📈 2. Biểu đồ Xu hướng Z-Score / SDI Đa đợt</button>
-          <button id="eqaSubBtn-rotation" type="button" class="sub-nav-btn" onclick="switchEqaSubView('rotation')">👨‍🔬 3. Lịch Luân phiên KTV &amp; Đánh giá Rủi ro Lâm sàng</button>
-          <button type="button" class="sub-nav-btn" style="margin-left:auto;color:#4c1d95;" onclick="openPrintableEqaForm('BM_09_01_PLAN')">🖨️ In Biểu mẫu BM-09-01..05</button>
         </div>
 
         <div id="qcSubView-eqa" style="display:block;">
-          <!-- 4 GOLDEN PRINCIPLES BANNER PER EQA TRAINING SLIDES & ISO 15189:2022 CLAUSE 7.3.7.3 -->
-          <div style="background:linear-gradient(135deg,#f5f3ff,#ede9fe);border:1.5px solid #c4b5fd;border-radius:10px;padding:10px 14px;margin-bottom:14px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;">
-            <div style="font-size:12px;color:#4c1d95;">
-              🛡️ <strong>4 Nguyên tắc "Không Ưu Tiên — Chính Trực Tuyệt Đối" khi chạy Mẫu EQA/SSLP (ISO 15189:2022 Điều 7.3.7.3 &amp; SOP QT.VT03.TTDT-09):</strong>
-              <span class="badge b-purple" style="margin-left:4px;">① Xử lý y hệt mẫu bệnh nhân</span>
-              <span class="badge b-info" style="margin-left:4px;">② Phân công luân phiên đúng KTV đứng máy</span>
-              <span class="badge b-pass" style="margin-left:4px;">③ Chạy đúng 1 lần (Không chạy lặp) &amp; IQC Đạt</span>
-              <span class="badge b-fail" style="margin-left:4px;">④ Cấm thông đồng kết quả (Anti-Collusion)</span>
-            </div>
-            <div style="display:flex;gap:6px;flex-wrap:wrap;">
-              <button type="button" class="btn btn-outline btn-xs" onclick="openPrintableEqaForm('BM_09_01_PLAN')">📄 BM-09-01 (Kế hoạch)</button>
-              <button type="button" class="btn btn-outline btn-xs" onclick="openPrintableEqaForm('BM_09_02_HANDOVER')">📄 BM-09-02 (Giao nhận)</button>
-              <button type="button" class="btn btn-outline btn-xs" onclick="openPrintableEqaForm('BM_09_03_TRACKING')">📄 BM-09-03 (Theo dõi 7 bước)</button>
-              <button type="button" class="btn btn-outline btn-xs" onclick="openPrintableEqaForm('BM_09_04_REPORT')">📄 BM-09-04 (Báo cáo KQ)</button>
-              <button type="button" class="btn btn-primary btn-xs" onclick="openPrintableEqaForm('BM_09_05_EVAL')">🖨️ BM-09-05 (Phiếu Đánh giá &amp; Rủi ro LS)</button>
+          <!-- ZONE 3: INTERACTIVE 6-STEP CLOSED-LOOP STEPPER & WORKBENCH -->
+          <div id="eqaWorkflow6Section" style="margin-bottom:14px;">
+            <!-- 6-STEP VISUAL STEPPER (CLICKABLE TO FILTER OR INSPECT EACH STEP) -->
+            <div id="eqaPipelineSummary" class="eqa-stepper-grid"></div>
+
+            <!-- INTERACTIVE 6-STEP CLOSED-LOOP WORKBENCH CARD -->
+            <div id="eqaSixStepWorkbenchCard" class="card" style="border:2px solid #7c3aed;background:#ffffff;margin-bottom:0;">
+              <div id="eqaSixStepWorkbenchContent"></div>
             </div>
           </div>
 
-          <div id="eqaSectionCard" class="card" style="border:2px solid #7c3aed;">
-            <div class="card-header">
+          <!-- ZONE 4: BALANCED MASTER-DETAIL PROGRAMS & 360° BLIND SAMPLE DOSSIER -->
+          <div id="eqaSectionCard" class="card" style="border:1.5px solid #cbd5e1;margin-bottom:14px;">
+            <div class="card-header" style="padding-bottom:10px;margin-bottom:10px;border-bottom:1px solid #e2e8f0;">
               <div>
-                <div class="card-title" style="border-left-color:#7c3aed;">🏅 QUẢN LÝ NGOẠI KIỂM (EQA/PT) &amp; SO SÁNH LIÊN PHÒNG (ILC/AAP) KHÉP KÍN 6 GIAI ĐOẠN (QT.VT03.TTDT-09 / QTQL.KXN.17)</div>
-                <div class="card-subtitle">1. Kế hoạch đầu năm (BM-09-01) → 2. Giao nhận &amp; Kiểm tra mẫu (BM-09-02) → 3. Phân tích 4 nguyên tắc &amp; IQC (BM-09-03) → 4. Báo cáo gửi KQ (BM-09-04) → 5. Đánh giá SDI/Tương đồng (BM-09-05) → 6. Đánh giá Rủi ro Lâm sàng &amp; CAPA</div>
+                <div class="card-title" style="border-left-color:#7c3aed;font-size:14.5px;">📋 DANH MỤC 12 CHƯƠNG TRÌNH NGOẠI KIỂM (EQA/PT) &amp; SO SÁNH LIÊN PHÒNG (ILC/AAP) — TRA CỨU &amp; ĐIỀU HÀNH</div>
+                <div class="card-subtitle">Nhấp vào bất kỳ chương trình nào để nạp lên <strong>Bàn làm việc Chu trình 6 Bước</strong> phía trên và xem <strong>Hồ sơ 360° &amp; Kết quả Mẫu mù</strong> ở khung bên phải</div>
               </div>
-              <div style="display:flex;gap:8px;flex-wrap:wrap;">
-                <button type="button" class="btn btn-outline btn-xs" onclick="openPrintableIqcForm('BM_17_04_EQA')">🖨️ In Báo cáo Tổng kết Ngoại kiểm (BM04.17)</button>
-                <button type="button" class="btn btn-warning btn-xs" onclick="openModal('modalEqaReceiveSample')">📦 Ghi Biên bản Giao nhận Mẫu (BM-09-02)</button>
-                <button type="button" class="btn btn-danger btn-xs" onclick="simulateEqaFailureAndClinicalReview()">🚨 Giả lập EQA Trượt (|SDI|=3.45) &amp; Rà soát Mẫu BN Lưu</button>
-                <button class="btn btn-primary btn-xs" onclick="openModal('modalEqa')">+ Đăng ký / Nhập Đợt Ngoại kiểm Mới</button>
+              <div style="display:flex;gap:6px;flex-wrap:wrap;">
+                <button type="button" class="btn btn-outline btn-xs" onclick="openPrintableEqaForm('BM_09_01_PLAN')">📄 BM-09-01 (Kế hoạch)</button>
+                <button type="button" class="btn btn-outline btn-xs" onclick="openPrintableEqaForm('BM_09_02_HANDOVER')">📄 BM-09-02 (Giao nhận)</button>
+                <button type="button" class="btn btn-outline btn-xs" onclick="openPrintableEqaForm('BM_09_03_TRACKING')">📄 BM-09-03 (Theo dõi)</button>
+                <button type="button" class="btn btn-outline btn-xs" onclick="openPrintableEqaForm('BM_09_04_REPORT')">📄 BM-09-04 (Báo cáo KQ)</button>
+                <button type="button" class="btn btn-primary btn-xs" style="background:#6d28d9;border-color:#6d28d9;" onclick="openPrintableEqaForm('BM_09_05_EVAL')">🖨️ BM-09-05 (Đánh giá &amp; Rủi ro)</button>
               </div>
             </div>
 
-            <!-- 6-STAGE VISUAL PIPELINE (CLICKABLE TO FILTER) -->
-            <div id="eqaPipelineSummary" class="grid-3" style="grid-template-columns:repeat(6,1fr);gap:8px;margin-bottom:12px;">
-          <div style="background:linear-gradient(135deg,#f5f3ff,#ede9fe);border:1.5px solid #c4b5fd;border-radius:9px;padding:9px 10px;">
-            <div style="font-size:11px;font-weight:800;color:#5b21b6;">1. Kế hoạch Năm (BM-09-01)</div>
-            <div style="font-size:18px;font-weight:800;color:#0f172a;margin:2px 0;">12 Đợt</div>
-            <div style="font-size:10.5px;color:#475569;">Đề xuất EQA &amp; SSLP 5 Bộ phận</div>
-          </div>
-        
-          <div style="background:linear-gradient(135deg,#f5f3ff,#ede9fe);border:1.5px solid #c4b5fd;border-radius:9px;padding:9px 10px;">
-            <div style="font-size:11px;font-weight:800;color:#5b21b6;">2. Giao nhận Mẫu (BM-09-02)</div>
-            <div style="font-size:18px;font-weight:800;color:#0f172a;margin:2px 0;">12 Đợt</div>
-            <div style="font-size:10.5px;color:#475569;">Kiểm tra bao bì &amp; nhiệt độ</div>
-          </div>
-        
-          <div style="background:linear-gradient(135deg,#f5f3ff,#ede9fe);border:1.5px solid #c4b5fd;border-radius:9px;padding:9px 10px;">
-            <div style="font-size:11px;font-weight:800;color:#5b21b6;">3. Phân tích 4 Nguyên tắc (BM-09-03)</div>
-            <div style="font-size:18px;font-weight:800;color:#0f172a;margin:2px 0;">1 Đợt</div>
-            <div style="font-size:10.5px;color:#475569;">Chạy 1 lần cùng mẫu BN + IQC Đạt</div>
-          </div>
-        
-          <div style="background:linear-gradient(135deg,#f5f3ff,#ede9fe);border:1.5px solid #c4b5fd;border-radius:9px;padding:9px 10px;">
-            <div style="font-size:11px;font-weight:800;color:#5b21b6;">4. Báo cáo &amp; Gửi KQ (BM-09-04)</div>
-            <div style="font-size:18px;font-weight:800;color:#0f172a;margin:2px 0;">1 Đợt</div>
-            <div style="font-size:10.5px;color:#475569;">Khai đúng Máy/PP/Hóa chất</div>
-          </div>
-        
-          <div style="background:linear-gradient(135deg,#f5f3ff,#ede9fe);border:1.5px solid #c4b5fd;border-radius:9px;padding:9px 10px;">
-            <div style="font-size:11px;font-weight:800;color:#5b21b6;">5. Đánh giá SDI/Tương đồng (BM-09-05)</div>
-            <div style="font-size:18px;font-weight:800;color:#0f172a;margin:2px 0;">0 Đợt</div>
-            <div style="font-size:10.5px;color:#475569;">Phân tích Z-score, %Bias &amp; Xu hướng</div>
-          </div>
-        
-          <div style="background:linear-gradient(135deg,#f5f3ff,#ede9fe);border:1.5px solid #c4b5fd;border-radius:9px;padding:9px 10px;">
-            <div style="font-size:11px;font-weight:800;color:#5b21b6;">6. Rủi ro Lâm sàng &amp; Lưu 5 Năm</div>
-            <div style="font-size:18px;font-weight:800;color:#0f172a;margin:2px 0;">10 Đợt</div>
-            <div style="font-size:10.5px;color:#475569;">ISO 7.3.7.3(i) &amp; Hồ sơ quan trắc gốc</div>
-          </div>
-        </div>
-
-            <!-- QUICK FILTER BAR FOR EQA vs INTER-LAB COMPARISON (ILC/AAP) -->
-            <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;margin-bottom:12px;">
-              <div class="quick-chip-bar" style="margin-bottom:0;">
-                <button id="eqaChip-ALL" type="button" class="filter-chip active" onclick="setEqaQuickFilter('ALL')">🌐 Tất cả (12 Chương trình)</button>
-                <button id="eqaChip-EQA_PT" type="button" class="filter-chip" onclick="setEqaQuickFilter('EQA_PT')">🏆 Ngoại kiểm Độc lập (EQA / PT: GenQA, RIQAS, QCMD, PMF, VQAP)</button>
-                <button id="eqaChip-ILC_AAP" type="button" class="filter-chip" onclick="setEqaQuickFilter('ILC_AAP')">🤝 So sánh Liên phòng (ILC / AAP: BV Phụ Sản HN, Nhi TW, Medlatec)</button>
-                <button id="eqaChip-DUE_SOON" type="button" class="filter-chip" onclick="setEqaQuickFilter('DUE_SOON')">⏰ Nhắc lịch Sắp đến hạn</button>
-                <button id="eqaChip-FAIL" type="button" class="filter-chip" onclick="setEqaQuickFilter('FAIL')">🚨 Không đạt / Cần CAPA</button>
-              </div>
-              <button type="button" class="btn btn-outline btn-xs" onclick="exportEqaMasterCsv()">⬇️ Xuất CSV Ngoại kiểm &amp; SSLP</button>
-            </div>
-
-            <!-- MASTER-DETAIL SPLIT: LEFT = 12 EQA/ILC PROGRAMS TABLE | RIGHT = 360° DOSSIER & BLIND SAMPLE RESULTS -->
-            <div class="grid-2" style="grid-template-columns:1.35fr 1fr;gap:14px;align-items:start;">
-              <div class="table-wrap" style="max-height:580px;">
-                <table>
+            <div class="grid-2" style="grid-template-columns:1.45fr 1fr;gap:14px;align-items:start;">
+              <!-- LEFT: COMPACT ZERO-CLIPPING MASTER TABLE -->
+              <div class="table-wrap" style="max-height:560px;overflow-y:auto;overflow-x:auto;border:1px solid #cbd5e1;border-radius:10px;">
+                <table class="eqa-clean-table" style="width:100%;border-collapse:collapse;">
                   <thead>
                     <tr>
-                      <th>Mã Đợt &amp; Loại hình</th>
-                      <th>Bộ phận &amp; Máy XN</th>
-                      <th>Tổ chức EQA / Đơn vị SSLP &amp; Chương trình</th>
-                      <th>Mã Mẫu &amp; Lịch trình (Nhận → Hạn nộp)</th>
-                      <th>Giai đoạn (BM-09-03)</th>
-                      <th>KQ Lab vs Tham chiếu</th>
-                      <th>SDI / Z-Score &amp; Độ tương đồng</th>
-                      <th>Đánh giá &amp; Rủi ro LS</th>
-                      <th>Thao tác</th>
+                      <th style="width:110px;">Mã Đợt &amp; Loại</th>
+                      <th style="width:130px;">Bộ phận &amp; Máy</th>
+                      <th>Chương trình EQA / Đơn vị SSLP</th>
+                      <th style="width:155px;text-align:center;">Tiến độ 6 Bước</th>
+                      <th style="width:135px;">KQ PXN vs Đích</th>
+                      <th style="width:125px;text-align:center;">SDI &amp; Đánh giá</th>
+                      <th style="width:115px;text-align:center;">Thao tác</th>
                     </tr>
                   </thead>
                   <tbody id="eqaTableBody"></tbody>
                 </table>
               </div>
 
-              <!-- RIGHT: 360° EQA / ILC DOSSIER PANEL (BM-09-02, BM-09-03, BM-09-04, BM-09-05) -->
-              <div id="eqaDetailDossierPanel" class="dossier-card">
-        <div class="dossier-header" style="background:linear-gradient(135deg,#4c1d95,#6d28d9);">
-          <div style="display:flex;align-items:center;gap:10px;">
-            <img src="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAQDAwMDAgQDAwMEBAQFBgoGBgUFBgwICQcKDgwPDg4MDQ0PERYTDxAVEQ0NExoTFRcYGRkZDxIbHRsYHRYYGRj/2wBDAQQEBAYFBgsGBgsYEA0QGBgYGBgYGBgYGBgYGBgYGBgYGBgYGBgYGBgYGBgYGBgYGBgYGBgYGBgYGBgYGBgYGBj/wAARCADEAQQDASIAAhEBAxEB/8QAHQABAAIDAQEBAQAAAAAAAAAAAAYHBAUIAwECCf/EAEAQAAEDBAAEBAQCBwYFBQAAAAECAwQABQYRBxIhMRNBUWEIFCJxMoEVI0JSkaGxFjNDYnKCJZKiweEXNIPR8P/EABsBAQACAwEBAAAAAAAAAAAAAAAEBQMGBwIB/8QANhEAAQMCBAQDBwMEAwEAAAAAAQACAwQRBSExQRJRYXEGgaEiMpGxwdHwEyNCFDNSYnKC4fH/2gAMAwEAAhEDEQA/AO/qUpREpSlESlKURKUpREpSlESlKURKUpREpSlESlKURKUpREpSlESlKURKUpREpSlESlKURKUpREpSlESlKURKUpREpSlESlKURKUpREpWtv8AfrVjGNzL9e5QiwIjfiPPFJVyjeuw6k7IGh61ErjxMatvFTG8Xk20ott/iKeh3VTnRbugUtcuuhII677qTWWOCST3Bz9Bc+iwS1McWTzbT1Nh6rIyDiIbPlLtnt+M3O8phtNvXKVEW0hENLhIQCXFJClaHMUg7CetbdWZ2BWET8rgzUXG3QW3XHlwVJeP6sbWkaOioa7brnzNEY5b/iNvUDik3f8AILU+w3OslvZU88gqUdKaDKCAdEK1voOXr3q38OCb7w6u1mZ4eSMNtjjbkeLEfQ22p9C2yCsto/AdnWj1PTrVjUUccUTH2OdiTsb8rnM9gLb31VZTV0sssjLjK4A3BGl7CwHcm+1tFv8ADc6x/PcXF7xqX47f4VsufQ4yvX4Fp68p/kR1G61/C/O3OIeEuXx+2ptz7U16G5GS6XOQtq13IHXRHlVAcL8QySJwrt/EThs8UZHbnX4V0tLij4N0Q24TykeTnKQB235aPeb/AAzXxNxGcQ0xXIWryZohun62PGB2g9uoKCO1Z6vDoomTOiNw0juMyCD3yIPyUeixSaWSBsosXg9jkCCO2YI+anvF/iK/wzwVi/xrc1PccmtxvAccKAUqClKII89J/nWZP4lWSNwXd4kwkLnW1EQSktoUErV1CSg76BQUdH3BqGcdEJuGW8NMfc5VImZEh1aFdQpLYG9jzH1VVXFqDduF9nyTA4TDjuK5UtEq2EHpDeDqVOs/YgDQ9OU/vUo6CGoZEz+ZN+7b2I7jM9rr5XYlPTSTP/g0W7OtcHsbgd7LpaVnNjtfDWNm1+eVbLc9HZfX4gK1NeLy8qSEgkn6h2qRMPtSYrcllXM06gLQrRGwRsHrXP8AxvTcZyMD4XWGALjLecRNdg+IGg61HQAEKWeiQdL6/wCWvLiTxkvI4Z3HG5eEZHjGR3BKYcQvICmFFaglXhvoOieXetdawMwwzNjMeridxkL2BtrzuVIfi7YXSCXRgGxzda5F9OVguiaVVuSZhcOG2N4XikBj9O5DcXmICWpT6ipwJSA66pfU9CR1O+/tVojqAarpIXMAcdDe3WytIp2yOLBqLX6XzsvtKUrEs6UpSiJSlKIlKUoiUpSiJSlKIlKUoiUpSiJSlKIlKUoiVGs5vmSY9ijlzxjGDkEttYK4iX/CV4fdSkjRKjrskdev5VqOJuZ5JgtsgX22Y4LvaGnz+li2s+MwzrQWhPn1OyT0GteexJscyOzZZjka+WKc3MhSE8yHEeR80qHdKh2IPUVIbE5jWzObdt/wG2YUV0zZHOp2u4XgfhF8iq2uGc4vxd4F5TAs8hTVwFsfEi2ShySI60oJ0pPmOYDqOn2PStHcbHJ4jfB/jl3tZUL5a4LE+A8j8YeYTyqSD6kII+4FTHiDwcsmYyv07apDtgydtJ8K7QvpUvprldA1zgjpvvrzI6VueF2GzMC4XW7Fp9wbnPRecl1pBSgc6yrlTvqQObWz39BVh/UwxRB8B9oOB4Ttkb56EadeirP6WommdHUtBaWEcQ3zFstQdeY6qtbkzk/Eqw8PeK+AxYqb/DUtEluYstN8iklLgV5lAWD0HUhfSt7hkDLr1xFlO5PxOelzrC6gS7JaIRiw0KcQSlKlrG3ho79iBVuIQlCAhCQlIGgANACvoSkEkDqe59ajPriWlgaAMwNCQCb2uR1OllKZhwDxI5xJyJ1AJAtewPQa3C0mL4hYsOtsmBYIq47EmU5MdSp1TnM6vXMfqJ12HQdK2Me2W6JOkTYsCKxJkkKfeaaSlbxHYrUBtX51l0qG6RziS43JVgyNjAGtFgNFjvwYUqQw/JiMPOsK52VuNhSm1eqSR0P2rBv+M2HKbc3AyC1x7hHbdS+ht9Owlaeyh5g1tqV8a5zSCDmF9cxrgQ4XBUbVhFkXxPRnrnzK7siEYCOZzbSGyd7CddFd+o9TUbzrCb3lnFXCpp+W/s7ZpDk6UhTmlrfA/V/TrRGwOu/M1ZFKyx1MjHBwOYFh0BFvqsElJFI0sIsCQTbcgg5/DNUphESVnXxF5Fn9yjPN2+xbstobfbKDzD+9d0R57P8Azj0qfcR89tfDrApWQ3AhxxI8OLG3pUh4j6UD28yfIAmpYABVaXnhfIyzjS3k+XTItyx+3xuS22ctnlS6rotboPRXqPX6eg5esls0U8odNkxoGXMDYdzqe5UR0E1PCWwZvcTmdidz0AyA6ALY8JRljnDePdczvKbhcLitU1KEBPJGbc6paSpPcD7nW9eVS+2XW23m3pnWmfGmxlEpD0dwOJJB0RseYNc15ZYrzi3EJPCjhNk0lqNkDSlzLS4C6iztqP1OocJ22Cnm+nvrXmpNX1jGP47w4wGLZobjEO3w2/rkPrS2FqPVTi1HQ2T1/l2Feq2Bg/dDs3m4AFsuo2zyFr31uvGH1LyTCW5MFnEm9z0O+WZva2llJqVDMZzNWSZ1c4tuciXDH0xGZEO5xVc6Fuc623WuYdCUlCT6jm9CKmdQJI3RnhdqrOKVsreJmiUpSvCyJSlKIlKUoiUpSiJSlKIlKUoiUpSiJUczSNklzwi4RcLvLFuvQADL7iAtKVAglB3vlJHTejre9VuJ9zt1rjB+5z4sNonQckupbTv02oiudc0m49h2Wzs34acWLNGuMpwyJ9jmzxIjTleetE8qj5fyKRU2hpzK/LXa4uCeR/8AndV+IVTYY89DrY2IHMcz59lkDP8AOOKUxnhOYZxO8hC05FMWsJUllOgpMZO9krB356B7kdal2PcJ7xw84lw5nD66oaxaYAi7WqctTnKUp0HWj++SPbWz3GgIlZbpinxEfLToK5uK5xZfDfE6InxChHNogL6BST10FaIJ8xvfRLSVIZShS1LIABWrW1e510qdXTup/wBljeC9+Jtt+d9/9eVvM1+H07ar997uOxHC+9shtbY/5c7+Q/Y7UpSqRbAlKUoiUpWiym/vWK0gwLc9crk+S3EhMpJLi/VR/ZQO5J/qRXprS42CxyytiYXv0C/WSZZYcTtvzt7nojpV0bbH1OOn0SkdT/SqYv3xB3J15bWOWZiM12S/NJcWffkSQB/E17jg5muX3Vd6zO/sRX3u7bY8ZaB5JABCUgegJrCv/CNOPsqchYrkeSoQNqVDuUZhR+zakbP2BJq5poaNhDXu4nenrYLRcSqseq7upo/0o+vvHuBcjyHmoy9xk4iOuFQvqGx+63FaAH8Ums238cs8iOpMl+DPQO6X44ST+aCKgMjLOG0e4OwLpjWbWeS0rkcQp9h1bZ/zIWlBrNiR8MvqgjG86hfMK/DCvbJt7qj6BZKmyf8AcKuX0UYbd8Nh2+outS/Wxhjrx1BceXH9HWJ7WV9Yrx1x67Ooh36OqzSVdA6pXOwT/q1tP5jXvVrNuNvNJcbWlaFgKSpJ2CD5g1xNdbLdrFN+Vu9vfhukbSHE9Fj95Kh0UPcE1PeFvE6Vi1zZs93kKdsbyuX6zsxCT+JP+T1H5j3qavCmlv6lP8PsthwXxlK2UUuJix04rWIP+w+uVt1a+RcPrvEutwv3DSZa7Jfbw8n9JT57CpCi2Br9UCSEneiRrR6dtVSeR2iDhuQ3lzje9dMrlIjLlWGXJfcMGapI/uSynohwKI+knRH8+skqStAUkgg9QR51AuJGBzc8n4xFVKjps0G5ibcYzifqfSlJ5Ak/foR5hW99NGPQ15Y8NlPs7n+WWljrta2nzW34jhjXsL4R7Ww1bnqS3Te99fkvHgliCsO4O22JJaS3Pmg3CYlKeXTrujy68uVPKnXtViVjTZ0G1292bcJbESMynmceeWEIQPUk9BVf4vxqxbNOJrmI4yzMnIajLkLuSW+VjaSkaG+pB5vxaA30G+9RHtmqnPn4b7k7BTmPgo2x05cBoANyrJpSlRFNSlKURKUpREpSlESlKURKUpRErWXvIbJjduE6+3ONAjqWG0rfWE86z2Skd1KPkBsmtnVfcVLPcHLXDy6yxJE67WBMh6JBZa8UvrdZLY0n1SooXzDqAkgd6ywMa+QNcbA/n4dlgqZHRxl7Bcj8PptutblWM4Jx2sk63mVK+Ysk12GmY0lSfl3wBzgBX0uDtv7dwarWxWhjhDeo1j4i8NbNeLU86GIeT222peUVKOkpeQQTzEkD19OatRY8usc7h9iHCSzXKdZ7lKuSXcgkzQYbrfKrxnTzkjqtYCU9d9ACOtW1/btUjj3cIr9/Yt2KWKOzAkeOpAblXB9QLaApXXmSB5HvV+WT0zXQG5ZmbG4Nr2BBH+R0GnPmtbD6erc2oFhJkLixFyLkEH/EanI8uSs+DbbdbmSi3W+LEQdbSw0lsfwAFZdB2pWuEk5lbUAALBKUpXxfUpSlESsG7Xa1WO1u3W8zo0GIyNuSJCwhKR9z/Ss1SglJUogAdya4H4ycTbhxDz2SUSFixwnVNW+MD9JSDrxSPNSu+/IaFWmFYY6vlLAbNGpVPjWLsw2EPIu46D82XS834m+FUScY7dwuMtIOvGjwllB+xVokflU3xDiRhedtKOM3yPMdQOZyMrbbyB6ltQCte/av51VmWu63KyXiPdbRNehzYyw4y+yrSkEf1HqOx7Gtom8KwFlonEO65j5LT6fxlUiS8zAW9Lg+Wa7y4pcJrBxKsC0yGm4t5aQflLklP1IPklevxIPmD27jRrg+9We44/kM2x3eOWJsN0svNHrpQ9PUHoQfMEGu/eFOdI4hcL4GQqQhuWdsTG0dkPI6K17HooeyhXPnxZY0zBzKy5Qw2EG4sLjPkftLa0Uk+/KvX+0VC8PVksFQaGbTO3Qj6Kf4noIamlGIwa5X6g/UKqsT4k3vGoqbTLQ3e7Ao/rLRPUVNj3aV+JlXoU9PUGp3MgWudYEZRisl2XZXFhp1t/XjwHT/AITwHTr+ysdFfeqRqTYLl72HZQJjjJl2uSj5a5QD+GVHP4k/6h+JJ8iB6mtjrKAOvLCLO5c//eR+K0biZUNENRps7dv3bzHmM12vwYv7t84XRmpCyt+A4qGpROyUpAKD/wApA/KrD8qqbgtbBZ5WRwY8gyoC3I0uFJ8n2HWypC/uRoH3Bq2a5vWhondw6a/HNdbwF8rqCITe8BY/9SR9FUuUcKI+SZfPyXiHlk6443E3Ii2RJ8COwhKQVFwp/H2V16HWtmq+4YZhhOD2O+8SMgXHgP5DKKbVaIbQLwhtEpbS22nsCd9ToHlB3V68QcanZhw3u2NW+5i2vzmfBEko5wlPMCoEDrogEfnVJRLbgHBrKo+PY3ilzz3O/CDq1JSCqMjyPYpaGuoABOiNnqKtKOYTwOieSTkOEWA4Rmc9Bc2uczkoNfAaepbNGABmS43J4jkLDU2F7DIZ9FfOJ353J8PhXx6zzrQuSjnMOcjldb6kDY9wAR7Gt1VV2HjbAkzZlpy7Gbxi14ix1SzBktF4vsp/EtopG18o2SAN6BI3o1ZFqu1tvlmjXa0TWZkKSgOMvsq5krT6g1U1FO+JxLm2HxHx3V3S1MczQGvud9j5jZZlKUqOpSUpSiJSlKIlKUoiUpSiJVecROIl1xi92vGsVxlzI8guCFyEQ0u+ElplGuZalH3Oh+f52HVHZVJz/FfiAuObROHk3JLUu2NW2M5CkI52khXiLPJ1V1Wda12FTaGJskh4gDYEgE2udhe476qvxGZ8cQ4CRcgEgXIG5tY9tN1F8n4o4Bm9kRKy3hJd5kKMUx7rc0tAG1vc3KWw6NKVroe47jpvpVx4Rw2xHEsP/Q9sjC4QX5X6QC56UvKUs6KFbI/ZATynW+nrXO0bMYT/AANVwoct13h5Zf7qEy0zIamkrU/KCllKj30nQ6gGuuozDcaI3HaTyttpCEj0AGh/SrDEwYGCJl2tucrkggWsfU6KswgtqZDM+znWGdgCCb3B8gNfkvWlKVRLY0pSoNxM4hNYLZGvl2ESbnLJTHaWfpSB3WrXXQ2OnmTWSKJ0rgxgzKjVdXFSQunmNmt1U52KVyeeMPEMzfmRfgnrvwhHb8P7a12/Orx4YcRkZxa3mJjLce6xAC8hv8DiT0C0g9R16EeR+9S6jDZoGcbrEdFR4X4rosRm/Qju121xr2sSpdkDT7+KXJmLvx1xHUt678xQQP51/M9KSlCUqBBAAIPka/qDXGHHfgxdcXyeblePwHJOPzHC+6lhPMYK1HagoD/DJ2QrsN6Oum7vwvWRxSPhebcVreWyg+MKCSaJk8YuG3v2Ns/TNUdSvgII2CCPapJheD5HnuQt2jHIC31FQDsgghmOnzU4rsB7dz2AreZJGxNL3mwC55FE+V4ZGLk7Lpz4S2ZKOF95ec5gw5dD4W+xIaQFa/l/CtR8XsxkWfFYHMPGVIkPa8wkISnf8VVeeF4ra+H/AA9g4/DdAjwmiXZDmk+Is/UtxXps7PsPtXFfG7P2uIPFWROgOc9qhI+ThK8nEJJKnP8Acokj2Ca0jCwa3FXVLB7IJP0HxXQcXIw/Bm0jz7ZAHrc/DRVxSlbbGceuWWZbAx20Nlcya6GkdOiB3Us+yRsn2Fbw94Y0ucbALnjGOe4MaLkrsv4an50rgLAcnM68J56NHdPdxhCyU/kFKWB9qt+tTjNgg4tiFux23J5YsFhLCN91aHVR9ydk+5rbVyOrmbNO+RosCSV26hgdBTxxONyAAtZkV3VYcXm3hNsn3Mxm+cQ7e34j7vUDSE7Gz1qo8Dulqxz4hc7t+SLRAud6dj3C3uzSGy/HLf8AdpJ80HoU77g+lXfVW8aJHCqNZIH/AKnWtUxDzi0QyywtbwUACoJUjRT0103o/lWeicHEw8JPHllmdjp5KPiDC0NqA4DgN/ayG4NztrktDxJvNpyHjdw6sWNSmZt8hXUy5C4igv5WKE/rAtQ6DY8vb3G7UxDGYuIYbCsER519MdKit538Tq1KK1rPuVKJ171ReH5njOMJdRwm4F5TKW8OVcx1gteIPIF1fMeX22BV/Y/OuNyxeDPu9rVa5zzKVvwlLCyws908w769azYgx8TGRAWaOZFyczcgE21UfDHslkfKTd55A2AyFgSBfQXWypSlVSukpSlESlKURKUpREpSlESmhSlEXk7GjvqQp5htwtqC0FaQrlI7Eb7GvWlKJZKUoaItZbsgtN1u9ytkGWlyVbnQ1JbHdBIBH3Hlv1BFUl8Q1tmC+Wi8cijEUwqKVDslwKKgD6bB/wCmq5g5Ve8c4hS79BkFMz5l0vJc6pdBWSpCx5g/y7iuhsdzbD+JtjXaZzLIkOp0/bJetnXmg/tDfYjqParr+mfQyNmaOJu65+MVg8RUslBI4Ry3y5GxuPsR5hcq1cXw+W2Y5l9yuwSpMRmL8upXkpalBQT+QTv8x61ODwFwYzfHC7olve/AEn6ftvl5tfnVhWiz2yw2lq2WiG1Eit/hbbGh7k+ZJ9T1rJW4pHJEY4wc1GwDwdVUlY2pqXABuYAN7n4aLOr4QFAggEHpo19pVCukqKTuGXD25TjMnYVYn3ydlxUJvZPv061vYsK0WG1FqFEh22EykrKGUJZbQAOpIGgBrzryv+QWfGLBIvV9uDMKDHTzOOunp7ADuSfIDqa4w4vcc7xxCfds1p8a242Ff+33pyXrsp3Xl5hA6euz2t8PoKnEXcIJ4RqToP8A1UmJ4lSYW0vLRxnQC1z36dVIuOfHn+1IkYfh0hSbLvklzU7Bm/5E+jXv+19u/P8ASveDBmXK4sW+3xXpUp9YbaYZSVLcUewAHc10Sjo4qKL9OPIDU/Url1dXT1836spuToOXQLzZZdfkIYYaW664oIQ2hJUpSidAADuSfKu1uAvB8YDY1X6+spORTmwFpPX5No9fCB/ePQqPsB5dcPgnwHj4UhrJcpbak5CpO2mQeZuCCOwPZTnqry7D1N51puO42Ki9PTn2dzz/APPmt68OeHjTWqqke3sOXXv8u6UpStWW5JXm4ww6tC3WW1qQdpKkglJ9vSvSlEXzQr72pSiJSlKIlKUoiUpSiJSlKIlKUoiUpSiJSlKIlKUoi5t4ycPpNmv0jKbYwpy2TF+JICBv5d09yfRKj135EkelVSha2nUuNqUhaTzJUk6KT6g+RruV5lqQwtl9tDjawUqQtIUFA9wQe4qjc94GkqdumFADupdsWrQ/+JR7f6T+R8q2CgxNvCIpvj91zDxL4RlEjqyhFwcy3cHmOfbXl0jOJ8bclsfhxbz/AMZhDpt08r6R7L/a/wB38avrFc0sGY28ybNL51oA8WO4OV1rf7yf+42PeuO5MaRDluRZbDjD7SuVxp1JSpB9CD2rLsl7uWPX2Pd7VIUzJZVsEHoseaVDzSexFSarC4phxR5H0VTg3i+roXiKpJeze/vDsfofRdtVoMxzGx4Niki/3+V4MdoaShPVbyz2Qgeaj/5PQV7WjI4FzweNkynEx4jkX5pxSz0aSBtWz/l0f4Vwxxc4mTuJWcuTQtxuzxVKbt0U9AlHm4ofvq7n0Gh5VXYThTq2Ysdk1uv27ro+MY3HQ0wljzc/3fv2WNxL4oZDxMyL525uGPb2VH5O3Nq22wPU/vLI7qP2GhUIpVhcLuEeQ8TbvuKDCs7K+WVcnEbSn1Q2P21+3YefoehkwUMOzWN/Pj81y8NqMQqMrue788h6BRrEsOyHOMjbsmOQFypCvqWo/S2yj99xXZKf69gCa7X4U8GMf4aQBKHLcb66jT9xWnXLvuhofsJ/mfP0EqwzCMdwPHEWbHYQYaGlOuq+p19X77iv2j/IdgAKkVaHi2OyVl44/ZZ6nv8AZdJwXw5FQASy+1J6Dt907UpSqBbKlKUoiUpSiJSlKIlKUoiUpSiJSlKIlKUoiUpSiJVZo4rw2fiNmcOJ5bZaMVn5V49OaSQVqbJ90KTr3SR5irMPUarhz4iIUu1fEVc5gLjRktx5jDqSUkfQE7B8iFNnr7Vb4NRR1kroX/4m3e4VJj1fJQwsmjH8hftYruPuKVQPBn4gIORR4+M5pLaiXoANsTXCEtzfIAnslz27K8uvSr+qDV0ktJIY5RY/PsrCiroa2ISwm49R0KUpSoylpTvSlEURzXh5Yc2gkTWRHnoGmZzSR4iPY/vJ9j+Wq5gyvE7vh9+Va7s0ATtTL6OqHkb/ABJP9R3Fdm1E+ImIs5hg8uCGkma0gvQ3NdUugdBv0V+E/f2qzoMQdA4McfZ+S1HxL4aixCJ08ItKM/8Al0PXkfoqBzzJ5Ng+DuyWVlxSHr3IdY2O/wAulxS169j9Kfso1zTV/fEnbXLFZeH9iI0iLb3kqHl4m2+b+e6rrhTw5mcSs+atCFLZt7AD8+Snu21vsP8AMo9B+Z8q3bCnxQURqHGwJc4/Gy0/EYJ5aqOiAu5rWNA/6i/rdSDgxwYncSLp+k7kHYmOR3OV59P0qkqHdps/1V5du/btq02m22KzRrTaITMKFGQG2mGU8qUAf/u/c+dLRabdYrHFtFpiNxIUVsNMstjSUJHl/wCfM9aza0rFMUkr5OJ2TRoPzddGwfB4sOi4W5vOp/NkpSlVauEpSlESlKURKUqMZvn2N4BjqrtkE1LYOwxGRpT0hX7qE+f37DzNe443SODGC5K8SSsiaXvNgN1icT87h8PeHU2+vLQZZSWYLCv8Z9QPKNeg7n2BrbYbfRk/D6y5B05p0JqQsAaAUpIKgPz3XCXEniRe+I+WKu90PgRWQUQ4KFbRGR5/dR0OZXn7AAV2xwotj9n4J4vb5KSl5u3NFaT3SVJ5tflzVd4jhQoqSNz/AH3HPtbTyWvYXjBxCtkbH/baMu99fNTGlKVQrZEpSlESlKURKUpREpSlESqT+IzhnIzLD2cis0cu3e0JUS0gbVIjnqpAHmpJHMB/qHnV2UqRS1L6aVs0eoUWtpGVcLoJND+XX8xPbuDV28POOGe4PjUWTe4rl9xgvmGyuS4EvNrSkKKW3D1UEpI6KBA2BsVYPGb4eDeJMnKsCZbanubck2volD6u5W15JWfNJ6Hy0e9Y2jILXOuiLDesNioZx1htFmsz/OJrs4qSPCVrXiBx3a3AoaCQNVvclbT4jTghnENxuO2m++lr9lzmOgqsLqCC/gP8Tse+u22t7d11BhfF/A86bQ3Z7001NUOsCZpl8fZJOlfdJNTsHdcI5Pw7Fm4fy7/PeflX0zY6i5BCDA5n1OczLSkdFuIKPq5SAkkJAPety1mPGrhTkM2wm7u3Jm2Rm5chmUDLYbZXy6PMrSkgKUE9D32KopcCilzpZB2PS2h31GwWxw+IpYsqyI7Zt631G2h3XatK5mx74toyuRnKcTdbV+0/bHgsa9eRej/1GrMs3xAcKrylIGTN291XTwri0tgj8yOX+dVU+EVkPvxnyz+SuKfG6Gf3JR55fOys2lay3ZFYLugLtV7t05J6gxpKHP6Gtnuq8tLTYhWbXBwu03XOPxcWZb+IY/kCE/RDluRnVeiXUAj+bf8AOp5wCwdvDeD8Fx5kJuV0SmfLUR1HMPoR9ko109SqpbnuIws5wKbjU1aUIkcikuEb5FJWFA/y19iakTaW22ktthKUJACUjsAPKrKTEC6hZSDYkntt6kqpiwxrcRfWndoA76H0A+K/dK+bHqKbHqKrFcL7Sm68n5MeK0XZL7bKB3U4oJA/M0Qmy9aVDbxxY4b2HYuWZ2dCh3bafDy/+VGzVd334qcEgJUiyW663hwdlBsR2z/uX9X/AE1Nhw6qm/txk+WXx0UCfFKSD+5KB55/AZq9q115v1lx62LuF9ukS3RUd3pLobT9hvufYVyrdeP/ABaytcePi9lZskWa+mKxJbZU5zOLOkp8d0BsEkgdhVf5HZn5uE3HL8jzKZfrvGfRDdjNhbphOrSpQD63daH0LTpsEBQ1urWDw+/iAqHht9hmfsFS1HiZnCTTMLrC9zkPXM9ld2dfE/GbZlQuHdrduLjSduXSUyoMMjeuYI7q6kaKuUb13rmS/wCQ3vJ747d8guUi4TXO7ryt6H7qR2Sn2AAq37tAxLDskduFslWy3rTHDU7HHZpcRdoDjKFLO+vgvHm2EKPVSQpOuxwsS4PtcRrlHTiUG6QMcYdUX8iuxHiywT0Q0yPp6Ad9nqSVHsmr6gdR0TP1GssLe8dfzlw6+RtreIiuxCQRueHOv7o07/cutbzF9HwW4ayeIXEFkSGFfoSAtL890j6VAHaWQfVWuvonZ9K7xSkJQEgAAdAB5VpcUxOx4Xi8ewY/DEeIyN+q3FHutav2lHzP/at3WqYtiTq+bi0aNB+c1umCYS3DoOE5uOZP07BKUpVUrlKUpREpSlESlKURKUpREpSlESoVnXCvDuIMb/jlu5ZqRpq4Rj4chv8A3ftD2VsVNaVkilfE4PjNiOSxTQxzMLJGgg7FcoTuCnEXhw/4+LMQstsyJzFxVCUnw3lOMFRbKkb66KzvlPXQ6VE7XnsKLGseOZ1apLU5u5p/TEicwrbsRDjjzSFoP1KCX3lKUnXVKQOvau2+9am+4xj2TQzFyCywbk1rQTKZSvl+xPUflV1HjXHlUsv1GR+3y25Kgl8P8BvSP4ehzHO3P5781yRBiTsmWxYc8yO0XyVOu0U24wpTUhbLCVKXKcCm/wC6ZLKSAhWuutJGjUAtlnsF3GRZTcHJUCwwX0BqJb0JW8svuLDLSSs6SkJSSVK32Hcmun778MGBT3VSLBLumPvnevlXvEbGxo/SvZ/goVBk/DlxDxR6W5iWSWK5xpLYZfh3KNytyEA7CVtqC0HRGwehB7EVdU2K03CeCThJtkRYDPO1rgXHrc7qgqsGqw5v6kXEBfMHiJyyvexNj6WGyplzDWpuNXHJ8PdulwhRJDEfwlQT8ylTja1q5i2SNI5AOYdFcw7VvWcd4pWa5CBasmmsuiUmEEsXN1rTpi/NEaJAHK33Pkrp71v7tgPHK22xUFGJuMtquBuK3bA4hrmX4aW+QJZUOVASnoAO5J60fyjKImUG4ZLw9yOIhy5XC4PeEwvmBkxRGQElaNbbSCdk9d+VTTVPkHsOa8Z7g7C3Lr8VXtpI4z+41zDlsQNTfnbb4LR41mXHC+QJEyxZdd5DEZTbbi5E5lIClglCdvEbJCT0HpW5gZx8R8mTNjRJ15degvCPJaXGjhTThGwghSQSSOoA3sdqirUzBGMLuOKyJGTxI0idHnJfet7Ljn6ppxBQpPiJH+JsH26itw9xJwqdA+Ru2OSLlCbuEDwWJEkodEWNGLPiqcQQC8d75fw9db6V9ljDiSyBpH/EdOoB35WSGUtaA+ocDv7Z69CRtzvdbJjiH8Rc21u3Bi43L5Vpbjbjq40ZrlU3/eJ0pIO0+Y10rWSeIPHhyaqJJyO9MOiCbny6aa3GCOfxQQkbTy9env5iv1ds6xXIcbkRbrdYSp67jcZJkSLAmUVpfUkoU0S4PBOk9R10ddTqvQcWbW+yu3T7e/PjJx0W2E9oB6FJVDDDoT1+plZAJB8wFAb2DjbEcyKZu/8AG3bM6+n0Xt8wyBqnbfyv3yGnr9Vi3t/i4xFluZFxBejIZdeYQmTfvD+aW0B4gYCT9euYDfTZOh1qLxcWyjJ8davsb9IXhC55gustJdlPNEISvxFDr9JCunuk1I8Gye4Wuzrhu2bKb7zOrcVbQ2h+DJK06/WJW0paTvqSggnp1BG6+WTC+LMjB5uMW7B743GmzGpZkKSuNylCFoKfqKQUkL67/dFSGyOhuDwtsRnkARvlfbVRzG2fhI43XByzJB2ztvovG74VjuBx5z+VC53VKLvItTDVvdREGmUoUp1alJXpSg4nlQB6knVSqJg9lQqXhttjzBJcdAfvUmwJnJQxIZQ4yHHSsCIptKzzkDe/qB8qkdr4WcfbhepdyenWixfO+CqQ2+tD6FLbbS2lzwuVwBzlSPqBB3vrUgtnwttypj07Ms6ulxflLLklMRPheMo9SVLWVFR/KqybEYw392cX6Z55bWtlnvnqrWDCpXH9qnNv9vZy734s8tstFVGV8QYyMbQ5AucuddLraGrfMBnbhwVsOBHO2zr+8WWUOJVsABZIGzXtbsd4hcSMiyC4YtiTkS15GyhE9y4p8ON4m0LW62o66+KlSk8oJAWR510/jPBzhxiakO2vGIi5KO0qYDId36hS96/LVToAAAAdqrZMbiiHDTR+bvLYcrC2eyt4vD00x4quTLk3z3PO5vluqQxD4cbNDuKb5n9xcyi6kJ5m3NpjJ5UhKQU93NBKQObpodquxllmOwhhhpDTSEhKEISEpSB2AA7CvSlUVTVy1LuKV1/kOw2WxUtFDSt4YW258z3OpSlKVHUpKUpREpSlESlKURKUpREpSlESlKURKUpREpSlESlKURK+a+9faUReTsaO8NPMNuD/ADpB/rWGuwWNw7XZrer/AFRkH/tWxpX0OI0K8ljTqFrBjmPpO02O2g+0Vv8A+qyGrZbmD+ogRW/9DSU/0FZdK+lzjqUDGjQL4EgDQ6D0FfdUpXlekpSlESlKURKUpREpSlESlKURKUpREpSlESlKURKUpREpSlESlKURKUpREpSlESlKURKUpREpSlESlKURKUpREpSlESlKURKUpREpSlESlKURKUpRF//Z" alt="BV Nhi HN" style="width:42px;height:36px;object-fit:contain;background:#fff;border-radius:8px;padding:2px;">
-            <div>
-              <div style="font-size:10px;font-weight:800;color:#ddd6fe;letter-spacing:0.04em;">HỒ SƠ NGOẠI KIỂM / SO SÁNH LIÊN PHÒNG 360° • QT.VT03.TTDT-09</div>
-              <div style="font-size:13.5px;font-weight:800;color:#ffffff;">EQA-2026-10 — PMF-G6PD-642</div>
-            </div>
-          </div>
-          <span class="badge b-pass">10/10 mẫu (100%)</span>
-        </div>
-
-        <div class="dossier-body">
-          <div style="margin-bottom:10px;padding-bottom:8px;border-bottom:1px solid #e2e8f0;">
-            <div style="font-size:13.5px;font-weight:800;color:#0f172a;margin-bottom:3px;">Neonatal G6PD Screening Test (Hoạt độ G6PD Sơ sinh)</div>
-            <div style="font-size:11.5px;color:#334155;">
-              • <strong>Đơn vị tổ chức / PXN đối chiếu:</strong> Preventive Medicine Foundation (Mã PXN: 642)<br>
-              • <strong>Hệ thống máy &amp; Phương pháp:</strong> Máy đọc huỳnh quang VICTOR 2D (Revvity)<br>
-              • <strong>Giao nhận mẫu (BM-09-02):</strong> 05/06/2026 (Nguyễn Văn Mây (Đơn vị giao mẫu) → <strong>Lê Thu Hằng / Nguyễn Thị Nhài</strong>)<br>
-              • <strong>Tình trạng mẫu &amp; Bảo quản:</strong> <span style="color:#059669;font-weight:700;">Bao bì nguyên vẹn, Túi hút ẩm độ ẩm 30%</span>
+              <!-- RIGHT: 360° DOSSIER & BLIND SAMPLE SUB-TABLE -->
+              <div id="eqaDetailDossierPanel" class="dossier-card" style="border:1.5px solid #c4b5fd;border-radius:10px;overflow:hidden;"></div>
             </div>
           </div>
 
-          <!-- BẢNG KIỂM 7 BƯỚC THEO DÕI THỰC HIỆN (BM.QT.VT03.TTDT-09-03.V1) -->
-          <div style="margin-bottom:10px;">
-            <div style="font-weight:800;color:#5b21b6;font-size:11.8px;margin-bottom:4px;">📋 Phiếu Theo dõi 7 Bước Thực hiện (BM.QT.VT03.TTDT-09-03.V1):</div>
-            <div class="iso-checklist-grid">
-              <div class="iso-check-item">✅ 1. Giao nhận mẫu: 05/06/2026</div>
-              <div class="iso-check-item">✅ 2. Tình trạng mẫu: Đạt yêu cầu</div>
-              <div class="iso-check-item">✅ 3. Ngày chạy XN: 09/06/2026</div>
-              <div class="iso-check-item">✅ 4. Nội kiểm (IQC): IQC G6PD Victor 2D (2 mức Đạt)</div>
-              <div class="iso-check-item">✅ 5. Xem xét KQ (QLCL/QLKT)</div>
-              <div class="iso-check-item">✅ 6. Phê duyệt gửi KQ: 11/06/2026</div>
-            </div>
-          </div>
-
-          <!-- BẢNG CHI TIẾT KẾT QUẢ TỪNG MẪU MÙ (BM-09-04 & BM-09-05) -->
-          <div style="margin-bottom:10px;">
-            <div style="font-weight:800;color:#0068b5;font-size:11.8px;margin-bottom:4px;">🔬 Chi tiết Kết quả Từng Mẫu Mù &amp; Đối chiếu (BM-09-04 &amp; BM-09-05):</div>
-            <div class="table-wrap" style="max-height:165px;">
-              <table>
-                <thead>
-                  <tr><th>Mã Mẫu</th><th>Giá trị Tham chiếu / PXN Đối tác</th><th>Kết quả tại Khoa XN</th><th>Đánh giá</th></tr>
-                </thead>
-                <tbody>
-                  
-                    <tr>
-                      <td><code style="font-weight:700;">Mẫu 01 &amp; 02</code></td>
-                      <td style="font-size:11px;">Nguy cơ cao (&lt; 2.6 U/g Hb)</td>
-                      <td style="font-size:11px;"><strong>M1 = 0.69 U/g Hb | M2 = 0.75 U/g Hb (Nguy cơ cao)</strong></td>
-                      <td><span class="badge b-pass">ĐẠT (Khớp 100%)</span></td>
-                    </tr>
-                  
-                    <tr>
-                      <td><code style="font-weight:700;">Mẫu 03 &amp; 04</code></td>
-                      <td style="font-size:11px;">Nguy cơ thấp (&gt; 2.6 U/g Hb)</td>
-                      <td style="font-size:11px;"><strong>M3 = 5.63 U/g Hb | M4 = 6.59 U/g Hb (Nguy cơ thấp)</strong></td>
-                      <td><span class="badge b-pass">ĐẠT (Khớp 100%)</span></td>
-                    </tr>
-                  
-                    <tr>
-                      <td><code style="font-weight:700;">Mẫu 05, 06, 07</code></td>
-                      <td style="font-size:11px;">Nguy cơ cao (&lt; 2.6 U/g Hb)</td>
-                      <td style="font-size:11px;"><strong>M5 = 0.80 | M6 = 0.76 | M7 = 0.78 U/g Hb (Nguy cơ cao)</strong></td>
-                      <td><span class="badge b-pass">ĐẠT (Khớp 100%)</span></td>
-                    </tr>
-                  
-                    <tr>
-                      <td><code style="font-weight:700;">Mẫu 08 &amp; 09</code></td>
-                      <td style="font-size:11px;">Nguy cơ thấp (&gt; 2.6 U/g Hb)</td>
-                      <td style="font-size:11px;"><strong>M8 = 6.07 U/g Hb | M9 = 6.14 U/g Hb (Nguy cơ thấp)</strong></td>
-                      <td><span class="badge b-pass">ĐẠT (Khớp 100%)</span></td>
-                    </tr>
-                  
-                    <tr>
-                      <td><code style="font-weight:700;">Mẫu 10</code></td>
-                      <td style="font-size:11px;">Nguy cơ cao (&lt; 2.6 U/g Hb)</td>
-                      <td style="font-size:11px;"><strong>M10 = 0.69 U/g Hb (Nguy cơ cao)</strong></td>
-                      <td><span class="badge b-pass">ĐẠT (Tổng 10/10 Pass)</span></td>
-                    </tr>
-                  
-                </tbody>
-              </table>
-            </div>
-          </div>
-
-          <!-- ĐÁNH GIÁ RỦI RO LÂM SÀNG (ISO 15189 ĐIỀU 7.3.7.3 i) -->
-          <div style="padding:8px 10px;background:#f0fdf4;border:1px solid #86efac;border-radius:8px;margin-bottom:10px;font-size:11.5px;">
-            <div style="font-weight:800;color:#065f46;">
-              🩺 Đánh giá Tác động Rủi ro Lâm sàng (ISO 15189:2022 Điều 7.3.7.3 i):
-            </div>
-            <div style="margin-top:2px;color:#1e293b;">An toàn 100% — Phân loại chính xác 100% ca Thiếu hụt G6PD Nguy cơ cao (&lt; 2.6 U/g Hb)</div>
-          </div>
-
-          <!-- 4 COMMERCIAL ACTION BUTTONS FOR THIS EQA PROGRAM -->
-          <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;">
-            <button type="button" class="btn btn-outline btn-xs" onclick="openPrintableEqaForm('BM_09_02_HANDOVER')">🖨️ In Biên bản Giao nhận (BM-09-02)</button>
-            <button type="button" class="btn btn-outline btn-xs" onclick="openPrintableEqaForm('BM_09_03_TRACKING')">🖨️ In Phiếu Theo dõi 7 Bước (BM-09-03)</button>
-            <button type="button" class="btn btn-primary btn-xs" onclick="openPrintableEqaForm('BM_09_04_REPORT')">🖨️ In Báo cáo Gửi KQ (BM-09-04)</button>
-            <button type="button" class="btn btn-success btn-xs" onclick="openPrintableEqaForm('BM_09_05_EVAL')">🖨️ In Phiếu Đánh giá &amp; Rủi ro (BM-09-05)</button>
-          </div>
-        </div>
-      </div>
-            </div>
-          </div>
-
-          <!-- BOTTOM ANALYTICS: MULTI-CYCLE SDI TREND CHART & STAFF ROTATION / CLINICAL IMPACT MATRIX -->
-          <div id="eqaBottomAnalyticsGrid" class="grid-2" style="gap:14px;">
-            <div class="card">
-              <div class="card-header">
+          <!-- ZONE 5: BALANCED 2-COLUMN ANALYTICS (SDI TREND CHART + STAFF ROTATION & CLINICAL IMPACT) -->
+          <div id="eqaBottomAnalyticsGrid" class="grid-2" style="grid-template-columns:1fr 1.15fr;gap:14px;align-items:stretch;">
+            <div class="card" style="margin-bottom:0;display:flex;flex-direction:column;justify-content:space-between;">
+              <div class="card-header" style="margin-bottom:8px;">
                 <div>
-                  <div class="card-title">📈 Biểu đồ Xu hướng Chỉ số Z-Score / SDI Qua Các Đợt Ngoại kiểm Trong Năm</div>
-                  <div class="card-subtitle">Phân tích xu hướng dài hạn theo Mục 5.2 Bước 6 (QT.VT03.TTDT-09): Phát hiện sớm độ chệch hệ thống trước khi vượt ngưỡng ±2.0 SDI</div>
+                  <div class="card-title" style="border-left-color:#7c3aed;">📈 Biểu đồ Xu hướng Chỉ số Z-Score / SDI Qua Các Đợt Ngoại kiểm</div>
+                  <div class="card-subtitle">Giám sát độ chệch hệ thống dài hạn theo Bước 5 &amp; Bước 6 (QT.VT03.TTDT-09) • Ngưỡng đạt: <strong>|SDI| ≤ 2.0</strong></div>
                 </div>
-                <span class="badge b-pass">Giới hạn chấp nhận: |SDI| ≤ 2.0</span>
+                <span class="badge b-pass">Mục tiêu: |SDI| ≤ 2.0</span>
               </div>
-              <div style="height:250px;"><canvas id="eqaSdiTrendChart"></canvas></div>
+              <div style="position:relative;height:285px;width:100%;padding:4px 6px;">
+                <canvas id="eqaSdiTrendChart"></canvas>
+              </div>
             </div>
 
-            <div class="card">
-              <div class="card-header">
+            <div class="card" style="margin-bottom:0;display:flex;flex-direction:column;">
+              <div class="card-header" style="margin-bottom:8px;">
                 <div>
-                  <div class="card-title">👨‍🔬 Lịch Phân công Luân phiên KTV Chạy EQA (ISO 7.3.7.3c) &amp; Đánh giá Rủi ro Lâm sàng (ISO 7.3.7.3i)</div>
-                  <div class="card-subtitle">Đảm bảo mọi KTV đứng máy đều luân phiên thực hiện mẫu mù EQA • Kiểm tra lại mẫu bệnh nhân lưu (Rerun) nếu EQA không đạt</div>
+                  <div class="card-title" style="border-left-color:#0284c7;">👨‍🔬 Lịch Phân công Luân phiên KTV (ISO 7.3.7.3c) &amp; Đánh giá Rủi ro Lâm sàng (ISO 7.3.7.3i)</div>
+                  <div class="card-subtitle">Đảm bảo mọi KTV đứng máy đều luân phiên chạy mẫu mù EQA • Kiểm tra lại mẫu bệnh nhân lưu (Rerun) nếu |SDI| &gt; 2.0</div>
                 </div>
               </div>
-              <div class="table-wrap" style="max-height:250px;">
-                <table>
+              <div class="table-wrap" style="max-height:285px;overflow-y:auto;border:1px solid #cbd5e1;border-radius:9px;">
+                <table class="eqa-clean-table" style="width:100%;border-collapse:collapse;">
                   <thead>
                     <tr>
-                      <th>Bộ phận</th>
+                      <th style="width:110px;">Bộ phận</th>
                       <th>Chương trình EQA / SSLP</th>
-                      <th>KTV Thực hiện Đợt Này</th>
-                      <th>KTV Luân phiên Đợt Tới</th>
-                      <th>Đánh giá Tác động Lâm sàng (Mẫu BN Lưu)</th>
+                      <th style="width:150px;">KTV Đợt Này</th>
+                      <th style="width:150px;">KTV Đợt Kế tiếp</th>
+                      <th style="width:180px;">Đánh giá Rủi ro Lâm sàng</th>
                     </tr>
                   </thead>
                   <tbody id="eqaRotationAndClinicalBody"></tbody>
@@ -23461,6 +23355,768 @@ function jsonResponse(obj) {
       syncGasUrlUiElements();
       autoDiscoverGasUrlViaJsonp();
     });
+
+  
+
+    // =========================================================================
+    // COMPLETE 6-STEP CLOSED-LOOP EQA LIFECYCLE ENGINE (ISO 15189:2022 & SOP QT.VT03.TTDT-09)
+    // =========================================================================
+    let ACTIVE_EQA_STEP_FILTER = 0; // 0 = All stages, 1..6 = filter/highlight specific step
+
+    const EQA_SIX_STEPS_SPEC = [
+      {
+        step: 1,
+        code: "BM-09-01",
+        formKey: "BM_09_01_PLAN",
+        shortTitle: "Bước 1: Lập Kế hoạch Năm",
+        fullTitle: "Bước 1: Lập Kế hoạch & Đăng ký Chương trình Ngoại kiểm / SSLP Đầu năm (BM-09-01)",
+        isoClause: "ISO 15189:2022 Điều 7.3.7.3(a,b)",
+        color: "#6d28d9",
+        bg: "#f5f3ff",
+        objective: "Rà soát 100% danh mục xét nghiệm 5 bộ phận, đăng ký gói Ngoại kiểm độc lập (ISO/IEC 17043: RIQAS, QCMD, GenQA, PMF, VQAP) hoặc lập kế hoạch So sánh liên phòng (ILC/AAP ≥ 2 đợt/năm) cho xét nghiệm chưa có EQA thương mại.",
+        deliverable: "Kế hoạch Ngoại kiểm & SSLP Năm 2026 (BM.QT.VT03.TTDT-09-01.V1)"
+      },
+      {
+        step: 2,
+        code: "BM-09-02",
+        formKey: "BM_09_02_HANDOVER",
+        shortTitle: "Bước 2: Giao nhận & Hoàn nguyên",
+        fullTitle: "Bước 2: Tiếp nhận, Kiểm tra Tình trạng & Hoàn nguyên Mẫu Mù (BM-09-02)",
+        isoClause: "SOP QT.VT03.TTDT-09 Mục 5.2.2",
+        color: "#0284c7",
+        bg: "#e0f2fe",
+        objective: "Kiểm tra tính nguyên vẹn bao bì, nhiệt độ bảo quản khi nhận (Đá khô -20°C / Gel lạnh 2–8°C / Túi hút ẩm), hạn dùng và hoàn nguyên mẫu đông khô bằng Pipette chuẩn đúng thể tích & thời gian ổn định.",
+        deliverable: "Biên bản Giao nhận & Kiểm tra Mẫu Ngoại kiểm (BM.QT.VT03.TTDT-09-02.V1)"
+      },
+      {
+        step: 3,
+        code: "BM-09-03",
+        formKey: "BM_09_03_TRACKING",
+        shortTitle: "Bước 3: Phân tích Mẫu Mù & IQC",
+        fullTitle: "Bước 3: Phân tích Mẫu Mù theo 4 Nguyên tắc Vàng & Kiểm soát Nội kiểm IQC (BM-09-03)",
+        isoClause: "ISO 15189:2022 Điều 7.3.7.3(c,d)",
+        color: "#059669",
+        bg: "#d1fae5",
+        objective: "Thực hiện phân tích mẫu EQA cùng mẻ mẫu bệnh nhân thường quy bởi KTV đứng máy theo lịch luân phiên, chạy đúng 1 lần khi Nội kiểm (IQC) trong ngày ĐẠT (In-Control), tuyệt đối không thông đồng kết quả.",
+        deliverable: "Phiếu Theo dõi Thực hiện Mẫu Ngoại kiểm & Hồ sơ Quan trắc Gốc (BM.QT.VT03.TTDT-09-03.V1)"
+      },
+      {
+        step: 4,
+        code: "BM-09-04",
+        formKey: "BM_09_04_REPORT",
+        shortTitle: "Bước 4: Thẩm định & Gửi KQ",
+        fullTitle: "Bước 4: Rà soát Chống Sai sót Hành chính & Phê duyệt Gửi Kết quả Đúng hạn (BM-09-04)",
+        isoClause: "SOP QT.VT03.TTDT-09 Mục 5.2.4",
+        color: "#d97706",
+        bg: "#fef3c7",
+        objective: "Kiểm tra chéo 4 thông số khai báo bắt buộc (Mã máy Instrument, Mã phương pháp Method, Mã hóa chất Reagent, Đơn vị đo Unit & dấu thập phân) trước khi Trưởng khoa / QLCL ký duyệt gửi lên cổng EQA trước hạn nộp.",
+        deliverable: "Báo cáo Kết quả Xét nghiệm Mẫu Ngoại kiểm & Xác nhận Nộp Cổng Điện tử (BM.QT.VT03.TTDT-09-04.V1)"
+      },
+      {
+        step: 5,
+        code: "BM-09-05",
+        formKey: "BM_09_05_EVAL",
+        shortTitle: "Bước 5: Đánh giá SDI / %Bias",
+        fullTitle: "Bước 5: Tiếp nhận Báo cáo Phản hồi & Đánh giá Thống kê SDI / Z-Score / %Bias (BM-09-05)",
+        isoClause: "ISO 15189:2022 Điều 7.3.7.3(e,f)",
+        color: "#0d9488",
+        bg: "#ccfbf1",
+        objective: "Đối chiếu kết quả PXN với Trung bình nhóm tương đồng (Peer Mean) & Peer SD. Tính chỉ số SDI = (Lab - PeerMean)/PeerSD và %Bias: |SDI| ≤ 2.0 (Đạt), 2.0 < |SDI| ≤ 3.0 (Cảnh báo xu hướng), |SDI| > 3.0 (Không đạt).",
+        deliverable: "Phiếu Đánh giá Kết quả Ngoại kiểm / So sánh Liên phòng (BM.QT.VT03.TTDT-09-05.V1)"
+      },
+      {
+        step: 6,
+        code: "ISO 7.3.7.3i",
+        formKey: "BM_09_05_EVAL",
+        shortTitle: "Bước 6: Rủi ro LS, CAPA & Lưu",
+        fullTitle: "Bước 6: Đánh giá Rủi ro Lâm sàng (Mẫu BN Lưu), CAPA, Luân phiên KTV & Lưu Hồ sơ 5 Năm",
+        isoClause: "ISO 15189:2022 Điều 7.3.7.3(g,h,i)",
+        color: "#e11d48",
+        bg: "#ffe4e6",
+        objective: "Nếu Không đạt (|SDI| > 2.0): Tìm nguyên nhân gốc rễ (5-Whys), chạy kiểm tra lại 5–10 mẫu bệnh nhân lưu (Retained Samples) để đánh giá rủi ro lâm sàng, mở phiếu CAPA. Phân công KTV luân phiên đợt tới & lưu hồ sơ ≥ 5 năm.",
+        deliverable: "Hồ sơ Đánh giá Tác động Lâm sàng, Phiếu CAPA & Báo cáo Tổng kết Năm (BM04.17)"
+      }
+    ];
+
+    // Ensure realistic stage distribution & complete 6-step metadata across EQA_PROGRAMS
+    function enrichEqaProgramsWithSixStepMetadata() {
+      if (typeof EQA_PROGRAMS === "undefined" || !Array.isArray(EQA_PROGRAMS)) return;
+      EQA_PROGRAMS.forEach((e, idx) => {
+        if (!e.planDate) e.planDate = "05/01/2026";
+        if (!e.recvDate) e.recvDate = "01/11/2026";
+        if (!e.testDate) e.testDate = "05/11/2026";
+        if (!e.dueDate) e.dueDate = "15/11/2026";
+        if (!e.submitDate) e.submitDate = e.stage >= 4 ? "08/11/2026" : "Chờ duyệt gửi";
+        if (!e.evalDate) e.evalDate = e.stage >= 5 ? "12/11/2026" : "Chờ phản hồi EQA";
+        if (!e.cyclesPerYear) e.cyclesPerYear = e.type === "ILC_AAP" ? "2 đợt/năm" : "6 đợt/năm";
+        if (!e.reconstitutionNote) {
+          e.reconstitutionNote = e.dept === "Di truyền & SHPT"
+            ? "Rã đông chậm ở 2–8°C, vortex nhẹ 5 giây, ly tâm nhanh (Spin-down) trước khi tách chiết DNA/RNA"
+            : "Hoàn nguyên bằng Pipette chuẩn Class A, để ổn định 20 phút ở 20–25°C, trộn đều tránh tạo bọt";
+        }
+        if (!e.methodCode) {
+          e.methodCode = e.dept === "Di truyền & SHPT"
+            ? "Real-time PCR / NGS (CE-IVD)"
+            : "Phương pháp chuẩn IFCC / CLSI";
+        }
+        if (!e.reagentLot) {
+          e.reagentLot = e.dept === "Di truyền & SHPT" ? "Lot: L_8899 / GP-2610A" : "Lot: BIO-2610 / ROCHE-91";
+        }
+        if (!e.reviewer) e.reviewer = "BSNT. Trịnh Thị Thu Hiền / ThS. Trần Tuấn Anh";
+        if (!e.nextOperator) e.nextOperator = "NHIHN000673 (Đinh Thị Phương Anh)";
+        if (!e.clinicalImpact) {
+          e.clinicalImpact = Math.abs(e.sdi || 0) > 2.0
+            ? "🚨 CẢNH BÁO: Bắt buộc chạy kiểm tra lại 10 mẫu bệnh nhân lưu gần nhất & mở CAPA!"
+            : "An toàn 100% — Không phát sinh sai lệch trên mẫu bệnh nhân (0 mẫu cần thu hồi)";
+        }
+        const stageTitles = {
+          1: "Bước 1/6: Đã lập Kế hoạch Năm (BM-09-01)",
+          2: "Bước 2/6: Đã nhận & Kiểm tra mẫu (BM-09-02)",
+          3: "Bước 3/6: Đang phân tích & Kiểm soát IQC (BM-09-03)",
+          4: "Bước 4/6: Đã chạy máy — Chờ duyệt gửi KQ (BM-09-04)",
+          5: "Bước 5/6: Đã nhận phản hồi — Đang tính SDI (BM-09-05)",
+          6: "Bước 6/6: Hoàn tất Chu trình 6 Bước & Lưu Hồ sơ"
+        };
+        if (!e.stage || e.stage < 1 || e.stage > 6) e.stage = 6;
+        e.stageName = stageTitles[e.stage] || stageTitles[6];
+      });
+    }
+
+    function filterByEqaStep(stepNum) {
+      if (ACTIVE_EQA_STEP_FILTER === stepNum) {
+        ACTIVE_EQA_STEP_FILTER = 0;
+      } else {
+        ACTIVE_EQA_STEP_FILTER = stepNum;
+        // Also select a program that is at or relevant to this step if available
+        const matchProg = EQA_PROGRAMS.find(e => e.stage === stepNum) || EQA_PROGRAMS.find(e => e.stage >= stepNum) || EQA_PROGRAMS[0];
+        if (matchProg) SELECTED_EQA_ID = matchProg.id;
+      }
+      renderEqaSection();
+    }
+
+    function setEqaProgramStage(eqaId, newStage) {
+      const item = EQA_PROGRAMS.find(e => e.id === eqaId);
+      if (!item) return;
+      const st = Math.max(1, Math.min(6, parseInt(newStage, 10) || 1));
+      const stageTitles = {
+        1: "Bước 1/6: Đã lập Kế hoạch Năm (BM-09-01)",
+        2: "Bước 2/6: Đã nhận & Kiểm tra mẫu (BM-09-02)",
+        3: "Bước 3/6: Đang phân tích & Kiểm soát IQC (BM-09-03)",
+        4: "Bước 4/6: Đã chạy máy — Chờ duyệt gửi KQ (BM-09-04)",
+        5: "Bước 5/6: Đã nhận phản hồi — Đang tính SDI (BM-09-05)",
+        6: "Bước 6/6: Hoàn tất Chu trình 6 Bước & Lưu Hồ sơ"
+      };
+      item.stage = st;
+      item.stageName = stageTitles[st];
+      const todayVn = typeof getTodayVnDate === "function" ? getTodayVnDate() : "13/11/2026";
+      if (st >= 2 && (!item.recvDate || item.recvDate.includes("Chờ"))) item.recvDate = todayVn;
+      if (st >= 3 && (!item.testDate || item.testDate.includes("Chờ"))) item.testDate = todayVn;
+      if (st >= 4 && (!item.submitDate || item.submitDate.includes("Chờ") || item.submitDate.includes("Chưa"))) item.submitDate = todayVn;
+      if (st >= 5 && (!item.evalDate || item.evalDate.includes("Chờ") || item.evalDate.includes("Đang"))) item.evalDate = todayVn;
+      if (st === 6) {
+        const sdiAbs = Math.abs(item.sdi || 0);
+        item.status = sdiAbs > 2.0 ? `KHÔNG ĐẠT (|SDI| = ${sdiAbs.toFixed(2)} > 2.0 — Cần CAPA)` : `ĐẠT (|SDI| = ${sdiAbs.toFixed(2)} ≤ 2.0)`;
+      } else {
+        item.status = `Đang thực hiện ${stageTitles[st].split(":")[0]}`;
+      }
+      SELECTED_EQA_ID = item.id;
+      renderEqaSection();
+      commitDatabaseTransaction("EQA_NgoaiKiem", `Chuyển giai đoạn chương trình ${eqaId} sang ${item.stageName}`, eqaId, "STAGE_EQA");
+      showToast(`🏅 Đã chuyển <strong>${eqaId}</strong> sang <strong>${item.stageName}</strong> và lưu vết CSDL!`, "#6d28d9");
+    }
+
+    function updateEqaProgramFieldInline(eqaId, field, val) {
+      const item = EQA_PROGRAMS.find(e => e.id === eqaId);
+      if (!item) return;
+      if (["labVal", "peerMean", "peerSd"].includes(field)) {
+        const num = parseFloat(val);
+        if (isNaN(num)) return;
+        item[field] = num;
+        const pSd = item.peerSd && item.peerSd > 0 ? item.peerSd : 0.1;
+        item.sdi = Number(((item.labVal - item.peerMean) / pSd).toFixed(2));
+        item.biasPct = Number((((item.labVal - item.peerMean) / (item.peerMean || 1)) * 100).toFixed(2));
+        const sdiAbs = Math.abs(item.sdi);
+        if (sdiAbs > 2.0) {
+          item.status = `KHÔNG ĐẠT (|SDI| = ${sdiAbs.toFixed(2)} > 2.0 — Mở CAPA)`;
+          item.clinicalImpact = `🚨 CẢNH BÁO (|SDI| = ${sdiAbs.toFixed(2)}): Bắt buộc chạy kiểm tra lại 10 mẫu bệnh nhân lưu & mở phiếu CAPA!`;
+          if (!item.capaId || item.capaId === "Không yêu cầu") item.capaId = `CAPA-EQA-${eqaId.slice(-2)}`;
+        } else {
+          item.status = `ĐẠT (|SDI| = ${sdiAbs.toFixed(2)} ≤ 2.0)`;
+          item.clinicalImpact = "An toàn 100% — Không phát sinh sai lệch trên mẫu bệnh nhân (0 mẫu thu hồi)";
+          item.capaId = "Không yêu cầu";
+        }
+      } else {
+        item[field] = String(val || "").trim();
+      }
+      renderEqaSection();
+      commitDatabaseTransaction("EQA_NgoaiKiem", `Cập nhật ${field} = ${val} cho chương trình Ngoại kiểm ${eqaId} (SDI = ${item.sdi})`, eqaId, "EDIT_EQA");
+      showToast(`✅ Đã lưu <strong>${field}</strong> cho <strong>${eqaId}</strong> (SDI = <strong>${item.sdi >= 0 ? "+" : ""}${item.sdi.toFixed(2)}</strong>, %Bias = <strong>${item.biasPct >= 0 ? "+" : ""}${item.biasPct.toFixed(2)}%</strong>) vào CSDL!`, "#059669");
+    }
+
+    function createCapaFromEqaFailure(eqaId) {
+      const item = EQA_PROGRAMS.find(e => e.id === eqaId);
+      if (!item) return;
+      const newCapaId = `CAPA-EQA-${Date.now().toString().slice(-4)}`;
+      item.capaId = newCapaId;
+      if (typeof CAPA_LIST !== "undefined") {
+        CAPA_LIST.unshift({
+          id: newCapaId,
+          date: typeof getTodayVnDate === "function" ? getTodayVnDate() : "13/11/2026",
+          source: `Sự cố Ngoại kiểm EQA (${item.id} - ${item.org})`,
+          dept: item.dept,
+          desc: `Kết quả Ngoại kiểm ${item.program} có |SDI| = ${Math.abs(item.sdi || 0).toFixed(2)} vượt ngưỡng chấp nhận (±2.0 SDI).`,
+          riskScore: 12,
+          riskLevel: "Cao (Bắt buộc rà soát mẫu BN lưu)",
+          rootCause: "Điều tra 5-Whys: Kiểm tra độ chệch hiệu chuẩn (Calibration Bias), quá trình hoàn nguyên mẫu đông khô và khai báo đơn vị đo.",
+          action: "Hiệu chuẩn lại thiết bị, chạy lại IQC 2 mức và chạy đối chiếu lại 10 mẫu bệnh nhân lưu gần nhất.",
+          preventive: "Chuẩn hóa danh mục kiểm tra 2 người độc lập (Double-check BM-09-04) trước khi gửi kết quả EQA.",
+          owner: item.operator || "ThS. Trần Tuấn Anh",
+          status: "Đang xử lý & Rà soát mẫu BN"
+        });
+      }
+      renderEqaSection();
+      if (typeof renderCapaTable === "function") renderCapaTable();
+      commitDatabaseTransaction("QMS_SuCo_CAPA", `Khởi tạo phiếu CAPA ${newCapaId} từ sự cố Ngoại kiểm ${eqaId}`, newCapaId, "CREATE_EQA_CAPA");
+      showToast(`🚨 Đã khởi tạo Phiếu CAPA <strong>${newCapaId}</strong> liên kết trực tiếp với đợt Ngoại kiểm <strong>${eqaId}</strong> và lưu CSDL!`, "#dc2626");
+    }
+
+    // Render the Interactive 6-Step Workbench for the selected EQA program
+    function renderEqaSixStepWorkbench() {
+      const box = document.getElementById("eqaSixStepWorkbenchContent");
+      if (!box) return;
+      const e = EQA_PROGRAMS.find(x => x.id === SELECTED_EQA_ID) || EQA_PROGRAMS[0];
+      if (!e) return;
+
+      const sdiVal = Number(e.sdi || 0);
+      const sdiAbs = Math.abs(sdiVal);
+      const biasVal = Number(e.biasPct || (((e.labVal - e.peerMean) / (e.peerMean || 1)) * 100));
+      const isFail = sdiAbs > 2.0 || (e.status && e.status.includes("KHÔNG ĐẠT"));
+      const curStage = e.stage || 6;
+
+      // Program selector options
+      const progOpts = EQA_PROGRAMS.map(p =>
+        `<option value="${p.id}" ${p.id === e.id ? "selected" : ""}>[${p.id}] ${p.dept} — ${p.program} (Đang ở Bước ${p.stage}/6 • SDI: ${p.sdi >= 0 ? "+" : ""}${Number(p.sdi || 0).toFixed(2)})</option>`
+      ).join("");
+
+      box.innerHTML = `
+        <div style="background:linear-gradient(135deg,#f5f3ff 0%,#ede9fe 100%);padding:11px 14px;border-radius:9px;border:1px solid #c4b5fd;margin-bottom:12px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;">
+          <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;flex:1;">
+            <span style="background:#5b21b6;color:#fff;font-weight:800;font-size:11.5px;padding:4px 10px;border-radius:7px;white-space:nowrap;">🔄 BÀN LÀM VIỆC CHU TRÌNH NGOẠI KIỂM 6 BƯỚC</span>
+            <select class="form-control" style="max-width:540px;font-weight:800;color:#1e293b;border:1.5px solid #7c3aed;padding:4px 10px;font-size:12px;" onchange="selectEqaProgram(this.value)">
+              ${progOpts}
+            </select>
+            <span class="badge ${isFail ? 'b-fail' : 'b-pass'}" style="font-size:11px;padding:4px 10px;">
+              ${e.stageName} • ${e.status}
+            </span>
+          </div>
+          <div style="display:flex;gap:6px;align-items:center;flex-wrap:wrap;">
+            <span style="font-size:11px;color:#4c1d95;font-weight:700;">Chuyển nhanh giai đoạn:</span>
+            ${[1,2,3,4,5,6].map(st => `
+              <button type="button" class="btn btn-xs" style="padding:3px 8px;font-weight:800;border-radius:6px;border:1px solid ${curStage === st ? '#4c1d95' : '#cbd5e1'};background:${curStage === st ? '#5b21b6' : (curStage > st ? '#d1fae5' : '#ffffff')};color:${curStage === st ? '#ffffff' : (curStage > st ? '#065f46' : '#475569')};" onclick="setEqaProgramStage('${e.id}', ${st})" title="Chuyển chương trình ${e.id} sang Bước ${st}">
+                B${st} ${curStage > st ? '✓' : (curStage === st ? '●' : '')}
+              </button>
+            `).join("")}
+          </div>
+        </div>
+
+        <!-- 6 INTERACTIVE STEP CARDS (2 ROWS x 3 COLUMNS — BALANCED & SCIENTIFIC) -->
+        <div class="eqa-step-cards-6">
+          <!-- BƯỚC 1: LẬP KẾ HOẠCH NĂM (BM-09-01) -->
+          <div class="eqa-wf-card ${curStage > 1 ? 'wf-done' : (curStage === 1 ? 'wf-current' : 'wf-pending')}">
+            <div>
+              <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;">
+                <span style="font-weight:800;font-size:12.2px;color:#5b21b6;">① Bước 1: Kế hoạch Năm (BM-09-01)</span>
+                <span class="badge ${curStage >= 1 ? 'b-pass' : 'b-info'}">${curStage > 1 ? '✅ Đã duyệt KH' : '🔵 Đang lập KH'}</span>
+              </div>
+              <div style="font-size:11px;color:#475569;margin-bottom:8px;">
+                <strong>Mục tiêu ISO 7.3.7.3(a,b):</strong> Đăng ký gói EQA chuẩn ISO/IEC 17043 hoặc So sánh liên phòng (ILC ≥ 2 đợt/năm) bao phủ xét nghiệm của bộ phận <strong>${e.dept}</strong>.
+              </div>
+              <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:8px;">
+                <div>
+                  <label style="font-size:10px;font-weight:700;color:#475569;">Mã Chương trình (Scheme):</label>
+                  <input type="text" class="form-control mono" style="padding:3px 6px;font-size:11px;font-weight:700;" value="${e.schemeCode || e.sampleCode}" onchange="updateEqaProgramFieldInline('${e.id}', 'schemeCode', this.value)">
+                </div>
+                <div>
+                  <label style="font-size:10px;font-weight:700;color:#475569;">Ngày duyệt KH &amp; Tần suất:</label>
+                  <input type="text" class="form-control" style="padding:3px 6px;font-size:11px;" value="${e.planDate || '05/01/2026'} (${e.cyclesPerYear || '6 đợt/năm'})" onchange="updateEqaProgramFieldInline('${e.id}', 'planDate', this.value)">
+                </div>
+              </div>
+            </div>
+            <div style="display:flex;justify-content:space-between;align-items:center;padding-top:6px;border-top:1px dashed #cbd5e1;">
+              <button type="button" class="btn btn-outline btn-xs" onclick="openPrintableEqaForm('BM_09_01_PLAN')">🖨️ In BM-09-01</button>
+              <button type="button" class="btn btn-primary btn-xs" style="background:#5b21b6;border-color:#5b21b6;" onclick="setEqaProgramStage('${e.id}', 2)">Chốt Bước 1 → Sang Bước 2</button>
+            </div>
+          </div>
+
+          <!-- BƯỚC 2: TIẾP NHẬN, KIỂM TRA & HOÀN NGUYÊN MẪU MÙ (BM-09-02) -->
+          <div class="eqa-wf-card ${curStage > 2 ? 'wf-done' : (curStage === 2 ? 'wf-current' : 'wf-pending')}">
+            <div>
+              <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;">
+                <span style="font-weight:800;font-size:12.2px;color:#0369a1;">② Bước 2: Giao nhận &amp; Hoàn nguyên (BM-09-02)</span>
+                <span class="badge ${curStage >= 2 ? 'b-pass' : 'b-warn'}">${curStage >= 2 ? '✅ Đạt chuẩn mẫu' : '⏳ Chờ nhận mẫu'}</span>
+              </div>
+              <div style="font-size:11px;color:#475569;margin-bottom:8px;">
+                <strong>Mục tiêu SOP 09:</strong> Kiểm tra bao bì, nhiệt độ chuỗi lạnh khi nhận mẫu mù <code>${e.sampleCode}</code> và hoàn nguyên đúng thể tích bằng Pipette chuẩn.
+              </div>
+              <div style="display:grid;grid-template-columns:1fr 1.3fr;gap:6px;margin-bottom:8px;">
+                <div>
+                  <label style="font-size:10px;font-weight:700;color:#475569;">Ngày nhận mẫu:</label>
+                  <input type="text" class="form-control" style="padding:3px 6px;font-size:11px;font-weight:700;" value="${e.recvDate || '01/11/2026'}" onchange="updateEqaProgramFieldInline('${e.id}', 'recvDate', this.value)">
+                </div>
+                <div>
+                  <label style="font-size:10px;font-weight:700;color:#475569;">Tình trạng bao bì &amp; Nhiệt độ:</label>
+                  <input type="text" class="form-control" style="padding:3px 6px;font-size:11px;color:#047857;font-weight:700;" value="${e.packCond || 'Nguyên vẹn, 2-8°C đạt chuẩn'}" onchange="updateEqaProgramFieldInline('${e.id}', 'packCond', this.value)">
+                </div>
+              </div>
+            </div>
+            <div style="display:flex;justify-content:space-between;align-items:center;padding-top:6px;border-top:1px dashed #cbd5e1;">
+              <button type="button" class="btn btn-outline btn-xs" onclick="openPrintableEqaForm('BM_09_02_HANDOVER')">🖨️ In BM-09-02</button>
+              <button type="button" class="btn btn-primary btn-xs" style="background:#0284c7;border-color:#0284c7;" onclick="setEqaProgramStage('${e.id}', 3)">Chốt Bước 2 → Sang Bước 3</button>
+            </div>
+          </div>
+
+          <!-- BƯỚC 3: PHÂN TÍCH MẪU MÙ THEO 4 NGUYÊN TẮC VÀNG & IQC (BM-09-03) -->
+          <div class="eqa-wf-card ${curStage > 3 ? 'wf-done' : (curStage === 3 ? 'wf-current' : 'wf-pending')}">
+            <div>
+              <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;">
+                <span style="font-weight:800;font-size:12.2px;color:#047857;">③ Bước 3: Phân tích 4 Nguyên tắc (BM-09-03)</span>
+                <span class="badge ${curStage >= 3 ? 'b-pass' : 'b-warn'}">${curStage >= 3 ? '✅ IQC Pass • Chạy 1 lần' : '⏳ Chờ chạy máy'}</span>
+              </div>
+              <div style="font-size:11px;color:#475569;margin-bottom:8px;">
+                <strong>Mục tiêu ISO 7.3.7.3(c,d):</strong> Chạy 1 lần cùng mẫu bệnh nhân bởi KTV luân phiên khi IQC trong ngày ĐẠT (<code>${e.iqcBatch || 'IQC Pass 100%'}</code>).
+              </div>
+              <div style="display:grid;grid-template-columns:1fr 1.2fr;gap:6px;margin-bottom:8px;">
+                <div>
+                  <label style="font-size:10px;font-weight:700;color:#475569;">KQ Đo tại Khoa XN (Lab):</label>
+                  <input type="number" step="0.01" class="form-control mono" style="padding:3px 6px;font-size:11.5px;font-weight:800;color:#0f172a;border-color:#059669;" value="${e.labVal}" onchange="updateEqaProgramFieldInline('${e.id}', 'labVal', this.value)">
+                </div>
+                <div>
+                  <label style="font-size:10px;font-weight:700;color:#475569;">KTV Thực hiện (Đứng máy):</label>
+                  <input type="text" class="form-control" style="padding:3px 6px;font-size:11px;font-weight:700;" value="${e.operator || 'NHIHN000674'}" onchange="updateEqaProgramFieldInline('${e.id}', 'operator', this.value)">
+                </div>
+              </div>
+            </div>
+            <div style="display:flex;justify-content:space-between;align-items:center;padding-top:6px;border-top:1px dashed #cbd5e1;">
+              <button type="button" class="btn btn-outline btn-xs" onclick="openPrintableEqaForm('BM_09_03_TRACKING')">🖨️ In BM-09-03</button>
+              <button type="button" class="btn btn-primary btn-xs" style="background:#059669;border-color:#059669;" onclick="setEqaProgramStage('${e.id}', 4)">Chốt Bước 3 → Sang Bước 4</button>
+            </div>
+          </div>
+
+          <!-- BƯỚC 4: THẨM ĐỊNH NỘI BỘ & GỬI KẾT QUẢ LÊN CỔNG EQA (BM-09-04) -->
+          <div class="eqa-wf-card ${curStage > 4 ? 'wf-done' : (curStage === 4 ? 'wf-current' : 'wf-pending')}">
+            <div>
+              <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;">
+                <span style="font-weight:800;font-size:12.2px;color:#b45309;">④ Bước 4: Duyệt &amp; Gửi Kết quả (BM-09-04)</span>
+                <span class="badge ${curStage >= 4 ? 'b-pass' : 'b-warn'}">${curStage >= 4 ? '✅ Đã gửi đúng hạn' : '⏳ Chờ duyệt gửi'}</span>
+              </div>
+              <div style="font-size:11px;color:#475569;margin-bottom:8px;">
+                <strong>Kiểm tra Kép (Double-Check):</strong> Đối soát đúng Mã máy (<code>${e.analyzer.split(' ')[0]}</code>), Mã hóa chất và Đơn vị đo trước khi nộp lên cổng trước hạn <strong>${e.dueDate}</strong>.
+              </div>
+              <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:8px;">
+                <div>
+                  <label style="font-size:10px;font-weight:700;color:#475569;">Ngày gửi KQ (Hạn ${e.dueDate}):</label>
+                  <input type="text" class="form-control" style="padding:3px 6px;font-size:11px;font-weight:700;" value="${e.submitDate || '08/11/2026'}" onchange="updateEqaProgramFieldInline('${e.id}', 'submitDate', this.value)">
+                </div>
+                <div>
+                  <label style="font-size:10px;font-weight:700;color:#475569;">Lãnh đạo / QLCL Duyệt gửi:</label>
+                  <input type="text" class="form-control" style="padding:3px 6px;font-size:11px;" value="${e.reviewer || 'BSNT. Trịnh Thị Thu Hiền'}" onchange="updateEqaProgramFieldInline('${e.id}', 'reviewer', this.value)">
+                </div>
+              </div>
+            </div>
+            <div style="display:flex;justify-content:space-between;align-items:center;padding-top:6px;border-top:1px dashed #cbd5e1;">
+              <button type="button" class="btn btn-outline btn-xs" onclick="openPrintableEqaForm('BM_09_04_REPORT')">🖨️ In BM-09-04</button>
+              <button type="button" class="btn btn-primary btn-xs" style="background:#d97706;border-color:#d97706;" onclick="setEqaProgramStage('${e.id}', 5)">Chốt Bước 4 → Sang Bước 5</button>
+            </div>
+          </div>
+
+          <!-- BƯỚC 5: TIẾP NHẬN BÁO CÁO PHẢN HỒI & ĐÁNH GIÁ SDI / %BIAS (BM-09-05) -->
+          <div class="eqa-wf-card ${isFail ? 'wf-alert' : (curStage > 5 ? 'wf-done' : (curStage === 5 ? 'wf-current' : 'wf-pending'))}">
+            <div>
+              <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;">
+                <span style="font-weight:800;font-size:12.2px;color:#0f766e;">⑤ Bước 5: Đánh giá SDI &amp; %Bias (BM-09-05)</span>
+                <span class="badge ${isFail ? 'b-fail' : 'b-pass'}">SDI = ${sdiVal >= 0 ? "+" : ""}${sdiVal.toFixed(2)} (${biasVal >= 0 ? "+" : ""}${biasVal.toFixed(1)}%)</span>
+              </div>
+              <div style="font-size:11px;color:#475569;margin-bottom:8px;">
+                <strong>Công thức ISO 7.3.7.3(e):</strong> <code>SDI = (Lab - PeerMean) / PeerSD</code> • Ngưỡng đạt: <strong>|SDI| ≤ 2.0</strong> (Tương đồng: <strong>${e.concordance || '100%'}</strong>).
+              </div>
+              <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:8px;">
+                <div>
+                  <label style="font-size:10px;font-weight:700;color:#475569;">Trung bình Nhóm (Peer Mean):</label>
+                  <input type="number" step="0.01" class="form-control mono" style="padding:3px 6px;font-size:11.5px;font-weight:800;" value="${e.peerMean}" onchange="updateEqaProgramFieldInline('${e.id}', 'peerMean', this.value)">
+                </div>
+                <div>
+                  <label style="font-size:10px;font-weight:700;color:#475569;">Độ lệch chuẩn Nhóm (Peer SD):</label>
+                  <input type="number" step="0.01" class="form-control mono" style="padding:3px 6px;font-size:11.5px;font-weight:800;" value="${e.peerSd}" onchange="updateEqaProgramFieldInline('${e.id}', 'peerSd', this.value)">
+                </div>
+              </div>
+            </div>
+            <div style="display:flex;justify-content:space-between;align-items:center;padding-top:6px;border-top:1px dashed #cbd5e1;">
+              <button type="button" class="btn btn-outline btn-xs" onclick="openPrintableEqaForm('BM_09_05_EVAL')">🖨️ In BM-09-05</button>
+              <button type="button" class="btn btn-primary btn-xs" style="background:#0d9488;border-color:#0d9488;" onclick="setEqaProgramStage('${e.id}', 6)">Chốt Bước 5 → Sang Bước 6</button>
+            </div>
+          </div>
+
+          <!-- BƯỚC 6: ĐÁNH GIÁ RỦI RO LÂM SÀNG (MẪU BN LƯU), CAPA, LUÂN PHIÊN KTV & LƯU 5 NĂM -->
+          <div class="eqa-wf-card ${isFail ? 'wf-alert' : (curStage === 6 ? 'wf-done' : 'wf-pending')}">
+            <div>
+              <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;">
+                <span style="font-weight:800;font-size:12.2px;color:#be123c;">⑥ Bước 6: Rủi ro LS, CAPA &amp; Lưu 5 Năm</span>
+                <span class="badge ${isFail ? 'b-fail' : 'b-pass'}">${isFail ? '🚨 Bắt buộc Rerun BN & CAPA' : '✅ An toàn LS • Đã lưu 5 năm'}</span>
+              </div>
+              <div style="font-size:11px;color:#475569;margin-bottom:8px;">
+                <strong>ISO 7.3.7.3(g,h,i):</strong> Rà soát rủi ro trên mẫu bệnh nhân lưu giữa 2 đợt EQA, phân công KTV luân phiên đợt tới và khóa hồ sơ lưu trữ ≥ 5 năm.
+              </div>
+              <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:8px;">
+                <div>
+                  <label style="font-size:10px;font-weight:700;color:#475569;">KTV Luân phiên Đợt tới:</label>
+                  <input type="text" class="form-control" style="padding:3px 6px;font-size:11px;font-weight:700;color:#4c1d95;" value="${e.nextOperator || 'NHIHN000673 (Đinh Thị Phương Anh)'}" onchange="updateEqaProgramFieldInline('${e.id}', 'nextOperator', this.value)">
+                </div>
+                <div>
+                  <label style="font-size:10px;font-weight:700;color:#475569;">Tác động LS &amp; Hồ sơ CAPA:</label>
+                  <input type="text" class="form-control" style="padding:3px 6px;font-size:11px;color:${isFail ? '#dc2626' : '#047857'};font-weight:700;" value="${e.clinicalImpact || 'An toàn 100% (0 mẫu thu hồi)'}" onchange="updateEqaProgramFieldInline('${e.id}', 'clinicalImpact', this.value)">
+                </div>
+              </div>
+            </div>
+            <div style="display:flex;justify-content:space-between;align-items:center;padding-top:6px;border-top:1px dashed #cbd5e1;gap:4px;">
+              <button type="button" class="btn btn-outline btn-xs" style="color:#dc2626;border-color:#fca5a5;" onclick="createCapaFromEqaFailure('${e.id}')">🚨 Tạo Phiếu CAPA</button>
+              <button type="button" class="btn btn-primary btn-xs" style="background:#059669;border-color:#059669;" onclick="setEqaProgramStage('${e.id}', 6)">✅ Hoàn tất &amp; Khóa Chu trình 6 Bước</button>
+            </div>
+          </div>
+        </div>
+      `;
+    }
+
+    // Override renderEqaSection with balanced 6-Step Stepper, Interactive Workbench, Clean 7-Column Master Table & 360° Dossier
+    renderEqaSection = function() {
+      enrichEqaProgramsWithSixStepMetadata();
+
+      const recvSel = document.getElementById("eqaRecvProgramSelect");
+      if (recvSel) {
+        recvSel.innerHTML = EQA_PROGRAMS.map(e => `<option value="${e.id}">[${e.id}] ${e.org} — ${e.program}</option>`).join("");
+      }
+
+      const totalProgs = EQA_PROGRAMS.length;
+      const failCnt = EQA_PROGRAMS.filter(e => Math.abs(e.sdi || 0) > 2.0 || (e.status && e.status.includes("KHÔNG ĐẠT"))).length;
+
+      // Render 6-Step Interactive Stepper (#eqaPipelineSummary)
+      const pipeEl = document.getElementById("eqaPipelineSummary");
+      if (pipeEl) {
+        pipeEl.innerHTML = EQA_SIX_STEPS_SPEC.map(s => {
+          const passedCount = EQA_PROGRAMS.filter(e => (e.stage || 6) >= s.step).length;
+          const activeHereCount = EQA_PROGRAMS.filter(e => (e.stage || 6) === s.step).length;
+          const isFilterActive = ACTIVE_EQA_STEP_FILTER === s.step;
+          return `
+            <div class="eqa-step-node ${isFilterActive ? 'active-step-filter' : ''}" onclick="filterByEqaStep(${s.step})" title="Nhấn để lọc các chương trình tại ${s.shortTitle}">
+              <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px;">
+                <span style="font-size:10px;font-weight:800;padding:2px 7px;border-radius:6px;background:${s.bg};color:${s.color};">${s.code}</span>
+                <span style="font-size:10px;font-weight:700;color:${activeHereCount > 0 ? s.color : '#64748b'};">
+                  ${activeHereCount > 0 ? `● ${activeHereCount} đang ở bước này` : '✓ Đã qua'}
+                </span>
+              </div>
+              <div style="font-size:12px;font-weight:800;color:#0f172a;line-height:1.3;">${s.shortTitle}</div>
+              <div style="display:flex;align-items:baseline;gap:5px;margin:4px 0 2px 0;">
+                <span style="font-size:17px;font-weight:800;color:${s.color};">${passedCount}/${totalProgs}</span>
+                <span style="font-size:10.5px;color:#475569;font-weight:600;">đợt đã thực hiện</span>
+              </div>
+              <div style="font-size:10px;color:#64748b;line-height:1.35;">${s.isoClause}</div>
+            </div>
+          `;
+        }).join("");
+      }
+
+      // Render Interactive 6-Step Workbench
+      renderEqaSixStepWorkbench();
+
+      // Render Master Table (7 well-balanced columns, zero truncation)
+      const tbody = document.getElementById("eqaTableBody");
+      if (tbody) {
+        const filtered = EQA_PROGRAMS.filter(e => {
+          const matchGlobal = GLOBAL_DEPT === "ALL" || e.dept === GLOBAL_DEPT;
+          let matchQuick = true;
+          if (EQA_QUICK_FILTER === "EQA_PT") matchQuick = (e.type || "EQA_PT") === "EQA_PT";
+          else if (EQA_QUICK_FILTER === "ILC_AAP") matchQuick = e.type === "ILC_AAP";
+          else if (EQA_QUICK_FILTER === "DUE_SOON") matchQuick = (e.stage || 6) < 6 || (e.status && (e.status.includes("NHẮC LỊCH") || e.status.includes("SẮP ĐẾN") || e.status.includes("Đang")));
+          else if (EQA_QUICK_FILTER === "FAIL") matchQuick = Math.abs(e.sdi || 0) > 2.0 || (e.status && e.status.includes("KHÔNG ĐẠT"));
+          const matchStep = ACTIVE_EQA_STEP_FILTER === 0 || (e.stage || 6) === ACTIVE_EQA_STEP_FILTER;
+          return matchGlobal && matchQuick && matchStep;
+        });
+
+        tbody.innerHTML = filtered.map(e => {
+          const isSel = e.id === SELECTED_EQA_ID;
+          const sdiVal = Number(e.sdi || 0);
+          const sdiAbs = Math.abs(sdiVal);
+          const isFail = sdiAbs > 2.0 || (e.status && e.status.includes("KHÔNG ĐẠT"));
+          const curSt = e.stage || 6;
+          const badgeCls = isFail ? "b-fail" : (curSt < 6 ? "b-warn" : "b-pass");
+          const typeCls = e.type === "ILC_AAP" ? "b-teal" : "b-purple";
+
+          const dotsHtml = [1,2,3,4,5,6].map(st => {
+            const done = curSt > st || (curSt === 6 && st === 6 && !isFail);
+            const curr = curSt === st && !(curSt === 6 && !isFail);
+            const bg = isFail && st >= 5 ? "#fee2e2" : (done ? "#d1fae5" : (curr ? "#ede9fe" : "#f1f5f9"));
+            const col = isFail && st >= 5 ? "#dc2626" : (done ? "#047857" : (curr ? "#5b21b6" : "#94a3b8"));
+            const bdr = curr ? "#7c3aed" : "transparent";
+            return `<span class="eqa-mini-dot" style="background:${bg};color:${col};border-color:${bdr};" onclick="event.stopPropagation();setEqaProgramStage('${e.id}', ${st})" title="Nhấn để chuyển ${e.id} sang Bước ${st}">${st}</span>`;
+          }).join("");
+
+          return `
+            <tr class="${isSel ? 'row-selected' : ''}" onclick="selectEqaProgram('${e.id}')" style="cursor:pointer;border-bottom:1px solid #e2e8f0;">
+              <td>
+                <code style="font-weight:800;color:#5b21b6;font-size:11.5px;">${e.id}</code>
+                <div style="margin-top:3px;"><span class="badge ${typeCls}" style="font-size:9.5px;">${e.type === 'ILC_AAP' ? '🤝 Liên phòng ILC' : '🏆 Ngoại kiểm EQA'}</span></div>
+              </td>
+              <td>
+                <span class="badge b-info" style="font-size:10px;">${e.dept}</span>
+                <div style="font-size:10.8px;font-weight:700;color:#334155;margin-top:3px;">🖥️ ${e.analyzer.split('(')[0].trim()}</div>
+              </td>
+              <td>
+                <div style="font-weight:800;color:#0f172a;font-size:11.8px;">${e.program}</div>
+                <div style="font-size:10.8px;color:#475569;margin-top:1px;">${e.org} • Mẫu: <code>${e.sampleCode.split('(')[0].trim()}</code></div>
+                <div style="font-size:10.2px;color:#64748b;margin-top:1px;">KTV: <strong>${(e.operator || 'NHIHN000674').replace('NHIHN000', 'NV')}</strong> • Hạn: <strong style="color:#dc2626;">${e.dueDate}</strong></div>
+              </td>
+              <td style="text-align:center;">
+                <div style="font-size:10.5px;font-weight:800;color:#4c1d95;">Bước ${curSt}/6</div>
+                <div class="eqa-mini-progress" style="justify-content:center;">${dotsHtml}</div>
+              </td>
+              <td>
+                <div style="font-size:11.2px;">PXN: <strong>${e.labVal}</strong> / Đích: <strong>${e.peerMean}</strong></div>
+                <div style="font-size:10.2px;color:#059669;font-weight:700;margin-top:2px;">✅ IQC: ${(e.iqcBatch || 'Đạt 100%').slice(0, 22)}</div>
+              </td>
+              <td style="text-align:center;">
+                <div class="mono" style="font-weight:800;font-size:12px;color:${isFail ? '#dc2626' : '#0f766e'};">
+                  SDI: ${sdiVal >= 0 ? '+' : ''}${sdiVal.toFixed(2)}
+                </div>
+                <span class="badge ${badgeCls}" style="font-size:9.8px;margin-top:2px;">${isFail ? '🚨 KHÔNG ĐẠT' : (curSt < 6 ? `⏳ BƯỚC ${curSt}/6` : '✅ ĐẠT CHUẨN')}</span>
+              </td>
+              <td style="text-align:center;" onclick="event.stopPropagation()">
+                <div style="display:flex;gap:4px;justify-content:center;flex-wrap:wrap;">
+                  <button type="button" class="btn btn-outline btn-xs" style="padding:2px 6px;font-size:10.5px;color:#5b21b6;border-color:#c4b5fd;" onclick="advanceEqaStage('${e.id}')" title="Chuyển sang bước kế tiếp trong Chu trình 6 Bước">⏭️ Bước kế</button>
+                  <button type="button" class="btn btn-outline btn-xs" style="padding:2px 6px;font-size:10.5px;color:#dc2626;border-color:#fca5a5;" onclick="deleteEqaProgramRecord('${e.id}')" title="Xóa chương trình ngoại kiểm này">🗑</button>
+                </div>
+              </td>
+            </tr>
+          `;
+        }).join("");
+      }
+
+      renderEqaDossierPanel();
+      renderEqaTrendAndRotation();
+    };
+
+    // Upgrade renderEqaDossierPanel to show consistent 6-Step Closed-Loop Summary & Blind Sample Results
+    renderEqaDossierPanel = function() {
+      const panel = document.getElementById("eqaDetailDossierPanel");
+      if (!panel) return;
+      const e = EQA_PROGRAMS.find(x => x.id === SELECTED_EQA_ID) || EQA_PROGRAMS[0];
+      if (!e) return;
+
+      const sdiVal = Number(e.sdi || 0);
+      const sdiAbs = Math.abs(sdiVal);
+      const isFail = sdiAbs > 2.0 || (e.status && e.status.includes("KHÔNG ĐẠT"));
+      const curSt = e.stage || 6;
+      const subRows = (e.subSamples && e.subSamples.length)
+        ? e.subSamples
+        : [{ code: e.sampleCode, target: `Peer Mean: ${e.peerMean} (±${e.peerSd})`, lab: `${e.labVal}`, eval: e.status }];
+
+      panel.innerHTML = `
+        <div class="dossier-header" style="background:linear-gradient(135deg,#4c1d95,#6d28d9);padding:12px 14px;display:flex;justify-content:space-between;align-items:center;">
+          <div style="display:flex;align-items:center;gap:10px;">
+            <img src="${HCH_LOGO_DATA_URI}" alt="BV Nhi HN" style="width:40px;height:34px;object-fit:contain;background:#fff;border-radius:7px;padding:2px;" />
+            <div>
+              <div style="font-size:9.8px;font-weight:800;color:#ddd6fe;letter-spacing:0.04em;">HỒ SƠ NGOẠI KIỂM / SSLP 360° • CHU TRÌNH 6 BƯỚC</div>
+              <div style="font-size:13px;font-weight:800;color:#ffffff;">${e.id} — ${e.schemeCode || e.sampleCode}</div>
+            </div>
+          </div>
+          <span class="badge ${isFail ? 'b-fail' : 'b-pass'}" style="font-size:11px;">${e.concordance || ('SDI: ' + (sdiVal >= 0 ? '+' : '') + sdiVal.toFixed(2))}</span>
+        </div>
+
+        <div class="dossier-body" style="padding:12px 14px;background:#ffffff;">
+          <div style="margin-bottom:10px;padding-bottom:8px;border-bottom:1px solid #e2e8f0;">
+            <div style="font-size:13px;font-weight:800;color:#0f172a;margin-bottom:4px;">${e.program}</div>
+            <div style="font-size:11.3px;color:#334155;line-height:1.5;">
+              • <strong>Đơn vị tổ chức / Đối tác:</strong> ${e.org}<br/>
+              • <strong>Thiết bị &amp; Phương pháp:</strong> ${e.analyzer}<br/>
+              • <strong>Giao nhận &amp; Bảo quản (BM-09-02):</strong> ${e.recvDate} — <span style="color:#059669;font-weight:700;">${e.packCond || 'Nguyên vẹn, đạt nhiệt độ chuẩn'}</span><br/>
+              • <strong>Hướng dẫn hoàn nguyên:</strong> <span style="color:#475569;">${e.reconstitutionNote || 'Hoàn nguyên chuẩn theo SOP'}</span>
+            </div>
+          </div>
+
+          <!-- TÓM TẮT TRẠNG THÁI CHU TRÌNH 6 BƯỚC KHÉP KÍN (ĐỒNG NHẤT 100% VỚI BÀN LÀM VIỆC 6 BƯỚC) -->
+          <div style="margin-bottom:10px;">
+            <div style="font-weight:800;color:#5b21b6;font-size:11.5px;margin-bottom:5px;">🔄 Tóm tắt Tiến độ Chu trình Ngoại kiểm 6 Bước (SOP QT.VT03.TTDT-09):</div>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:5px;font-size:10.8px;">
+              <div style="padding:5px 8px;border-radius:6px;background:${curSt >= 1 ? '#f0fdf4' : '#f8fafc'};border:1px solid ${curSt >= 1 ? '#bbf7d0' : '#e2e8f0'};">
+                ${curSt >= 1 ? '✅' : '⏳'} <strong>Bước 1 (BM-09-01):</strong> Duyệt KH ${e.planDate || '05/01/2026'}
+              </div>
+              <div style="padding:5px 8px;border-radius:6px;background:${curSt >= 2 ? '#f0fdf4' : '#f8fafc'};border:1px solid ${curSt >= 2 ? '#bbf7d0' : '#e2e8f0'};">
+                ${curSt >= 2 ? '✅' : '⏳'} <strong>Bước 2 (BM-09-02):</strong> Nhận mẫu ${e.recvDate}
+              </div>
+              <div style="padding:5px 8px;border-radius:6px;background:${curSt >= 3 ? '#f0fdf4' : '#f8fafc'};border:1px solid ${curSt >= 3 ? '#bbf7d0' : '#e2e8f0'};">
+                ${curSt >= 3 ? '✅' : '⏳'} <strong>Bước 3 (BM-09-03):</strong> IQC Đạt • KQ = ${e.labVal}
+              </div>
+              <div style="padding:5px 8px;border-radius:6px;background:${curSt >= 4 ? '#f0fdf4' : '#f8fafc'};border:1px solid ${curSt >= 4 ? '#bbf7d0' : '#e2e8f0'};">
+                ${curSt >= 4 ? '✅' : '⏳'} <strong>Bước 4 (BM-09-04):</strong> Gửi KQ (${e.submitDate})
+              </div>
+              <div style="padding:5px 8px;border-radius:6px;background:${isFail ? '#fef2f2' : (curSt >= 5 ? '#f0fdf4' : '#f8fafc')};border:1px solid ${isFail ? '#fecaca' : (curSt >= 5 ? '#bbf7d0' : '#e2e8f0')};">
+                ${isFail ? '🚨' : (curSt >= 5 ? '✅' : '⏳')} <strong>Bước 5 (BM-09-05):</strong> SDI = ${sdiVal >= 0 ? '+' : ''}${sdiVal.toFixed(2)}
+              </div>
+              <div style="padding:5px 8px;border-radius:6px;background:${isFail ? '#fef2f2' : (curSt >= 6 ? '#f0fdf4' : '#f8fafc')};border:1px solid ${isFail ? '#fecaca' : (curSt >= 6 ? '#bbf7d0' : '#e2e8f0')};">
+                ${isFail ? '🚨' : (curSt >= 6 ? '✅' : '⏳')} <strong>Bước 6 (ISO 7.3.7.3i):</strong> ${isFail ? 'Mở CAPA & Rerun BN' : 'An toàn LS • Lưu 5 năm'}
+              </div>
+            </div>
+          </div>
+
+          <!-- BẢNG CHI TIẾT KẾT QUẢ TỪNG MẪU MÙ -->
+          <div style="margin-bottom:10px;">
+            <div style="font-weight:800;color:#0f4c81;font-size:11.5px;margin-bottom:4px;">🔬 Chi tiết Kết quả Từng Mẫu Mù &amp; Đối chiếu (BM-09-04 &amp; BM-09-05):</div>
+            <div class="table-wrap" style="max-height:175px;overflow-y:auto;border:1px solid #cbd5e1;border-radius:7px;">
+              <table class="eqa-clean-table" style="width:100%;">
+                <thead>
+                  <tr><th>Mã Mẫu</th><th>Giá trị Đích / PXN Đối tác</th><th>Kết quả tại Khoa XN</th><th>Đánh giá</th></tr>
+                </thead>
+                <tbody>
+                  ${subRows.map(s => `
+                    <tr>
+                      <td><code style="font-weight:700;">${s.code}</code></td>
+                      <td style="font-size:11px;">${s.target}</td>
+                      <td style="font-size:11px;"><strong>${s.lab}</strong></td>
+                      <td><span class="badge ${s.eval.includes('KHÔNG') ? 'b-fail' : 'b-pass'}">${s.eval}</span></td>
+                    </tr>
+                  `).join("")}
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <!-- ĐÁNH GIÁ RỦI RO LÂM SÀNG (ISO 15189 ĐIỀU 7.3.7.3 i) -->
+          <div style="padding:8px 10px;background:${isFail ? '#fef2f2' : '#f0fdf4'};border:1px solid ${isFail ? '#fca5a5' : '#86efac'};border-radius:8px;margin-bottom:10px;font-size:11.3px;">
+            <div style="font-weight:800;color:${isFail ? '#991b1b' : '#065f46'};">
+              🩺 Bước 6 — Đánh giá Tác động Rủi ro Lâm sàng (ISO 15189:2022 Điều 7.3.7.3i):
+            </div>
+            <div style="margin-top:2px;color:#1e293b;">${e.clinicalImpact || 'An toàn 100% — Không phát sinh sai lệch trên mẫu bệnh nhi'}</div>
+          </div>
+
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;">
+            <button type="button" class="btn btn-outline btn-xs" onclick="openPrintableEqaForm('BM_09_02_HANDOVER')">🖨️ Biên bản Giao nhận (BM-09-02)</button>
+            <button type="button" class="btn btn-outline btn-xs" onclick="openPrintableEqaForm('BM_09_03_TRACKING')">🖨️ Phiếu Theo dõi 6 Bước (BM-09-03)</button>
+            <button type="button" class="btn btn-primary btn-xs" style="background:#0284c7;border-color:#0284c7;" onclick="openPrintableEqaForm('BM_09_04_REPORT')">🖨️ Báo cáo Gửi KQ (BM-09-04)</button>
+            <button type="button" class="btn btn-success btn-xs" onclick="openPrintableEqaForm('BM_09_05_EVAL')">🖨️ Phiếu Đánh giá &amp; Rủi ro (BM-09-05)</button>
+          </div>
+        </div>
+      `;
+    };
+
+    // Upgrade renderEqaTrendAndRotation to fix the squished chart and sticky table header overlap
+    renderEqaTrendAndRotation = function() {
+      const rotBody = document.getElementById("eqaRotationAndClinicalBody");
+      if (rotBody) {
+        rotBody.innerHTML = EQA_PROGRAMS.map(e => {
+          const isFail = Math.abs(e.sdi || 0) > 2.0 || (e.status && e.status.includes("KHÔNG ĐẠT"));
+          return `
+            <tr style="border-bottom:1px solid #e2e8f0;cursor:pointer;" onclick="selectEqaProgram('${e.id}')">
+              <td><span class="badge b-info" style="font-size:10px;">${e.dept}</span></td>
+              <td>
+                <div style="font-weight:800;color:#0f172a;font-size:11.5px;">${e.program}</div>
+                <div style="font-size:10.3px;color:#64748b;">${e.org} (${e.id})</div>
+              </td>
+              <td><strong style="color:#0369a1;font-size:11.2px;">${e.operator || 'NHIHN000674'}</strong></td>
+              <td><span class="badge b-purple" style="font-size:10.2px;">${e.nextOperator || 'Luân phiên KTV đứng máy'}</span></td>
+              <td>
+                <span class="badge ${isFail ? 'b-fail' : 'b-pass'}" style="font-size:10.2px;">
+                  ${isFail ? '🚨 Chạy lại 10 mẫu BN lưu & Mở CAPA' : '✅ An toàn lâm sàng (0 mẫu thu hồi)'}
+                </span>
+              </td>
+            </tr>
+          `;
+        }).join("");
+      }
+
+      const canvas = document.getElementById("eqaSdiTrendChart");
+      if (canvas && typeof Chart !== "undefined") {
+        if (eqaSdiTrendChartInstance) {
+          try { eqaSdiTrendChartInstance.destroy(); } catch (e) {}
+        }
+        const labels = EQA_PROGRAMS.map(e => e.id);
+        const sdiVals = EQA_PROGRAMS.map(e => parseFloat((e.sdi || 0).toFixed(2)));
+        const pointColors = sdiVals.map(v => Math.abs(v) > 2.0 ? "#dc2626" : (Math.abs(v) > 1.5 ? "#d97706" : "#7c3aed"));
+
+        eqaSdiTrendChartInstance = new Chart(canvas, {
+          type: "line",
+          data: {
+            labels,
+            datasets: [
+              {
+                label: "SDI Thực tế Đạt được",
+                data: sdiVals,
+                borderColor: "#7c3aed",
+                backgroundColor: pointColors,
+                pointBackgroundColor: pointColors,
+                pointBorderColor: "#ffffff",
+                pointBorderWidth: 1.5,
+                borderWidth: 2.5,
+                pointRadius: 5.5,
+                tension: 0.22
+              },
+              { label: "+2.0 SDI (Cảnh báo)", data: labels.map(() => 2.0), borderColor: "#d97706", borderDash: [5, 5], borderWidth: 1.4, pointRadius: 0 },
+              { label: "+3.0 SDI (Không đạt)", data: labels.map(() => 3.0), borderColor: "#dc2626", borderDash: [3, 3], borderWidth: 1.4, pointRadius: 0 },
+              { label: "0.0 SDI (Tâm Peer)", data: labels.map(() => 0.0), borderColor: "#059669", borderWidth: 1.5, pointRadius: 0 },
+              { label: "-2.0 SDI (Cảnh báo)", data: labels.map(() => -2.0), borderColor: "#d97706", borderDash: [5, 5], borderWidth: 1.4, pointRadius: 0 },
+              { label: "-3.0 SDI (Không đạt)", data: labels.map(() => -3.0), borderColor: "#dc2626", borderDash: [3, 3], borderWidth: 1.4, pointRadius: 0 }
+            ]
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+              legend: {
+                position: "top",
+                labels: { boxWidth: 12, padding: 10, font: { size: 10.5, weight: "700" } }
+              }
+            },
+            scales: {
+              y: {
+                min: -3.5,
+                max: 3.5,
+                ticks: { stepSize: 1.0, font: { size: 10.5, weight: "700" } },
+                title: { display: true, text: "Chỉ số Z-Score / SDI", font: { size: 11, weight: "800" } }
+              },
+              x: {
+                ticks: { font: { size: 10, weight: "700" }, maxRotation: 30, minRotation: 0 }
+              }
+            }
+          }
+        });
+      }
+    };
+
+    // Upgrade switchEqaSubView to support 'all', 'workflow6', 'programs', 'trend'
+    switchEqaSubView = function(viewKey) {
+      ["all", "workflow6", "programs", "trend"].forEach(k => {
+        const b = document.getElementById("eqaSubBtn-" + k);
+        if (b) b.classList.toggle("active", k === viewKey);
+      });
+      const wfSec = document.getElementById("eqaWorkflow6Section");
+      const mainCard = document.getElementById("eqaSectionCard");
+      const bottomGrid = document.getElementById("eqaBottomAnalyticsGrid");
+      if (wfSec) {
+        wfSec.style.display = (viewKey === "all" || viewKey === "workflow6") ? "block" : "none";
+      }
+      if (mainCard) {
+        mainCard.style.display = (viewKey === "all" || viewKey === "programs") ? "block" : "none";
+      }
+      if (bottomGrid) {
+        bottomGrid.style.display = (viewKey === "all" || viewKey === "trend") ? "grid" : "none";
+      }
+      renderEqaSection();
+    };
+
+    // Upgrade advanceEqaStage to cycle cleanly through Steps 1 -> 2 -> 3 -> 4 -> 5 -> 6 (and wrap 6 -> 1 when testing!)
+    advanceEqaStage = function(eqaId) {
+      const item = EQA_PROGRAMS.find(e => e.id === eqaId);
+      if (!item) return;
+      const nextSt = (item.stage && item.stage < 6) ? (item.stage + 1) : 1;
+      setEqaProgramStage(eqaId, nextSt);
+    };
 
   </script>
 
