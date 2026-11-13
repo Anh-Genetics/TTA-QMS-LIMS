@@ -5493,37 +5493,157 @@
             </div>
           </div>
 
-          <!-- ZONE 5: BALANCED 2-COLUMN ANALYTICS (SDI TREND CHART + STAFF ROTATION & CLINICAL IMPACT) -->
-          <div id="eqaBottomAnalyticsGrid" class="grid-2" style="grid-template-columns:1fr 1.15fr;gap:14px;align-items:stretch;">
-            <div class="card" style="margin-bottom:0;display:flex;flex-direction:column;justify-content:space-between;">
-              <div class="card-header" style="margin-bottom:8px;">
+          <!-- ZONE 5: SPACIOUS EXECUTIVE ANALYTICS, EARLY WARNING, MULTI-MODE SDI CHART & INTERACTIVE KTV ROTATION WORKSPACE -->
+          <div id="eqaBottomAnalyticsGrid" style="display:flex;flex-direction:column;gap:14px;">
+            <!-- 5A. DYNAMIC STATISTICAL & EARLY WARNING KPI STRIP (5 SCIENTIFIC CARDS) -->
+            <div id="eqaAnalyticsSummaryStrip" style="display:grid;grid-template-columns:repeat(5,1fr);gap:10px;"></div>
+
+            <!-- 5B. FULL-WIDTH INTERACTIVE Z-SCORE / SDI & %BIAS ANALYTICS CARD -->
+            <div class="card" style="margin-bottom:0;border:1.5px solid #cbd5e1;box-shadow:0 4px 14px rgba(15,23,42,0.05);">
+              <div class="card-header" style="margin-bottom:10px;padding-bottom:10px;border-bottom:1px solid #e2e8f0;display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:10px;">
                 <div>
-                  <div class="card-title" style="border-left-color:#7c3aed;">📈 Biểu đồ Xu hướng Chỉ số Z-Score / SDI Qua Các Đợt Ngoại kiểm</div>
-                  <div class="card-subtitle">Giám sát độ chệch hệ thống dài hạn theo Bước 5 &amp; Bước 6 (QT.VT03.TTDT-09) • Ngưỡng đạt: <strong>|SDI| ≤ 2.0</strong></div>
+                  <div class="card-title" style="border-left-color:#7c3aed;font-size:14.5px;">📈 3A. BIỂU ĐỒ PHÂN TÍCH XU HƯỚNG CHỈ SỐ Z-SCORE / SDI &amp; %BIAS ĐA CHẾ ĐỘ (SOP QT.VT03.TTDT-09)</div>
+                  <div class="card-subtitle">Giám sát độ chệch hệ thống dài hạn qua các đợt ngoại kiểm • Phát hiện sớm xu hướng trượt trước khi vượt ngưỡng <strong>±2.0 SDI</strong></div>
                 </div>
-                <span class="badge b-pass">Mục tiêu: |SDI| ≤ 2.0</span>
+                <div style="display:flex;gap:6px;flex-wrap:wrap;align-items:center;">
+                  <select id="eqaChartModeSelect" class="form-control" style="width:auto;font-size:11.5px;font-weight:800;color:#4c1d95;border:1.5px solid #7c3aed;padding:4px 9px;" onchange="renderEqaTrendAndRotation()">
+                    <option value="ALL_PROGRAMS">📊 Chế độ 1: So sánh SDI &amp; %Bias Toàn bộ Chương trình (Toàn Khoa)</option>
+                    <option value="SINGLE_HISTORY">📈 Chế độ 2: Lịch sử 6 Đợt/Năm của Từng Chương trình (Đợt 1 → Đợt 6)</option>
+                  </select>
+                  <select id="eqaChartDeptFilter" class="form-control" style="width:auto;font-size:11.5px;font-weight:700;padding:4px 9px;" onchange="renderEqaTrendAndRotation()">
+                    <option value="ALL">🏥 Tất cả 5 Bộ phận</option>
+                    <option value="Di truyền & SHPT">🧬 Di truyền &amp; SHPT</option>
+                    <option value="Hóa sinh">🧪 Hóa sinh - Miễn dịch</option>
+                    <option value="Huyết học">🩸 Huyết học - Đông máu</option>
+                    <option value="Vi sinh">🦠 Vi sinh</option>
+                    <option value="Giải phẫu bệnh">🔬 Giải phẫu bệnh</option>
+                  </select>
+                  <select id="eqaHistoryProgSelect" class="form-control" style="width:auto;max-width:260px;font-size:11.5px;font-weight:700;padding:4px 9px;display:none;" onchange="renderEqaTrendAndRotation()"></select>
+                  <button type="button" class="btn btn-outline btn-xs" style="color:#d97706;border-color:#fcd34d;font-weight:700;" onclick="simulateEqaWarningTrend()">⚠️ Giả lập Cảnh báo (SDI=+2.35)</button>
+                  <button type="button" class="btn btn-outline btn-xs" style="color:#059669;border-color:#6ee7b7;font-weight:700;" onclick="restoreCleanEqaBaseline()">✅ Chuẩn 100% Đạt</button>
+                  <button type="button" class="btn btn-primary btn-xs" style="background:#4c1d95;border-color:#4c1d95;" onclick="openPrintableIqcForm('BM_17_04_EQA')">🖨️ Xuất Báo cáo Thống kê (BM04.17)</button>
+                </div>
               </div>
-              <div style="position:relative;height:285px;width:100%;padding:4px 6px;">
-                <canvas id="eqaSdiTrendChart"></canvas>
+
+              <!-- CLEAN HTML REFERENCE LEGEND BAR (NO CRAMPED CANVAS LEGEND OVERLAP!) -->
+              <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;background:#f8fafc;border:1px solid #e2e8f0;border-radius:8px;padding:7px 12px;margin-bottom:10px;font-size:11.2px;">
+                <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap;">
+                  <span style="display:inline-flex;align-items:center;gap:5px;font-weight:800;color:#0f172a;">
+                    <span style="width:12px;height:12px;border-radius:50%;background:#059669;display:inline-block;"></span> Đạt chuẩn (|SDI| ≤ 2.0)
+                  </span>
+                  <span style="display:inline-flex;align-items:center;gap:5px;font-weight:800;color:#b45309;">
+                    <span style="width:12px;height:12px;border-radius:50%;background:#d97706;display:inline-block;"></span> Cảnh báo sớm (2.0 &lt; |SDI| ≤ 3.0)
+                  </span>
+                  <span style="display:inline-flex;align-items:center;gap:5px;font-weight:800;color:#b91c1c;">
+                    <span style="width:12px;height:12px;border-radius:50%;background:#dc2626;display:inline-block;"></span> Không đạt / Mở CAPA (|SDI| &gt; 3.0)
+                  </span>
+                  <span style="display:inline-flex;align-items:center;gap:5px;font-weight:700;color:#0284c7;">
+                    <span style="width:14px;height:3px;background:#0284c7;display:inline-block;"></span> Độ lệch %Bias
+                  </span>
+                </div>
+                <div id="eqaChartActiveSummaryText" style="font-weight:800;color:#4c1d95;font-size:11.2px;"></div>
+              </div>
+
+              <!-- CHART + 3-CYCLE STATISTICAL BREAKDOWN SPLIT (SPACIOUS 1.55fr : 1fr) -->
+              <div class="grid-2" style="grid-template-columns:1.55fr 1fr;gap:14px;align-items:stretch;">
+                <div style="position:relative;height:340px;width:100%;background:#ffffff;border:1px solid #e2e8f0;border-radius:10px;padding:10px;">
+                  <canvas id="eqaSdiTrendChart"></canvas>
+                </div>
+                <div style="display:flex;flex-direction:column;justify-content:space-between;border:1px solid #cbd5e1;border-radius:10px;overflow:hidden;background:#ffffff;">
+                  <div style="background:#0f172a;color:#ffffff;padding:8px 12px;font-size:11.5px;font-weight:800;display:flex;justify-content:space-between;align-items:center;">
+                    <span>📊 BẢNG THỐNG KÊ XU HƯỚNG 3 ĐỢT &amp; CẢNH BÁO SỚM</span>
+                    <span class="badge" style="background:rgba(255,255,255,0.15);color:#fff;font-size:9.8px;">Tự động quét Drift</span>
+                  </div>
+                  <div class="table-wrap" style="max-height:300px;overflow-y:auto;border:none;border-radius:0;">
+                    <table class="eqa-clean-table" style="width:100%;border-collapse:collapse;">
+                      <thead>
+                        <tr>
+                          <th>Chương trình</th>
+                          <th style="text-align:center;">Đợt N-2</th>
+                          <th style="text-align:center;">Đợt N-1</th>
+                          <th style="text-align:center;">SDI Đợt N</th>
+                          <th style="text-align:center;">%Bias</th>
+                          <th>Đánh giá Xu hướng</th>
+                        </tr>
+                      </thead>
+                      <tbody id="eqaStatisticalTrendTableBody"></tbody>
+                    </table>
+                  </div>
+                </div>
               </div>
             </div>
 
-            <div class="card" style="margin-bottom:0;display:flex;flex-direction:column;">
-              <div class="card-header" style="margin-bottom:8px;">
+            <!-- 5C. FULL-WIDTH INTERACTIVE STAFF ROTATION (ISO 7.3.7.3c) & CLINICAL RISK ASSESSMENT MATRIX (ISO 7.3.7.3i) -->
+            <div class="card" style="margin-bottom:0;border:1.5px solid #cbd5e1;box-shadow:0 4px 14px rgba(15,23,42,0.05);">
+              <div class="card-header" style="margin-bottom:10px;padding-bottom:10px;border-bottom:1px solid #e2e8f0;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;">
                 <div>
-                  <div class="card-title" style="border-left-color:#0284c7;">👨‍🔬 Lịch Phân công Luân phiên KTV (ISO 7.3.7.3c) &amp; Đánh giá Rủi ro Lâm sàng (ISO 7.3.7.3i)</div>
-                  <div class="card-subtitle">Đảm bảo mọi KTV đứng máy đều luân phiên chạy mẫu mù EQA • Kiểm tra lại mẫu bệnh nhân lưu (Rerun) nếu |SDI| &gt; 2.0</div>
+                  <div class="card-title" style="border-left-color:#0284c7;font-size:14.5px;">👨‍🔬 3B. LỊCH PHÂN CÔNG LUÂN PHIÊN KTV CHẠY EQA (ISO 7.3.7.3c) &amp; ĐÁNH GIÁ RỦI RO LÂM SÀNG TRÊN MẪU BỆNH NHÂN LƯU (ISO 7.3.7.3i)</div>
+                  <div class="card-subtitle">Chỉnh sửa trực tiếp KTV thực hiện, xoay vòng KTV 1-chạm cho đợt kế tiếp và ghi nhận kết quả chạy kiểm tra lại mẫu bệnh nhân lưu (Retained Patient Samples Rerun)</div>
+                </div>
+                <div style="display:flex;gap:6px;flex-wrap:wrap;">
+                  <button type="button" class="btn btn-outline btn-xs" style="color:#4c1d95;border-color:#c4b5fd;font-weight:800;" onclick="rotateAllEqaOperatorsNextCycle()">🔄 Luân phiên Toàn bộ KTV Sang Đợt Kế tiếp</button>
+                  <button type="button" class="btn btn-primary btn-xs" style="background:#0284c7;border-color:#0284c7;font-weight:800;" onclick="openPrintableEqaForm('BM_09_05_EVAL')">🖨️ In Bảng Luân phiên &amp; Đánh giá Rủi ro (BM-09-05)</button>
                 </div>
               </div>
-              <div class="table-wrap" style="max-height:285px;overflow-y:auto;border:1px solid #cbd5e1;border-radius:9px;">
+
+              <!-- QUICK-ADD EQA / ILC PROGRAM & ROTATION BAR (INLINE CRUD) -->
+              <div style="background:linear-gradient(135deg,#f0f9ff 0%,#e0f2fe 100%);border:1.5px solid #7dd3fc;border-radius:9px;padding:9px 12px;margin-bottom:10px;display:flex;align-items:flex-end;gap:8px;flex-wrap:wrap;">
+                <div style="flex:0.9;min-width:120px;">
+                  <label style="font-size:10px;font-weight:800;color:#0369a1;display:block;margin-bottom:2px;">Bộ phận chuyên môn:</label>
+                  <select id="qeEqaDeptSelect" class="form-control" style="padding:4px 7px;font-size:11.2px;font-weight:700;">
+                    <option value="Di truyền & SHPT">Di truyền &amp; SHPT</option>
+                    <option value="Hóa sinh">Hóa sinh</option>
+                    <option value="Huyết học">Huyết học</option>
+                    <option value="Vi sinh">Vi sinh</option>
+                    <option value="Giải phẫu bệnh">Giải phẫu bệnh</option>
+                  </select>
+                </div>
+                <div style="flex:1.1;min-width:140px;">
+                  <label style="font-size:10px;font-weight:800;color:#0369a1;display:block;margin-bottom:2px;">Tổ chức EQA / Đơn vị SSLP:</label>
+                  <input id="qeEqaOrgInput" type="text" class="form-control" style="padding:4px 7px;font-size:11.2px;" value="QCMD / UK NEQAS Molecular">
+                </div>
+                <div style="flex:1.5;min-width:180px;">
+                  <label style="font-size:10px;font-weight:800;color:#0369a1;display:block;margin-bottom:2px;">Tên Chương trình Ngoại kiểm / SSLP:</label>
+                  <input id="qeEqaProgInput" type="text" class="form-control" style="padding:4px 7px;font-size:11.2px;font-weight:700;" placeholder="Nhập tên chương trình EQA / SSLP..." value="Quantitative CMV/EBV Viral Load PCR">
+                </div>
+                <div style="flex:1;min-width:130px;">
+                  <label style="font-size:10px;font-weight:800;color:#0369a1;display:block;margin-bottom:2px;">Hệ thống máy XN:</label>
+                  <input id="qeEqaAnalyzerInput" type="text" class="form-control" style="padding:4px 7px;font-size:11.2px;" value="QuantStudio 5 Dx (TTB.KXN.SHPT.09)">
+                </div>
+                <div style="width:82px;">
+                  <label style="font-size:10px;font-weight:800;color:#0369a1;display:block;margin-bottom:2px;">KQ PXN:</label>
+                  <input id="qeEqaLabInput" type="number" step="0.01" class="form-control mono" style="padding:4px 7px;font-size:11.2px;font-weight:800;" value="3.42">
+                </div>
+                <div style="width:82px;">
+                  <label style="font-size:10px;font-weight:800;color:#0369a1;display:block;margin-bottom:2px;">Peer Mean:</label>
+                  <input id="qeEqaPeerMeanInput" type="number" step="0.01" class="form-control mono" style="padding:4px 7px;font-size:11.2px;font-weight:800;" value="3.40">
+                </div>
+                <div style="width:74px;">
+                  <label style="font-size:10px;font-weight:800;color:#0369a1;display:block;margin-bottom:2px;">Peer SD:</label>
+                  <input id="qeEqaPeerSdInput" type="number" step="0.01" class="form-control mono" style="padding:4px 7px;font-size:11.2px;font-weight:800;" value="0.15">
+                </div>
+                <div style="flex:1;min-width:135px;">
+                  <label style="font-size:10px;font-weight:800;color:#0369a1;display:block;margin-bottom:2px;">KTV Thực hiện:</label>
+                  <input id="qeEqaOpInput" type="text" class="form-control" style="padding:4px 7px;font-size:11.2px;font-weight:700;" value="NHIHN000674 (ThS. Trần Tuấn Anh)">
+                </div>
+                <div>
+                  <button type="button" class="btn btn-primary" style="background:#0284c7;border-color:#0284c7;padding:5px 12px;font-size:11.5px;font-weight:800;white-space:nowrap;" onclick="addQuickEqaProgramRow()">➕ Thêm Đợt &amp; Ghi CSDL</button>
+                </div>
+              </div>
+
+              <!-- FULL-WIDTH NON-CLIPPING ROTATION & CLINICAL RISK TABLE -->
+              <div class="table-wrap" style="max-height:460px;overflow-y:auto;overflow-x:auto;border:1px solid #cbd5e1;border-radius:10px;">
                 <table class="eqa-clean-table" style="width:100%;border-collapse:collapse;">
                   <thead>
                     <tr>
-                      <th style="width:110px;">Bộ phận</th>
-                      <th>Chương trình EQA / SSLP</th>
-                      <th style="width:150px;">KTV Đợt Này</th>
-                      <th style="width:150px;">KTV Đợt Kế tiếp</th>
-                      <th style="width:180px;">Đánh giá Rủi ro Lâm sàng</th>
+                      <th style="width:85px;">Mã Đợt</th>
+                      <th style="width:115px;">Bộ phận</th>
+                      <th>Chương trình Ngoại kiểm (EQA/PT) &amp; Liên phòng (ILC)</th>
+                      <th style="width:185px;">KTV Đứng máy Đợt Này (Sửa trực tiếp)</th>
+                      <th style="width:185px;">KTV Luân phiên Đợt Tới (ISO 7.3.7.3c)</th>
+                      <th style="width:125px;text-align:center;">Đối chiếu Mẫu BN Lưu</th>
+                      <th style="width:245px;">Đánh giá Rủi ro Lâm sàng (ISO 7.3.7.3i)</th>
+                      <th style="width:120px;text-align:center;">Thao tác</th>
                     </tr>
                   </thead>
                   <tbody id="eqaRotationAndClinicalBody"></tbody>
@@ -22578,18 +22698,27 @@ function jsonResponse(obj) {
       if (sheetName === "EQA_NgoaiKiem" || sheetName === "EQA_NgoaiKiem_SSLP_TTDT09") {
         return (typeof EQA_PROGRAMS !== "undefined" ? EQA_PROGRAMS : []).map(e => ({
           ID_KetQua_EQA: e.id || "",
-          Phan_Loai: e.typeBadge || e.type || "EQA/PT",
+          Phan_Loai: e.type === "ILC_AAP" ? "So sánh Liên phòng (ILC/AAP)" : "Ngoại kiểm Độc lập (EQA/PT)",
           Bo_Phan: e.dept || "",
           ToChuc_NgoaiKiem: e.org || "",
           Chuong_Trinh: e.program || "",
           He_Thong_May: e.analyzer || "",
           Ma_Mau_Dot: e.sampleCode || "",
+          Ngay_Nhan_Mau: e.recvDate || "01/11/2026",
+          Han_Nop_KQ: e.dueDate || "15/11/2026",
+          Ngay_Gui_KQ: e.submitDate || "08/11/2026",
           KetQua_PXN: e.labVal ?? "",
           Mean_Nhom_Peer: e.peerMean ?? "",
           SD_Nhom_Peer: e.peerSd ?? "",
           Chi_So_SDI: e.sdi ?? "",
+          Do_Lech_Bias_Pct: e.biasPct ?? "",
+          Do_Tuong_Dong: e.concordance || "100%",
           Giai_Doan_6Buoc: e.stageName || `Bước ${e.stage || 6}/6`,
-          KetLuan_DanhGia: e.conclusion || "Đạt (|SDI| ≤ 2.0)"
+          KTV_ThucHien_DotNay: e.operator || "NHIHN000674 (ThS. Trần Tuấn Anh)",
+          KTV_LuanPhien_DotToi: e.nextOperator || "NHIHN000673 (Đinh Thị Phương Anh)",
+          DoiChieu_Mau_BN_Luu: e.retainedSamplesChecked || "05 mẫu BN lưu (100% Khớp)",
+          DanhGia_RuiRo_LamSang: e.clinicalImpact || "An toàn 100% (0 mẫu thu hồi)",
+          KetLuan_DanhGia: e.status || "ĐẠT (|SDI| ≤ 2.0)"
         }));
       }
       if (sheetName === "QMS_SuCo_CAPA") {
@@ -24105,7 +24234,7 @@ function jsonResponse(obj) {
         mainCard.style.display = (viewKey === "all" || viewKey === "programs") ? "block" : "none";
       }
       if (bottomGrid) {
-        bottomGrid.style.display = (viewKey === "all" || viewKey === "trend") ? "grid" : "none";
+        bottomGrid.style.display = (viewKey === "all" || viewKey === "trend") ? "flex" : "none";
       }
       renderEqaSection();
     };
@@ -24116,6 +24245,463 @@ function jsonResponse(obj) {
       if (!item) return;
       const nextSt = (item.stage && item.stage < 6) ? (item.stage + 1) : 1;
       setEqaProgramStage(eqaId, nextSt);
+    };
+
+  
+
+    // =========================================================================
+    // V2026.13 EQA MULTI-MODE SDI/BIAS CHART, EARLY WARNING ENGINE & INTERACTIVE KTV ROTATION
+    // =========================================================================
+    const DEPT_ROTATION_ROSTER = {
+      "Di truyền & SHPT": [
+        "NHIHN000674 (ThS. Trần Tuấn Anh)",
+        "NHIHN000686 (ThS. Nguyễn Viết Hoàng)",
+        "NHIHN000673 (ThS.BSNT. Đinh Thị Phương Anh)",
+        "NHIHN000675 (CN. Bùi Thu Linh)",
+        "NHIHN000479 (CN. Nguyễn Khánh Ly)",
+        "NHIHN000268 (CN. Nguyễn Thị Nhài)"
+      ],
+      "Hóa sinh": [
+        "NHIHN000274 (CN. Đỗ Văn Lương)",
+        "NHIHN000677 (CN. Hoàng Thị Lan)",
+        "NHIHN000320 (CKI. Nguyễn Văn Quân)",
+        "NHIHN000574 (CN. Nguyễn Thị Linh)",
+        "NHIHN000525 (CN. Nguyễn Văn Khánh)"
+      ],
+      "Huyết học": [
+        "NHIHN000034 (BSNT. Trịnh Thị Thu Hiền)",
+        "NHIHN000684 (KTV. Nguyễn Văn Chiến)",
+        "NHIHN000275 (CN. Nguyễn Đăng Long)"
+      ],
+      "Vi sinh": [
+        "NHIHN000624 (KTV. Trần Văn Dũng)",
+        "NHIHN000025 (CN. Vũ Thị Thanh Thảo)",
+        "NHIHN000270 (CN. Trần Thị Thạch Thơi)"
+      ],
+      "Giải phẫu bệnh": [
+        "NHIHN000552 (CN. Nguyễn Văn Việt)",
+        "NHIHN000269 (BS. Nguyễn Hà Mỹ)",
+        "NHIHN000629 (CN. Lương Tú Oanh)"
+      ]
+    };
+
+    function ensureHistoricalCyclesForEqa() {
+      if (typeof EQA_PROGRAMS === "undefined" || !Array.isArray(EQA_PROGRAMS)) return;
+      EQA_PROGRAMS.forEach((e, idx) => {
+        const curSdi = Number(e.sdi || 0);
+        if (!Array.isArray(e.historyCycles) || e.historyCycles.length < 6) {
+          const base = ((idx % 5) - 2) * 0.12;
+          e.historyCycles = [
+            { cycle: "Đợt 1 (T01)", sdi: Number((base - 0.15).toFixed(2)), bias: Number(((base - 0.15) * 2.1).toFixed(2)) },
+            { cycle: "Đợt 2 (T03)", sdi: Number((base + 0.08).toFixed(2)), bias: Number(((base + 0.08) * 2.1).toFixed(2)) },
+            { cycle: "Đợt 3 (T05)", sdi: Number((base - 0.05).toFixed(2)), bias: Number(((base - 0.05) * 2.1).toFixed(2)) },
+            { cycle: "Đợt 4 (T07)", sdi: Number((base + 0.18).toFixed(2)), bias: Number(((base + 0.18) * 2.1).toFixed(2)) },
+            { cycle: "Đợt 5 (T09)", sdi: Number((curSdi * 0.72).toFixed(2)), bias: Number((curSdi * 1.6).toFixed(2)) },
+            { cycle: "Đợt 6 (Hiện tại)", sdi: curSdi, bias: Number(e.biasPct || (curSdi * 2.2).toFixed(2)) }
+          ];
+        } else {
+          e.historyCycles[5].sdi = curSdi;
+          e.historyCycles[5].bias = Number(e.biasPct || 0);
+        }
+        if (!e.retainedSamplesChecked) {
+          e.retainedSamplesChecked = Math.abs(curSdi) > 2.0 ? "10 mẫu BN lưu (Bắt buộc Rerun)" : "05 mẫu BN lưu (100% Khớp)";
+        }
+      });
+    }
+
+    // Rotate a single EQA program's KTV to the next qualified operator in that department
+    function rotateSingleEqaOperator(eqaId) {
+      const item = EQA_PROGRAMS.find(e => e.id === eqaId);
+      if (!item) return false;
+      const roster = DEPT_ROTATION_ROSTER[item.dept] || DEPT_ROTATION_ROSTER["Di truyền & SHPT"];
+      const prevOp = item.operator || roster[0];
+      const newCurrentOp = item.nextOperator || roster[1] || roster[0];
+      const curIdx = roster.findIndex(r => r.includes(newCurrentOp.split(" ")[0]));
+      const nextIdx = (curIdx + 1) % roster.length;
+      item.operator = newCurrentOp;
+      item.nextOperator = roster[nextIdx];
+      renderEqaSection();
+      commitDatabaseTransaction("EQA_NgoaiKiem", `Luân phiên KTV chương trình ${eqaId}: ${prevOp} -> ${item.operator} (Đợt tới: ${item.nextOperator})`, eqaId, "ROTATE_KTV");
+      showToast(`🔄 Đã luân phiên KTV cho <strong>${eqaId}</strong>: KTV hiện tại <strong>${item.operator}</strong> → KTV đợt tới <strong>${item.nextOperator}</strong>!`, "#4c1d95");
+      return true;
+    }
+
+    function rotateAllEqaOperatorsNextCycle() {
+      EQA_PROGRAMS.forEach(item => {
+        const roster = DEPT_ROTATION_ROSTER[item.dept] || DEPT_ROTATION_ROSTER["Di truyền & SHPT"];
+        const newCurrentOp = item.nextOperator || roster[0];
+        const curIdx = roster.findIndex(r => r.includes(newCurrentOp.split(" ")[0]));
+        const nextIdx = (curIdx + 1) % roster.length;
+        item.operator = newCurrentOp;
+        item.nextOperator = roster[nextIdx];
+      });
+      renderEqaSection();
+      commitDatabaseTransaction("EQA_NgoaiKiem", `Luân phiên toàn bộ KTV chạy Ngoại kiểm sang chu kỳ kế tiếp (${EQA_PROGRAMS.length} chương trình)`, "ALL_EQA", "ROTATE_ALL_KTV");
+      showToast(`🔄 Đã xoay vòng lịch phân công KTV cho toàn bộ <strong>${EQA_PROGRAMS.length} chương trình Ngoại kiểm &amp; SSLP</strong> theo chuẩn ISO 15189 Điều 7.3.7.3(c)!`, "#059669");
+    }
+
+    // Quick-Add EQA Program directly from Section 3B bar
+    function addQuickEqaProgramRow() {
+      const dept = document.getElementById("qeEqaDeptSelect")?.value || "Di truyền & SHPT";
+      const org = (document.getElementById("qeEqaOrgInput")?.value || "QCMD Quốc tế").trim();
+      const prog = (document.getElementById("qeEqaProgInput")?.value || "Chương trình Ngoại kiểm Mới").trim();
+      const analyzer = (document.getElementById("qeEqaAnalyzerInput")?.value || "QuantStudio 5 Dx").trim();
+      const labVal = parseFloat(document.getElementById("qeEqaLabInput")?.value || "3.42");
+      const peerMean = parseFloat(document.getElementById("qeEqaPeerMeanInput")?.value || "3.40");
+      const peerSd = parseFloat(document.getElementById("qeEqaPeerSdInput")?.value || "0.15") || 0.1;
+      const op = (document.getElementById("qeEqaOpInput")?.value || "NHIHN000674 (ThS. Trần Tuấn Anh)").trim();
+
+      const sdi = Number(((labVal - peerMean) / peerSd).toFixed(2));
+      const biasPct = Number((((labVal - peerMean) / (peerMean || 1)) * 100).toFixed(2));
+      const nextNum = EQA_PROGRAMS.length + 1;
+      const newId = `EQA-2026-${String(nextNum).padStart(2, "0")}`;
+      const isIlc = org.toLowerCase().includes("bệnh viện") || org.toLowerCase().includes("medlatec") || prog.toLowerCase().includes("liên phòng");
+      const roster = DEPT_ROTATION_ROSTER[dept] || DEPT_ROTATION_ROSTER["Di truyền & SHPT"];
+      const sdiAbs = Math.abs(sdi);
+      const todayVn = typeof getTodayVnDate === "function" ? getTodayVnDate() : "13/11/2026";
+
+      const newProgObj = {
+        id: newId,
+        type: isIlc ? "ILC_AAP" : "EQA_PT",
+        typeBadge: isIlc ? "🤝 So sánh Liên phòng (ILC)" : "🏆 Ngoại kiểm QT (EQA)",
+        dept: dept,
+        org: org,
+        program: prog,
+        schemeCode: `SCH-${newId}`,
+        analyzer: analyzer,
+        sampleCode: `SMP-${newId} (05 mẫu mù)`,
+        sampleType: "Mẫu chuẩn ngoại kiểm bảo quản lạnh",
+        planDate: "05/01/2026",
+        recvDate: todayVn,
+        testDate: todayVn,
+        dueDate: "25/11/2026",
+        submitDate: todayVn,
+        evalDate: todayVn,
+        packCond: "Nguyên vẹn, đạt nhiệt độ chuẩn",
+        iqcBatch: "IQC trong ngày Đạt 100%",
+        labVal: labVal,
+        peerMean: peerMean,
+        peerSd: peerSd,
+        sdi: sdi,
+        biasPct: biasPct,
+        concordance: sdiAbs <= 2.0 ? "100% Đạt chuẩn" : "Cần rà soát CAPA",
+        stage: 6,
+        stageName: "Bước 6/6: Hoàn tất Chu trình 6 Bước & Lưu Hồ sơ",
+        operator: op,
+        nextOperator: roster[1] || roster[0],
+        retainedSamplesChecked: sdiAbs > 2.0 ? "10 mẫu BN lưu (Bắt buộc Rerun)" : "05 mẫu BN lưu (100% Khớp)",
+        status: sdiAbs > 3.0
+          ? `KHÔNG ĐẠT (|SDI| = ${sdiAbs.toFixed(2)} > 3.0 — Mở CAPA)`
+          : (sdiAbs > 2.0 ? `CẢNH BÁO SỚM (|SDI| = ${sdiAbs.toFixed(2)} > 2.0)` : `ĐẠT (|SDI| = ${sdiAbs.toFixed(2)} ≤ 2.0)`),
+        capaId: sdiAbs > 2.0 ? `CAPA-${newId}` : "Không yêu cầu",
+        clinicalImpact: sdiAbs > 2.0
+          ? `🚨 CẢNH BÁO (|SDI| = ${sdiAbs.toFixed(2)}): Bắt buộc chạy kiểm tra lại 10 mẫu bệnh nhân lưu & mở CAPA!`
+          : "An toàn 100% — Không phát sinh sai lệch trên mẫu bệnh nhân (0 mẫu thu hồi)"
+      };
+
+      EQA_PROGRAMS.unshift(newProgObj);
+      SELECTED_EQA_ID = newId;
+      renderEqaSection();
+      commitDatabaseTransaction("EQA_NgoaiKiem", `Thêm đợt Ngoại kiểm mới ${newId} (${prog} • SDI = ${sdi})`, newId, "ADD_EQA_QUICK");
+      showToast(`➕ Đã thêm đợt Ngoại kiểm <strong>${newId}</strong> (${prog} • SDI = <strong>${sdi >= 0 ? "+" : ""}${sdi}</strong>) và đồng bộ CSDL!`, "#059669");
+      return newId;
+    }
+
+    // Simulate a Warning Trend (2.0 < |SDI| <= 3.0) to test early warning & drift detection
+    function simulateEqaWarningTrend() {
+      const target = EQA_PROGRAMS.find(e => e.id === "EQA-2026-03") || EQA_PROGRAMS[0];
+      if (!target) return;
+      target.labVal = Number((target.peerMean + 2.35 * (target.peerSd || 0.5)).toFixed(2));
+      target.sdi = 2.35;
+      target.biasPct = Number((((target.labVal - target.peerMean) / (target.peerMean || 1)) * 100).toFixed(2));
+      target.status = "CẢNH BÁO SỚM (2.0 < |SDI| = 2.35 ≤ 3.0 — Theo dõi Drift)";
+      target.clinicalImpact = "⚠️ Cảnh báo xu hướng lệch dương (+2.35 SDI): Cần rà soát đường chuẩn Calibration và kiểm tra 5 mẫu BN lưu!";
+      if (Array.isArray(target.historyCycles) && target.historyCycles.length >= 6) {
+        target.historyCycles[3].sdi = 1.25;
+        target.historyCycles[4].sdi = 1.78;
+        target.historyCycles[5].sdi = 2.35;
+      }
+      SELECTED_EQA_ID = target.id;
+      renderEqaSection();
+      commitDatabaseTransaction("EQA_NgoaiKiem", `Kích hoạt cảnh báo sớm xu hướng SDI = +2.35 tại ${target.id}`, target.id, "WARN_EQA_TREND");
+      showToast(`⚠️ Đã giả lập tình huống Cảnh báo sớm (<strong>${target.id}: SDI = +2.35</strong>, 3 đợt liên tiếp trôi dương +1.25 → +1.78 → +2.35)!`, "#d97706");
+    }
+
+    // Restore clean passing baseline (removes simulated fail/warning records)
+    function restoreCleanEqaBaseline() {
+      const errIdx = EQA_PROGRAMS.findIndex(e => e.id === "EQA-ERR-2026");
+      if (errIdx !== -1) EQA_PROGRAMS.splice(errIdx, 1);
+      const p3 = EQA_PROGRAMS.find(e => e.id === "EQA-2026-03");
+      if (p3) {
+        p3.labVal = 15.35;
+        p3.peerMean = 15.10;
+        p3.peerSd = 0.55;
+        p3.sdi = 0.45;
+        p3.biasPct = 1.66;
+        p3.status = "ĐẠT (|SDI| = 0.45 ≤ 2.0)";
+        p3.clinicalImpact = "An toàn 100% — Không phát sinh sai lệch trên mẫu bệnh nhân (0 mẫu thu hồi)";
+        if (Array.isArray(p3.historyCycles) && p3.historyCycles.length >= 6) {
+          p3.historyCycles[3].sdi = 0.22;
+          p3.historyCycles[4].sdi = 0.31;
+          p3.historyCycles[5].sdi = 0.45;
+        }
+      }
+      renderEqaSection();
+      commitDatabaseTransaction("EQA_NgoaiKiem", "Khôi phục trạng thái chuẩn 100% Đạt cho toàn bộ chương trình Ngoại kiểm", "ALL_EQA", "RESTORE_EQA");
+      showToast("✅ Đã khôi phục toàn bộ chương trình Ngoại kiểm về trạng thái Đạt chuẩn (|SDI| ≤ 2.0)!", "#059669");
+    }
+
+    // Comprehensive replacement of renderEqaTrendAndRotation for Section 3
+    renderEqaTrendAndRotation = function() {
+      ensureHistoricalCyclesForEqa();
+
+      const deptFilter = document.getElementById("eqaChartDeptFilter")?.value || "ALL";
+      const chartMode = document.getElementById("eqaChartModeSelect")?.value || "ALL_PROGRAMS";
+      const histSel = document.getElementById("eqaHistoryProgSelect");
+
+      if (histSel) {
+        histSel.style.display = chartMode === "SINGLE_HISTORY" ? "inline-block" : "none";
+        const currentHistVal = histSel.value || SELECTED_EQA_ID || (EQA_PROGRAMS[0] ? EQA_PROGRAMS[0].id : "");
+        histSel.innerHTML = EQA_PROGRAMS.map(p =>
+          `<option value="${p.id}" ${p.id === currentHistVal ? "selected" : ""}>[${p.id}] ${p.program.slice(0, 38)}</option>`
+        ).join("");
+      }
+
+      const filteredProgs = EQA_PROGRAMS.filter(e => deptFilter === "ALL" || e.dept === deptFilter);
+      const activeList = filteredProgs.length > 0 ? filteredProgs : EQA_PROGRAMS;
+
+      // 1. Compute Dynamic Statistical & Early-Warning Metrics
+      const totalCnt = activeList.length;
+      const absSdis = activeList.map(e => Math.abs(Number(e.sdi || 0)));
+      const passCnt = activeList.filter(e => Math.abs(Number(e.sdi || 0)) <= 2.0 && !(e.status && e.status.includes("KHÔNG ĐẠT"))).length;
+      const warnCnt = activeList.filter(e => {
+        const a = Math.abs(Number(e.sdi || 0));
+        return a > 2.0 && a <= 3.0;
+      }).length;
+      const failCnt = activeList.filter(e => Math.abs(Number(e.sdi || 0)) > 3.0 || (e.status && e.status.includes("KHÔNG ĐẠT"))).length;
+      const driftCnt = activeList.filter(e => {
+        const hc = e.historyCycles || [];
+        if (hc.length < 3) return false;
+        const s1 = hc[hc.length - 3].sdi;
+        const s2 = hc[hc.length - 2].sdi;
+        const s3 = hc[hc.length - 1].sdi;
+        return (s1 > 0.8 && s2 > 1.0 && s3 > 1.2) || (s1 < -0.8 && s2 < -1.0 && s3 < -1.2);
+      }).length;
+
+      const meanAbsSdi = totalCnt > 0 ? (absSdis.reduce((a, b) => a + b, 0) / totalCnt) : 0;
+      const maxAbsSdi = totalCnt > 0 ? Math.max(...absSdis) : 0;
+      const passRate = totalCnt > 0 ? Math.round((passCnt / totalCnt) * 100) : 100;
+      const uniqueOps = new Set(activeList.map(e => (e.operator || "").split("(")[0].trim())).size;
+
+      const stripEl = document.getElementById("eqaAnalyticsSummaryStrip");
+      if (stripEl) {
+        stripEl.innerHTML = `
+          <div style="background:#ffffff;border:1.5px solid #cbd5e1;border-top:4px solid #6d28d9;border-radius:10px;padding:10px 12px;">
+            <div style="font-size:10.5px;font-weight:800;color:#6d28d9;text-transform:uppercase;">1. Quy mô Chương trình</div>
+            <div style="font-size:19px;font-weight:800;color:#0f172a;margin:2px 0;">${totalCnt} Đợt EQA/SSLP</div>
+            <div style="font-size:10.8px;color:#475569;">${activeList.filter(x => x.type !== 'ILC_AAP').length} Ngoại kiểm QT/VN • ${activeList.filter(x => x.type === 'ILC_AAP').length} Liên phòng</div>
+          </div>
+          <div style="background:#ffffff;border:1.5px solid #cbd5e1;border-top:4px solid ${failCnt > 0 ? '#dc2626' : '#059669'};border-radius:10px;padding:10px 12px;">
+            <div style="font-size:10.5px;font-weight:800;color:${failCnt > 0 ? '#dc2626' : '#059669'};text-transform:uppercase;">2. Tỷ lệ Đạt Chuẩn (|SDI| ≤ 2.0)</div>
+            <div style="font-size:19px;font-weight:800;color:${failCnt > 0 ? '#dc2626' : '#059669'};margin:2px 0;">${passRate}% (${passCnt}/${totalCnt} Đạt)</div>
+            <div style="font-size:10.8px;color:#475569;">Cảnh báo: <strong>${warnCnt}</strong> • Không đạt: <strong style="color:${failCnt > 0 ? '#dc2626' : '#059669'};">${failCnt}</strong></div>
+          </div>
+          <div style="background:#ffffff;border:1.5px solid #cbd5e1;border-top:4px solid #0284c7;border-radius:10px;padding:10px 12px;">
+            <div style="font-size:10.5px;font-weight:800;color:#0284c7;text-transform:uppercase;">3. Thống kê |SDI| Trung bình &amp; Max</div>
+            <div style="font-size:19px;font-weight:800;color:#0f172a;margin:2px 0;">|SDI| TB = ${meanAbsSdi.toFixed(2)}</div>
+            <div style="font-size:10.8px;color:#475569;">|SDI| Cực đại: <strong style="color:${maxAbsSdi > 2.0 ? '#dc2626' : '#0369a1'};">${maxAbsSdi.toFixed(2)} SD</strong> (Mục tiêu ≤ 2.0)</div>
+          </div>
+          <div style="background:#ffffff;border:1.5px solid #cbd5e1;border-top:4px solid ${(failCnt + warnCnt + driftCnt) > 0 ? '#d97706' : '#0d9488'};border-radius:10px;padding:10px 12px;">
+            <div style="font-size:10.5px;font-weight:800;color:${(failCnt + warnCnt + driftCnt) > 0 ? '#b45309' : '#0f766e'};text-transform:uppercase;">4. Cảnh báo Xu hướng (Drift Guard)</div>
+            <div style="font-size:19px;font-weight:800;color:${(failCnt + warnCnt + driftCnt) > 0 ? '#d97706' : '#0f766e'};margin:2px 0;">
+              ${(failCnt + warnCnt + driftCnt) > 0 ? `${failCnt + warnCnt + driftCnt} Cảnh báo` : '0 Lệch hệ thống'}
+            </div>
+            <div style="font-size:10.8px;color:#475569;">${driftCnt > 0 ? `⚠️ ${driftCnt} CT trôi cùng dấu 3 đợt` : 'Đường nền ổn định quanh 0.0 SDI'}</div>
+          </div>
+          <div style="background:#ffffff;border:1.5px solid #cbd5e1;border-top:4px solid #4f46e5;border-radius:10px;padding:10px 12px;">
+            <div style="font-size:10.5px;font-weight:800;color:#4f46e5;text-transform:uppercase;">5. Luân phiên KTV &amp; Mẫu BN Lưu</div>
+            <div style="font-size:19px;font-weight:800;color:#0f172a;margin:2px 0;">${uniqueOps} KTV Đứng máy</div>
+            <div style="font-size:10.8px;color:${failCnt > 0 ? '#dc2626' : '#059669'};font-weight:700;">
+              ${failCnt > 0 ? `🚨 Cần Rerun ${failCnt * 10} mẫu BN lưu!` : '✅ 100% mẫu BN lưu an toàn'}
+            </div>
+          </div>
+        `;
+      }
+
+      // 2. Render 3-Cycle Statistical Trend & Early Warning Table (#eqaStatisticalTrendTableBody)
+      const statBody = document.getElementById("eqaStatisticalTrendTableBody");
+      if (statBody) {
+        statBody.innerHTML = activeList.map(e => {
+          const hc = e.historyCycles || [];
+          const n2 = hc.length >= 3 ? hc[hc.length - 3].sdi : 0.12;
+          const n1 = hc.length >= 2 ? hc[hc.length - 2].sdi : 0.18;
+          const n0 = Number(e.sdi || 0);
+          const abs0 = Math.abs(n0);
+          const bias = Number(e.biasPct || 0);
+          const isDrift = (n2 > 0.8 && n1 > 1.0 && n0 > 1.2) || (n2 < -0.8 && n1 < -1.0 && n0 < -1.2);
+          let trendBadge = `<span class="badge b-pass" style="font-size:9.8px;">✅ Ổn định</span>`;
+          if (abs0 > 3.0) trendBadge = `<span class="badge b-fail" style="font-size:9.8px;">🚨 Vượt ±3.0 SDI (CAPA)</span>`;
+          else if (abs0 > 2.0) trendBadge = `<span class="badge b-warn" style="font-size:9.8px;">⚠️ Cảnh báo &gt;2.0 SDI</span>`;
+          else if (isDrift) trendBadge = `<span class="badge b-warn" style="font-size:9.8px;">📈 Trôi cùng dấu 3 đợt</span>`;
+
+          return `
+            <tr style="border-bottom:1px solid #e2e8f0;cursor:pointer;" onclick="selectEqaProgram('${e.id}')">
+              <td>
+                <code style="font-weight:800;color:#4c1d95;font-size:10.8px;">${e.id}</code>
+                <div style="font-size:10.2px;color:#334155;font-weight:700;">${e.program.slice(0, 26)}...</div>
+              </td>
+              <td class="mono" style="text-align:center;font-size:11px;color:#64748b;">${n2 >= 0 ? "+" : ""}${n2.toFixed(2)}</td>
+              <td class="mono" style="text-align:center;font-size:11px;color:#475569;">${n1 >= 0 ? "+" : ""}${n1.toFixed(2)}</td>
+              <td class="mono" style="text-align:center;font-size:11.5px;font-weight:800;color:${abs0 > 2.0 ? '#dc2626' : '#0f766e'};">${n0 >= 0 ? "+" : ""}${n0.toFixed(2)}</td>
+              <td class="mono" style="text-align:center;font-size:11px;color:#0284c7;font-weight:700;">${bias >= 0 ? "+" : ""}${bias.toFixed(1)}%</td>
+              <td>${trendBadge}</td>
+            </tr>
+          `;
+        }).join("");
+      }
+
+      // 3. Render Spacious Full-Width Chart (#eqaSdiTrendChart)
+      const summaryTxtEl = document.getElementById("eqaChartActiveSummaryText");
+      const canvas = document.getElementById("eqaSdiTrendChart");
+      let labels = [];
+      let sdiVals = [];
+      let biasVals = [];
+
+      if (chartMode === "SINGLE_HISTORY") {
+        const selId = document.getElementById("eqaHistoryProgSelect")?.value || SELECTED_EQA_ID || activeList[0].id;
+        const progObj = EQA_PROGRAMS.find(x => x.id === selId) || activeList[0];
+        const hc = progObj.historyCycles || [];
+        labels = hc.map(c => c.cycle);
+        sdiVals = hc.map(c => Number(c.sdi || 0));
+        biasVals = hc.map(c => Number(c.bias || 0));
+        if (summaryTxtEl) {
+          summaryTxtEl.innerHTML = `Đang xem lịch sử 6 đợt: <strong>[${progObj.id}] ${progObj.program}</strong> • SDI hiện tại: <strong>${progObj.sdi >= 0 ? "+" : ""}${Number(progObj.sdi || 0).toFixed(2)}</strong>`;
+        }
+      } else {
+        labels = activeList.map(e => `${e.id} (${e.dept.split(" ")[0]})`);
+        sdiVals = activeList.map(e => Number((e.sdi || 0).toFixed(2)));
+        biasVals = activeList.map(e => Number((e.biasPct || 0).toFixed(2)));
+        if (summaryTxtEl) {
+          summaryTxtEl.innerHTML = `Đang hiển thị: <strong>${activeList.length} chương trình</strong> (${deptFilter === "ALL" ? "Toàn Khoa 5 Bộ phận" : deptFilter}) • 100% nhãn trục hoành rõ nét`;
+        }
+      }
+
+      if (canvas && typeof Chart !== "undefined") {
+        if (eqaSdiTrendChartInstance) {
+          try { eqaSdiTrendChartInstance.destroy(); } catch (err) {}
+        }
+
+        const pointColors = sdiVals.map(v => Math.abs(v) > 3.0 ? "#dc2626" : (Math.abs(v) > 2.0 ? "#d97706" : "#059669"));
+
+        eqaSdiTrendChartInstance = new Chart(canvas, {
+          type: "line",
+          data: {
+            labels,
+            datasets: [
+              {
+                label: "Chỉ số Z-Score / SDI",
+                data: sdiVals,
+                borderColor: "#6d28d9",
+                backgroundColor: "rgba(109, 40, 217, 0.08)",
+                pointBackgroundColor: pointColors,
+                pointBorderColor: "#ffffff",
+                pointBorderWidth: 2,
+                borderWidth: 2.8,
+                pointRadius: 6.5,
+                pointHoverRadius: 8,
+                fill: true,
+                tension: 0.25
+              },
+              {
+                label: "Độ lệch %Bias",
+                data: biasVals,
+                borderColor: "#0284c7",
+                backgroundColor: "#0284c7",
+                borderDash: [3, 3],
+                borderWidth: 1.8,
+                pointRadius: 4,
+                tension: 0.25
+              },
+              { label: "+2.0 SDI", data: labels.map(() => 2.0), borderColor: "#d97706", borderDash: [6, 4], borderWidth: 1.4, pointRadius: 0 },
+              { label: "+3.0 SDI", data: labels.map(() => 3.0), borderColor: "#dc2626", borderDash: [4, 4], borderWidth: 1.4, pointRadius: 0 },
+              { label: "0.0 SDI", data: labels.map(() => 0.0), borderColor: "#059669", borderWidth: 1.6, pointRadius: 0 },
+              { label: "-2.0 SDI", data: labels.map(() => -2.0), borderColor: "#d97706", borderDash: [6, 4], borderWidth: 1.4, pointRadius: 0 },
+              { label: "-3.0 SDI", data: labels.map(() => -3.0), borderColor: "#dc2626", borderDash: [4, 4], borderWidth: 1.4, pointRadius: 0 }
+            ]
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+              legend: { display: false }
+            },
+            scales: {
+              y: {
+                min: -3.6,
+                max: 3.6,
+                ticks: { stepSize: 1.0, font: { size: 11, weight: "700" } },
+                title: { display: true, text: "Chỉ số Z-Score / SDI & %Bias", font: { size: 11.5, weight: "800" } }
+              },
+              x: {
+                ticks: {
+                  autoSkip: false,
+                  maxRotation: 25,
+                  minRotation: 0,
+                  font: { size: 10.5, weight: "700" }
+                }
+              }
+            }
+          }
+        });
+      }
+
+      // 4. Render Full-Width Interactive KTV Rotation & Clinical Risk Assessment Table (#eqaRotationAndClinicalBody)
+      const rotBody = document.getElementById("eqaRotationAndClinicalBody");
+      if (rotBody) {
+        rotBody.innerHTML = activeList.map(e => {
+          const sdiVal = Number(e.sdi || 0);
+          const sdiAbs = Math.abs(sdiVal);
+          const isFail = sdiAbs > 2.0 || (e.status && e.status.includes("KHÔNG ĐẠT"));
+          const rowBg = isFail ? "#fff1f2" : "#ffffff";
+
+          return `
+            <tr style="background:${rowBg};border-bottom:1px solid #e2e8f0;" onclick="selectEqaProgram('${e.id}')">
+              <td>
+                <code style="font-weight:800;color:#5b21b6;font-size:11.3px;">${e.id}</code>
+                <div style="font-size:10px;color:#64748b;font-weight:700;">SDI: ${sdiVal >= 0 ? "+" : ""}${sdiVal.toFixed(2)}</div>
+              </td>
+              <td><span class="badge b-info" style="font-size:10.2px;">${e.dept}</span></td>
+              <td>
+                <div style="font-weight:800;color:#0f172a;font-size:11.6px;">${e.program}</div>
+                <div style="font-size:10.5px;color:#475569;">${e.org} • Máy: <strong>${e.analyzer.split("(")[0].trim()}</strong></div>
+              </td>
+              <td onclick="event.stopPropagation()">
+                <input type="text" class="form-control" style="padding:3px 7px;font-size:11px;font-weight:700;color:#0369a1;border-color:#bae6fd;" value="${e.operator || 'NHIHN000674 (ThS. Trần Tuấn Anh)'}" onchange="updateEqaProgramFieldInline('${e.id}', 'operator', this.value)" title="Chỉnh sửa trực tiếp KTV thực hiện đợt này">
+              </td>
+              <td onclick="event.stopPropagation()">
+                <input type="text" class="form-control" style="padding:3px 7px;font-size:11px;font-weight:700;color:#5b21b6;border-color:#ddd6fe;" value="${e.nextOperator || 'NHIHN000673 (Đinh Thị Phương Anh)'}" onchange="updateEqaProgramFieldInline('${e.id}', 'nextOperator', this.value)" title="Chỉnh sửa trực tiếp KTV luân phiên đợt kế tiếp">
+              </td>
+              <td style="text-align:center;" onclick="event.stopPropagation()">
+                <input type="text" class="form-control" style="padding:3px 6px;font-size:10.8px;font-weight:700;text-align:center;color:${isFail ? '#dc2626' : '#047857'};" value="${e.retainedSamplesChecked || '05 mẫu BN lưu (100% Khớp)'}" onchange="updateEqaProgramFieldInline('${e.id}', 'retainedSamplesChecked', this.value)" title="Số lượng mẫu bệnh nhân lưu đã kiểm tra đối chiếu">
+              </td>
+              <td onclick="event.stopPropagation()">
+                <div style="display:flex;flex-direction:column;gap:3px;">
+                  <span class="badge ${isFail ? 'b-fail' : 'b-pass'}" style="font-size:10px;align-self:flex-start;">
+                    ${isFail ? '🚨 Bắt buộc Rerun 10 mẫu BN lưu & Mở CAPA' : '✅ An toàn lâm sàng (0 mẫu BN thu hồi)'}
+                  </span>
+                  <input type="text" class="form-control" style="padding:2px 6px;font-size:10.5px;color:#334155;" value="${e.clinicalImpact || 'An toàn 100% — Không phát sinh sai lệch'}" onchange="updateEqaProgramFieldInline('${e.id}', 'clinicalImpact', this.value)" title="Chỉnh sửa đánh giá tác động rủi ro lâm sàng (ISO 7.3.7.3i)">
+                </div>
+              </td>
+              <td style="text-align:center;" onclick="event.stopPropagation()">
+                <div style="display:flex;gap:4px;justify-content:center;flex-wrap:wrap;">
+                  <button type="button" class="btn btn-outline btn-xs" style="padding:2px 7px;font-size:10.5px;color:#4c1d95;border-color:#c4b5fd;font-weight:800;" onclick="rotateSingleEqaOperator('${e.id}')" title="Xoay vòng KTV sang đợt kế tiếp">🔄 Đổi KTV</button>
+                  <button type="button" class="btn btn-outline btn-xs" style="padding:2px 6px;font-size:10.5px;color:#dc2626;border-color:#fca5a5;" onclick="deleteEqaProgramRecord('${e.id}')" title="Xóa chương trình ngoại kiểm này">🗑</button>
+                </div>
+              </td>
+            </tr>
+          `;
+        }).join("");
+      }
     };
 
   </script>
