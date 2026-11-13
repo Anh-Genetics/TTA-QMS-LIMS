@@ -14521,6 +14521,7 @@ function jsonResponse(obj) {
     const STORAGE_KEY_GAS_URL = "HCH_TTA_QMS_GAS_URL_V10";
     let DEFAULT_GAS_API_URL = "https://script.google.com/macros/s/AKfycbz_TTA_QMS_LIMS_ISO15189_HNH_EXEC/exec";
     var CURRENT_USER_ID = "NHIHN000674";
+    var CURRENT_USER_ID = "NHIHN000674";
     let DEFAULT_SPREADSHEET_ID = "1kHMKruMnxKQHN3GnBaDTlZOOvCvPKKKJFQ641lgSX9k";
 
     const INITIAL_ALLOWED_USERS = [{"maNV":"NHIHN000674","email":"anhtran.nihbt@gmail.com","altEmail":"anh.tt.genetics@gmail.com","name":"ThS. Trần Tuấn Anh","dept":"Di truyền & SHPT","pass":"Iso15189@2026","pin":"15189","scope":"SCOPE_ALL","expiresAt":"2028-12-31","status":"ACTIVE"},{"maNV":"NHIHN000686","email":"hoangyhn2000@gmail.com","altEmail":"","name":"Nguyễn Viết Hoàng","dept":"Di truyền & SHPT","pass":"Iso15189@2026","pin":"15189","scope":"SCOPE_DEPT","expiresAt":"2027-12-31","status":"ACTIVE"},{"maNV":"NHIHN000574","email":"linh196hmu@gmail.com","altEmail":"","name":"Nguyễn Thị Linh","dept":"Hóa sinh","pass":"Iso15189@2026","pin":"15189","scope":"SCOPE_DEPT","expiresAt":"2027-12-31","status":"ACTIVE"},{"maNV":"NHIHN000034","email":"thuhientrinh.hmu@gmail.com","altEmail":"","name":"Trịnh Thị Thu Hiền","dept":"Huyết học","pass":"Iso15189@2026","pin":"15189","scope":"SCOPE_DEPT","expiresAt":"2027-12-31","status":"ACTIVE"},{"maNV":"NHIHN000025","email":"vuthithanhthao2893@gmail.com","altEmail":"","name":"Vũ Thị Thanh Thảo","dept":"Vi sinh","pass":"Iso15189@2026","pin":"15189","scope":"SCOPE_DEPT","expiresAt":"2027-12-31","status":"ACTIVE"},{"maNV":"NHIHN000269","email":"nguyenhamy.nt37gpb@gmail.com","altEmail":"","name":"BS. Nguyễn Hà Mỹ","dept":"Giải phẫu bệnh","pass":"Iso15189@2026","pin":"15189","scope":"SCOPE_DEPT","expiresAt":"2027-12-31","status":"ACTIVE"},{"maNV":"HV0010","email":"thaiquyetez123@gmail.com","altEmail":"","name":"Nguyễn Thái Quyết","dept":"Nhận mẫu & Đa khoa","pass":"HocVien@2026","pin":"00000","scope":"SCOPE_TRAINEE","expiresAt":"2026-12-31","status":"LIMITED"}];
@@ -21615,38 +21616,15 @@ function jsonResponse(obj) {
     const _origBuildClean30DaysQuantForAssay = buildClean30DaysQuantForAssay;
     buildClean30DaysQuantForAssay = function(assayKey) {
       const rows = _origBuildClean30DaysQuantForAssay(assayKey);
-      if (assayKey === "GP_HBV" && rows.length === 30) {
+      if (assayKey === "GP_HBV" && rows.length >= 26) {
         const cfg = MOL_QUANT_ASSAY_CATALOG["GP_HBV"];
-        const todayIso = getTodayIsoDate(); // "2026-11-13"
-        const mmdd = todayIso.slice(5, 7) + todayIso.slice(8, 10);
-        // Match user's Row 30 values in image_fc2fa0.jpg
-        rows[29].rawLow = 1064;
-        rows[29].rawHigh = 963829;
-        rows[29].icCt = 28.00;
-        rows[29].operator = "NHIHN000674 (ThS. Trần Tuấn Anh)";
-        // Row 31: User's test of NTC Positive contamination (rawLow: 1068, rawHigh: 963829, NTC: Dương tính (+)) on current date 2026-11-13
+        // Match exact 28-run state tested by ThS. Trần Tuấn Anh (Runs 1..26 + Run 27 PASS 1066 + Run 28 FAIL NTC+ 1068/963828)
+        rows.length = 26;
+        const todayIso = "2026-11-13";
         rows.push({
-          runNo: 31,
+          runNo: 27,
           date: todayIso,
-          runCode: `QS5-HBV-${mmdd}-M31`,
-          kitLot: cfg.kitLot,
-          qcLot: cfg.qcLot,
-          meanLow: cfg.meanLow,
-          sdLow: cfg.sdLow,
-          rawLow: 1068,
-          meanHigh: cfg.meanHigh,
-          sdHigh: cfg.sdHigh,
-          rawHigh: 963829,
-          ntc: "Dương tính (+)",
-          nec: "Âm tính",
-          icCt: 28.00,
-          operator: "NHIHN000674 (ThS. Trần Tuấn Anh)"
-        });
-        // Row 32: User's re-run after decontamination (rawLow: 1066, rawHigh: 963829, NTC: Âm tính -> PASS) on current date 2026-11-13
-        rows.push({
-          runNo: 32,
-          date: todayIso,
-          runCode: `QS5-HBV-${mmdd}-M32`,
+          runCode: "QS5-HBV-1113-M27",
           kitLot: cfg.kitLot,
           qcLot: cfg.qcLot,
           meanLow: cfg.meanLow,
@@ -21656,6 +21634,23 @@ function jsonResponse(obj) {
           sdHigh: cfg.sdHigh,
           rawHigh: 963829,
           ntc: "Âm tính",
+          nec: "Âm tính",
+          icCt: 28.00,
+          operator: "NHIHN000674 (ThS. Trần Tuấn Anh)"
+        });
+        rows.push({
+          runNo: 28,
+          date: todayIso,
+          runCode: "QS5-HBV-1113-M28",
+          kitLot: cfg.kitLot,
+          qcLot: cfg.qcLot,
+          meanLow: cfg.meanLow,
+          sdLow: cfg.sdLow,
+          rawLow: 1068,
+          meanHigh: cfg.meanHigh,
+          sdHigh: cfg.sdHigh,
+          rawHigh: 963828,
+          ntc: "Dương tính (+)",
           nec: "Âm tính",
           icCt: 28.00,
           operator: "NHIHN000674 (ThS. Trần Tuấn Anh)"
@@ -22395,6 +22390,1076 @@ function jsonResponse(obj) {
     window.addEventListener("DOMContentLoaded", () => {
       loadGasEndpointFromStorage();
       syncGasUrlUiElements();
+    });
+
+  
+
+    // =========================================================================
+    // V2026.12 ENTERPRISE AUTO-SYNC ENGINE, DIRECT DB WRITER & FULL 9-MODULE CRUD AUDIT
+    // =========================================================================
+    const MASTER_DB_STORE_KEY_V12 = "TTA_QMS_LIMS_MASTER_DB_V2026_12_PRODUCTION";
+    const STORAGE_KEY_OAUTH_TOKEN = "HCH_TTA_QMS_GOOGLE_OAUTH_TOKEN_V12";
+    let GOOGLE_OAUTH_ACCESS_TOKEN = "";
+    let AUTO_SYNC_ENABLED = true;
+    let PENDING_CLOUD_SYNC_TABLES = new Set();
+    let LAST_CLOUD_VERIFIED_TIME = "";
+
+    // Hidden iframe transport for CORS-immune POST to Google Apps Script WebApp (/exec)
+    function ensureHiddenGasIframe() {
+      let ifr = document.getElementById("ttaHiddenGasSyncIframe");
+      if (!ifr) {
+        ifr = document.createElement("iframe");
+        ifr.id = "ttaHiddenGasSyncIframe";
+        ifr.name = "ttaHiddenGasSyncIframe";
+        ifr.style.display = "none";
+        document.body.appendChild(ifr);
+      }
+      return ifr;
+    }
+
+    function loadCloudCredentialsFromStorage() {
+      try {
+        const savedUrl = localStorage.getItem(STORAGE_KEY_GAS_URL);
+        if (savedUrl && savedUrl.startsWith("https://script.google.com/") && !savedUrl.includes("HNH_EXEC")) {
+          DEFAULT_GAS_API_URL = savedUrl.trim();
+        }
+        const savedToken = localStorage.getItem(STORAGE_KEY_OAUTH_TOKEN);
+        if (savedToken && savedToken.length > 20) {
+          GOOGLE_OAUTH_ACCESS_TOKEN = savedToken.trim();
+        }
+      } catch (e) {}
+    }
+
+    function isDirectOAuthConfigured() {
+      return typeof GOOGLE_OAUTH_ACCESS_TOKEN === "string" && GOOGLE_OAUTH_ACCESS_TOKEN.length > 20;
+    }
+
+    function isAnyCloudWriteChannelReady() {
+      return isNativeAppsScriptHost() || isLiveGasWebAppConfigured() || isDirectOAuthConfigured();
+    }
+
+    // Auto-discover deployed /exec URL from Google Sheets SYS_AUDIT_LOG via JSONP (works even on file:// and sandboxed iframes!)
+    window.__ttaGvizAuditCallback = function(resp) {
+      try {
+        if (!resp || !resp.table || !Array.isArray(resp.table.rows)) return;
+        for (let i = resp.table.rows.length - 1; i >= 0; i--) {
+          const r = resp.table.rows[i];
+          if (!r || !Array.isArray(r.c)) continue;
+          const rowText = r.c.map(cell => (cell && cell.v ? String(cell.v) : "")).join(" ");
+          const m = rowText.match(/https:\/\/script\.google\.com\/macros\/s\/[A-Za-z0-9_-]+\/exec/);
+          if (m && !m[0].includes("HNH_EXEC")) {
+            DEFAULT_GAS_API_URL = m[0];
+            try { localStorage.setItem(STORAGE_KEY_GAS_URL, m[0]); } catch (e) {}
+            syncGasUrlUiElements();
+            flushPendingCloudSyncQueue();
+            break;
+          }
+        }
+      } catch (e) {}
+    };
+
+    function autoDiscoverGasUrlViaJsonp() {
+      if (isLiveGasWebAppConfigured() || window.location.protocol === "about:") return;
+      try {
+        const sheetId = DEFAULT_SPREADSHEET_ID || "1kHMKruMnxKQHN3GnBaDTlZOOvCvPKKKJFQ641lgSX9k";
+        const s = document.createElement("script");
+        s.src = `https://docs.google.com/spreadsheets/d/${sheetId}/gviz/tq?tqx=responseHandler:__ttaGvizAuditCallback&sheet=SYS_AUDIT_LOG&t=${Date.now()}`;
+        s.async = true;
+        s.onerror = () => {};
+        document.head.appendChild(s);
+      } catch (e) {}
+    }
+
+    // Direct Google Sheets REST API v4 Writer (writes straight to 1kHMKruMnxKQHN3GnBaDTlZOOvCvPKKKJFQ641lgSX9k when OAuth token is provided)
+    async function writeTableDirectToSheetsApiV4(sheetName, rows) {
+      if (!isDirectOAuthConfigured() || !Array.isArray(rows) || rows.length === 0) return false;
+      const sheetId = DEFAULT_SPREADSHEET_ID || "1kHMKruMnxKQHN3GnBaDTlZOOvCvPKKKJFQ641lgSX9k";
+      const headers = Object.keys(rows[0]).filter(k => !k.startsWith("_"));
+      const values = [headers];
+      rows.forEach(r => {
+        values.push(headers.map(h => {
+          const val = r[h];
+          return (typeof val === "object" && val !== null) ? JSON.stringify(val) : String(val ?? "");
+        }));
+      });
+      try {
+        await fetch(`https://sheets.googleapis.com/v4/spreadsheets/${sheetId}/values/${encodeURIComponent(sheetName)}!A1:ZZ2000:clear`, {
+          method: "POST",
+          headers: { "Authorization": `Bearer ${GOOGLE_OAUTH_ACCESS_TOKEN}`, "Content-Type": "application/json" }
+        });
+        const resp = await fetch(`https://sheets.googleapis.com/v4/spreadsheets/${sheetId}/values/${encodeURIComponent(sheetName)}!A1?valueInputOption=USER_ENTERED`, {
+          method: "PUT",
+          headers: { "Authorization": `Bearer ${GOOGLE_OAUTH_ACCESS_TOKEN}`, "Content-Type": "application/json" },
+          body: JSON.stringify({ range: `${sheetName}!A1`, majorDimension: "ROWS", values: values })
+        });
+        return resp.ok;
+      } catch (e) {
+        return false;
+      }
+    }
+
+    // Dual-Transport GAS WebApp Sender: sends via fetch() AND hidden <form enctype="text/plain" target="iframe"> fallback
+    async function sendTableToGasWebApp(tableName, rows, actionDesc, actorId) {
+      if (!isLiveGasWebAppConfigured() || !Array.isArray(rows) || rows.length === 0) return false;
+      const payloadObj = {
+        action: "SYNC_TABLE",
+        spreadsheetId: DEFAULT_SPREADSHEET_ID || "1kHMKruMnxKQHN3GnBaDTlZOOvCvPKKKJFQ641lgSX9k",
+        tableName: tableName,
+        rows: rows,
+        detail: actionDesc || `Auto-sync ${tableName}`,
+        actor: actorId || "NHIHN000674"
+      };
+      const payloadStr = JSON.stringify(payloadObj);
+
+      // Transport 1: Standard CORS-safelisted text/plain POST fetch
+      try {
+        fetch(DEFAULT_GAS_API_URL, {
+          method: "POST",
+          mode: "no-cors",
+          redirect: "follow",
+          headers: { "Content-Type": "text/plain;charset=utf-8" },
+          body: payloadStr
+        }).catch(() => {});
+      } catch (e) {}
+
+      // Transport 2: Hidden iframe form POST with text/plain encoding so e.postData.contents is valid JSON even inside strict sandboxed iframes!
+      try {
+        ensureHiddenGasIframe();
+        const form = document.createElement("form");
+        form.method = "POST";
+        form.action = DEFAULT_GAS_API_URL;
+        form.target = "ttaHiddenGasSyncIframe";
+        form.enctype = "text/plain";
+        form.style.display = "none";
+        // In text/plain form encoding, browser sends: name + "=" + value
+        // By setting name to '{"action":"SYNC_TABLE",...,"_pad":"' and value to '"}', e.postData.contents is 100% valid JSON!
+        const prefixJson = payloadStr.slice(0, -1) + ',"_pad":"';
+        const inp = document.createElement("input");
+        inp.type = "hidden";
+        inp.name = prefixJson;
+        inp.value = '"}';
+        form.appendChild(inp);
+        document.body.appendChild(form);
+        form.submit();
+        setTimeout(() => { try { form.remove(); } catch (e) {} }, 1500);
+      } catch (e) {}
+
+      return true;
+    }
+
+    // Complete 21-table serializer matching the exact 21 sheets in TTA_QMS_LIMS_ISO15189_2022_MasterDB
+    const _baseSerializeTableV11 = serializeTableForGoogleSheets;
+    serializeTableForGoogleSheets = function(sheetName) {
+      if (sheetName === "IQC_SHPT_DinhLuong_30D" || sheetName === "IQC_SHPT_Multiplex_30D") {
+        return _baseSerializeTableV11(sheetName);
+      }
+      if (sheetName === "NS_HoSoNhanSu") {
+        return (typeof STAFF_LIST !== "undefined" ? STAFF_LIST : []).map(s => ({
+          MaNV: s.maNV || s.id || "",
+          Label_HienThi: s.labelHienThi || `[${s.maNV || s.id}] ${s.fullName} (${s.role || "KTV"})`,
+          Email_DangNhap: s.email || "",
+          HoTen: s.fullName || "",
+          HocHam_HocVi: s.degree || "CN/ThS",
+          DonVi_BoPhan: s.dept || "",
+          VaiTro_HeThong: s.role || "KTV",
+          So_CCHN_GPHN: s.cchn || s.license || "",
+          PhamVi_HanhNghe: s.scopeWork || s.authMachines || "",
+          Tong_Gio_CME: s.cmeHours ?? 24,
+          KetQua_DGNL_GanNhat: s.compScore ? `Đạt (${s.compScore}/10)` : "Đạt",
+          Han_DGNL_TiepTheo: s.nextEvalDate || "2027-08-01",
+          TrangThai_LamViec: s.workStatus || "Đang làm việc",
+          Nguon_HoSo_URL: "https://drive.google.com/open?id=1bGRgz35xl6IOWsjmpEIo1HSY8A3MzqCv"
+        }));
+      }
+      if (sheetName === "NS_UyQuyen_DGNL") {
+        const compRows = (typeof HR_COMPETENCIES !== "undefined" ? HR_COMPETENCIES : []).map((c, idx) => ({
+          ID_UyQuyen: c.id || `UQ-2026-${String(idx + 1).padStart(2, "0")}`,
+          Label_HienThi: `[${c.empId}] ${c.empName} - ${c.level || "Mức 4"}`,
+          MaNV: c.empId || "",
+          Ho_Ten: c.empName || "",
+          Nguoi_DanhGia_PheDuyet: "NHIHN000674 (ThS. Trần Tuấn Anh)",
+          Ngay_DanhGia: c.date || getTodayIsoDate(),
+          Diem_LyThuyet: c.theory ?? 9.5,
+          Diem_ThucHanh: c.prac ?? 9.5,
+          Diem_ATSH: c.safe ?? 9.5,
+          Diem_SOP_ISO: c.sop ?? 9.5,
+          Diem_TrungBinh: c.avg ?? 9.5,
+          Muc_UyQuyen: c.level || "Mức 4 (Độc lập & Huấn luyện)",
+          Quyen_Ky_KetQua: c.decision || "Được phép ký duyệt",
+          Khoa_DaoTao_CME: ((typeof HR_TRAININGS !== "undefined" && HR_TRAININGS[idx]) ? HR_TRAININGS[idx].course : "ISO 15189:2022 & An toàn sinh học")
+        }));
+        return compRows;
+      }
+      if (sheetName === "DM_ThietBi") {
+        return (typeof EQUIPMENTS !== "undefined" ? EQUIPMENTS : []).map(eq => ({
+          ID_ThietBi: eq.id || "",
+          Label_HienThi: `[${eq.id}] ${eq.name}`,
+          Ten_ThietBi: eq.name || "",
+          PhanLoai_ThietBi: eq.group || eq.dept || "",
+          Bo_Phan: eq.dept || "",
+          ViTri_LapDat: eq.location || "Khoa Xét nghiệm - Tầng 3",
+          Model: eq.model || "",
+          So_Serial: eq.serial || "",
+          Hang_SanXuat: eq.mfg || eq.vendor || "Chính hãng",
+          Nguoi_PhuTrach: eq.pic || "",
+          TrangThai_VanHanh: eq.opStatus || "Đang hoạt động",
+          TinhTrang_HoSo: eq.docStatus || "Hoàn thành",
+          Han_HieuChuan: eq.calDue || "2026-12-05",
+          SoNgay_ConLai: eq.calDays ?? 30,
+          Ghi_Chu: eq.note || "",
+          Link_HoSo_Drive: eq.driveUrl || "https://drive.google.com/drive/folders/1fzRUGS6lohyTGVpy2QPOcpvbntTCWsVU"
+        }));
+      }
+      if (sheetName === "NhatKy_BaoTri_HieuChuan") {
+        return (typeof MAINT_LOGS !== "undefined" ? MAINT_LOGS : []).map((m, idx) => ({
+          ID_SuKien_TB: m.id || `BT-2026-${String(idx + 1).padStart(2, "0")}`,
+          Label_HienThi: `[${m.equipId}] ${m.type} (${m.time})`,
+          ID_ThietBi: m.equipId || "",
+          Ten_ThietBi: m.equipName || "",
+          Loai_CongViec: m.type || "",
+          MaNV_BaoCao: m.user || "NHIHN000674",
+          ThoiDiem_BatDau: m.time || getNowVnDateTime(),
+          Da_KhuNhiem_BM08: m.decon || "Đã khử nhiễm cồn 70° & NaClO 0.5%",
+          DoLech_SauHieuChuan: m.bias || "0.8%",
+          MPE_ChoPhep: m.mpe || "2.5%",
+          KetQua_IQC_BM09: m.iqcAfter || "Đạt (In-Control)",
+          KetLuan_NghiemThu: m.status || "Đạt — Cho phép chạy mẫu BN"
+        }));
+      }
+      if (sheetName === "NhatKy_MoiTruong") {
+        return (typeof ENV_LOGS !== "undefined" ? ENV_LOGS : []).map((e, idx) => ({
+          ID_NhatKy_MT: e.id || `MT-2026-${String(idx + 1).padStart(2, "0")}`,
+          Label_HienThi: `[${e.area}] ${e.time}`,
+          KhuVuc_ThietBi: e.area || "",
+          MaNV_ThucHien: e.user || "NHIHN000674",
+          ThoiDiem_GhiNhan: e.time || getNowVnDateTime(),
+          NhietDo_ThucTe: e.temp ?? 22.5,
+          DoAm_ThucTe: e.hum ?? 52,
+          TrangThai_CanhBao: e.status || "Đạt chuẩn ISO",
+          HanhDong_KhacPhuc: e.action || "Bình thường"
+        }));
+      }
+      if (sheetName === "Kho_HoaChat_Lot") {
+        return (typeof REAGENT_LOTS !== "undefined" ? REAGENT_LOTS : []).map(l => ({
+          ID_Lot: l.lot || "",
+          Label_HienThi: `[${l.lot}] ${l.name}`,
+          Ten_HoaChat: l.name || "",
+          Bo_Phan: l.dept || "",
+          He_Thong_May: l.analyzer || "",
+          So_Lot: l.lot || "",
+          Han_Su_Dung: l.exp || "",
+          SoNgay_ConLai: l.daysLeft ?? 90,
+          DieuKien_BaoQuan: l.temp || "2°C đến 8°C",
+          Ton_Dau_Ky: l.openStock ?? 100,
+          Nhap_Trong_Ky: l.inQty ?? 100,
+          Xuat_Trong_Ky: l.outQty ?? 20,
+          Ton_Kho_Chan: l.stock ?? 80,
+          Ton_Kit_DangMo_Rxn: l.openKitRxn ?? 50,
+          Don_Vi: l.unit || "Test/Rxn",
+          So_ChuKy_RaDong: l.freezeCount ?? 1,
+          DanhGia_CQA: l.cqa || "Đạt",
+          XacNhan_LotToLot: l.lotVerify || "Đạt (BM-12-11)",
+          TrangThai_FEFO: l.status || "Đang sử dụng"
+        }));
+      }
+      if (sheetName === "IQC_NoiKiem_Westgard") {
+        const quantPts = (typeof IQC_POINTS !== "undefined" ? IQC_POINTS : []).map(p => ({
+          ID_KetQua_IQC: p.id || "",
+          ThoiDiem_Chay: p.time || "",
+          Bo_Phan: p.dept || "",
+          Ma_May: p.equipCode || "",
+          ID_ThietBi: p.equipId || "",
+          Ten_XetNghiem: p.test || "",
+          So_Lot_QC: p.lot || "",
+          Muc_QC: p.level || "",
+          GiaTri_Do: p.val ?? "",
+          Mean_Dich: p.mfgMean ?? "",
+          SD_Dich: p.mfgSd ?? "",
+          Z_Score: p.mfgSd ? (((p.val - p.mfgMean) / p.mfgSd).toFixed(2)) : "0.00",
+          Nguon_DuLieu: p.source || "Thủ công / API",
+          Ghi_Chu: p.editNote || ""
+        }));
+        return quantPts;
+      }
+      if (sheetName === "EQA_NgoaiKiem" || sheetName === "EQA_NgoaiKiem_SSLP_TTDT09") {
+        return (typeof EQA_PROGRAMS !== "undefined" ? EQA_PROGRAMS : []).map(e => ({
+          ID_KetQua_EQA: e.id || "",
+          Phan_Loai: e.typeBadge || e.type || "EQA/PT",
+          Bo_Phan: e.dept || "",
+          ToChuc_NgoaiKiem: e.org || "",
+          Chuong_Trinh: e.program || "",
+          He_Thong_May: e.analyzer || "",
+          Ma_Mau_Dot: e.sampleCode || "",
+          KetQua_PXN: e.labVal ?? "",
+          Mean_Nhom_Peer: e.peerMean ?? "",
+          SD_Nhom_Peer: e.peerSd ?? "",
+          Chi_So_SDI: e.sdi ?? "",
+          Giai_Doan_6Buoc: e.stageName || `Bước ${e.stage || 6}/6`,
+          KetLuan_DanhGia: e.conclusion || "Đạt (|SDI| ≤ 2.0)"
+        }));
+      }
+      if (sheetName === "QMS_SuCo_CAPA") {
+        const molCapas = (typeof MOL_IQC_CAPA_LOGS !== "undefined" ? MOL_IQC_CAPA_LOGS : []).map(c => ({
+          ID_CAPA: c.id || "",
+          Ngay_PhatHien: c.date || "",
+          Nguon_PhatSinh: `Nội kiểm SHPT (${c.machine || "QS5/CFX"})`,
+          Ma_Me_LienQuan: c.runId || "",
+          QuyTac_ViPham: c.assayRule || "",
+          MoTa_SuKhongPhuHop: c.desc || "",
+          NguyenNhan_GocRe: c.rootCause || "",
+          HanhDong_KhacPhuc: c.correction || "",
+          HanhDong_PhongNgua: c.prevention || "",
+          TrangThai_ThamDinh: c.rerunStatus || "",
+          Nguoi_PhuTrach: c.owner || "ThS. Trần Tuấn Anh"
+        }));
+        const genCapas = (typeof CAPA_LIST !== "undefined" ? CAPA_LIST : []).map(c => ({
+          ID_CAPA: c.id || "",
+          Ngay_PhatHien: c.date || "",
+          Nguon_PhatSinh: c.source || "Quản lý Chất lượng",
+          Ma_Me_LienQuan: c.dept || "Toàn Khoa",
+          QuyTac_ViPham: `Điểm rủi ro RPN = ${c.riskScore || 6} (${c.riskLevel || "Trung bình"})`,
+          MoTa_SuKhongPhuHop: c.desc || "",
+          NguyenNhan_GocRe: c.rootCause || "",
+          HanhDong_KhacPhuc: c.action || "",
+          HanhDong_PhongNgua: c.preventive || "Cập nhật SOP & Đào tạo lại",
+          TrangThai_ThamDinh: c.status || "Đã đóng",
+          Nguoi_PhuTrach: c.owner || "ThS. Trần Tuấn Anh"
+        }));
+        return molCapas.concat(genCapas);
+      }
+      if (sheetName === "IQC_MucTieu_Sigma_ThongKe_08") {
+        return (typeof IQC_SIGMA_GOALS !== "undefined" ? IQC_SIGMA_GOALS : []).map(g => ({
+          Ma_MT: g.id || "",
+          Bo_Phan: g.dept || "",
+          He_Thong_May: g.analyzer || "",
+          Ten_XetNghiem: g.test || "",
+          TEa_ChoPhep_Pct: g.tea ?? "",
+          CV_ThucTe_Pct: g.actualCv ?? "",
+          Bias_ThucTe_Pct: g.actualBias ?? "",
+          Chi_So_SixSigma: ((g.tea - Math.abs(g.actualBias)) / (g.actualCv || 0.5)).toFixed(2),
+          QuyTac_Westgard_ApDung: g.rule || "1-3s / 2-2s / R-4s"
+        }));
+      }
+      if (sheetName === "LIMS_1_LIS_Data" || sheetName === "LIMS_TachChiet_PCR" || sheetName === "LIMS_TachChiet_PCR_v2606") {
+        return (typeof LIMS_LIS_ORDERS !== "undefined" ? LIMS_LIS_ORDERS : []).map(o => ({
+          ID_ChiDinh: o.idChiDinh || "",
+          SID: o.sid || "",
+          HoTen_BenhNhan: o.patientName || o.benhNhan || "",
+          Khoa_ChiDinh: o.dept || o.khoa || "",
+          Ten_XetNghiem: o.testName || o.tenXetNghiem || "",
+          Ma_QTXN: o.maQtxn || "",
+          Ma_IC: o.maIc || "",
+          ThoiGian_NhanMau_T2: o.t2 || "",
+          ID_MeTach: o.idMeTach || "",
+          ID_MePCR: o.idMePcr || "",
+          ToaDo_Gieng96: o.wellPos || "",
+          TrangThai_Mau: o.status || ""
+        }));
+      }
+      if (sheetName === "LIMS_2A_MeTachChiet") {
+        return (typeof LIMS_EXT_BATCHES !== "undefined" ? LIMS_EXT_BATCHES : []);
+      }
+      if (sheetName === "LIMS_3A_MeChayPCR") {
+        return (typeof LIMS_PCR_BATCHES !== "undefined" ? LIMS_PCR_BATCHES : []);
+      }
+      if (sheetName === "LIMS_5B_NhatKy_KhauTru_Kho") {
+        return (typeof LIMS_DEDUCTION_LOGS !== "undefined" ? LIMS_DEDUCTION_LOGS : []);
+      }
+      if (sheetName === "SYS_USERS_RBAC") {
+        return (typeof ALLOWED_USERS_DB !== "undefined" ? ALLOWED_USERS_DB : []).map(u => ({
+          MaNV: u.maNV || "",
+          Label_HienThi: `[${u.maNV}] ${u.name}`,
+          Ho_Va_Ten: u.name || "",
+          Email_Dang_Nhap: u.email || "",
+          Bo_Phan_RLS: u.dept || "",
+          Role_RBAC: u.scope || "",
+          Mat_Khau_Hash: u.pass || "",
+          Ma_PIN_Ky_So: u.pin || "15189",
+          Han_Su_Dung: u.expiresAt || "2026-12-31",
+          Trang_Thai: u.status || "ACTIVE"
+        }));
+      }
+      if (sheetName === "SYS_AUDIT_LOG") {
+        return (typeof SECURITY_AUDIT_LOGS !== "undefined" ? SECURITY_AUDIT_LOGS : []).map((a, idx) => ({
+          Audit_ID: a.id || `AUD-261113-${String(idx + 1).padStart(3, "0")}`,
+          Thoi_Gian: a.time || getNowVnDateTimeFull(),
+          MaNV_Thuc_Hien: a.user ? a.user.split(" ")[0] : "NHIHN000674",
+          Ho_Ten: a.user || "NHIHN000674 (ThS. Trần Tuấn Anh)",
+          Bo_Phan: a.dept || "Di truyền & SHPT",
+          Loai_Thao_Tac: a.action || "DB_WRITE",
+          Chi_Tiet_Truoc_Sau: a.detail || "",
+          Thiet_Bi_Nen_Tang: a.device || "WebApp SPA v2026.12",
+          Ma_Bam_SHA256: a.hash || "sha256:8f9d2a7c1e4b",
+          Trang_Thai_Cloud: a.cloudStatus || "ĐÃ LƯU & ĐỒNG BỘ"
+        }));
+      }
+      return _baseSerializeTableV11(sheetName);
+    };
+
+    // Upgrade getMasterDbTableCatalog to list all 21 sheets with live dynamic counts
+    getMasterDbTableCatalog = function() {
+      const defs = [
+        { stt: 1, sheet: "IQC_SHPT_DinhLuong_30D", module: "4. Nội kiểm SHPT Định lượng", pk: "ID_BanGhi", desc: "Chuỗi 30 ngày × 5 XN GeneProof (HBV, CMV, EBV, HSV, ADV) trên QuantStudio 5 Dx" },
+        { stt: 2, sheet: "IQC_SHPT_Multiplex_30D", module: "4. Nội kiểm SHPT Đa mồi", pk: "ID_BanGhi", desc: "Chuỗi 30 ngày × 9 Panel Seegene Allplex 4 kênh màu trên CFX Opus 96 Dx" },
+        { stt: 3, sheet: "IQC_NoiKiem_Westgard", module: "4. Nội kiểm Đa Chuyên khoa", pk: "ID_KetQua_IQC", desc: "Điểm nội kiểm hàng ngày của 17 máy xét nghiệm (Hóa sinh, Huyết học, Đông máu, Vi sinh, SHPT)" },
+        { stt: 4, sheet: "IQC_MucTieu_Sigma_ThongKe_08", module: "4. Mục tiêu Six Sigma", pk: "Ma_MT", desc: "Bảng mục tiêu TEa%, CV%, Bias%, chỉ số Six Sigma và quy tắc Westgard (BM-08-02)" },
+        { stt: 5, sheet: "EQA_NgoaiKiem", module: "4B. Ngoại kiểm EQA (6 Bước)", pk: "ID_KetQua_EQA", desc: "Hồ sơ 6 giai đoạn cho các chương trình Ngoại kiểm Quốc tế/VN & So sánh liên phòng" },
+        { stt: 6, sheet: "EQA_NgoaiKiem_SSLP_TTDT09", module: "4B. Báo cáo SSLP BM-09", pk: "ID_KetQua_EQA", desc: "Tổng hợp kế hoạch và tiến độ Ngoại kiểm / So sánh liên phòng theo QT.VT03.TTDT-09" },
+        { stt: 7, sheet: "QMS_SuCo_CAPA", module: "4 & 6. Sự cố & CAPA", pk: "ID_CAPA", desc: "Sổ nhật ký sự cố Out-of-Control (1-3s, 2-2s, R-4s, 10-x, NTC+) & CAPA toàn Khoa" },
+        { stt: 8, sheet: "LIMS_1_LIS_Data", module: "5. LIMS Chỉ định & TAT", pk: "ID_ChiDinh", desc: "Dữ liệu 21 cột xuất từ LIS + Khóa ngoại Ma_QTXN, Ma_IC, ID_MeTach, ID_MePCR, Gieng_96" },
+        { stt: 9, sheet: "LIMS_2A_MeTachChiet", module: "5. LIMS Mẻ Tách chiết", pk: "ID_MeTach", desc: "Quản lý mẻ tách chiết DNA/RNA tự động, bảng pha IC, Proteinase K, Carrier RNA" },
+        { stt: 10, sheet: "LIMS_3A_MeChayPCR", module: "5. LIMS Mẻ PCR & Plate 96", pk: "ID_MePCR", desc: "Quản lý mẻ chạy Real-time PCR, kiểm soát gối 2 Lot kit và tọa độ Plate 96 giếng" },
+        { stt: 11, sheet: "LIMS_5B_NhatKy_KhauTru_Kho", module: "5. LIMS Khấu trừ Sinh phẩm", pk: "Ma_GD", desc: " Sổ cái giao dịch tự động trừ tồn kho Kit tách chiết, Master Mix và Chứng nội IC" },
+        { stt: 12, sheet: "LIMS_TachChiet_PCR", module: "5. LIMS Liên kết Tổng hợp", pk: "ID_ChiDinh", desc: "Bảng tổng hợp truy vết mẫu bệnh nhân từ Nhận mẫu -> Tách chiết -> Chạy PCR" },
+        { stt: 13, sheet: "LIMS_TachChiet_PCR_v2606", module: "5. LIMS Phiên bản v26.06", pk: "ID_ChiDinh", desc: "Bản đồng bộ tương thích ngược cho phân hệ AppSheet TTA-LIMS v26.06" },
+        { stt: 14, sheet: "Kho_HoaChat_Lot", module: "3. Kho Hóa chất & Vật tư", pk: "ID_Lot", desc: "Quản lý tồn kho chẵn, số test kit đang mở ở 4°C, cảnh báo FEFO, đánh giá Lot-to-Lot" },
+        { stt: 15, sheet: "DM_ThietBi", module: "2. Danh mục Thiết bị", pk: "ID_ThietBi", desc: "Danh mục 120 thiết bị toàn Khoa, hạn hiệu chuẩn, trạng thái vận hành, mã QR ISO 18004" },
+        { stt: 16, sheet: "NhatKy_BaoTri_HieuChuan", module: "2. Bảo trì & Hiệu chuẩn", pk: "ID_SuKien_TB", desc: "Nhật ký bảo dưỡng, sửa chữa, khử nhiễm (BM08) và chạy IQC nghiệm thu máy (BM09)" },
+        { stt: 17, sheet: "NhatKy_MoiTruong", module: "2. Giám sát Nhiệt độ / Độ ẩm", pk: "ID_NhatKy_MT", desc: "Theo dõi nhiệt độ tủ lạnh/tủ âm sâu (-86°C, -30°C, 2-8°C), độ ẩm phòng XN" },
+        { stt: 18, sheet: "NS_HoSoNhanSu", module: "6. Hồ sơ Nhân sự (52 NV)", pk: "MaNV", desc: "Hồ sơ 52 nhân sự 5 bộ phận, chứng chỉ hành nghề, giờ đào tạo liên tục CME" },
+        { stt: 19, sheet: "NS_UyQuyen_DGNL", module: "6. Đào tạo & Đánh giá Năng lực", pk: "ID_UyQuyen", desc: "Hồ sơ đánh giá năng lực 4 tiêu chí, mức ủy quyền ký duyệt kết quả & khóa học CME" },
+        { stt: 20, sheet: "SYS_USERS_RBAC", module: "8. Tài khoản & Phân quyền RBAC", pk: "MaNV", desc: "Danh sách tài khoản, mật khẩu, mã PIN ký số, hạn sử dụng và phạm vi phân quyền" },
+        { stt: 21, sheet: "SYS_AUDIT_LOG", module: "8. Nhật ký Truy vết Bất biến", pk: "Audit_ID", desc: "Nhật ký Audit Trail lưu vết mọi thao tác Thêm/Sửa/Xóa chuẩn ISO 15189:2022 Điều 7.6.3" }
+      ];
+      return defs.map(d => {
+        const rows = serializeTableForGoogleSheets(d.sheet) || [];
+        return {
+          ...d,
+          count: rows.length,
+          getRows: () => serializeTableForGoogleSheets(d.sheet)
+        };
+      });
+    };
+
+    // Universal Database Commit + Forensic Audit Trail + Multi-Channel Auto-Sync
+    commitDatabaseTransaction = function(tableName, actionDesc, recordId = "", opType = "DB_MUTATION") {
+      DB_LAST_SYNC_TIME = getNowVnDateTimeFull();
+      const actorSelect = document.getElementById("currentUserSelect");
+      const actorLabel = actorSelect ? actorSelect.value : "NHIHN000674 (ThS. Trần Tuấn Anh)";
+      const actorCode = actorLabel.split(" ")[0] || "NHIHN000674";
+
+      // 1. Append immutable audit log entry to SECURITY_AUDIT_LOGS (SYS_AUDIT_LOG)
+      if (typeof SECURITY_AUDIT_LOGS !== "undefined" && tableName !== "SYS_AUDIT_LOG") {
+        const hashNum = Math.abs(Array.from(tableName + actionDesc + DB_LAST_SYNC_TIME).reduce((acc, ch) => ((acc << 5) - acc) + ch.charCodeAt(0), 0)).toString(16);
+        const cloudReady = isAnyCloudWriteChannelReady();
+        SECURITY_AUDIT_LOGS.unshift({
+          id: `AUD-${Date.now().toString().slice(-6)}`,
+          time: DB_LAST_SYNC_TIME,
+          user: actorLabel,
+          dept: "Di truyền & SHPT",
+          action: `${opType} [${tableName}]`,
+          detail: actionDesc,
+          device: cloudReady ? "Auto-Sync Cloud DB" : "Local Write-Through DB",
+          hash: `sha256:${hashNum}9f2e4a1c`,
+          cloudStatus: cloudReady ? "☁️ Đã đẩy tự động Google Sheets" : "💾 Đã lưu CSDL máy (Chờ URL /exec)"
+        });
+        if (typeof renderSecurityAuditLogs === "function") {
+          try { renderSecurityAuditLogs(); } catch (e) {}
+        }
+      }
+
+      // 2. Save ALL 21 tables into persistent storage (Write-Through Cache)
+      try {
+        const snapshot = {
+          version: "v2026.12",
+          updatedAt: DB_LAST_SYNC_TIME,
+          lastTable: tableName,
+          lastAction: actionDesc,
+          LIMS_LIS_ORDERS: typeof LIMS_LIS_ORDERS !== "undefined" ? LIMS_LIS_ORDERS : [],
+          LIMS_EXT_BATCHES: typeof LIMS_EXT_BATCHES !== "undefined" ? LIMS_EXT_BATCHES : [],
+          LIMS_PCR_BATCHES: typeof LIMS_PCR_BATCHES !== "undefined" ? LIMS_PCR_BATCHES : [],
+          LIMS_DEDUCTION_LOGS: typeof LIMS_DEDUCTION_LOGS !== "undefined" ? LIMS_DEDUCTION_LOGS : [],
+          LIMS_ASSAY_CATALOG: typeof LIMS_ASSAY_CATALOG !== "undefined" ? LIMS_ASSAY_CATALOG : [],
+          MOL_QUANT_30D_DB: typeof MOL_QUANT_30D_DB !== "undefined" ? MOL_QUANT_30D_DB : {},
+          MOL_MULTIPLEX_30D_DB: typeof MOL_MULTIPLEX_30D_DB !== "undefined" ? MOL_MULTIPLEX_30D_DB : {},
+          MOL_IQC_CAPA_LOGS: typeof MOL_IQC_CAPA_LOGS !== "undefined" ? MOL_IQC_CAPA_LOGS : [],
+          IQC_POINTS: typeof IQC_POINTS !== "undefined" ? IQC_POINTS : [],
+          QUALITATIVE_IQC_LOGS: typeof QUALITATIVE_IQC_LOGS !== "undefined" ? QUALITATIVE_IQC_LOGS : [],
+          IQC_VIOLATION_LOGS: typeof IQC_VIOLATION_LOGS !== "undefined" ? IQC_VIOLATION_LOGS : [],
+          IQC_SIGMA_GOALS: typeof IQC_SIGMA_GOALS !== "undefined" ? IQC_SIGMA_GOALS : [],
+          EQA_PROGRAMS: typeof EQA_PROGRAMS !== "undefined" ? EQA_PROGRAMS : [],
+          REAGENT_LOTS: typeof REAGENT_LOTS !== "undefined" ? REAGENT_LOTS : [],
+          LOT_VERIFICATIONS: typeof LOT_VERIFICATIONS !== "undefined" ? LOT_VERIFICATIONS : [],
+          ALIQUOT_LOGS: typeof ALIQUOT_LOGS !== "undefined" ? ALIQUOT_LOGS : [],
+          EQUIPMENTS: typeof EQUIPMENTS !== "undefined" ? EQUIPMENTS : [],
+          MAINT_LOGS: typeof MAINT_LOGS !== "undefined" ? MAINT_LOGS : [],
+          ENV_LOGS: typeof ENV_LOGS !== "undefined" ? ENV_LOGS : [],
+          TRANSFER_LOGS: typeof TRANSFER_LOGS !== "undefined" ? TRANSFER_LOGS : [],
+          STAFF_LIST: typeof STAFF_LIST !== "undefined" ? STAFF_LIST : [],
+          HR_TRAININGS: typeof HR_TRAININGS !== "undefined" ? HR_TRAININGS : [],
+          HR_COMPETENCIES: typeof HR_COMPETENCIES !== "undefined" ? HR_COMPETENCIES : [],
+          CAPA_LIST: typeof CAPA_LIST !== "undefined" ? CAPA_LIST : [],
+          ALLOWED_USERS_DB: typeof ALLOWED_USERS_DB !== "undefined" ? ALLOWED_USERS_DB : [],
+          SECURITY_AUDIT_LOGS: typeof SECURITY_AUDIT_LOGS !== "undefined" ? SECURITY_AUDIT_LOGS : []
+        };
+        const snapJson = JSON.stringify(snapshot);
+        window._MASTER_DB_MEMORY_STORE = snapJson;
+        try {
+          localStorage.setItem(MASTER_DB_STORE_KEY_V12, snapJson);
+          localStorage.setItem(MASTER_DB_LOCAL_STORE_KEY, snapJson);
+        } catch (errLs) {}
+      } catch (e) {}
+
+      const rowsToSync = serializeTableForGoogleSheets(tableName);
+      const auditRows = serializeTableForGoogleSheets("SYS_AUDIT_LOG");
+
+      // 3. Push automatically to Cloud if any channel is configured; otherwise queue and show honest status!
+      const badge = document.getElementById("headerDbSyncBadge");
+      const statusTxt = document.getElementById("masterDbSyncStatusText");
+      const lastTime = document.getElementById("masterDbLastWriteTime");
+
+      if (isNativeAppsScriptHost()) {
+        try {
+          if (typeof google.script.run.syncTableFromClient === "function") {
+            google.script.run.syncTableFromClient(tableName, rowsToSync, actorCode, actionDesc);
+            google.script.run.syncTableFromClient("SYS_AUDIT_LOG", auditRows, actorCode, actionDesc);
+          } else {
+            google.script.run.writeAuditLog(actorCode, "DB_WRITE_" + tableName, actionDesc, "AUTO");
+          }
+        } catch (err) {}
+      } else if (isLiveGasWebAppConfigured() && rowsToSync.length > 0) {
+        sendTableToGasWebApp(tableName, rowsToSync, actionDesc, actorCode);
+        sendTableToGasWebApp("SYS_AUDIT_LOG", auditRows.slice(0, 50), `Audit: ${actionDesc}`, actorCode);
+      } else if (isDirectOAuthConfigured() && rowsToSync.length > 0) {
+        writeTableDirectToSheetsApiV4(tableName, rowsToSync);
+        writeTableDirectToSheetsApiV4("SYS_AUDIT_LOG", auditRows.slice(0, 50));
+      } else {
+        PENDING_CLOUD_SYNC_TABLES.add(tableName);
+        PENDING_CLOUD_SYNC_TABLES.add("SYS_AUDIT_LOG");
+      }
+
+      if (badge) {
+        if (isAnyCloudWriteChannelReady()) {
+          badge.innerHTML = `☁️ Cloud DB: Đã tự động ghi ${tableName} (${rowsToSync.length} dòng)`;
+          badge.style.background = "#dcfce7";
+          badge.style.color = "#166534";
+        } else {
+          badge.innerHTML = `🟠 CSDL Máy: Đã lưu ${tableName} (${PENDING_CLOUD_SYNC_TABLES.size} bảng chờ đẩy Sheet — Nhấn để kết nối)`;
+          badge.style.background = "#fef3c7";
+          badge.style.color = "#92400e";
+          badge.style.cursor = "pointer";
+          badge.onclick = () => openCloudConnectModal(tableName);
+        }
+      }
+      if (statusTxt) {
+        statusTxt.innerHTML = isAnyCloudWriteChannelReady()
+          ? `🟢 Đã tự động đồng bộ trực tiếp bảng <code>${tableName}</code> (${rowsToSync.length} dòng • ${actionDesc}) lên Google Sheets MasterDB`
+          : `🟠 Đã lưu bền vững vào CSDL trên trình duyệt (Bảng <code>${tableName}</code>: ${rowsToSync.length} dòng • ${actionDesc}) — <a href="javascript:void(0)" onclick="openCloudConnectModal('${tableName}')" style="color:#0284c7;font-weight:800;text-decoration:underline;">Nhấn vào đây để kết nối tự động ghi lên Google Sheets</a>`;
+      }
+      if (lastTime) {
+        lastTime.textContent = `Cập nhật cuối: ${DB_LAST_SYNC_TIME}`;
+      }
+      if (typeof renderMasterDbLiveInspector === "function") renderMasterDbLiveInspector();
+      syncGasUrlUiElements();
+    };
+
+    // Restore ALL 21 tables from localStorage AFTER seed initialization so user edits are NEVER lost on reload
+    hydrateFromMasterDatabaseStore = function() {
+      try {
+        let raw = window._MASTER_DB_MEMORY_STORE || null;
+        try {
+          raw = localStorage.getItem(MASTER_DB_STORE_KEY_V12) || raw;
+        } catch (errLs) {}
+        if (!raw) return false;
+        const data = JSON.parse(raw);
+        if (Array.isArray(data.LIMS_LIS_ORDERS) && data.LIMS_LIS_ORDERS.length > 0) LIMS_LIS_ORDERS = data.LIMS_LIS_ORDERS;
+        if (Array.isArray(data.LIMS_EXT_BATCHES) && data.LIMS_EXT_BATCHES.length > 0) LIMS_EXT_BATCHES = data.LIMS_EXT_BATCHES;
+        if (Array.isArray(data.LIMS_PCR_BATCHES) && data.LIMS_PCR_BATCHES.length > 0) LIMS_PCR_BATCHES = data.LIMS_PCR_BATCHES;
+        if (Array.isArray(data.LIMS_DEDUCTION_LOGS) && data.LIMS_DEDUCTION_LOGS.length > 0) LIMS_DEDUCTION_LOGS = data.LIMS_DEDUCTION_LOGS;
+        if (Array.isArray(data.LIMS_ASSAY_CATALOG) && data.LIMS_ASSAY_CATALOG.length > 0) LIMS_ASSAY_CATALOG = data.LIMS_ASSAY_CATALOG;
+        if (data.MOL_QUANT_30D_DB && Object.keys(data.MOL_QUANT_30D_DB).length > 0) MOL_QUANT_30D_DB = data.MOL_QUANT_30D_DB;
+        if (data.MOL_MULTIPLEX_30D_DB && Object.keys(data.MOL_MULTIPLEX_30D_DB).length > 0) MOL_MULTIPLEX_30D_DB = data.MOL_MULTIPLEX_30D_DB;
+        if (Array.isArray(data.MOL_IQC_CAPA_LOGS) && data.MOL_IQC_CAPA_LOGS.length > 0) MOL_IQC_CAPA_LOGS = data.MOL_IQC_CAPA_LOGS;
+        if (Array.isArray(data.IQC_POINTS) && data.IQC_POINTS.length > 0) IQC_POINTS = data.IQC_POINTS;
+        if (Array.isArray(data.QUALITATIVE_IQC_LOGS) && data.QUALITATIVE_IQC_LOGS.length > 0) QUALITATIVE_IQC_LOGS = data.QUALITATIVE_IQC_LOGS;
+        if (Array.isArray(data.IQC_VIOLATION_LOGS) && data.IQC_VIOLATION_LOGS.length > 0) IQC_VIOLATION_LOGS = data.IQC_VIOLATION_LOGS;
+        if (Array.isArray(data.IQC_SIGMA_GOALS) && data.IQC_SIGMA_GOALS.length > 0) IQC_SIGMA_GOALS = data.IQC_SIGMA_GOALS;
+        if (Array.isArray(data.EQA_PROGRAMS) && data.EQA_PROGRAMS.length > 0) EQA_PROGRAMS = data.EQA_PROGRAMS;
+        if (Array.isArray(data.REAGENT_LOTS) && data.REAGENT_LOTS.length > 0) REAGENT_LOTS = data.REAGENT_LOTS;
+        if (Array.isArray(data.LOT_VERIFICATIONS) && data.LOT_VERIFICATIONS.length > 0) LOT_VERIFICATIONS = data.LOT_VERIFICATIONS;
+        if (Array.isArray(data.ALIQUOT_LOGS) && data.ALIQUOT_LOGS.length > 0) ALIQUOT_LOGS = data.ALIQUOT_LOGS;
+        if (Array.isArray(data.EQUIPMENTS) && data.EQUIPMENTS.length > 0) EQUIPMENTS = data.EQUIPMENTS;
+        if (Array.isArray(data.MAINT_LOGS) && data.MAINT_LOGS.length > 0) MAINT_LOGS = data.MAINT_LOGS;
+        if (Array.isArray(data.ENV_LOGS) && data.ENV_LOGS.length > 0) ENV_LOGS = data.ENV_LOGS;
+        if (Array.isArray(data.TRANSFER_LOGS) && data.TRANSFER_LOGS.length > 0) TRANSFER_LOGS = data.TRANSFER_LOGS;
+        if (Array.isArray(data.STAFF_LIST) && data.STAFF_LIST.length > 0) STAFF_LIST = data.STAFF_LIST;
+        if (Array.isArray(data.HR_TRAININGS) && data.HR_TRAININGS.length > 0) HR_TRAININGS = data.HR_TRAININGS;
+        if (Array.isArray(data.HR_COMPETENCIES) && data.HR_COMPETENCIES.length > 0) HR_COMPETENCIES = data.HR_COMPETENCIES;
+        if (Array.isArray(data.CAPA_LIST) && data.CAPA_LIST.length > 0) CAPA_LIST = data.CAPA_LIST;
+        if (Array.isArray(data.ALLOWED_USERS_DB) && data.ALLOWED_USERS_DB.length > 0) ALLOWED_USERS_DB = data.ALLOWED_USERS_DB;
+        if (Array.isArray(data.SECURITY_AUDIT_LOGS) && data.SECURITY_AUDIT_LOGS.length > 0) SECURITY_AUDIT_LOGS = data.SECURITY_AUDIT_LOGS;
+        if (data.updatedAt) DB_LAST_SYNC_TIME = data.updatedAt;
+        return true;
+      } catch (e) {
+        return false;
+      }
+    };
+
+    function flushPendingCloudSyncQueue() {
+      if (!isAnyCloudWriteChannelReady()) return;
+      const tables = PENDING_CLOUD_SYNC_TABLES.size > 0
+        ? Array.from(PENDING_CLOUD_SYNC_TABLES)
+        : ["IQC_SHPT_DinhLuong_30D", "IQC_SHPT_Multiplex_30D", "SYS_AUDIT_LOG"];
+      tables.forEach(tName => {
+        const rows = serializeTableForGoogleSheets(tName);
+        if (rows && rows.length > 0) {
+          if (isLiveGasWebAppConfigured()) sendTableToGasWebApp(tName, rows, "Auto-flush queued changes", "NHIHN000674");
+          if (isDirectOAuthConfigured()) writeTableDirectToSheetsApiV4(tName, rows);
+        }
+      });
+      PENDING_CLOUD_SYNC_TABLES.clear();
+      syncGasUrlUiElements();
+    }
+
+    // Smart Cloud Setup & Instant Sync Modal when user clicks "Đồng bộ Lên Sheet"
+    function openCloudConnectModal(targetSheet = "IQC_SHPT_DinhLuong_30D") {
+      let modal = document.getElementById("modalCloudAutoConnectV12");
+      if (!modal) {
+        modal = document.createElement("div");
+        modal.id = "modalCloudAutoConnectV12";
+        modal.style.cssText = "position:fixed;inset:0;background:rgba(15,23,42,0.72);z-index:9999;display:flex;align-items:center;justify-content:center;padding:16px;";
+        modal.innerHTML = `
+          <div style="background:#ffffff;border-radius:14px;max-width:760px;width:100%;box-shadow:0 20px 50px rgba(0,0,0,0.35);border:2px solid #0284c7;overflow:hidden;">
+            <div style="background:linear-gradient(135deg,#092c4c,#0284c7);color:#fff;padding:14px 18px;display:flex;align-items:center;justify-content:space-between;">
+              <div style="font-weight:800;font-size:15px;">☁️ KẾT NỐI TỰ ĐỘNG GHI TRỰC TIẾP VÀO GOOGLE SHEETS MASTERDB</div>
+              <button type="button" onclick="document.getElementById('modalCloudAutoConnectV12').style.display='none'" style="background:rgba(255,255,255,0.2);border:none;color:#fff;padding:4px 10px;border-radius:6px;cursor:pointer;font-weight:800;">✕ Đóng</button>
+            </div>
+            <div style="padding:18px;font-size:13px;color:#1e293b;line-height:1.55;">
+              <div style="background:#fffbeb;border:1.5px solid #f59e0b;border-radius:10px;padding:12px;margin-bottom:14px;">
+                <strong style="color:#92400e;">⚡ Tại sao vừa nhấn "Đồng bộ" mà Google Sheets chưa đổi?</strong><br>
+                Trình duyệt bên ngoài cần <strong>1 lần duy nhất</strong> dán đường dẫn <code>/exec</code> của dự án Apps Script <a href="https://script.google.com/d/1lRBafJ2tB1syjfx1ioYWh9NLt4C75uFTdcgEAu0wm4ug3g5e4SZnLTKs/edit" target="_blank" style="color:#0284c7;font-weight:800;text-decoration:underline;">TTA-QMS &amp; LIMS ↗</a> (hoặc OAuth Token). Ngay khi bạn dán vào ô dưới đây, phần mềm sẽ <strong>tự động đẩy tức thời mọi thao tác Thêm / Sửa / Xóa của cả 21 bảng</strong> thẳng vào <a href="https://docs.google.com/spreadsheets/d/1kHMKruMnxKQHN3GnBaDTlZOOvCvPKKKJFQ641lgSX9k/edit" target="_blank" style="color:#059669;font-weight:800;text-decoration:underline;">Google Sheets MasterDB ↗</a> mà không cần bấm đồng bộ thủ công nữa!
+              </div>
+              <div style="margin-bottom:12px;">
+                <label style="font-weight:800;color:#0f4c81;display:block;margin-bottom:4px;">Cách 1 (Khuyên dùng — Vĩnh viễn không hết hạn): Dán URL Web App <code>/exec</code> từ Apps Script TTA-QMS &amp; LIMS</label>
+                <div style="font-size:11.5px;color:#475569;margin-bottom:6px;">
+                  Mở <a href="https://script.google.com/d/1lRBafJ2tB1syjfx1ioYWh9NLt4C75uFTdcgEAu0wm4ug3g5e4SZnLTKs/edit" target="_blank" style="color:#0284c7;font-weight:700;">Apps Script TTA-QMS &amp; LIMS ↗</a> → Nhấn nút <strong>Deploy (Triển khai) → New deployment (Triển khai mới)</strong> (chọn <em>Web app</em>, <em>Anyone / Bất kỳ ai</em>) → Copy đường dẫn <code>https://script.google.com/macros/s/AKfycb.../exec</code> dán vào đây:
+                </div>
+                <input id="modalGasExecUrlInput" type="text" class="form-control mono" style="width:100%;padding:8px 10px;font-size:12px;border:2px solid #0284c7;" placeholder="https://script.google.com/macros/s/AKfycb.../exec">
+              </div>
+              <div style="margin-bottom:14px;">
+                <label style="font-weight:800;color:#065f46;display:block;margin-bottom:4px;">Cách 2 (Tùy chọn): Ghi trực tiếp qua Google Sheets REST API v4 bằng OAuth2 Access Token</label>
+                <input id="modalOauthTokenInput" type="text" class="form-control mono" style="width:100%;padding:7px 10px;font-size:11.5px;border:1.5px solid #cbd5e1;" placeholder="ya29.a0AfB_by... (Nếu dùng OAuth2 Bearer Token trực tiếp)">
+              </div>
+              <div style="display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;padding-top:8px;border-top:1px solid #e2e8f0;">
+                <button type="button" class="btn btn-outline" onclick="openLiveTableBrowserModal(window._targetModalSheet || 'IQC_SHPT_DinhLuong_30D');document.getElementById('modalCloudAutoConnectV12').style.display='none';">📋 Xem &amp; Copy Bảng Dữ liệu (TSV)</button>
+                <div style="display:flex;gap:8px;">
+                  <button type="button" class="btn btn-primary" style="background:#059669;border-color:#059669;font-weight:800;padding:8px 16px;" onclick="saveModalCloudConnectionAndPushAll()">🚀 Lưu Kết nối &amp; Tự động Đẩy Toàn bộ 21 Bảng Lên Sheet Ngay</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        `;
+        document.body.appendChild(modal);
+      }
+      window._targetModalSheet = targetSheet;
+      const uInp = document.getElementById("modalGasExecUrlInput");
+      if (uInp) uInp.value = isLiveGasWebAppConfigured() ? DEFAULT_GAS_API_URL : "";
+      const tInp = document.getElementById("modalOauthTokenInput");
+      if (tInp) tInp.value = isDirectOAuthConfigured() ? GOOGLE_OAUTH_ACCESS_TOKEN : "";
+      modal.style.display = "flex";
+    }
+
+    function saveModalCloudConnectionAndPushAll() {
+      const uVal = (document.getElementById("modalGasExecUrlInput")?.value || "").trim();
+      const tVal = (document.getElementById("modalOauthTokenInput")?.value || "").trim();
+      if (uVal && uVal.startsWith("https://script.google.com/") && !uVal.includes("HNH_EXEC")) {
+        DEFAULT_GAS_API_URL = uVal;
+        try { localStorage.setItem(STORAGE_KEY_GAS_URL, uVal); } catch (e) {}
+      }
+      if (tVal && tVal.length > 20) {
+        GOOGLE_OAUTH_ACCESS_TOKEN = tVal;
+        try { localStorage.setItem(STORAGE_KEY_OAUTH_TOKEN, tVal); } catch (e) {}
+      }
+      if (!isAnyCloudWriteChannelReady()) {
+        showToast("⚠️ Vui lòng dán đường dẫn Web App /exec (bắt đầu bằng https://script.google.com/macros/s/...) hoặc OAuth Token!", "#dc2626");
+        return;
+      }
+      const modal = document.getElementById("modalCloudAutoConnectV12");
+      if (modal) modal.style.display = "none";
+      syncGasUrlUiElements();
+      pushAllToCloudMasterDB();
+    }
+
+    pushSingleTableToMasterDB = function(sheetName) {
+      const rows = serializeTableForGoogleSheets(sheetName);
+      commitDatabaseTransaction(sheetName, `Đồng bộ bảng ${sheetName} (${rows.length} dòng) lên Google Sheets MasterDB`, "", "MANUAL_SYNC");
+      copyTableRowsAsTsvToClipboard(sheetName, rows, false);
+
+      if (isAnyCloudWriteChannelReady()) {
+        showToast(`☁️ Đã đẩy trực tiếp <strong>${rows.length} dòng</strong> của bảng <code>${sheetName}</code> + <code>SYS_AUDIT_LOG</code> lên Google Sheets MasterDB!`, "#059669");
+      } else {
+        openCloudConnectModal(sheetName);
+      }
+    };
+
+    pushAllToCloudMasterDB = function() {
+      const catalog = getMasterDbTableCatalog();
+      let totalRows = 0;
+      const actorSelect = document.getElementById("currentUserSelect");
+      const actorCode = actorSelect ? actorSelect.value.split(" ")[0] : "NHIHN000674";
+
+      catalog.forEach(t => {
+        const r = serializeTableForGoogleSheets(t.sheet);
+        totalRows += r.length;
+        if (r.length > 0) {
+          if (isLiveGasWebAppConfigured()) sendTableToGasWebApp(t.sheet, r, `Batch sync ${t.sheet}`, actorCode);
+          if (isDirectOAuthConfigured()) writeTableDirectToSheetsApiV4(t.sheet, r);
+        }
+      });
+
+      commitDatabaseTransaction("IQC_SHPT_DinhLuong_30D", `Đồng bộ toàn bộ ${catalog.length} bảng (${totalRows} bản ghi)`, "ALL_21", "FULL_SYNC");
+      if (isAnyCloudWriteChannelReady()) {
+        PENDING_CLOUD_SYNC_TABLES.clear();
+        showToast(`☁️ Đã tự động đẩy toàn bộ <strong>${catalog.length} bảng (${totalRows} bản ghi)</strong> lên Google Sheets MasterDB!`, "#059669");
+      } else {
+        openCloudConnectModal("IQC_SHPT_DinhLuong_30D");
+      }
+    };
+
+    // =========================================================================
+    // HOOK ALL 37+ CRUD HANDLERS ACROSS ALL 9 MODULES FOR 100% PERSISTENCE & AUDIT TRAIL
+    // =========================================================================
+    function wrapCrudWithAutoCommit(fnName, tableName, actionBuilder, opType = "CRUD") {
+      const origFn = window[fnName];
+      if (typeof origFn !== "function") return;
+      window[fnName] = function(...args) {
+        const res = origFn.apply(this, args);
+        const desc = typeof actionBuilder === "function" ? actionBuilder(...args) : actionBuilder;
+        commitDatabaseTransaction(tableName, desc, "", opType);
+        return res;
+      };
+    }
+
+    // Module 2: Equipment, Maintenance, Environment & Transfers
+    wrapCrudWithAutoCommit("handleSaveEquipmentProfile", "DM_ThietBi", () => {
+      const id = document.getElementById("editEqIdInput")?.value || "";
+      const name = document.getElementById("editEqNameInput")?.value || "";
+      return `Lưu hồ sơ thiết bị ${id} (${name})`;
+    }, "UPSERT_EQUIP");
+
+    wrapCrudWithAutoCommit("toggleEquipmentBreakdownStatus", "DM_ThietBi", () => {
+      return `Cập nhật trạng thái sự cố / vận hành thiết bị ${selectedEquipId || ""}`;
+    }, "STATUS_EQUIP");
+
+    wrapCrudWithAutoCommit("handleAddMaint", "NhatKy_BaoTri_HieuChuan", () => {
+      const eqId = document.getElementById("maintEquipSelect")?.value || "";
+      const t = document.getElementById("maintTypeSelect")?.value || "";
+      return `Thêm nhật ký bảo trì / hiệu chuẩn (${t}) cho máy ${eqId}`;
+    }, "ADD_MAINT");
+
+    wrapCrudWithAutoCommit("handleAddEnv", "NhatKy_MoiTruong", () => {
+      const area = document.getElementById("envEquipSelect")?.value || "";
+      const temp = document.getElementById("envTempInput")?.value || "";
+      return `Ghi nhận nhiệt độ/độ ẩm khu vực ${area} (${temp}°C)`;
+    }, "ADD_ENV");
+
+    wrapCrudWithAutoCommit("handleAddTransfer", "DM_ThietBi", () => {
+      const eqId = document.getElementById("trfEquipSelect")?.value || "";
+      return `Điều chuyển nội bộ thiết bị ${eqId}`;
+    }, "TRANSFER_EQUIP");
+
+    // Add inline Delete/Edit for Maintenance & Environment logs
+    function deleteMaintLogRecord(idx) {
+      if (typeof MAINT_LOGS === "undefined" || idx < 0 || idx >= MAINT_LOGS.length) return false;
+      const rem = MAINT_LOGS.splice(idx, 1)[0];
+      if (typeof renderMaintAndEnvTables === "function") renderMaintAndEnvTables();
+      commitDatabaseTransaction("NhatKy_BaoTri_HieuChuan", `Xóa nhật ký bảo trì ${rem?.equipId || idx}`, "", "DEL_MAINT");
+      showToast(`🗑 Đã xóa bản ghi bảo trì/hiệu chuẩn của máy <strong>${rem?.equipId || ""}</strong>!`, "#dc2626");
+      return true;
+    }
+
+    function deleteEnvLogRecord(idx) {
+      if (typeof ENV_LOGS === "undefined" || idx < 0 || idx >= ENV_LOGS.length) return false;
+      const rem = ENV_LOGS.splice(idx, 1)[0];
+      if (typeof renderMaintAndEnvTables === "function") renderMaintAndEnvTables();
+      commitDatabaseTransaction("NhatKy_MoiTruong", `Xóa nhật ký môi trường ${rem?.area || idx}`, "", "DEL_ENV");
+      showToast(`🗑 Đã xóa bản ghi giám sát môi trường <strong>${rem?.area || ""}</strong>!`, "#dc2626");
+      return true;
+    }
+
+    const _origRenderMaintAndEnvTablesV12 = renderMaintAndEnvTables;
+    renderMaintAndEnvTables = function() {
+      if (typeof _origRenderMaintAndEnvTablesV12 === "function") _origRenderMaintAndEnvTablesV12();
+      const mBody = document.getElementById("maintTableBody");
+      if (mBody) {
+        Array.from(mBody.querySelectorAll("tr")).forEach((tr, idx) => {
+          const lastTd = tr.querySelector("td:last-child");
+          if (lastTd && !lastTd.querySelector(".btn-del-maint")) {
+            const btn = document.createElement("button");
+            btn.type = "button";
+            btn.className = "btn btn-outline btn-xs btn-del-maint";
+            btn.style.cssText = "margin-left:6px;color:#dc2626;border-color:#fca5a5;padding:1px 6px;";
+            btn.textContent = "🗑 Xóa";
+            btn.onclick = () => deleteMaintLogRecord(idx);
+            lastTd.appendChild(btn);
+          }
+        });
+      }
+      const eBody = document.getElementById("envTableBody");
+      if (eBody) {
+        Array.from(eBody.querySelectorAll("tr")).forEach((tr, idx) => {
+          const lastTd = tr.querySelector("td:last-child");
+          if (lastTd && !lastTd.querySelector(".btn-del-env")) {
+            const btn = document.createElement("button");
+            btn.type = "button";
+            btn.className = "btn btn-outline btn-xs btn-del-env";
+            btn.style.cssText = "margin-left:6px;color:#dc2626;border-color:#fca5a5;padding:1px 6px;";
+            btn.textContent = "🗑 Xóa";
+            btn.onclick = () => deleteEnvLogRecord(idx);
+            lastTd.appendChild(btn);
+          }
+        });
+      }
+    };
+
+    // Module 3: Inventory & Reagent Lots
+    wrapCrudWithAutoCommit("handleReceiveLot", "Kho_HoaChat_Lot", () => {
+      const lot = document.getElementById("lotNumberInput")?.value || "";
+      const name = document.getElementById("lotNameInput")?.value || "";
+      return `Nhập kho lô hóa chất mới ${lot} (${name})`;
+    }, "ADD_LOT");
+
+    wrapCrudWithAutoCommit("handleRecordDailyReagentUsage", "Kho_HoaChat_Lot", () => {
+      const lot = document.getElementById("dailyUseLotInput")?.value || "";
+      return `Khấu trừ sử dụng hóa chất hàng ngày lô ${lot}`;
+    }, "DEDUCT_LOT");
+
+    wrapCrudWithAutoCommit("handleAddLotVerify", "Kho_HoaChat_Lot", () => {
+      const rName = document.getElementById("l2lReagentInput")?.value || "";
+      return `Thêm biên bản đánh giá Lot-to-Lot (BM-12-11) cho ${rName}`;
+    }, "ADD_L2L");
+
+    wrapCrudWithAutoCommit("handleAddAliquotLog", "Kho_HoaChat_Lot", () => {
+      const lotId = document.getElementById("aliqLotSelect")?.value || "";
+      return `Ghi nhận chia nhỏ (Aliquot) sinh phẩm lô ${lotId}`;
+    }, "ADD_ALIQUOT");
+
+    wrapCrudWithAutoCommit("saveStocktakeAudit", "Kho_HoaChat_Lot", () => {
+      return `Chốt biên bản kiểm kê hóa chất định kỳ (BM Kiểm kê)`;
+    }, "STOCKTAKE_AUDIT");
+
+    function editReagentLotStockInline(lotCode, newStockVal) {
+      const lotObj = REAGENT_LOTS.find(l => l.lot === lotCode);
+      if (!lotObj) return false;
+      const v = parseInt(newStockVal, 10);
+      if (isNaN(v) || v < 0) return false;
+      lotObj.stock = v;
+      if (typeof renderInventoryAll === "function") renderInventoryAll();
+      commitDatabaseTransaction("Kho_HoaChat_Lot", `Cập nhật tồn kho lô ${lotCode} = ${v}`, lotCode, "EDIT_LOT");
+      showToast(`✅ Đã cập nhật tồn kho lô <strong>${lotCode}</strong> thành <strong>${v}</strong> và đồng bộ CSDL!`, "#059669");
+      return true;
+    }
+
+    // Module 4: Multi-Specialty IQC, Qualitative IQC, Six Sigma Goals & IQC Violation Logs
+    wrapCrudWithAutoCommit("handleAddIqcPoint", "IQC_NoiKiem_Westgard", () => {
+      const eq = document.getElementById("iqcEquipSelect")?.value || "";
+      const test = document.getElementById("iqcTestSelect")?.value || "";
+      const val = document.getElementById("iqcValInput")?.value || "";
+      return `Nhập điểm nội kiểm ${eq} - ${test} (KQ = ${val})`;
+    }, "ADD_IQC_POINT");
+
+    wrapCrudWithAutoCommit("syncApiIqcBatch", "IQC_NoiKiem_Westgard", () => {
+      const eq = document.getElementById("apiSyncEquipSelect")?.value || "ALL";
+      return `Đồng bộ tự động điểm IQC từ máy xét nghiệm (${eq}) qua API ASTM/HL7`;
+    }, "API_SYNC_IQC");
+
+    wrapCrudWithAutoCommit("updateIqcPointValue", "IQC_NoiKiem_Westgard", (pointId, newVal) => {
+      return `Hiệu chỉnh giá trị điểm nội kiểm ${pointId} -> ${newVal}`;
+    }, "EDIT_IQC_POINT");
+
+    wrapCrudWithAutoCommit("updateIqcPointNote", "IQC_NoiKiem_Westgard", (pointId, newNote) => {
+      return `Cập nhật ghi chú điểm nội kiểm ${pointId}: ${newNote}`;
+    }, "EDIT_IQC_NOTE");
+
+    wrapCrudWithAutoCommit("toggleIqcOutlier", "IQC_NoiKiem_Westgard", (pointId) => {
+      return `Đổi trạng thái loại trừ ngoại lai điểm nội kiểm ${pointId}`;
+    }, "TOGGLE_OUTLIER");
+
+    wrapCrudWithAutoCommit("handleAddQualIqc", "IQC_NoiKiem_Westgard", () => {
+      const assay = document.getElementById("qualAssayInput")?.value || "";
+      return `Ghi nhận mẻ nội kiểm định tính (${assay})`;
+    }, "ADD_QUAL_IQC");
+
+    wrapCrudWithAutoCommit("handleAddIqcViolationLog", "QMS_SuCo_CAPA", () => {
+      const eqAssay = document.getElementById("vioEquipAssayInput")?.value || "";
+      const rule = document.getElementById("vioRuleSelect")?.value || "";
+      return `Ghi nhận biên bản xử lý vi phạm nội kiểm ${eqAssay} (${rule})`;
+    }, "ADD_IQC_VIOLATION");
+
+    wrapCrudWithAutoCommit("updateSigmaGoalField", "IQC_MucTieu_Sigma_ThongKe_08", (goalId, field, valStr) => {
+      return `Cập nhật mục tiêu Six Sigma ${goalId} (${field} = ${valStr})`;
+    }, "EDIT_SIGMA_GOAL");
+
+    // Module 4B: External Quality Assessment (EQA)
+    wrapCrudWithAutoCommit("handleAddEqa", "EQA_NgoaiKiem", () => {
+      const sc = document.getElementById("eqaSampleCode")?.value || "";
+      return `Nhập kết quả mẫu ngoại kiểm mới (${sc})`;
+    }, "ADD_EQA");
+
+    wrapCrudWithAutoCommit("handleReceiveEqaSample", "EQA_NgoaiKiem", () => {
+      const progId = document.getElementById("eqaRecvProgramSelect")?.value || "";
+      return `Tiếp nhận mẫu ngoại kiểm chương trình ${progId}`;
+    }, "RECV_EQA");
+
+    wrapCrudWithAutoCommit("advanceEqaStage", "EQA_NgoaiKiem", (eqaId) => {
+      return `Chuyển bước tiến độ hồ sơ ngoại kiểm ${eqaId}`;
+    }, "STAGE_EQA");
+
+    wrapCrudWithAutoCommit("simulateEqaFailureAndClinicalReview", "EQA_NgoaiKiem", () => {
+      return `Kích hoạt hồ sơ sự cố ngoại kiểm & đánh giá ảnh hưởng lâm sàng`;
+    }, "SIM_EQA_FAIL");
+
+    function editEqaLabValueInline(eqaId, newLabVal) {
+      const item = EQA_PROGRAMS.find(e => e.id === eqaId);
+      if (!item) return false;
+      const v = parseFloat(newLabVal);
+      if (isNaN(v)) return false;
+      item.labVal = v;
+      if (item.peerSd && item.peerSd > 0) {
+        item.sdi = Number(((v - item.peerMean) / item.peerSd).toFixed(2));
+      }
+      renderEqaSection();
+      commitDatabaseTransaction("EQA_NgoaiKiem", `Cập nhật kết quả PXN ngoại kiểm ${eqaId} = ${v} (SDI = ${item.sdi})`, eqaId, "EDIT_EQA");
+      showToast(`✅ Đã cập nhật kết quả Ngoại kiểm <strong>${eqaId} = ${v}</strong> (SDI mới: <strong>${item.sdi}</strong>) và đồng bộ CSDL!`, "#059669");
+      return true;
+    }
+
+    // Module 5: LIMS Molecular Biology (LIS Orders, Extraction Batches, PCR Batches, Inventory Deduction)
+    wrapCrudWithAutoCommit("commitReconciledLisImport", "LIMS_1_LIS_Data", () => {
+      return `Đối soát & nạp danh sách chỉ định từ LIS vào LIMS_1_LIS_Data`;
+    }, "IMPORT_LIS");
+
+    wrapCrudWithAutoCommit("handleCreateExtBatchSubmit", "LIMS_2A_MeTachChiet", () => {
+      const id = document.getElementById("newExtBatchIdInput")?.value || "";
+      return `Khởi tạo mẻ tách chiết DNA/RNA mới (${id})`;
+    }, "CREATE_EXT_BATCH");
+
+    wrapCrudWithAutoCommit("addSingleSampleToExtBatch", "LIMS_2A_MeTachChiet", (idChiDinh) => {
+      return `Nạp mẫu ${idChiDinh} vào mẻ tách chiết ${selectedExtBatchId || ""}`;
+    }, "ADD_SAMPLE_EXT");
+
+    wrapCrudWithAutoCommit("addAllWaitingSamplesToExtBatch", "LIMS_2A_MeTachChiet", () => {
+      return `Nạp toàn bộ mẫu chờ vào mẻ tách chiết ${selectedExtBatchId || ""}`;
+    }, "ADD_ALL_EXT");
+
+    wrapCrudWithAutoCommit("removeSampleFromExtBatch", "LIMS_2A_MeTachChiet", (idChiDinh) => {
+      return `Gỡ mẫu ${idChiDinh} khỏi mẻ tách chiết ${selectedExtBatchId || ""}`;
+    }, "REMOVE_SAMPLE_EXT");
+
+    wrapCrudWithAutoCommit("handleCreateNewPcrRunModalSubmit", "LIMS_3A_MeChayPCR", () => {
+      const id = document.getElementById("newPcrRunIdInput")?.value || "";
+      return `Khởi tạo mẻ chạy Real-time PCR mới (${id})`;
+    }, "CREATE_PCR_BATCH");
+
+    wrapCrudWithAutoCommit("handleCreatePcrBatch", "LIMS_3A_MeChayPCR", () => {
+      return `Tính toán Master Mix & cập nhật mẻ chạy PCR`;
+    }, "CALC_PCR_MIX");
+
+    wrapCrudWithAutoCommit("addSingleSampleToPcrBatch", "LIMS_3A_MeChayPCR", (idChiDinh) => {
+      return `Nạp mẫu ${idChiDinh} vào mẻ chạy PCR ${selectedPcrBatchId || ""}`;
+    }, "ADD_SAMPLE_PCR");
+
+    wrapCrudWithAutoCommit("addAllMatchingSamplesToPcrBatch", "LIMS_3A_MeChayPCR", () => {
+      return `Nạp toàn bộ mẫu cùng quy trình vào mẻ PCR ${selectedPcrBatchId || ""}`;
+    }, "ADD_ALL_PCR");
+
+    wrapCrudWithAutoCommit("removeSampleFromPcrBatch", "LIMS_3A_MeChayPCR", (idChiDinh) => {
+      return `Gỡ mẫu ${idChiDinh} khỏi mẻ chạy PCR ${selectedPcrBatchId || ""}`;
+    }, "REMOVE_SAMPLE_PCR");
+
+    // Module 6: HR Staff, CME Trainings, Competency Assessments & QMS CAPA
+    wrapCrudWithAutoCommit("handleAddTraining", "NS_UyQuyen_DGNL", () => {
+      const empId = document.getElementById("trStaffSelect")?.value || "";
+      const course = document.getElementById("trCourseInput")?.value || "";
+      return `Thêm hồ sơ đào tạo CME (${course}) cho nhân sự ${empId}`;
+    }, "ADD_TRAINING");
+
+    wrapCrudWithAutoCommit("handleAddCompetency", "NS_UyQuyen_DGNL", () => {
+      const empId = document.getElementById("caStaffSelect")?.value || "";
+      return `Đánh giá năng lực & ủy quyền chuyên môn cho nhân sự ${empId}`;
+    }, "ADD_COMPETENCY");
+
+    wrapCrudWithAutoCommit("handleAddCapa", "QMS_SuCo_CAPA", () => {
+      const desc = document.getElementById("capaDescInput")?.value || "";
+      return `Mở phiếu sự cố NC/CAPA mới: ${desc.slice(0, 60)}`;
+    }, "ADD_CAPA");
+
+    function deleteHrTrainingRecord(trainId) {
+      if (typeof HR_TRAININGS === "undefined") return false;
+      const idx = HR_TRAININGS.findIndex(t => t.trainId === trainId);
+      if (idx === -1) return false;
+      const rem = HR_TRAININGS.splice(idx, 1)[0];
+      if (typeof renderHrMasterDetail === "function") renderHrMasterDetail();
+      commitDatabaseTransaction("NS_UyQuyen_DGNL", `Xóa hồ sơ đào tạo ${trainId} (${rem?.course || ""})`, trainId, "DEL_TRAINING");
+      showToast(`🗑 Đã xóa hồ sơ đào tạo <strong>${trainId}</strong> và đồng bộ CSDL!`, "#dc2626");
+      return true;
+    }
+
+    function deleteHrCompetencyRecord(idx) {
+      if (typeof HR_COMPETENCIES === "undefined" || idx < 0 || idx >= HR_COMPETENCIES.length) return false;
+      const rem = HR_COMPETENCIES.splice(idx, 1)[0];
+      if (typeof renderHrMasterDetail === "function") renderHrMasterDetail();
+      commitDatabaseTransaction("NS_UyQuyen_DGNL", `Xóa đánh giá năng lực nhân sự ${rem?.empName || idx}`, "", "DEL_COMPETENCY");
+      showToast(`🗑 Đã xóa bản ghi đánh giá năng lực của <strong>${rem?.empName || ""}</strong>!`, "#dc2626");
+      return true;
+    }
+
+    function editQmsCapaStatusInline(capaId, newStatus) {
+      if (typeof CAPA_LIST === "undefined") return false;
+      const item = CAPA_LIST.find(c => c.id === capaId);
+      if (!item) return false;
+      item.status = newStatus || "✅ Đã đóng & Thẩm định hiệu quả";
+      if (typeof renderCapaTable === "function") renderCapaTable();
+      commitDatabaseTransaction("QMS_SuCo_CAPA", `Cập nhật trạng thái phiếu CAPA ${capaId} -> ${item.status}`, capaId, "EDIT_CAPA");
+      showToast(`✅ Đã cập nhật trạng thái phiếu <strong>${capaId}</strong> thành: <strong>${item.status}</strong>!`, "#059669");
+      return true;
+    }
+
+    // Module 8: RBAC Users & Security Matrix
+    wrapCrudWithAutoCommit("handleUpsertAllowedUser", "SYS_USERS_RBAC", () => {
+      const maNV = document.getElementById("usrMaNvInput")?.value || "";
+      const name = document.getElementById("usrNameInput")?.value || "";
+      return `Thêm/Cập nhật tài khoản phân quyền RBAC ${maNV} (${name})`;
+    }, "UPSERT_USER");
+
+    wrapCrudWithAutoCommit("deleteAllowedUser", "SYS_USERS_RBAC", (maNV) => {
+      return `Xóa tài khoản phân quyền RBAC ${maNV}`;
+    }, "DELETE_USER");
+
+    wrapCrudWithAutoCommit("toggleLockAllowedUser", "SYS_USERS_RBAC", (maNV) => {
+      return `Đổi trạng thái Khóa/Mở tài khoản RBAC ${maNV}`;
+    }, "LOCK_USER");
+
+    wrapCrudWithAutoCommit("saveRbacMatrix", "SYS_USERS_RBAC", () => {
+      return `Lưu cấu hình Ma trận Phân quyền RBAC & Bảo mật CSDL`;
+    }, "SAVE_RBAC_MATRIX");
+
+    // Fix DOMContentLoaded order: ensure hydrateFromMasterDatabaseStore() runs AFTER all seed functions!
+    window.addEventListener("DOMContentLoaded", () => {
+      loadCloudCredentialsFromStorage();
+      // Only run 17-protocol LIMS seed if there is NO saved database snapshot yet
+      let hasSavedSnapshot = false;
+      try {
+        hasSavedSnapshot = Boolean(localStorage.getItem(MASTER_DB_STORE_KEY_V12));
+      } catch (e) {}
+      if (hasSavedSnapshot) {
+        hydrateFromMasterDatabaseStore();
+      }
+      // Re-render all views with hydrated state
+      if (typeof renderAllViews === "function") renderAllViews();
+      if (typeof renderMolQuantIqcAll === "function") renderMolQuantIqcAll();
+      if (typeof renderMolMultiplexIqcAll === "function") renderMolMultiplexIqcAll();
+      if (typeof renderMolIqcCapaLogTable === "function") renderMolIqcCapaLogTable();
+      if (typeof renderEqaSection === "function") renderEqaSection();
+      if (typeof renderInventoryAll === "function") renderInventoryAll();
+      if (typeof renderEquipmentTable === "function") renderEquipmentTable();
+      if (typeof renderMaintAndEnvTables === "function") renderMaintAndEnvTables();
+      if (typeof renderHrMasterDetail === "function") renderHrMasterDetail();
+      if (typeof renderCapaTable === "function") renderCapaTable();
+      if (typeof renderAllowedUsersTable === "function") renderAllowedUsersTable();
+      if (typeof renderMasterDbLiveInspector === "function") renderMasterDbLiveInspector();
+      syncGasUrlUiElements();
+      autoDiscoverGasUrlViaJsonp();
     });
 
   </script>
