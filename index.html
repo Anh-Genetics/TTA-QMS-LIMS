@@ -2442,6 +2442,150 @@
       }
     }
 
+  
+    /* === CLEAN DE-CLUTTERED REAGENT UX & FLEXIBLE PROCUREMENT v2026.18 === */
+    #tab-inventory .section-banner {
+      padding: 10px 14px !important;
+      margin-bottom: 8px !important;
+      background: linear-gradient(135deg, #0f3d68 0%, #0f4c81 60%, #0d9488 100%) !important;
+    }
+    #tab-inventory .card {
+      box-shadow: 0 2px 8px rgba(15, 23, 42, 0.04) !important;
+      border: 1px solid #e2e8f0 !important;
+      padding: 12px 14px !important;
+      margin-bottom: 12px !important;
+    }
+    #tab-inventory table th {
+      background: #1e293b !important;
+      color: #f8fafc !important;
+      font-weight: 700 !important;
+      padding: 8px 9px !important;
+      font-size: 11px !important;
+      line-height: 1.3 !important;
+      border-bottom: 2px solid #0f172a !important;
+    }
+    #tab-inventory table td {
+      padding: 8px 9px !important;
+      font-size: 11.4px !important;
+      border-bottom: 1px solid #f1f5f9 !important;
+      vertical-align: middle !important;
+    }
+    #tab-inventory table tbody tr:hover {
+      background: #f8fafc !important;
+    }
+    .wf-compact-ribbon {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 4px;
+      background: #f8fafc;
+      border: 1px solid #cbd5e1;
+      border-radius: 9px;
+      padding: 6px 10px;
+      margin-bottom: 10px;
+      flex-wrap: wrap;
+    }
+    .wf-pill-step {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      padding: 4px 8px;
+      border-radius: 6px;
+      font-size: 10.6px;
+      font-weight: 600;
+      color: #334155;
+      background: #ffffff;
+      border: 1px solid #e2e8f0;
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+    .wf-pill-step:hover {
+      border-color: #0284c7;
+      color: #0f4c81;
+      background: #f0f9ff;
+    }
+    .wf-pill-step.step-current {
+      background: #0284c7;
+      color: #ffffff;
+      border-color: #0284c7;
+      font-weight: 700;
+      box-shadow: 0 2px 6px rgba(2, 132, 199, 0.25);
+    }
+    .plan-sub-pill-bar {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+      flex-wrap: wrap;
+      background: #f1f5f9;
+      padding: 6px 8px;
+      border-radius: 10px;
+      margin-bottom: 12px;
+    }
+    .plan-sub-pill {
+      padding: 6px 14px;
+      border-radius: 7px;
+      border: 1px solid transparent;
+      background: transparent;
+      font-size: 11.8px;
+      font-weight: 700;
+      color: #475569;
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+    .plan-sub-pill.active {
+      background: #ffffff;
+      color: #0f4c81;
+      border-color: #bae6fd;
+      box-shadow: 0 2px 6px rgba(15, 23, 42, 0.06);
+    }
+    .proc-qty-stepper {
+      display: inline-flex;
+      align-items: center;
+      border: 1.5px solid #0284c7;
+      border-radius: 7px;
+      overflow: hidden;
+      background: #fff;
+    }
+    .proc-qty-btn {
+      width: 24px;
+      height: 26px;
+      border: none;
+      background: #f0f9ff;
+      color: #0369a1;
+      font-weight: 800;
+      font-size: 13px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .proc-qty-btn:hover {
+      background: #bae6fd;
+    }
+    .proc-qty-input {
+      width: 64px;
+      height: 26px;
+      border: none;
+      text-align: center;
+      font-weight: 700;
+      font-size: 12px;
+      color: #0f172a;
+      outline: none;
+    }
+    .voucher-prog-bar {
+      width: 100%;
+      height: 7px;
+      background: #e2e8f0;
+      border-radius: 999px;
+      overflow: hidden;
+      margin-top: 4px;
+    }
+    .voucher-prog-fill {
+      height: 100%;
+      border-radius: 999px;
+      transition: width 0.25s ease;
+    }
+
   </style>
   <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js" crossorigin="anonymous"></script>
   <script src="https://cdn.jsdelivr.net/npm/qrcode-generator@1.4.4/qrcode.min.js" crossorigin="anonymous"></script>
@@ -3539,126 +3683,34 @@
       <!-- ========================================================= -->
       <!-- TAB 3: INVENTORY (5 SUB-MODULES MATCHING image_1ac460.png)-->
       <!-- ========================================================= -->
-            <section id="tab-inventory" class="tab-pane">
-        <div class="section-banner" style="padding:12px 16px;margin-bottom:10px;">
+                  <section id="tab-inventory" class="tab-pane">
+        <!-- COMPACT, CALM TOP BANNER -->
+        <div class="section-banner">
           <div>
-            <h2 style="font-size:15.5px;margin-bottom:3px;">🧪 HỆ THỐNG QUẢN LÝ KHO HÓA CHẤT, DANH MỤC ĐỊNH MỨC &amp; TIÊU HAO THỰC TẾ THEO XÉT NGHIỆM (QTQL.VT03.TTDT-12 &amp; APPSHEET 4.1–5F)</h2>
-            <p style="font-size:11.5px;margin:0;">Chuẩn hóa quy trình 8 bước khép kín • Bảng Danh mục &amp; Định mức 5 Bộ phận (<code>4.1</code> &amp; <code>5E</code>) • Tồn kho Chẵn (<code>4.2</code>) &amp; Hộp Mở (<code>4C</code>) • Xuất khấu trừ tiêu hao theo xét nghiệm (<code>4.3/4.4/5B</code>) &amp; Truy vết CSDL (<code>SYS_AUDIT_LOG</code>)</p>
+            <h2 style="font-size:15px;margin-bottom:2px;">🧪 QUẢN LÝ KHO HÓA CHẤT, ĐỊNH MỨC XÉT NGHIỆM &amp; DỰ TRÙ LINH HOẠT (ISO 15189:2022 • QTQL.VT03.TTDT-12)</h2>
+            <p style="font-size:11.2px;margin:0;opacity:0.92;">Liên kết đồng bộ 5 Bộ phận: Danh mục &amp; Định mức (<code>4.1/5E</code>) • Tồn kho Lô &amp; Hộp Mở (<code>4.2/4C</code>) • Khấu trừ theo XN (<code>5B</code>) • Kiểm kê (<code>4.5A</code>) • Dự trù linh hoạt &amp; Theo dõi Phiếu dự trù (<code>BM-12-01/02/05</code>)</p>
           </div>
           <div style="display:flex;gap:6px;flex-wrap:wrap;align-items:center;">
-            <button type="button" class="btn btn-primary btn-xs" onclick="openEditReagentCatalogModal(null)">+ Thêm Danh mục &amp; Định mức (4.1)</button>
-            <button type="button" id="btnOpenReceiveLotModal" class="btn btn-success btn-xs" onclick="openModal('modalReceiveLot')">+ Nhập Lô Mới (4.2 • CQA)</button>
-            <button type="button" id="btnOpenIssueKitModal" class="btn btn-warning btn-xs" onclick="openModal('modalIssueKit')">📤 Mở Hộp Sang 4C (FEFO)</button>
-            <button type="button" class="btn btn-danger btn-xs" onclick="switchInvSubTab('consume')">⚡ Xuất &amp; Trừ Tiêu hao Theo XN</button>
-            <button type="button" class="btn btn-outline btn-xs" style="background:#fff;color:#0f4c81;font-weight:700;" onclick="scrollToReagentAuditTrail()">🗄️ Truy vết CSDL (<span id="invHeaderAuditCount">0</span>)</button>
-            <button type="button" class="btn btn-outline btn-xs" style="background:#ecfdf5;color:#065f46;border-color:#6ee7b7;font-weight:700;" onclick="pushSingleTableToMasterDB('Kho_HoaChat_Lot');pushSingleTableToMasterDB('LIMS_5B_NhatKy_KhauTru_Kho');">☁️ Đồng bộ Lên Sheet</button>
+            <button type="button" class="btn btn-outline btn-xs" style="background:rgba(255,255,255,0.14);color:#fff;border-color:rgba(255,255,255,0.35);" onclick="toggleInvWorkflowStrip()">🔄 Sơ đồ 8 Bước SOP</button>
+            <button type="button" id="invSubBtn-all" class="btn btn-outline btn-xs" style="background:rgba(255,255,255,0.14);color:#fff;border-color:rgba(255,255,255,0.35);" onclick="switchInvSubTab('all')">🌐 Xem Tất cả</button>
+            <button type="button" class="btn btn-outline btn-xs" style="background:#fff;color:#0f4c81;font-weight:700;" onclick="openAndScrollToReagentAuditTrail()">🗄️ Nhật ký CSDL (<span id="invHeaderAuditCount">25</span>)</button>
+            <button type="button" class="btn btn-success btn-xs" style="font-weight:700;" onclick="pushSingleTableToMasterDB('Kho_HoaChat_Lot');pushSingleTableToMasterDB('LIMS_5B_NhatKy_KhauTru_Kho');">☁️ Đồng bộ Lên Sheet</button>
           </div>
         </div>
 
-        <!-- COMMERCIAL REAGENT KPI & COMPLIANCE STRIP (6 COMPACT INTERACTIVE CARDS) -->
-        <div class="reagent-kpi-strip" style="margin-bottom:10px;gap:8px;">
-          <div id="invKpiCard-CATALOG" class="eq-stat-card" style="padding:8px 11px;cursor:pointer;" onclick="switchInvSubTab('catalog')">
-            <div class="eq-stat-top"><span>1. DANH MỤC &amp; ĐỊNH MỨC (4.1/5E)</span><span>📚</span></div>
-            <div id="invKpiCatalogCount" class="eq-stat-val" style="color:#0f4c81;font-size:18px;">29 Danh mục</div>
-            <div class="eq-stat-sub">5 Bộ phận • Liên kết chuẩn QTXN</div>
-          </div>
-          <div id="invKpiCard-ALL" class="eq-stat-card active-filter" style="padding:8px 11px;cursor:pointer;" onclick="switchInvSubTab('stock');setInvQuickFilter('ALL')">
-            <div class="eq-stat-top"><span>2. TỔNG LÔ TỒN KHO CHẴN (4.2)</span><span>🧪</span></div>
-            <div id="invKpiTotalLots" class="eq-stat-val" style="font-size:18px;">29 Lô</div>
-            <div class="eq-stat-sub">Nhóm A (HC) • B (VTTH) • C</div>
-          </div>
-          <div id="invKpiCard-OPEN_KIT" class="eq-stat-card" style="padding:8px 11px;cursor:pointer;" onclick="switchInvSubTab('stock');setInvQuickFilter('OPEN_KIT')">
-            <div class="eq-stat-top"><span>3. HỘP KIT ĐANG MỞ (4C)</span><span>🔓</span></div>
-            <div id="invKpiOpenKits" class="eq-stat-val" style="color:#0284c7;font-size:18px;">29 Hộp mở</div>
-            <div class="eq-stat-sub">Giám sát On-board &amp; Rã đông ≤ 5 lần</div>
-          </div>
-          <div class="eq-stat-card" style="padding:8px 11px;cursor:pointer;" onclick="switchInvSubTab('consume')">
-            <div class="eq-stat-top"><span>4. SỔ KHẤU TRỪ THEO XN (5B)</span><span>⚡</span></div>
-            <div id="invKpiDeductionCount" class="eq-stat-val" style="color:#059669;font-size:18px;">40 Giao dịch</div>
-            <div class="eq-stat-sub">Tự động từ LIMS &amp; Xuất thực tế</div>
-          </div>
-          <div id="invKpiCard-EXP_WARN" class="eq-stat-card" style="padding:8px 11px;cursor:pointer;" onclick="switchInvSubTab('exp')">
-            <div class="eq-stat-top"><span>5. CẢNH BÁO FEFO / KIỂM KÊ</span><span>⏳</span></div>
-            <div id="invKpiExpWarn" class="eq-stat-val" style="color:#dc2626;font-size:18px;">2 Lô ≤ 30d</div>
-            <div class="eq-stat-sub">Ưu tiên xuất số 1 (FEFO) &amp; Kiểm kê</div>
-          </div>
-          <div id="invKpiCard-REORDER" class="eq-stat-card" style="padding:8px 11px;cursor:pointer;" onclick="switchInvSubTab('plan')">
-            <div class="eq-stat-top"><span>6. HIỆU SUẤT (BM20) &amp; DỰ TRÙ</span><span>📈</span></div>
-            <div id="invKpiYieldPct" class="eq-stat-val" style="color:#7c3aed;font-size:18px;">90.4%</div>
-            <div id="invKpiReorderSub" class="eq-stat-sub">Dự trù tháng x = m − t</div>
-          </div>
+        <!-- HIDDEN KPI HOLDERS FOR LEGACY SCRIPT COMPATIBILITY (ZERO VISUAL CLUTTER) -->
+        <div style="display:none;">
+          <span id="invKpiCatalogCount">29 Danh mục</span>
+          <span id="invKpiTotalLots">29 Lô</span>
+          <span id="invKpiOpenKits">29 Hộp mở</span>
+          <span id="invKpiDeductionCount">40 Giao dịch</span>
+          <span id="invKpiExpWarn">2 Lô ≤ 30d</span>
+          <span id="invKpiYieldPct">90.4%</span>
+          <span id="invKpiReorderSub">Dự trù x = m - t</span>
         </div>
 
-        <!-- INTERACTIVE 8-STEP CLOSED-LOOP REAGENT WORKFLOW BANNER (COLLAPSIBLE & INTERACTIVE) -->
-        <div class="card" style="margin-bottom:10px;padding:10px 12px;border-top:3px solid #0d9488;background:linear-gradient(180deg,#f0fdfa 0%,#ffffff 100%);">
-          <div style="display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:6px;">
-            <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
-              <span style="font-size:12.8px;font-weight:700;color:#0f766e;">🔄 CHU TRÌNH QUẢN LÝ KHO HÓA CHẤT &amp; TIÊU HAO THEO XÉT NGHIỆM KHÉP KÍN 8 BƯỚC (ISO 15189:2022 ĐIỀU 6.6 &amp; APPSHEET TTA-LIMS)</span>
-              <span class="badge b-info" style="font-size:10px;">Click từng bước để mở bàn làm việc &amp; hướng dẫn SOP</span>
-            </div>
-            <div style="display:flex;gap:6px;flex-wrap:wrap;">
-              <button type="button" id="invSubBtn-all" class="btn btn-outline btn-xs" style="font-weight:700;border-color:#0284c7;color:#0369a1;" onclick="switchInvSubTab('all')">🌐 Xem Toàn bộ 6 Phân mục Trên 1 Trang</button>
-              <button type="button" class="btn btn-outline btn-xs" onclick="toggleInvWorkflowStrip()">↕️ Thu gọn / Mở rộng 8 Bước</button>
-              <button type="button" class="btn btn-primary btn-xs" style="background:#0d9488;border-color:#0d9488;" onclick="openPrintableReagentForm('PHIEU_LINH_BM05')">🖨️ In Biểu mẫu SOP Hóa chất (BM02/05/17/20/21)</button>
-            </div>
-          </div>
-          <div id="invWorkflow8StepsContainer">
-            <div id="invWorkflow8StepsStrip" style="display:grid;grid-template-columns:repeat(8,minmax(0,1fr));gap:5px;">
-              <div id="invWfStep-1" class="wf-step-card step-done" onclick="selectInvWorkflowStep(1, 'catalog')" title="Bước 1: Khai báo Danh mục Hóa chất & Định mức Tiêu hao (4.1 & 5E)">
-                <div style="font-size:9.5px;font-weight:700;color:#0f766e;">BƯỚC 1 • BẢNG 4.1 &amp; 5E</div>
-                <div style="font-size:10.8px;font-weight:700;color:#0f172a;">1. Danh mục &amp; Định mức</div>
-                <div style="font-size:9.5px;color:#475569;">Khai Mã HC, QTXN &amp; Định mức</div>
-              </div>
-              <div id="invWfStep-2" class="wf-step-card step-done" onclick="selectInvWorkflowStep(2, 'plan')" title="Bước 2: Lập Dự trù Mua sắm x = m - t & Xin lĩnh Khoa Dược (BM-12-01/02)">
-                <div style="font-size:9.5px;font-weight:700;color:#0284c7;">BƯỚC 2 • BM-12-01/02</div>
-                <div style="font-size:10.8px;font-weight:700;color:#0f172a;">2. Dự trù &amp; Xin lĩnh Dược</div>
-                <div style="font-size:9.5px;color:#475569;">Tính x = m − t &amp; Phiếu lĩnh</div>
-              </div>
-              <div id="invWfStep-3" class="wf-step-card step-done" onclick="selectInvWorkflowStep(3, 'stock')" title="Bước 3: Tiếp nhận Lô mới & Kiểm tra CQA 6 tiêu chí (BM-12-06)">
-                <div style="font-size:9.5px;font-weight:700;color:#059669;">BƯỚC 3 • BM-12-06 (4.2)</div>
-                <div style="font-size:10.8px;font-weight:700;color:#0f172a;">3. Nhận hàng &amp; CQA</div>
-                <div style="font-size:9.5px;color:#475569;">Kiểm chuỗi lạnh, CO/CQ &amp; HSD</div>
-              </div>
-              <div id="invWfStep-4" class="wf-step-card step-done" onclick="selectInvWorkflowStep(4, 'nxt')" title="Bước 4: Đánh giá chất lượng Lô mới Lot-to-Lot trước khi dùng (BM-12-11)">
-                <div style="font-size:9.5px;font-weight:700;color:#7c3aed;">BƯỚC 4 • BM-12-11</div>
-                <div style="font-size:10.8px;font-weight:700;color:#0f172a;">4. Đánh giá Lot-to-Lot</div>
-                <div style="font-size:9.5px;color:#475569;">So sánh Lô cũ/mới đạt ΔCt</div>
-              </div>
-              <div id="invWfStep-5" class="wf-step-card step-done" onclick="selectInvWorkflowStep(5, 'stock')" title="Bước 5: Xuất Mở Hộp sang 4C theo FEFO & Chia nhỏ Aliquot (BM-12-19)">
-                <div style="font-size:9.5px;font-weight:700;color:#d97706;">BƯỚC 5 • BẢNG 4C &amp; BM19</div>
-                <div style="font-size:10.8px;font-weight:700;color:#0f172a;">5. Mở Hộp FEFO &amp; Aliquot</div>
-                <div style="font-size:9.5px;color:#475569;">Chuyển 4.2 → 4C &amp; dán nhãn QR</div>
-              </div>
-              <div id="invWfStep-6" class="wf-step-card step-current" onclick="selectInvWorkflowStep(6, 'consume')" title="Bước 6: Xuất Sử dụng & Khấu trừ Tiêu hao Thực tế Theo Xét nghiệm (4.3/4.4/5B)">
-                <div style="font-size:9.5px;font-weight:700;color:#0284c7;">BƯỚC 6 • BẢNG 4.4 &amp; 5B</div>
-                <div style="font-size:10.8px;font-weight:700;color:#0f172a;">6. Khấu trừ Theo XN</div>
-                <div style="font-size:9.5px;color:#475569;">Trừ tự động LIMS &amp; Xuất thực tế</div>
-              </div>
-              <div id="invWfStep-7" class="wf-step-card step-done" onclick="selectInvWorkflowStep(7, 'exp')" title="Bước 7: Giám sát Cảnh báo Cận hạn ≤ 30 ngày & Chạm Min Stock (BM-12-09/10)">
-                <div style="font-size:9.5px;font-weight:700;color:#dc2626;">BƯỚC 7 • BM-12-09/10</div>
-                <div style="font-size:10.8px;font-weight:700;color:#0f172a;">7. Cảnh báo Cận hạn</div>
-                <div style="font-size:9.5px;color:#475569;">Cảnh báo ≤30d &amp; Khóa lô quá hạn</div>
-              </div>
-              <div id="invWfStep-8" class="wf-step-card step-done" onclick="selectInvWorkflowStep(8, 'audit')" title="Bước 8: Kiểm kê Định kỳ 4.5A/4.5B, Cân bằng kho & Đồng bộ MasterDB">
-                <div style="font-size:9.5px;font-weight:700;color:#4f46e5;">BƯỚC 8 • BẢNG 4.5 &amp; BM21</div>
-                <div style="font-size:10.8px;font-weight:700;color:#0f172a;">8. Kiểm kê &amp; Quyết toán</div>
-                <div style="font-size:9.5px;color:#475569;">Đối chiếu thực tế &amp; Chốt CSDL</div>
-              </div>
-            </div>
-            <div id="invWorkflowStepGuideBar" class="wf-step-guide-strip">
-              <div id="invWorkflowStepGuideText">
-                <strong>📌 Bước 1 (Bảng 4.1_Danh_Muc_Hoa_Chat &amp; 5E. DinhMuc_HoaChat):</strong> Thiết lập danh mục chuẩn 29 hóa chất/vật tư của 5 Bộ phận, gắn mã xét nghiệm (<code>Ma_QTXN</code>), định mức tiêu hao cho 1 mẫu bệnh nhân và ngưỡng tồn tối thiểu (<code>Min_Stock</code>).
-              </div>
-              <div id="invWorkflowStepGuideActions" style="display:flex;gap:6px;">
-                <button type="button" class="btn btn-primary btn-xs" onclick="openEditReagentCatalogModal(null)">+ Thêm Danh mục &amp; Định mức</button>
-                <button type="button" class="btn btn-outline btn-xs" onclick="openLiveDbTableBrowser('Kho_HoaChat_Lot')">🗄️ Xem Bảng CSDL Gốc</button>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- HIGH-RECOGNITION 6-CARD SUB-NAVIGATION BAR (SINGLE BALANCED ROW OF 6 CARDS) -->
-        <div class="equip-subnav-wrapper" style="margin-bottom:12px;">
+        <!-- UNIFIED 6-CARD SUB-NAVIGATION & LIVE KPI BAR (SINGLE BALANCED ROW) -->
+        <div class="equip-subnav-wrapper" style="margin-bottom:8px;">
           <div class="reagent-subnav-grid">
             <button type="button" id="invSubBtn-catalog" class="equip-nav-card nav-blue active" onclick="switchInvSubTab('catalog')">
               <div class="enc-top">
@@ -3666,16 +3718,16 @@
                 <span id="invNavBadgeCatalog" class="enc-badge">29 Danh mục</span>
               </div>
               <div class="enc-title">📚 1. Danh mục &amp; Định mức XN</div>
-              <div class="enc-sub">Bảng 4.1 &amp; 5E • 5 Bộ phận • Thêm/Sửa/Xóa</div>
+              <div class="enc-sub">Bảng 4.1 &amp; 5E • Định mức 1 Test</div>
             </button>
 
             <button type="button" id="invSubBtn-stock" class="equip-nav-card nav-teal" onclick="switchInvSubTab('stock')">
               <div class="enc-top">
                 <span class="enc-step">PHÂN MỤC 02</span>
-                <span id="invNavBadgeStock" class="enc-badge">29 Lô (4.2 &amp; 4C)</span>
+                <span id="invNavBadgeStock" class="enc-badge">29 Lô • 29 Mở</span>
               </div>
-              <div class="enc-title">🏠 2. Tồn kho Lô (4.2) &amp; Hộp Mở (4C)</div>
-              <div class="enc-sub">Thẻ kho 360° • Mở hộp FEFO • Rã đông</div>
+              <div class="enc-title">🏠 2. Tồn kho Lô (4.2) &amp; Hộp Mở</div>
+              <div class="enc-sub">Thẻ kho 360° • Mở hộp FEFO</div>
             </button>
 
             <button type="button" id="invSubBtn-consume" class="equip-nav-card nav-amber" onclick="switchInvSubTab('consume')">
@@ -3683,36 +3735,65 @@
                 <span class="enc-step">PHÂN MỤC 03</span>
                 <span id="invNavBadgeConsume" class="enc-badge">40 Giao dịch</span>
               </div>
-              <div class="enc-title">⚡ 3. Xuất &amp; Trừ Tiêu hao Theo XN</div>
-              <div class="enc-sub">Bảng 4.4 &amp; 5B • Tính &amp; trừ tự động theo XN</div>
+              <div class="enc-title">⚡ 3. Xuất &amp; Trừ Tiêu hao XN</div>
+              <div class="enc-sub">Bảng 4.4 &amp; 5B • Trừ tự động theo XN</div>
             </button>
 
             <button type="button" id="invSubBtn-nxt" class="equip-nav-card nav-purple" onclick="switchInvSubTab('nxt')">
               <div class="enc-top">
                 <span class="enc-step">PHÂN MỤC 04</span>
-                <span id="invNavBadgeNxt" class="enc-badge">4 Đánh giá Lot</span>
+                <span id="invNavBadgeNxt" class="enc-badge">4 Lot-to-Lot</span>
               </div>
-              <div class="enc-title">📥 4. Báo cáo NXT &amp; Lot-to-Lot</div>
-              <div class="enc-sub">Xuất-Nhập-Tồn BM07 • Đánh giá Lô mới BM11</div>
+              <div class="enc-title">📥 4. Báo cáo NXT &amp; Lô Mới</div>
+              <div class="enc-sub">Xuất-Nhập-Tồn BM07 • Lot-to-Lot</div>
             </button>
 
             <button type="button" id="invSubBtn-exp" class="equip-nav-card nav-indigo" onclick="switchInvSubTab('exp')">
               <div class="enc-top">
                 <span class="enc-step">PHÂN MỤC 05</span>
-                <span id="invNavBadgeExp" class="enc-badge">FEFO &amp; Kiểm kê</span>
+                <span id="invNavBadgeExp" class="enc-badge">19 Cảnh báo</span>
               </div>
-              <div class="enc-title">📦 5. Cận hạn &amp; Kiểm kê (4.5A/B)</div>
-              <div class="enc-sub">Cảnh báo ≤30d • Kiểm đếm &amp; Cân bằng kho</div>
+              <div class="enc-title">📦 5. Cận hạn &amp; Kiểm kê (4.5)</div>
+              <div class="enc-sub">FEFO ≤30d • Kiểm đếm &amp; Chốt kho</div>
             </button>
 
             <button type="button" id="invSubBtn-plan" class="equip-nav-card nav-blue" onclick="switchInvSubTab('plan')">
               <div class="enc-top">
                 <span class="enc-step">PHÂN MỤC 06</span>
-                <span id="invNavBadgePlan" class="enc-badge">BM02 / BM19 / BM20</span>
+                <span id="invNavBadgePlan" class="enc-badge">3 Phiếu Dự trù</span>
               </div>
-              <div class="enc-title">🧮 6. Dự trù (x=m−t) &amp; Aliquot</div>
-              <div class="enc-sub">Dự trù tháng/năm • Chia ống • Hiệu suất</div>
+              <div class="enc-title">🧮 6. Dự trù Linh hoạt &amp; Aliquot</div>
+              <div class="enc-sub">Thêm/bớt DM • Chỉnh SL • Tiến độ phiếu</div>
             </button>
+          </div>
+        </div>
+
+        <!-- SLEEK 1-LINE 8-STEP WORKFLOW RIBBON (WITH COLLAPSIBLE DETAIL DRAWER) -->
+        <div class="wf-compact-ribbon">
+          <div id="invWorkflow8StepsStrip" style="display:flex;gap:4px;flex-wrap:wrap;align-items:center;flex:1;">
+            <span style="font-size:10.5px;font-weight:800;color:#0f766e;margin-right:4px;">🔄 Quy trình 8 Bước:</span>
+            <div id="invWfStep-1" class="wf-step-card wf-pill-step step-current" onclick="selectInvWorkflowStep(1, 'catalog')">① Danh mục &amp; Định mức (4.1)</div>
+            <div id="invWfStep-2" class="wf-step-card wf-pill-step step-done" onclick="selectInvWorkflowStep(2, 'plan')">② Dự trù &amp; Tiến độ Phiếu (BM02)</div>
+            <div id="invWfStep-3" class="wf-step-card wf-pill-step step-done" onclick="selectInvWorkflowStep(3, 'stock')">③ Nhận hàng CQA (4.2)</div>
+            <div id="invWfStep-4" class="wf-step-card wf-pill-step step-done" onclick="selectInvWorkflowStep(4, 'nxt')">④ Lot-to-Lot (BM11)</div>
+            <div id="invWfStep-5" class="wf-step-card wf-pill-step step-done" onclick="selectInvWorkflowStep(5, 'stock')">⑤ Mở hộp 4C &amp; Aliquot</div>
+            <div id="invWfStep-6" class="wf-step-card wf-pill-step step-done" onclick="selectInvWorkflowStep(6, 'consume')">⑥ Khấu trừ Theo XN (5B)</div>
+            <div id="invWfStep-7" class="wf-step-card wf-pill-step step-done" onclick="selectInvWorkflowStep(7, 'exp')">⑦ Cảnh báo Cận hạn FEFO</div>
+            <div id="invWfStep-8" class="wf-step-card wf-pill-step step-done" onclick="selectInvWorkflowStep(8, 'audit')">⑧ Kiểm kê &amp; Quyết toán (4.5A)</div>
+          </div>
+          <button type="button" class="btn btn-outline btn-xs" style="height:24px;padding:0 8px;font-size:10.2px;" onclick="toggleInvWorkflowDetailDrawer()">ℹ️ Hướng dẫn SOP</button>
+        </div>
+
+        <!-- COLLAPSIBLE SOP STEP GUIDE DRAWER (HIDDEN BY DEFAULT TO KEEP UI CLEAN) -->
+        <div id="invWorkflow8StepsContainer" style="display:none;margin-bottom:10px;">
+          <div id="invWorkflowStepGuideBar" class="wf-step-guide-strip" style="margin-top:0;">
+            <div id="invWorkflowStepGuideText">
+              <strong>📌 Bước 1 (Bảng 4.1_Danh_Muc_Hoa_Chat &amp; 5E. DinhMuc_HoaChat):</strong> Thiết lập danh mục chuẩn 29 hóa chất/sinh phẩm/vật tư của 5 Bộ phận, gắn mã quy trình xét nghiệm (<code>Ma_QTXN</code>), công thức định mức tiêu hao 1 mẫu và ngưỡng tồn tối thiểu (<code>Min_Stock</code>).
+            </div>
+            <div id="invWorkflowStepGuideActions" style="display:flex;gap:6px;">
+              <button type="button" class="btn btn-primary btn-xs" onclick="openEditReagentCatalogModal(null)">+ Thêm Danh mục &amp; Định mức</button>
+              <button type="button" class="btn btn-outline btn-xs" onclick="openLiveDbTableBrowser('Kho_HoaChat_Lot')">🗄️ Xem Bảng CSDL Gốc</button>
+            </div>
           </div>
         </div>
 
@@ -3720,23 +3801,22 @@
         <!-- SUB-VIEW 1: BẢNG DANH MỤC HÓA CHẤT & ĐỊNH MỨC TIÊU HAO THEO XÉT NGHIỆM (4.1 & 5E) -->
         <!-- ===================================================================== -->
         <div id="invSubView-catalog" style="display:block;">
-          <div class="card" style="border-top:4px solid #0284c7;">
+          <div class="card" style="border-top:3px solid #0284c7;">
             <div class="card-header" style="margin-bottom:8px;">
               <div>
-                <div class="card-title">📚 BẢNG DANH MỤC HÓA CHẤT, SINH PHẨM, VẬT TƯ &amp; ĐỊNH MỨC TIÊU HAO CHUẨN THEO TỪNG XÉT NGHIỆM (BẢNG 4.1_Danh_Muc_Hoa_Chat &amp; 5E. DinhMuc_HoaChat)</div>
-                <div class="card-subtitle">Liên kết chặt chẽ Mã Hóa chất (<code>ID_HoaChat</code> / <code>Ma_Duoc_BV</code>) với Quy trình Xét nghiệm (<code>Ma_QTXN</code>), Định mức tiêu hao chuẩn cho 1 mẫu xét nghiệm, số mẫu QC/Cal mặc định và Tổng tồn kho thực tế từ các Lô (<code>4.2</code> &amp; <code>4C</code>)</div>
+                <div class="card-title">📚 BẢNG DANH MỤC HÓA CHẤT, SINH PHẨM, VẬT TƯ &amp; ĐỊNH MỨC TIÊU HAO THEO XÉT NGHIỆM (BẢNG 4.1 &amp; 5E)</div>
+                <div class="card-subtitle">Liên kết Mã Hóa chất (<code>ID_HoaChat</code> / <code>Ma_Duoc_BV</code>) với Quy trình Xét nghiệm (<code>Ma_QTXN</code>), Định mức tiêu hao 1 mẫu và Tổng tồn kho thực tế (<code>4.2</code> &amp; <code>4C</code>)</div>
               </div>
               <div style="display:flex;gap:6px;flex-wrap:wrap;align-items:center;">
-                <button type="button" class="btn btn-primary btn-xs" onclick="openEditReagentCatalogModal(null)">+ Thêm Danh mục &amp; Định mức (Modal)</button>
-                <button type="button" class="btn btn-outline btn-xs" onclick="exportReagentCatalogCsv()">⬇️ Xuất Danh mục (.CSV)</button>
-                <button type="button" class="btn btn-success btn-xs" onclick="pushSingleTableToMasterDB('Kho_HoaChat_Lot')">☁️ Đồng bộ Bảng 4.1/4.2 Lên Sheet</button>
+                <button type="button" class="btn btn-outline btn-xs" onclick="toggleQuickAddDrawer('quickAddCatalogDrawer')">⚡ Khai báo nhanh trên dòng</button>
+                <button type="button" class="btn btn-primary btn-xs" onclick="openEditReagentCatalogModal(null)">+ Thêm Danh mục &amp; Định mức</button>
+                <button type="button" class="btn btn-outline btn-xs" onclick="exportReagentCatalogCsv()">⬇️ Xuất CSV</button>
               </div>
             </div>
 
             <!-- SMART CATEGORY & DEPARTMENT FILTER TOOLBAR FOR CATALOG -->
-            <div class="equip-filter-toolbar" style="margin-bottom:10px;">
+            <div class="equip-filter-toolbar" style="margin-bottom:8px;padding:7px 10px;">
               <div style="display:flex;gap:5px;flex-wrap:wrap;align-items:center;">
-                <span style="font-size:11.5px;font-weight:700;color:#0f4c81;">Lọc nhóm Danh mục (4.1):</span>
                 <button type="button" id="catChip-ALL" class="eq-quick-chip active" onclick="setCatalogGroupFilter('ALL')">Tất cả</button>
                 <button type="button" id="catChip-EXT" class="eq-quick-chip" onclick="setCatalogGroupFilter('EXT')">🧬 Kit Tách chiết</button>
                 <button type="button" id="catChip-PCR" class="eq-quick-chip" onclick="setCatalogGroupFilter('PCR')">🔬 Kit Real-time PCR</button>
@@ -3745,7 +3825,7 @@
                 <button type="button" id="catChip-LOW" class="eq-quick-chip" onclick="setCatalogGroupFilter('LOW')">⚠️ Chạm Min Stock</button>
               </div>
               <div style="display:flex;gap:6px;flex-wrap:wrap;align-items:center;">
-                <select id="catalogDeptFilter" class="form-control" style="width:165px;height:30px;font-size:11.5px;" onchange="renderReagentCatalogTable()">
+                <select id="catalogDeptFilter" class="form-control" style="width:160px;height:29px;font-size:11.3px;" onchange="renderReagentCatalogTable()">
                   <option value="ALL">Tất cả 5 Bộ phận</option>
                   <option value="Di truyền &amp; SHPT">Di truyền &amp; SHPT</option>
                   <option value="Hóa sinh">Hóa sinh - Miễn dịch</option>
@@ -3753,13 +3833,13 @@
                   <option value="Vi sinh">Vi sinh</option>
                   <option value="Giải phẫu bệnh">Giải phẫu bệnh</option>
                 </select>
-                <input id="catalogSearchInput" type="text" class="form-control" style="width:220px;height:30px;font-size:11.5px;" placeholder="🔍 Tìm mã HC, tên, xét nghiệm..." oninput="renderReagentCatalogTable()">
+                <input id="catalogSearchInput" type="text" class="form-control" style="width:210px;height:29px;font-size:11.3px;" placeholder="🔍 Tìm mã HC, tên, xét nghiệm..." oninput="renderReagentCatalogTable()">
                 <span id="catalogFilterCountBadge" class="badge b-info">29 danh mục</span>
               </div>
             </div>
 
-            <!-- INLINE QUICK-ADD MASTER REAGENT CATALOG & NORM BAR -->
-            <div style="background:#f0f9ff;border:1.5px solid #bae6fd;border-radius:10px;padding:9px 12px;margin-bottom:10px;">
+            <!-- COLLAPSIBLE QUICK-ADD MASTER REAGENT CATALOG DRAWER (HIDDEN BY DEFAULT FOR CLEAN UX) -->
+            <div id="quickAddCatalogDrawer" style="display:none;background:#f0f9ff;border:1.5px solid #bae6fd;border-radius:10px;padding:9px 12px;margin-bottom:10px;">
               <div style="font-size:11.2px;font-weight:700;color:#0369a1;margin-bottom:5px;">⚡ KHAI BÁO NHANH DANH MỤC HÓA CHẤT GỐC &amp; ĐỊNH MỨC TIÊU HAO THEO XÉT NGHIỆM (GHI BẢNG 4.1 &amp; 5E + KHỞI TẠO LÔ 4.2):</div>
               <div style="display:grid;grid-template-columns:0.8fr 0.9fr 1.4fr 0.95fr 1.0fr 1.35fr 0.55fr 0.6fr auto;gap:6px;align-items:end;">
                 <div>
@@ -3805,17 +3885,17 @@
               </div>
             </div>
 
-            <div class="table-wrap" style="max-height:560px;overflow-x:auto;">
+            <div class="table-wrap" style="max-height:580px;overflow-x:auto;">
               <table style="width:100%;table-layout:fixed;">
                 <thead>
                   <tr>
                     <th style="width:9%;">Mã HC (4.1) &amp; Mã Dược</th>
-                    <th style="width:17%;">Tên Hóa chất / Sinh phẩm &amp; Quy cách</th>
+                    <th style="width:17.5%;">Tên Hóa chất / Sinh phẩm &amp; Quy cách</th>
                     <th style="width:11%;">Bộ phận &amp; Máy XN</th>
                     <th style="width:13%;">Xét nghiệm Liên kết (Ma_QTXN)</th>
                     <th style="width:21%;">Định mức Tiêu hao Chuẩn / 1 XN (5E)</th>
                     <th style="width:6.5%;">Min Stock</th>
-                    <th style="width:11.5%;">Tồn Chẵn (4.2) &amp; Mở (4C)</th>
+                    <th style="width:11%;">Tồn Chẵn (4.2) &amp; Mở (4C)</th>
                     <th style="width:11%;">Thao tác (Trừ XN / Sửa / Xóa)</th>
                   </tr>
                 </thead>
@@ -3829,24 +3909,22 @@
         <!-- SUB-VIEW 2: KHO HÓA CHẤT THEO LÔ (4.2) & HỘP KIT ĐANG MỞ (4C) + THẺ KHO 360° -->
         <!-- ===================================================================== -->
         <div id="invSubView-stock" style="display:none;">
-          <div class="card" style="border-top:4px solid #0d9488;">
+          <div class="card" style="border-top:3px solid #0d9488;">
             <div class="card-header" style="margin-bottom:8px;">
               <div>
-                <div class="card-title">🏠 QUẢN LÝ TỒN KHO HÓA CHẤT THEO LÔ (BẢNG 4.2_Ton_Kho_Theo_Lot), HỘP KIT ĐANG MỞ (BẢNG 4C) &amp; THẺ KHO 360°</div>
-                <div class="card-subtitle">Bảng rộng 100% hiển thị đầy đủ Tồn Kho Chẵn (<code>4.2</code>), Hộp Kit Đang Mở (<code>4C</code> + thanh % còn lại), Chu kỳ Rã đông và Cột Thao tác (<code>⚡ Trừ XN</code>, <code>📤 Mở hộp</code>, <code>🏷️ Thẻ kho</code>, <code>✎ Sửa</code>, <code>🗑 Xóa</code>). Click vào dòng bất kỳ để xem <strong>Hồ sơ Thẻ Kho &amp; Nhãn QR 360°</strong> ngay bên dưới.</div>
+                <div class="card-title">🏠 QUẢN LÝ TỒN KHO HÓA CHẤT THEO LÔ (BẢNG 4.2), HỘP KIT ĐANG MỞ (BẢNG 4C) &amp; THẺ KHO 360°</div>
+                <div class="card-subtitle">Sửa trực tiếp Tồn Kho Chẵn (<code>4.2</code>) và Hộp Kit Đang Mở (<code>4C</code>) ngay trên bảng; click chọn dòng bất kỳ để xem <strong>Thẻ Kho &amp; Nhãn QR 360°</strong> bên dưới</div>
               </div>
               <div style="display:flex;gap:6px;flex-wrap:wrap;">
                 <button type="button" class="btn btn-success btn-xs" onclick="openModal('modalReceiveLot')">+ Nhập Lô Mới (4.2 • CQA)</button>
-                <button type="button" class="btn btn-warning btn-xs" onclick="openModal('modalIssueKit')">📤 Xuất Mở Hộp Sang 4C (FEFO)</button>
-                <button type="button" class="btn btn-primary btn-xs" onclick="openModal('modalAliquot')">💧 Ghi Sổ Chia ống Aliquot (BM-12-19)</button>
-                <button type="button" class="btn btn-outline btn-xs" onclick="openPrintableReagentForm('PHIEU_LINH_BM05')">🖨️ In Phiếu Lĩnh Khoa Dược (BM-12-05)</button>
+                <button type="button" class="btn btn-warning btn-xs" onclick="openModal('modalIssueKit')">📤 Mở Hộp Sang 4C (FEFO)</button>
+                <button type="button" class="btn btn-outline btn-xs" onclick="openPrintableReagentForm('PHIEU_LINH_BM05')">🖨️ In Phiếu Lĩnh Dược (BM-12-05)</button>
               </div>
             </div>
 
             <!-- SMART REAGENT FILTER TOOLBAR -->
-            <div class="equip-filter-toolbar" style="margin-bottom:10px;">
+            <div class="equip-filter-toolbar" style="margin-bottom:8px;padding:7px 10px;">
               <div style="display:flex;gap:5px;flex-wrap:wrap;align-items:center;">
-                <span style="font-size:11.5px;font-weight:700;color:#0068b5;">Lọc nhanh Kho Lô (4.2 &amp; 4C):</span>
                 <button type="button" id="invChip-ALL" class="eq-quick-chip active" onclick="setInvQuickFilter('ALL')">Tất cả Lô</button>
                 <button type="button" id="invChip-CAT_A" class="eq-quick-chip" onclick="setInvQuickFilter('CAT_A')">🧪 A. Hóa chất, thuốc thử</button>
                 <button type="button" id="invChip-CAT_B" class="eq-quick-chip" onclick="setInvQuickFilter('CAT_B')">🧤 B. Vật tư tiêu hao</button>
@@ -3855,12 +3933,11 @@
                 <button type="button" id="invChip-REORDER" class="eq-quick-chip" onclick="setInvQuickFilter('REORDER')">📋 Cần dự trù (x = m − t &gt; 0)</button>
               </div>
               <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center;">
-                <input id="invSearchInput" type="text" class="form-control" style="width:240px;height:30px;font-size:11.5px;" placeholder="🔍 Tìm Mã Dược BV, Tên HC, Số Lot, XN..." oninput="renderInventoryAll()">
+                <input id="invSearchInput" type="text" class="form-control" style="width:230px;height:29px;font-size:11.3px;" placeholder="🔍 Tìm Mã Dược, Tên HC, Số Lot..." oninput="renderInventoryAll()">
                 <span id="invFilterCountBadge" class="badge b-info">Hiển thị: 29 lô</span>
               </div>
             </div>
 
-            <!-- 100% FULL-WIDTH MASTER LOT TABLE + FULL-WIDTH 360° DOSSIER BELOW -->
             <div class="reagent-fullwidth-stack">
               <div class="table-wrap" style="max-height:500px;overflow-x:auto;">
                 <table style="width:100%;table-layout:fixed;">
@@ -3890,21 +3967,21 @@
         <!-- SUB-VIEW 3: BÀN TÍNH & SỔ NHẬT KÝ XUẤT SỬ DỤNG, KHẤU TRỪ TIÊU HAO THỰC TẾ THEO XÉT NGHIỆM (4.3 / 4.4 / 5B) -->
         <!-- ===================================================================== -->
         <div id="invSubView-consume" style="display:none;">
-          <div class="card" style="border-top:4px solid #d97706;background:linear-gradient(180deg,#fffbeb 0%,#ffffff 180px);">
+          <div class="card" style="border-top:3px solid #d97706;">
             <div class="card-header" style="margin-bottom:8px;">
               <div>
-                <div class="card-title" style="color:#92400e;font-size:14.5px;">⚡ BÀN LÀM VIỆC TÍNH ĐỊNH MỨC &amp; KHẤU TRỪ TIÊU HAO HÓA CHẤT THỰC TẾ THEO TỪNG XÉT NGHIỆM (BẢNG 4.3 / 4.4 / 5B &amp; BM-12-18)</div>
-                <div class="card-subtitle">Chọn Bộ phận &amp; Quy trình Xét nghiệm → Hệ thống nạp Định mức chuẩn (<code>5E</code>), Lô đang mở (<code>4C</code>), tính chính xác tổng tiêu hao <code>(Mẫu BN + Chứng/IQC/Cal + Ngoại kiểm EQA + Chạy lại/Hao hụt)</code> và tự động khui hộp mới theo <code>FEFO</code> nếu hộp mở không đủ</div>
+                <div class="card-title" style="color:#92400e;">⚡ BÀN TÍNH ĐỊNH MỨC &amp; KHẤU TRỪ TIÊU HAO THỰC TẾ THEO XÉT NGHIỆM (BẢNG 4.3 / 4.4 / 5B &amp; BM-12-18)</div>
+                <div class="card-subtitle">Chọn Xét nghiệm → Tự động nạp Định mức (<code>5E</code>) &amp; Lô đang mở (<code>4C</code>), tính tổng tiêu hao <code>(Mẫu BN + Cal/IQC + EQA + Hao hụt)</code> và tự động mở hộp mới theo <code>FEFO</code> nếu thiếu</div>
               </div>
               <div style="display:flex;gap:6px;flex-wrap:wrap;">
                 <button type="button" class="btn btn-outline btn-xs" onclick="exportLimsDeductionLedgerCsv()">⬇️ Xuất Sổ Khấu trừ (.CSV)</button>
-                <button type="button" class="btn btn-success btn-xs" onclick="pushSingleTableToMasterDB('LIMS_5B_NhatKy_KhauTru_Kho')">☁️ Đồng bộ Sổ Khấu trừ Lên Sheet</button>
+                <button type="button" class="btn btn-success btn-xs" onclick="pushSingleTableToMasterDB('LIMS_5B_NhatKy_KhauTru_Kho')">☁️ Đồng bộ Lên Sheet</button>
               </div>
             </div>
 
             <!-- DEPARTMENT QUICK FILTER PILLS FOR ASSAY CONSUMPTION -->
-            <div style="display:flex;gap:5px;flex-wrap:wrap;align-items:center;margin-bottom:10px;">
-              <span style="font-size:11.3px;font-weight:700;color:#92400e;">Chọn nhanh Bộ phận chạy xét nghiệm:</span>
+            <div style="display:flex;gap:5px;flex-wrap:wrap;align-items:center;margin-bottom:8px;">
+              <span style="font-size:11px;font-weight:700;color:#92400e;">Bộ phận:</span>
               <button type="button" id="conDeptBtn-ALL" class="eq-quick-chip active" onclick="setConsumeDeptFilter('ALL')">Tất cả 5 Bộ phận</button>
               <button type="button" id="conDeptBtn-SHPT" class="eq-quick-chip" onclick="setConsumeDeptFilter('Di truyền & SHPT')">🧬 Di truyền &amp; SHPT</button>
               <button type="button" id="conDeptBtn-CHEM" class="eq-quick-chip" onclick="setConsumeDeptFilter('Hóa sinh')">🧪 Hóa sinh - Miễn dịch</button>
@@ -3915,73 +3992,70 @@
 
             <!-- 3-ZONE VISUAL ASSAY CONSUMPTION CALCULATOR & EXECUTION WORKBENCH -->
             <div class="consume-zone-grid">
-              <!-- ZONE 1: CHỌN XÉT NGHIỆM & LÔ ĐANG MỞ (4C) -->
               <div class="consume-zone-box" style="border-color:#fcd34d;background:#fffef7;">
                 <div class="consume-zone-title">
-                  <span>1️⃣ BƯỚC A: CHỌN XÉT NGHIỆM &amp; LÔ ĐANG MỞ (4C)</span>
-                  <span class="badge b-purple">Bảng 4.1 / 5E / 4C</span>
+                  <span>1️⃣ CHỌN XÉT NGHIỆM &amp; LÔ ĐANG MỞ (4C)</span>
+                  <span class="badge b-purple">4.1 / 5E / 4C</span>
                 </div>
-                <div style="margin-bottom:8px;">
-                  <label style="font-size:10.8px;font-weight:700;color:#92400e;display:block;margin-bottom:3px;">Quy trình Xét nghiệm Thực hiện (Ma_QTXN):</label>
-                  <select id="consumeAssaySelect" class="form-control" style="height:32px;font-size:11.8px;font-weight:700;border-color:#f59e0b;" onchange="handleConsumeAssayChange()"></select>
+                <div style="margin-bottom:7px;">
+                  <label style="font-size:10.5px;font-weight:700;color:#92400e;display:block;margin-bottom:2px;">Quy trình Xét nghiệm (Ma_QTXN):</label>
+                  <select id="consumeAssaySelect" class="form-control" style="height:31px;font-size:11.5px;font-weight:700;border-color:#f59e0b;" onchange="handleConsumeAssayChange()"></select>
                 </div>
                 <div>
-                  <label style="font-size:10.8px;font-weight:700;color:#92400e;display:block;margin-bottom:3px;">Lô Hóa chất Đang Mở trên máy (Ưu tiên FEFO):</label>
-                  <select id="consumeLotSelect" class="form-control" style="height:32px;font-size:11.5px;font-weight:600;" onchange="previewAssayConsumptionCalculation()"></select>
+                  <label style="font-size:10.5px;font-weight:700;color:#92400e;display:block;margin-bottom:2px;">Lô Hóa chất Đang Mở (Ưu tiên FEFO):</label>
+                  <select id="consumeLotSelect" class="form-control" style="height:31px;font-size:11.3px;font-weight:600;" onchange="previewAssayConsumptionCalculation()"></select>
                 </div>
               </div>
 
-              <!-- ZONE 2: NHẬP CƠ CẤU MẪU THỰC TẾ TRONG CA / MẺ CHẠY -->
               <div class="consume-zone-box" style="border-color:#bae6fd;background:#f8fafc;">
                 <div class="consume-zone-title">
-                  <span>2️⃣ BƯỚC B: NHẬP SỐ MẪU THỰC TẾ TRONG MẺ CHẠY</span>
-                  <span class="badge b-info">BM-12-18 &amp; Bảng 5B</span>
+                  <span>2️⃣ NHẬP SỐ MẪU THỰC TẾ TRONG CA CHẠY</span>
+                  <span class="badge b-info">BM-12-18</span>
                 </div>
-                <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-bottom:8px;">
+                <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-bottom:7px;">
                   <div>
-                    <label style="font-size:10.3px;font-weight:700;color:#059669;">Mẫu BN:</label>
-                    <input id="consumeNBnInput" type="number" min="0" class="form-control" style="height:31px;font-size:12.5px;font-weight:700;color:#059669;" value="14" oninput="previewAssayConsumptionCalculation()">
+                    <label style="font-size:10px;font-weight:700;color:#059669;">Mẫu BN:</label>
+                    <input id="consumeNBnInput" type="number" min="0" class="form-control" style="height:30px;font-size:12px;font-weight:700;color:#059669;" value="14" oninput="previewAssayConsumptionCalculation()">
                   </div>
                   <div>
-                    <label style="font-size:10.3px;font-weight:700;color:#0284c7;">Mẫu Cal/IQC:</label>
-                    <input id="consumeNQcInput" type="number" min="0" class="form-control" style="height:31px;font-size:12.5px;font-weight:700;color:#0284c7;" value="2" oninput="previewAssayConsumptionCalculation()">
+                    <label style="font-size:10px;font-weight:700;color:#0284c7;">Mẫu Cal/IQC:</label>
+                    <input id="consumeNQcInput" type="number" min="0" class="form-control" style="height:30px;font-size:12px;font-weight:700;color:#0284c7;" value="2" oninput="previewAssayConsumptionCalculation()">
                   </div>
                   <div>
-                    <label style="font-size:10.3px;font-weight:700;color:#7c3aed;">Mẫu EQA:</label>
-                    <input id="consumeNEqaInput" type="number" min="0" class="form-control" style="height:31px;font-size:12.5px;font-weight:700;color:#7c3aed;" value="0" oninput="previewAssayConsumptionCalculation()">
+                    <label style="font-size:10px;font-weight:700;color:#7c3aed;">Mẫu EQA:</label>
+                    <input id="consumeNEqaInput" type="number" min="0" class="form-control" style="height:30px;font-size:12px;font-weight:700;color:#7c3aed;" value="0" oninput="previewAssayConsumptionCalculation()">
                   </div>
                   <div>
-                    <label style="font-size:10.3px;font-weight:700;color:#dc2626;">Hao hụt/Lặp:</label>
-                    <input id="consumeNHaoHutInput" type="number" min="0" class="form-control" style="height:31px;font-size:12.5px;font-weight:700;color:#dc2626;" value="1" oninput="previewAssayConsumptionCalculation()">
+                    <label style="font-size:10px;font-weight:700;color:#dc2626;">Hao hụt/Lặp:</label>
+                    <input id="consumeNHaoHutInput" type="number" min="0" class="form-control" style="height:30px;font-size:12px;font-weight:700;color:#dc2626;" value="1" oninput="previewAssayConsumptionCalculation()">
                   </div>
                 </div>
                 <div style="display:flex;gap:6px;align-items:center;">
-                  <input id="consumeBatchNoteInput" type="text" class="form-control" style="height:30px;font-size:11.2px;flex:1;" placeholder="Mã mẻ chạy / Ghi chú ca (tự sinh nếu để trống)...">
-                  <button type="button" class="btn btn-primary" style="height:30px;background:#d97706;border-color:#d97706;font-weight:700;padding:0 12px;white-space:nowrap;" onclick="executeAssayActualConsumptionDeduction()">⚡ Thực hiện Khấu trừ &amp; Ghi Sổ</button>
+                  <input id="consumeBatchNoteInput" type="text" class="form-control" style="height:29px;font-size:11px;flex:1;" placeholder="Mã mẻ chạy / Ghi chú ca...">
+                  <button type="button" class="btn btn-primary" style="height:29px;background:#d97706;border-color:#d97706;font-weight:700;padding:0 11px;white-space:nowrap;" onclick="executeAssayActualConsumptionDeduction()">⚡ Thực hiện Khấu trừ</button>
                 </div>
               </div>
 
-              <!-- ZONE 3: ĐỐI SOÁT ĐỊNH MỨC & DỰ BÁO TỒN KHO TRƯỚC -> SAU -->
               <div class="consume-zone-box" style="border-color:#86efac;background:#f0fdf4;">
                 <div class="consume-zone-title">
-                  <span>3️⃣ BƯỚC C: DỰ BÁO KHẤU TRỪ &amp; TỒN KHO (TRƯỚC → SAU)</span>
+                  <span>3️⃣ DỰ BÁO KHẤU TRỪ &amp; TỒN KHO (TRƯỚC → SAU)</span>
                   <span class="badge b-pass">Tự động FEFO</span>
                 </div>
-                <div id="consumeLivePreviewBox" style="font-size:11.2px;color:#1e293b;line-height:1.4;"></div>
+                <div id="consumeLivePreviewBox" style="font-size:11px;color:#1e293b;line-height:1.38;"></div>
               </div>
             </div>
 
             <!-- UNIFIED ASSAY CONSUMPTION & DEDUCTION LEDGER TABLE -->
             <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;flex-wrap:wrap;gap:8px;">
-              <div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap;">
-                <span style="font-size:12.8px;font-weight:700;color:#0f4c81;">📋 SỔ CÁI GIAO DỊCH XUẤT KHO &amp; KHẤU TRỪ TIÊU HAO THỰC TẾ THEO XÉT NGHIỆM (LIÊN KẾT LIMS 2A/3A/5B):</span>
+              <div style="display:flex;align-items:center;gap:5px;flex-wrap:wrap;">
+                <span style="font-size:12px;font-weight:700;color:#0f4c81;">📋 SỔ GIAO DỊCH KHẤU TRỪ TIÊU HAO (BẢNG 5B):</span>
                 <button type="button" id="conSrcChip-ALL" class="eq-quick-chip active" onclick="setConsumeLedgerSourceFilter('ALL')">Tất cả</button>
-                <button type="button" id="conSrcChip-EXT" class="eq-quick-chip" onclick="setConsumeLedgerSourceFilter('Tách chiết')">🧬 Mẻ Tách chiết (2A)</button>
-                <button type="button" id="conSrcChip-PCR" class="eq-quick-chip" onclick="setConsumeLedgerSourceFilter('PCR')">🔬 Mẻ Real-time PCR (3A)</button>
-                <button type="button" id="conSrcChip-SPEC" class="eq-quick-chip" onclick="setConsumeLedgerSourceFilter('Tiêu hao XN')">⚡ Chuyên khoa (HS/HH/VS/GPB)</button>
+                <button type="button" id="conSrcChip-EXT" class="eq-quick-chip" onclick="setConsumeLedgerSourceFilter('Tách chiết')">🧬 Tách chiết (2A)</button>
+                <button type="button" id="conSrcChip-PCR" class="eq-quick-chip" onclick="setConsumeLedgerSourceFilter('PCR')">🔬 Real-time PCR (3A)</button>
+                <button type="button" id="conSrcChip-SPEC" class="eq-quick-chip" onclick="setConsumeLedgerSourceFilter('Tiêu hao XN')">⚡ Chuyên khoa</button>
               </div>
               <div style="display:flex;gap:6px;align-items:center;">
-                <input id="consumeLedgerSearchInput" type="text" class="form-control" style="width:220px;height:28px;font-size:11.5px;" placeholder="🔍 Tìm mã GD, mã mẻ, tên XN, số Lot..." oninput="renderAssayConsumptionLedgerTable()">
+                <input id="consumeLedgerSearchInput" type="text" class="form-control" style="width:210px;height:28px;font-size:11.3px;" placeholder="🔍 Tìm mã GD, mã mẻ, tên XN, Lot..." oninput="renderAssayConsumptionLedgerTable()">
                 <span id="consumeLedgerCountBadge" class="badge b-pass">40 giao dịch</span>
               </div>
             </div>
@@ -4011,19 +4085,19 @@
         <!-- SUB-VIEW 4: NHẬP XUẤT HÓA CHẤT + BÁO CÁO NXT + LOT-TO-LOT VERIFICATION -->
         <!-- ===================================================================== -->
         <div id="invSubView-nxt" style="display:none;">
-          <div class="card" style="border-top:4px solid #7c3aed;">
+          <div class="card" style="border-top:3px solid #7c3aed;">
             <div class="card-header">
               <div>
-                <div class="card-title">📊 BÁO CÁO TỔNG HỢP XUẤT - NHẬP - TỒN HÓA CHẤT SINH PHẨM (BÁO CÁO NXT KỲ THÁNG 11/2026 • BẢNG 4A &amp; BM-12-07)</div>
-                <div class="card-subtitle">Tự động kết chuyển: <code>Tồn cuối kỳ (Chẵn 4.2) = Tồn đầu kỳ + Nhập trong kỳ − Xuất mở hộp trong kỳ</code> (Kèm lượng còn lẻ trong Hộp Kit Đang Mở 4C &amp; Tổng thành tiền)</div>
+                <div class="card-title">📊 BÁO CÁO TỔNG HỢP XUẤT - NHẬP - TỒN HÓA CHẤT SINH PHẨM (BẢNG 4A &amp; BM-12-07)</div>
+                <div class="card-subtitle">Tự động kết chuyển: <code>Tồn cuối kỳ (Chẵn 4.2) = Tồn đầu kỳ + Nhập trong kỳ − Xuất mở hộp trong kỳ</code> (Kèm lượng còn trong Hộp Mở 4C &amp; Thành tiền)</div>
               </div>
               <div style="display:flex;gap:6px;">
                 <button type="button" class="btn btn-success btn-xs" onclick="openModal('modalReceiveLot')">+ Nhập Lô Mới (+4.2)</button>
                 <button type="button" class="btn btn-warning btn-xs" onclick="openModal('modalIssueKit')">📤 Xuất Mở Hộp (−4.2→4C)</button>
-                <button type="button" class="btn btn-outline btn-xs" onclick="exportNxtReportCsv()">⬇️ Xuất Báo cáo NXT (.CSV)</button>
+                <button type="button" class="btn btn-outline btn-xs" onclick="exportNxtReportCsv()">⬇️ Xuất CSV</button>
               </div>
             </div>
-            <div class="table-wrap" style="max-height:440px;">
+            <div class="table-wrap" style="max-height:420px;">
               <table>
                 <thead>
                   <tr>
@@ -4045,17 +4119,20 @@
             </div>
           </div>
 
-          <div class="card" style="border-top:4px solid #0284c7;">
+          <div class="card" style="border-top:3px solid #0284c7;">
             <div class="card-header">
               <div>
-                <div class="card-title">🔬 QUẢN LÝ ĐÁNH GIÁ LÔ / LOT HÓA CHẤT MỚI TRƯỚC KHI ĐƯA VÀO SỬ DỤNG (LOT-TO-LOT VERIFICATION - BM-12-11)</div>
-                <div class="card-subtitle">Chạy song song Lô cũ vs Lô mới trên mẫu bệnh nhân/chứng và đạt độ lệch cho phép (ΔCt ≤ 0.5 hoặc Bias% ≤ TEa/2) trước khi duyệt xuất kho • Hỗ trợ Thêm / Sửa trực tiếp / Xóa</div>
+                <div class="card-title">🔬 ĐÁNH GIÁ CHẤT LƯỢNG LÔ HÓA CHẤT MỚI TRƯỚC KHI ĐƯA VÀO SỬ DỤNG (LOT-TO-LOT VERIFICATION - BM-12-11)</div>
+                <div class="card-subtitle">Chạy song song Lô cũ vs Lô mới đạt độ lệch (ΔCt ≤ 0.5 hoặc Bias% ≤ TEa/2) • Hỗ trợ Thêm / Sửa trực tiếp / Xóa</div>
               </div>
-              <button type="button" class="btn btn-primary btn-xs" onclick="openModal('modalLotVerify')">+ Mở Form Đánh giá Lô Mới</button>
+              <div style="display:flex;gap:6px;">
+                <button type="button" class="btn btn-outline btn-xs" onclick="toggleQuickAddDrawer('quickAddL2lDrawer')">⚡ Khai báo nhanh trên dòng</button>
+                <button type="button" class="btn btn-primary btn-xs" onclick="openModal('modalLotVerify')">+ Mở Form Đánh giá Lô Mới</button>
+              </div>
             </div>
 
-            <!-- INLINE QUICK-ADD LOT-TO-LOT VERIFICATION BAR -->
-            <div style="background:#f0f9ff;border:1.5px solid #bae6fd;border-radius:9px;padding:8px 10px;margin-bottom:10px;">
+            <!-- COLLAPSIBLE QUICK-ADD LOT-TO-LOT BAR -->
+            <div id="quickAddL2lDrawer" style="display:none;background:#f0f9ff;border:1.5px solid #bae6fd;border-radius:9px;padding:8px 10px;margin-bottom:10px;">
               <div style="display:grid;grid-template-columns:1.3fr 0.8fr 0.8fr 1fr 0.9fr 0.9fr 0.9fr auto;gap:6px;align-items:end;">
                 <div>
                   <label style="font-size:10.5px;font-weight:700;color:#0369a1;">Hóa chất đánh giá:</label>
@@ -4114,14 +4191,14 @@
         <!-- SUB-VIEW 5: CẢNH BÁO CẬN HẠN & BẢNG KIỂM KÊ HÓA CHẤT (4.5A / 4.5B)    -->
         <!-- ===================================================================== -->
         <div id="invSubView-exp" style="display:none;">
-          <div class="card" style="border-top:4px solid #dc2626;">
+          <div class="card" style="border-top:3px solid #dc2626;">
             <div class="card-header">
               <div>
                 <div class="card-title">⏳ DANH SÁCH CẢNH BÁO HÓA CHẤT CẬN HẠN (≤ 30 NGÀY), KIT MỞ SẮP HẾT HẠN &amp; CHẠM TỒN KHO TỐI THIỂU (BM-12-09/10)</div>
                 <div class="card-subtitle">Tự động ưu tiên xuất theo nguyên tắc FEFO (First Expired - First Out) và khóa không cho xuất lô đã quá hạn</div>
               </div>
             </div>
-            <div class="table-wrap" style="max-height:320px;">
+            <div class="table-wrap" style="max-height:300px;">
               <table>
                 <thead>
                   <tr>
@@ -4140,19 +4217,19 @@
             </div>
           </div>
 
-          <div id="invSubView-audit" class="card" style="border-top:4px solid #059669;">
+          <div id="invSubView-audit" class="card" style="border-top:3px solid #059669;">
             <div class="card-header">
               <div>
-                <div class="card-title">📦 BẢNG KIỂM KÊ HÓA CHẤT ĐỊNH KỲ &amp; CÂN BẰNG TỒN KHO THỰC TẾ (BẢNG 4.5A_Phieu_Kiem_Ke_Tong &amp; 4.5B_Chi_Tiet_Kiem_Ke • BM-12-21)</div>
-                <div class="card-subtitle">Nhập số lượng kiểm đếm thực tế tại kho chẵn (<code>4.2</code>) và hộp mở trên máy (<code>4C</code>) → Hệ thống tự động tính <code>Chênh lệch = Thực tế − Phần mềm</code>, cập nhật cân đối kho và lưu Biên bản Kiểm kê vào CSDL</div>
+                <div class="card-title">📦 BẢNG KIỂM KÊ HÓA CHẤT ĐỊNH KỲ &amp; CÂN BẰNG TỒN KHO THỰC TẾ (BẢNG 4.5A &amp; 4.5B • BM-12-21)</div>
+                <div class="card-subtitle">Nhập số lượng kiểm đếm thực tế tại kho chẵn (<code>4.2</code>) và hộp mở (<code>4C</code>) → Tự động tính <code>Chênh lệch = Thực tế − Phần mềm</code>, cập nhật cân đối kho và lưu Biên bản Kiểm kê</div>
               </div>
               <div style="display:flex;gap:6px;flex-wrap:wrap;">
-                <a href="https://docs.google.com/document/d/1sXIJK207XtqXh9KZ4X9X_2luJTk4-uCthJzb9R6NLPM/edit" target="_blank" class="btn btn-outline btn-xs" rel="noopener noreferrer">📄 Mở Biểu mẫu Phiếu Kiểm Kê trên Drive</a>
-                <button type="button" class="btn btn-primary btn-xs" onclick="openPrintableReagentForm('PHIEU_KIEM_KE_ISO')">🖨️ In Phiếu Kiểm Kê Chuẩn ISO (BM-12-21)</button>
-                <button type="button" class="btn btn-success btn-xs" onclick="saveStocktakeAudit()">✅ Chốt Kiểm kê &amp; Cập nhật Tồn Kho Thực tế (4.2/4C)</button>
+                <a href="https://docs.google.com/document/d/1sXIJK207XtqXh9KZ4X9X_2luJTk4-uCthJzb9R6NLPM/edit" target="_blank" class="btn btn-outline btn-xs" rel="noopener noreferrer">📄 Mẫu Phiếu Kiểm Kê Drive</a>
+                <button type="button" class="btn btn-primary btn-xs" onclick="openPrintableReagentForm('PHIEU_KIEM_KE_ISO')">🖨️ In Phiếu Kiểm Kê (BM-12-21)</button>
+                <button type="button" class="btn btn-success btn-xs" onclick="saveStocktakeAudit()">✅ Chốt Kiểm kê &amp; Cập nhật Tồn Kho (4.2/4C)</button>
               </div>
             </div>
-            <div class="table-wrap" style="max-height:400px;">
+            <div class="table-wrap" style="max-height:380px;">
               <table>
                 <thead>
                   <tr>
@@ -4171,10 +4248,9 @@
               </table>
             </div>
 
-            <!-- LỊCH SỬ PHIẾU KIỂM KÊ TỔNG (BẢNG 4.5A_Phieu_Kiem_Ke_Tong) -->
-            <div style="margin-top:12px;border-top:1px dashed #cbd5e1;padding-top:10px;">
-              <div style="font-size:12px;font-weight:700;color:#065f46;margin-bottom:6px;">📋 SỔ LỊCH SỬ PHIẾU KIỂM KÊ TỔNG ĐÃ CHỐT (BẢNG 4.5A_Phieu_Kiem_Ke_Tong):</div>
-              <div class="table-wrap" style="max-height:200px;">
+            <div style="margin-top:10px;border-top:1px dashed #cbd5e1;padding-top:8px;">
+              <div style="font-size:11.8px;font-weight:700;color:#065f46;margin-bottom:6px;">📋 SỔ LỊCH SỬ PHIẾU KIỂM KÊ TỔNG ĐÃ CHỐT (BẢNG 4.5A_Phieu_Kiem_Ke_Tong):</div>
+              <div class="table-wrap" style="max-height:180px;">
                 <table>
                   <thead>
                     <tr>
@@ -4195,215 +4271,333 @@
         </div>
 
         <!-- ===================================================================== -->
-        <!-- SUB-VIEW 6: DỰ TRÙ (x = m - t • BM01/02), HIỆU SUẤT (BM20), ALIQUOT (BM19) & BIỂU ĐỒ -->
+        <!-- SUB-VIEW 6: DỰ TRÙ LINH HOẠT & TIẾN ĐỘ PHIẾU DỰ TRÙ (6A), ALIQUOT (6B) & HIỆU SUẤT (6C) -->
         <!-- ===================================================================== -->
         <div id="invSubView-plan" style="display:none;">
-          <!-- 6.1: DỰ TRÙ THÁNG (x = m - t) & DỰ TRÙ NĂM (x = y + a*y) -->
-          <div class="card" style="border-top:4px solid #0068b5;">
-            <div class="card-header">
-              <div>
-                <div class="card-title">🧮 BẢNG TÍNH DỰ TRÙ HÓA CHẤT - THUỐC THỬ - VẬT TƯ TIÊU HAO THÁNG (BM-12-02 / BM-12-03) &amp; NĂM (BM-12-01)</div>
-                <div class="card-subtitle">
-                  Quy trình chuẩn <code>QTQL.VT03.TTDT-12.V1</code>: <strong>Dự trù tháng <code>x = m − t</code></strong> (Sửa trực tiếp <code>m</code>: tiêu thụ 45 ngày, <code>t</code>: tồn sau kiểm kê) • <strong>Dự trù năm <code>x_năm = y + a·y</code></strong> (Sửa trực tiếp <code>y</code>: sử dụng 12 tháng trước, <code>a%</code>: tăng trưởng dự kiến)
+          <!-- CLEAN 3-PILL SUB-SWITCHER INSIDE PHÂN MỤC 06 SO IT NEVER FEELS CLUTTERED -->
+          <div class="plan-sub-pill-bar">
+            <span style="font-size:11.3px;font-weight:800;color:#0f4c81;margin-left:4px;">Chế độ hiển thị Phân mục 06:</span>
+            <button type="button" id="planSubBtn-proc" class="plan-sub-pill active" onclick="switchPlanSubSection('proc')">🧮 6A. Dự trù Linh hoạt &amp; Tiến độ Phiếu Dự trù (BM-12-01/02/05)</button>
+            <button type="button" id="planSubBtn-aliq" class="plan-sub-pill" onclick="switchPlanSubSection('aliq')">💧 6B. Sổ Pha chế &amp; Chia ống Aliquot (BM-12-19)</button>
+            <button type="button" id="planSubBtn-eff" class="plan-sub-pill" onclick="switchPlanSubSection('eff')">📈 6C. Báo cáo Hiệu suất (BM-12-20) &amp; Biểu đồ</button>
+            <button type="button" id="planSubBtn-all" class="plan-sub-pill" onclick="switchPlanSubSection('all')">🌐 Xem Tất cả 6A + 6B + 6C</button>
+          </div>
+
+          <!-- =============================================================== -->
+          <!-- 6A: HỆ THỐNG DỰ TRÙ LINH HOẠT & QUẢN LÝ TIẾN ĐỘ PHIẾU DỰ TRÙ     -->
+          <!-- =============================================================== -->
+          <div id="planSubSection-proc">
+            <!-- CARD 6A.1: QUẢN LÝ TIẾN ĐỘ & TÌNH TRẠNG CÁC PHIẾU DỰ TRÙ / XIN LĨNH (VOUCHER LIFECYCLE) -->
+            <div class="card" style="border-top:3px solid #0d9488;background:linear-gradient(180deg,#f0fdfa 0%,#ffffff 140px);">
+              <div class="card-header" style="margin-bottom:8px;">
+                <div>
+                  <div class="card-title" style="color:#0f766e;">📋 QUẢN LÝ PHIẾU DỰ TRÙ &amp; THEO DÕI TIẾN ĐỘ / TÌNH TRẠNG DUYỆT CẤP HÓA CHẤT (BM-12-01 / BM-12-02 / BM-12-05)</div>
+                  <div class="card-subtitle">Theo dõi khép kín 6 bước tiến độ của từng Phiếu dự trù: <code>1. Bản nháp (20%)</code> → <code>2. Trình KXN duyệt (40%)</code> → <code>3. Đã gửi Khoa Dược/VT (60%)</code> → <code>4. Đã duyệt / Đang giao (80%)</code> → <code>5. Nhận 1 phần (90%)</code> → <code>6. Đã nhận &amp; Nhập kho 4.2 (100%)</code></div>
+                </div>
+                <div style="display:flex;gap:6px;flex-wrap:wrap;">
+                  <button type="button" class="btn btn-primary btn-xs" style="background:#0d9488;border-color:#0d9488;" onclick="createProcurementVoucherFromSelected()">+ Lập Phiếu Dự trù Mới từ Mục Đã chọn</button>
+                  <button type="button" class="btn btn-outline btn-xs" onclick="openPrintableReagentForm('DU_TRU_THANG_BM02')">🖨️ In Đơn Dự trù Gửi Khoa Dược (BM-12-02)</button>
                 </div>
               </div>
-              <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;">
-                <span style="font-size:12px;font-weight:700;color:#0068b5;">Hệ số tăng trưởng năm (a%):</span>
-                <input id="annualGrowthPctInput" type="number" class="form-control" style="width:70px;height:29px;font-weight:700;" value="15" min="0" max="100" oninput="renderReagentPlanningAndYield()">
-                <button type="button" class="btn btn-primary btn-xs" onclick="openPrintableReagentForm('DU_TRU_THANG_BM02')">🖨️ In Đơn Dự trù Tháng gửi Khoa Dược (BM-12-02/03)</button>
+
+              <!-- 6-STAGE PROCUREMENT VOUCHER SUMMARY PILLS -->
+              <div style="display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:6px;margin-bottom:10px;">
+                <div style="background:#fff;border:1px solid #cbd5e1;border-left:3px solid #64748b;border-radius:7px;padding:6px 8px;">
+                  <div style="font-size:9.8px;font-weight:700;color:#475569;">BƯỚC 1 (20%)</div>
+                  <div style="font-size:11px;font-weight:700;color:#0f172a;">📝 Đang lập dự trù</div>
+                </div>
+                <div style="background:#fff;border:1px solid #cbd5e1;border-left:3px solid #0284c7;border-radius:7px;padding:6px 8px;">
+                  <div style="font-size:9.8px;font-weight:700;color:#0284c7;">BƯỚC 2 (40%)</div>
+                  <div style="font-size:11px;font-weight:700;color:#0f172a;">👨‍⚕️ Chờ KXN duyệt</div>
+                </div>
+                <div style="background:#fff;border:1px solid #cbd5e1;border-left:3px solid #7c3aed;border-radius:7px;padding:6px 8px;">
+                  <div style="font-size:9.8px;font-weight:700;color:#7c3aed;">BƯỚC 3 (60%)</div>
+                  <div style="font-size:11px;font-weight:700;color:#0f172a;">📤 Đã gửi Dược / VT</div>
+                </div>
+                <div style="background:#fff;border:1px solid #cbd5e1;border-left:3px solid #d97706;border-radius:7px;padding:6px 8px;">
+                  <div style="font-size:9.8px;font-weight:700;color:#d97706;">BƯỚC 4 (80%)</div>
+                  <div style="font-size:11px;font-weight:700;color:#0f172a;">🛒 Đã duyệt / Đang giao</div>
+                </div>
+                <div style="background:#fff;border:1px solid #cbd5e1;border-left:3px solid #0d9488;border-radius:7px;padding:6px 8px;">
+                  <div style="font-size:9.8px;font-weight:700;color:#0d9488;">BƯỚC 5 (90%)</div>
+                  <div style="font-size:11px;font-weight:700;color:#0f172a;">📦 Nhận một phần</div>
+                </div>
+                <div style="background:#fff;border:1px solid #cbd5e1;border-left:3px solid #059669;border-radius:7px;padding:6px 8px;">
+                  <div style="font-size:9.8px;font-weight:700;color:#059669;">BƯỚC 6 (100%)</div>
+                  <div style="font-size:11px;font-weight:700;color:#0f172a;">✅ Đã nhập kho 4.2</div>
+                </div>
+              </div>
+
+              <div class="table-wrap" style="max-height:280px;overflow-x:auto;">
+                <table style="width:100%;table-layout:fixed;">
+                  <thead>
+                    <tr>
+                      <th style="width:11%;">Mã Phiếu &amp; Ngày lập</th>
+                      <th style="width:18%;">Tên Đợt Dự trù / Xin lĩnh &amp; Bộ phận</th>
+                      <th style="width:11%;">Đơn vị Tiếp nhận</th>
+                      <th style="width:16%;">Danh mục &amp; Tổng Kinh phí Dự kiến</th>
+                      <th style="width:21%;">Tình trạng &amp; Tiến độ Phiếu Dự trù (Đổi trực tiếp)</th>
+                      <th style="width:11%;">Người lập / Duyệt</th>
+                      <th style="width:12%;">Thao tác (Tiến độ / Nhập kho / Xóa)</th>
+                    </tr>
+                  </thead>
+                  <tbody id="procurementVoucherTableBody"></tbody>
+                </table>
               </div>
             </div>
-            <div class="table-wrap" style="max-height:380px;">
-              <table>
-                <thead>
-                  <tr>
-                    <th>Phân nhóm</th>
-                    <th>Mã Dược BV &amp; Lô</th>
-                    <th>Tên Hóa chất, Thuốc thử, VTTH</th>
-                    <th>Nhà cung cấp</th>
-                    <th>Quy cách / ĐVT</th>
-                    <th>Tiêu thụ 45 Ngày (m - Sửa trực tiếp)</th>
-                    <th>Tồn Hiện tại (t)</th>
-                    <th>Dự Trù Tháng Tới (x = m − t)</th>
-                    <th>Sử dụng 12 Tháng (y - Sửa trực tiếp)</th>
-                    <th>Dự Trù Năm Tới (x = y + a·y)</th>
-                  </tr>
-                </thead>
-                <tbody id="procurementPlanTableBody"></tbody>
-              </table>
+
+            <!-- CARD 6A.2: BẢNG TÍNH DỰ TRÙ TỰ ĐỘNG KẾT HỢP LINH HOẠT THÊM/BỚT DANH MỤC & CHỈNH SỐ LƯỢNG THỰC ĐẶT -->
+            <div class="card" style="border-top:3px solid #0068b5;">
+              <div class="card-header" style="margin-bottom:8px;">
+                <div>
+                  <div class="card-title">🧮 BẢNG DỰ TRÙ HÓA CHẤT - SINH PHẨM - VẬT TƯ LINH HOẠT (TỰ ĐỘNG <code>x = m − t</code> + THÊM/BỚT DANH MỤC &amp; CHỈNH SỐ LƯỢNG THỰC ĐẶT)</div>
+                  <div class="card-subtitle">
+                    Hệ thống tự động gợi ý <code>x_tự_động = max(0, m − t)</code> và dự trù năm <code>x_năm = y + a·y</code>; đồng thời cho phép <strong>thêm/bớt danh mục bất kỳ</strong>, <strong>chỉnh sửa số lượng thực đặt (<code>±</code>)</strong> và <strong>cập nhật tình trạng từng mặt hàng</strong>
+                  </div>
+                </div>
+                <div style="display:flex;gap:6px;align-items:center;flex-wrap:wrap;">
+                  <span style="font-size:11.3px;font-weight:700;color:#0068b5;">Tăng trưởng năm (a%):</span>
+                  <input id="annualGrowthPctInput" type="number" class="form-control" style="width:62px;height:28px;font-weight:700;" value="15" min="0" max="100" oninput="renderReagentPlanningAndYield()">
+                  <button type="button" class="btn btn-outline btn-xs" onclick="toggleQuickAddDrawer('quickAddProcurementDrawer')">+ Thêm Danh mục Vào Dự trù</button>
+                  <button type="button" class="btn btn-outline btn-xs" onclick="resetProcurementPlanFromLots()" title="Khôi phục đầy đủ danh mục từ tồn kho thực tế">🔄 Nạp lại Tự động từ Kho</button>
+                </div>
+              </div>
+
+              <!-- FILTER & SUMMARY TOOLBAR FOR FLEXIBLE PROCUREMENT TABLE -->
+              <div class="equip-filter-toolbar" style="margin-bottom:8px;padding:7px 10px;">
+                <div style="display:flex;gap:5px;flex-wrap:wrap;align-items:center;">
+                  <button type="button" id="procFilterChip-ALL" class="eq-quick-chip active" onclick="setProcurementFilterMode('ALL')">Tất cả danh mục dự trù</button>
+                  <button type="button" id="procFilterChip-NEED" class="eq-quick-chip" onclick="setProcurementFilterMode('NEED')">📋 Cần đặt hàng (SL Thực đặt &gt; 0)</button>
+                  <button type="button" id="procFilterChip-AUTO" class="eq-quick-chip" onclick="setProcurementFilterMode('AUTO')">⚡ Thiếu theo công thức (m − t &gt; 0)</button>
+                  <button type="button" id="procFilterChip-PENDING" class="eq-quick-chip" onclick="setProcurementFilterMode('PENDING')">⏳ Đang chờ duyệt / Đang giao</button>
+                </div>
+                <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;">
+                  <input id="procurementSearchInput" type="text" class="form-control" style="width:210px;height:28px;font-size:11.3px;" placeholder="🔍 Tìm mã dược, tên hóa chất, bộ phận..." oninput="renderReagentPlanningAndYield()">
+                  <span id="procurementSummaryBadge" class="badge b-info">29 mục • Cần đặt: 8 mục</span>
+                </div>
+              </div>
+
+              <!-- COLLAPSIBLE DRAWER: ADD ITEM TO PROCUREMENT PLAN (FROM CATALOG 4.1 OR CUSTOM ITEM) -->
+              <div id="quickAddProcurementDrawer" style="display:none;background:#f0f9ff;border:1.5px solid #bae6fd;border-radius:9px;padding:9px 12px;margin-bottom:10px;">
+                <div style="font-size:11.2px;font-weight:700;color:#0369a1;margin-bottom:6px;">➕ THÊM LINH HOẠT DANH MỤC HÓA CHẤT / SINH PHẨM / VẬT TƯ VÀO BẢNG DỰ TRÙ (CHỌN TỪ DANH MỤC 4.1 HOẶC NHẬP MỚI):</div>
+                <div style="display:grid;grid-template-columns:1.3fr 0.85fr 1.35fr 0.85fr 0.75fr 0.7fr 0.75fr 1.1fr auto;gap:6px;align-items:end;">
+                  <div>
+                    <label style="font-size:10px;font-weight:700;color:#334155;">Chọn nhanh từ Danh mục 4.1:</label>
+                    <select id="procQuickCatalogSelect" class="form-control" style="height:29px;font-size:11px;" onchange="handleProcQuickCatalogPick(this.value)"></select>
+                  </div>
+                  <div>
+                    <label style="font-size:10px;font-weight:700;color:#334155;">Mã Dược BV:</label>
+                    <input id="procAddMaDuocInput" type="text" class="form-control" style="height:29px;font-size:11px;" value="HC.DT.CFX96.0205">
+                  </div>
+                  <div>
+                    <label style="font-size:10px;font-weight:700;color:#334155;">Tên Hóa chất / Sinh phẩm / VTTH:</label>
+                    <input id="procAddNameInput" type="text" class="form-control" style="height:29px;font-size:11px;" value="Kit Real-time PCR Định lượng BKV/JCV Đa tác nhân">
+                  </div>
+                  <div>
+                    <label style="font-size:10px;font-weight:700;color:#334155;">Bộ phận:</label>
+                    <select id="procAddDeptSelect" class="form-control" style="height:29px;font-size:11px;">
+                      <option value="Di truyền &amp; SHPT">Di truyền &amp; SHPT</option>
+                      <option value="Hóa sinh">Hóa sinh</option>
+                      <option value="Huyết học">Huyết học</option>
+                      <option value="Vi sinh">Vi sinh</option>
+                      <option value="Giải phẫu bệnh">Giải phẫu bệnh</option>
+                    </select>
+                  </div>
+                  <div>
+                    <label style="font-size:10px;font-weight:700;color:#334155;">Quy cách / ĐVT:</label>
+                    <input id="procAddUnitInput" type="text" class="form-control" style="height:29px;font-size:11px;" value="100 Rxn/Hộp|Rxn">
+                  </div>
+                  <div>
+                    <label style="font-size:10px;font-weight:700;color:#334155;">Tiêu thụ 45d (m):</label>
+                    <input id="procAddM45Input" type="number" min="0" class="form-control" style="height:29px;font-size:11px;font-weight:700;" value="200">
+                  </div>
+                  <div>
+                    <label style="font-size:10px;font-weight:700;color:#059669;">SL Thực đặt:</label>
+                    <input id="procAddOrderQtyInput" type="number" min="0" class="form-control" style="height:29px;font-size:11px;font-weight:700;color:#059669;" value="200">
+                  </div>
+                  <div>
+                    <label style="font-size:10px;font-weight:700;color:#334155;">Lý do dự trù / Ghi chú:</label>
+                    <input id="procAddReasonInput" type="text" class="form-control" style="height:29px;font-size:11px;" value="Bổ sung xét nghiệm mới triển khai Q4/2026">
+                  </div>
+                  <button type="button" class="btn btn-primary btn-xs" style="height:29px;font-weight:700;padding:0 11px;" onclick="handleAddProcurementPlanItem()">+ Thêm Dự trù</button>
+                </div>
+              </div>
+
+              <div class="table-wrap" style="max-height:480px;overflow-x:auto;">
+                <table style="width:100%;table-layout:fixed;">
+                  <thead>
+                    <tr>
+                      <th style="width:3.5%;text-align:center;"><input type="checkbox" id="procSelectAllCheck" checked onchange="toggleSelectAllProcurementItems(this.checked)" title="Chọn / Bỏ chọn tất cả"></th>
+                      <th style="width:9.5%;">Mã Dược BV &amp; Bộ phận</th>
+                      <th style="width:17%;">Tên Hóa chất, Sinh phẩm, VTTH &amp; Quy cách</th>
+                      <th style="width:8%;">Tiêu thụ 45d (m - Sửa)</th>
+                      <th style="width:6.5%;">Tồn Kho (t)</th>
+                      <th style="width:8.5%;">Gợi ý Tự động (x = m − t)</th>
+                      <th style="width:13%;">SL Dự trù Thực đặt (Chỉnh sửa ±)</th>
+                      <th style="width:8.5%;">Dự trù Năm (y + a·y)</th>
+                      <th style="width:15%;">Tiến độ / Tình trạng &amp; Lý do Điều chỉnh</th>
+                      <th style="width:10.5%;">Thao tác (Phiếu / Bớt)</th>
+                    </tr>
+                  </thead>
+                  <tbody id="procurementPlanTableBody"></tbody>
+                </table>
+              </div>
             </div>
           </div>
 
-          <!-- 6.2: BÁO CÁO HIỆU SUẤT SỬ DỤNG HÓA CHẤT (BM-12-20 / BM-HH-08) -->
-          <div class="card" style="border-top:4px solid #059669;">
-            <div class="card-header">
-              <div>
-                <div class="card-title">📈 BÁO CÁO HIỆU SUẤT SỬ DỤNG HÓA CHẤT - THUỐC THỬ - VẬT TƯ TIÊU HAO THEO XÉT NGHIỆM (BM.QTQL.VT03.TTDT-12-20.V1)</div>
-                <div class="card-subtitle">Phân tích chi tiết số test đã xuất sử dụng: <strong>Số test Bệnh nhân (BN)</strong> + <strong>Số test Cal / QC</strong> + <strong>Số test Ngoại kiểm (EQA)</strong> + <strong>Số BN chạy lại / Hao hụt</strong> so với Định mức lý thuyết</div>
-              </div>
-              <button type="button" class="btn btn-outline btn-xs" onclick="openPrintableReagentForm('BAO_CAO_HIEU_SUAT_BM20')">🖨️ In Báo cáo Hiệu suất Sử dụng (BM-12-20)</button>
-            </div>
-            <div class="table-wrap" style="max-height:360px;">
-              <table>
-                <thead>
-                  <tr>
-                    <th>Mã Dược BV &amp; Số Lô</th>
-                    <th>Tên Hóa chất &amp; Máy XN</th>
-                    <th>Tồn Đầu</th>
-                    <th>Đã Lĩnh</th>
-                    <th>Tổng Đã SD</th>
-                    <th>Tồn Cuối</th>
-                    <th>Số Test BN (Hữu ích)</th>
-                    <th>Số Test Cal / IQC</th>
-                    <th>Số Test Ngoại kiểm EQA</th>
-                    <th>Số Test Chạy lại / Hao hụt</th>
-                    <th>Hiệu suất Hữu ích (%)</th>
-                  </tr>
-                </thead>
-                <tbody id="reagentEfficiencyTableBody"></tbody>
-              </table>
-            </div>
-          </div>
-
-          <!-- 6.3: SỔ THEO DÕI PHA CHẾ, HOÀN NGUYÊN & CHIA NHỎ HÓA CHẤT ALIQUOT (BM-12-19) -->
-          <div class="card" style="border-top:4px solid #7c3aed;">
-            <div class="card-header">
-              <div>
-                <div class="card-title">💧 SỔ THEO DÕI PHA CHẾ MASTERMIX, HOÀN NGUYÊN &amp; CHIA NHỎ HÓA CHẤT ALIQUOT (BM.QTQL.VT03.TTDT-12-19.V1)</div>
-                <div class="card-subtitle">Bảo vệ hoạt tính sinh học của enzyme/kháng thể — Tránh cấp đông/rã đông lặp lại quá 5 lần theo ISO 15189:2022 &amp; CLSI EP25 • Hỗ trợ Thêm / Sửa trực tiếp / Xóa</div>
-              </div>
-              <button type="button" class="btn btn-success btn-xs" onclick="openModal('modalAliquot')">+ Mở Form Chia ống Aliquot Mới</button>
-            </div>
-
-            <!-- INLINE QUICK-ADD ALIQUOT BAR -->
-            <div style="background:#f5f3ff;border:1.5px solid #ddd6fe;border-radius:9px;padding:8px 10px;margin-bottom:10px;">
-              <div style="display:grid;grid-template-columns:1.1fr 1.2fr 1.1fr 0.9fr 0.8fr auto;gap:6px;align-items:end;">
-                <div>
-                  <label style="font-size:10.3px;font-weight:700;color:#5b21b6;">Lô Hóa chất Gốc:</label>
-                  <input id="quickAliqLotInput" type="text" class="form-control" style="height:29px;font-size:11.3px;" value="RB0325K03">
-                </div>
-                <div>
-                  <label style="font-size:10.3px;font-weight:700;color:#5b21b6;">Tên Hóa chất / MasterMix:</label>
-                  <input id="quickAliqNameInput" type="text" class="form-control" style="height:29px;font-size:11.3px;" value="Allplex RP1 MasterMix (5µL EM8 + 5µL 5X Buffer + 5µL Oligo)">
-                </div>
-                <div>
-                  <label style="font-size:10.3px;font-weight:700;color:#5b21b6;">Quy cách ống chia × Thể tích:</label>
-                  <input id="quickAliqSpecInput" type="text" class="form-control" style="height:29px;font-size:11.3px;" value="20 ống × 15 µL (Đủ 1 mẻ 18 BN + 2 QC)">
-                </div>
-                <div>
-                  <label style="font-size:10.3px;font-weight:700;color:#5b21b6;">Bảo quản:</label>
-                  <input id="quickAliqTempInput" type="text" class="form-control" style="height:29px;font-size:11.3px;" value="-20°C (Tránh sáng)">
-                </div>
-                <div>
-                  <label style="font-size:10.3px;font-weight:700;color:#5b21b6;">Hạn sau chia:</label>
-                  <input id="quickAliqExpInput" type="text" class="form-control" style="height:29px;font-size:11.3px;" value="13/12/2026">
-                </div>
-                <button type="button" class="btn btn-primary btn-xs" style="height:29px;background:#7c3aed;border-color:#7c3aed;font-weight:700;padding:0 10px;" onclick="handleQuickAddAliquotInline()">+ Ghi Sổ BM-12-19</button>
-              </div>
-            </div>
-
-            <div class="table-wrap">
-              <table>
-                <thead>
-                  <tr>
-                    <th>Mã Mẻ Pha &amp; Ngày</th>
-                    <th>Tên Hóa chất / Sinh phẩm Gốc (Số Lot)</th>
-                    <th>Loại thao tác</th>
-                    <th>Số lượng ống chia × Thể tích (Sửa trực tiếp)</th>
-                    <th>Điều kiện bảo quản</th>
-                    <th>Kết quả QC sau pha</th>
-                    <th>Hạn dùng sau chia (Sửa)</th>
-                    <th>Người thực hiện &amp; Thao tác</th>
-                  </tr>
-                </thead>
-                <tbody id="aliquotLogTableBody"></tbody>
-              </table>
-            </div>
-          </div>
-
-          <!-- 6.4: BIỂU ĐỒ THỐNG KÊ HÓA CHẤT -->
-          <div id="invSubView-chart" class="grid-2">
-            <div class="card">
+          <!-- =============================================================== -->
+          <!-- 6B: SỔ THEO DÕI PHA CHẾ, HOÀN NGUYÊN & CHIA NHỎ ALIQUOT (BM-12-19) -->
+          <!-- =============================================================== -->
+          <div id="planSubSection-aliq" style="display:none;">
+            <div class="card" style="border-top:3px solid #7c3aed;">
               <div class="card-header">
-                <div class="card-title">📊 Biểu đồ Tổng hợp Nhập - Xuất - Tồn theo Lô Hóa chất</div>
+                <div>
+                  <div class="card-title">💧 SỔ THEO DÕI PHA CHẾ MASTERMIX, HOÀN NGUYÊN &amp; CHIA NHỎ HÓA CHẤT ALIQUOT (BM.QTQL.VT03.TTDT-12-19.V1)</div>
+                  <div class="card-subtitle">Bảo vệ hoạt tính sinh học của enzyme/kháng thể — Tránh cấp đông/rã đông lặp lại quá 5 lần theo ISO 15189:2022 &amp; CLSI EP25 • Hỗ trợ Thêm / Sửa trực tiếp / Xóa</div>
+                </div>
+                <div style="display:flex;gap:6px;">
+                  <button type="button" class="btn btn-outline btn-xs" onclick="toggleQuickAddDrawer('quickAddAliqDrawer')">⚡ Ghi nhanh trên dòng</button>
+                  <button type="button" class="btn btn-success btn-xs" onclick="openModal('modalAliquot')">+ Mở Form Chia ống Aliquot Mới</button>
+                </div>
               </div>
-              <div style="height:260px;"><canvas id="invNxtBarChart"></canvas></div>
+
+              <div id="quickAddAliqDrawer" style="display:block;background:#f5f3ff;border:1.5px solid #ddd6fe;border-radius:9px;padding:8px 10px;margin-bottom:10px;">
+                <div style="display:grid;grid-template-columns:1.1fr 1.2fr 1.1fr 0.9fr 0.8fr auto;gap:6px;align-items:end;">
+                  <div>
+                    <label style="font-size:10.3px;font-weight:700;color:#5b21b6;">Lô Hóa chất Gốc:</label>
+                    <input id="quickAliqLotInput" type="text" class="form-control" style="height:29px;font-size:11.3px;" value="RB0325K03">
+                  </div>
+                  <div>
+                    <label style="font-size:10.3px;font-weight:700;color:#5b21b6;">Tên Hóa chất / MasterMix:</label>
+                    <input id="quickAliqNameInput" type="text" class="form-control" style="height:29px;font-size:11.3px;" value="Allplex RP1 MasterMix (5µL EM8 + 5µL 5X Buffer + 5µL Oligo)">
+                  </div>
+                  <div>
+                    <label style="font-size:10.3px;font-weight:700;color:#5b21b6;">Quy cách ống chia × Thể tích:</label>
+                    <input id="quickAliqSpecInput" type="text" class="form-control" style="height:29px;font-size:11.3px;" value="20 ống × 15 µL (Đủ 1 mẻ 18 BN + 2 QC)">
+                  </div>
+                  <div>
+                    <label style="font-size:10.3px;font-weight:700;color:#5b21b6;">Bảo quản:</label>
+                    <input id="quickAliqTempInput" type="text" class="form-control" style="height:29px;font-size:11.3px;" value="-20°C (Tránh sáng)">
+                  </div>
+                  <div>
+                    <label style="font-size:10.3px;font-weight:700;color:#5b21b6;">Hạn sau chia:</label>
+                    <input id="quickAliqExpInput" type="text" class="form-control" style="height:29px;font-size:11.3px;" value="13/12/2026">
+                  </div>
+                  <button type="button" class="btn btn-primary btn-xs" style="height:29px;background:#7c3aed;border-color:#7c3aed;font-weight:700;padding:0 10px;" onclick="handleQuickAddAliquotInline()">+ Ghi Sổ BM-12-19</button>
+                </div>
+              </div>
+
+              <div class="table-wrap">
+                <table>
+                  <thead>
+                    <tr>
+                      <th>Mã Mẻ Pha &amp; Ngày</th>
+                      <th>Tên Hóa chất / Sinh phẩm Gốc (Số Lot)</th>
+                      <th>Loại thao tác</th>
+                      <th>Số lượng ống chia × Thể tích (Sửa trực tiếp)</th>
+                      <th>Điều kiện bảo quản</th>
+                      <th>Kết quả QC sau pha</th>
+                      <th>Hạn dùng sau chia (Sửa)</th>
+                      <th>Người thực hiện &amp; Thao tác</th>
+                    </tr>
+                  </thead>
+                  <tbody id="aliquotLogTableBody"></tbody>
+                </table>
+              </div>
             </div>
-            <div class="card">
+          </div>
+
+          <!-- =============================================================== -->
+          <!-- 6C: BÁO CÁO HIỆU SUẤT SỬ DỤNG (BM-12-20) & BIỂU ĐỒ THỐNG KÊ     -->
+          <!-- =============================================================== -->
+          <div id="planSubSection-eff" style="display:none;">
+            <div class="card" style="border-top:3px solid #059669;">
               <div class="card-header">
-                <div class="card-title">⏳ Biểu đồ Theo dõi Thời hạn Sử dụng Còn lại của Các Lô (Ngày)</div>
+                <div>
+                  <div class="card-title">📈 BÁO CÁO HIỆU SUẤT SỬ DỤNG HÓA CHẤT - THUỐC THỬ - VẬT TƯ TIÊU HAO THEO XÉT NGHIỆM (BM.QTQL.VT03.TTDT-12-20.V1)</div>
+                  <div class="card-subtitle">Phân tích chi tiết số test đã xuất sử dụng: <strong>Số test Bệnh nhân (BN)</strong> + <strong>Số test Cal / QC</strong> + <strong>Số test Ngoại kiểm (EQA)</strong> + <strong>Số BN chạy lại / Hao hụt</strong></div>
+                </div>
+                <button type="button" class="btn btn-outline btn-xs" onclick="openPrintableReagentForm('BAO_CAO_HIEU_SUAT_BM20')">🖨️ In Báo cáo Hiệu suất (BM-12-20)</button>
               </div>
-              <div style="height:260px;"><canvas id="invExpiryChart"></canvas></div>
+              <div class="table-wrap" style="max-height:360px;">
+                <table>
+                  <thead>
+                    <tr>
+                      <th>Mã Dược BV &amp; Số Lô</th>
+                      <th>Tên Hóa chất &amp; Máy XN</th>
+                      <th>Tồn Đầu</th>
+                      <th>Đã Lĩnh</th>
+                      <th>Tổng Đã SD</th>
+                      <th>Tồn Cuối</th>
+                      <th>Số Test BN (Hữu ích)</th>
+                      <th>Số Test Cal / IQC</th>
+                      <th>Số Test Ngoại kiểm EQA</th>
+                      <th>Số Test Chạy lại / Hao hụt</th>
+                      <th>Hiệu suất Hữu ích (%)</th>
+                    </tr>
+                  </thead>
+                  <tbody id="reagentEfficiencyTableBody"></tbody>
+                </table>
+              </div>
+            </div>
+
+            <div id="invSubView-chart" class="grid-2">
+              <div class="card">
+                <div class="card-header">
+                  <div class="card-title">📊 Biểu đồ Tổng hợp Nhập - Xuất - Tồn theo Lô Hóa chất</div>
+                </div>
+                <div style="height:260px;"><canvas id="invNxtBarChart"></canvas></div>
+              </div>
+              <div class="card">
+                <div class="card-header">
+                  <div class="card-title">⏳ Biểu đồ Theo dõi Thời hạn Sử dụng Còn lại của Các Lô (Ngày)</div>
+                </div>
+                <div style="height:260px;"><canvas id="invExpiryChart"></canvas></div>
+              </div>
             </div>
           </div>
         </div>
 
         <!-- ===================================================================== -->
-        <!-- ALWAYS-VISIBLE REAL-TIME DATABASE PERSISTENCE & AUDIT TRAIL PANEL     -->
+        <!-- SLEEK COLLAPSIBLE DATABASE PERSISTENCE & AUDIT TRAIL PANEL            -->
         <!-- ===================================================================== -->
-        <div id="reagentModuleAuditTrailCard" class="card" style="margin-top:14px;border-top:4px solid #0f4c81;background:linear-gradient(180deg,#f8fafc 0%,#ffffff 100%);">
-          <div class="card-header" style="margin-bottom:8px;">
-            <div>
-              <div class="card-title" style="color:#0f4c81;">🗄️ TRUNG TÂM LIÊN KẾT CƠ SỞ DỮ LIỆU &amp; NHẬT KÝ TRUY VẾT THỜI GIAN THỰC PHÂN HỆ HÓA CHẤT (ISO 15189:2022 ĐIỀU 8.4 &amp; APPSHEET TTA-LIMS)</div>
-              <div class="card-subtitle">Mọi thao tác Thêm / Sửa / Xóa / Khấu trừ / Kiểm kê đều tự động ghi trực tiếp vào CSDL nội bộ và đồng bộ lên Google Sheets MasterDB (<code>Kho_HoaChat_Lot</code>, <code>LIMS_5B_NhatKy_KhauTru_Kho</code>, <code>SYS_AUDIT_LOG</code>)</div>
+        <div id="reagentModuleAuditTrailCard" class="card" style="margin-top:10px;border-top:3px solid #0f4c81;background:#f8fafc;">
+          <div style="display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap;">
+            <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;">
+              <span style="font-size:12.5px;font-weight:800;color:#0f4c81;">🗄️ LIÊN KẾT CSDL &amp; NHẬT KÝ TRUY VẾT THỜI GIAN THỰC:</span>
+              <span class="badge b-info">4.1/5E: <strong id="dbStatCatCount">29 Danh mục</strong></span>
+              <span class="badge b-pass">4.2 Kho Chẵn: <strong id="dbStatLotCount">29 Lô</strong></span>
+              <span class="badge b-info">4C Hộp Mở: <strong id="dbStatOpenCount">29 Hộp mở</strong></span>
+              <span class="badge b-warn">5B Khấu trừ: <strong id="dbStatDedCount">40 Giao dịch</strong></span>
+              <span class="badge b-purple">4.5A Kiểm kê: <strong id="dbStatStkCount">2 Đợt chốt</strong></span>
+              <span class="badge b-fail">Audit Log: <strong id="dbStatAuditCount">25 Sự kiện</strong></span>
             </div>
             <div style="display:flex;gap:6px;flex-wrap:wrap;">
-              <button type="button" class="btn btn-outline btn-xs" onclick="openLiveDbTableBrowser('Kho_HoaChat_Lot')">🔍 Duyệt Bảng Kho_HoaChat_Lot</button>
-              <button type="button" class="btn btn-outline btn-xs" onclick="openLiveDbTableBrowser('LIMS_5B_NhatKy_KhauTru_Kho')">🔍 Duyệt Bảng LIMS_5B_NhatKy_KhauTru_Kho</button>
-              <button type="button" class="btn btn-outline btn-xs" onclick="openLiveDbTableBrowser('SYS_AUDIT_LOG')">🔍 Duyệt Bảng SYS_AUDIT_LOG</button>
-              <button type="button" class="btn btn-success btn-xs" onclick="pushSingleTableToMasterDB('Kho_HoaChat_Lot');pushSingleTableToMasterDB('LIMS_5B_NhatKy_KhauTru_Kho');pushSingleTableToMasterDB('SYS_AUDIT_LOG');">☁️ Đồng bộ Tất cả Bảng Hóa chất Lên Google Sheets</button>
+              <button type="button" class="btn btn-outline btn-xs" onclick="toggleReagentAuditLogDrawer()">🔍 Mở rộng / Thu gọn Sổ Truy vết</button>
+              <button type="button" class="btn btn-outline btn-xs" onclick="openLiveDbTableBrowser('Kho_HoaChat_Lot')">🗄️ Bảng Kho_HoaChat_Lot</button>
+              <button type="button" class="btn btn-outline btn-xs" onclick="openLiveDbTableBrowser('LIMS_5B_NhatKy_KhauTru_Kho')">🗄️ Bảng LIMS_5B</button>
+              <button type="button" class="btn btn-success btn-xs" onclick="pushSingleTableToMasterDB('Kho_HoaChat_Lot');pushSingleTableToMasterDB('LIMS_5B_NhatKy_KhauTru_Kho');pushSingleTableToMasterDB('SYS_AUDIT_LOG');">☁️ Đồng bộ Tất cả</button>
             </div>
           </div>
 
-          <div style="display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:8px;margin-bottom:10px;">
-            <div style="background:#fff;border:1px solid #cbd5e1;border-radius:8px;padding:7px 10px;">
-              <div style="font-size:10px;font-weight:700;color:#475569;">BẢNG 4.1 &amp; 5E (DANH MỤC)</div>
-              <div id="dbStatCatCount" style="font-size:15px;font-weight:700;color:#0f4c81;">29 Bản ghi</div>
-              <div style="font-size:9.8px;color:#059669;">✓ Đã liên kết QTXN</div>
+          <div id="reagentAuditLogDrawerBody" style="display:none;margin-top:10px;">
+            <div class="table-wrap" style="max-height:220px;">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Mã Truy vết (Audit ID)</th>
+                    <th>Thời gian Ghi</th>
+                    <th>Người thực hiện</th>
+                    <th>Loại Thao tác</th>
+                    <th>Bảng CSDL Cập nhật</th>
+                    <th>Mã Bản ghi / Số Lô</th>
+                    <th>Nội dung Thay đổi &amp; Đối soát Tồn kho</th>
+                    <th>Trạng thái CSDL</th>
+                  </tr>
+                </thead>
+                <tbody id="reagentAuditLogTableBody"></tbody>
+              </table>
             </div>
-            <div style="background:#fff;border:1px solid #cbd5e1;border-radius:8px;padding:7px 10px;">
-              <div style="font-size:10px;font-weight:700;color:#475569;">BẢNG 4.2 (LÔ KHO CHẴN)</div>
-              <div id="dbStatLotCount" style="font-size:15px;font-weight:700;color:#0d9488;">29 Lô</div>
-              <div style="font-size:9.8px;color:#059669;">✓ Đồng bộ Kho_HoaChat_Lot</div>
-            </div>
-            <div style="background:#fff;border:1px solid #cbd5e1;border-radius:8px;padding:7px 10px;">
-              <div style="font-size:10px;font-weight:700;color:#475569;">BẢNG 4C (HỘP ĐANG MỞ)</div>
-              <div id="dbStatOpenCount" style="font-size:15px;font-weight:700;color:#0284c7;">29 Hộp mở</div>
-              <div style="font-size:9.8px;color:#059669;">✓ Giám sát On-board &amp; Rã đông</div>
-            </div>
-            <div style="background:#fff;border:1px solid #cbd5e1;border-radius:8px;padding:7px 10px;">
-              <div style="font-size:10px;font-weight:700;color:#475569;">BẢNG 4.4 &amp; 5B (KHẤU TRỪ)</div>
-              <div id="dbStatDedCount" style="font-size:15px;font-weight:700;color:#d97706;">40 Giao dịch</div>
-              <div style="font-size:9.8px;color:#059669;">✓ Tự động LIMS &amp; Chuyên khoa</div>
-            </div>
-            <div style="background:#fff;border:1px solid #cbd5e1;border-radius:8px;padding:7px 10px;">
-              <div style="font-size:10px;font-weight:700;color:#475569;">BẢNG 4.5A/B (KIỂM KÊ)</div>
-              <div id="dbStatStkCount" style="font-size:15px;font-weight:700;color:#7c3aed;">2 Đợt chốt</div>
-              <div style="font-size:9.8px;color:#059669;">✓ Cân bằng tồn thực tế</div>
-            </div>
-            <div style="background:#fff;border:1px solid #cbd5e1;border-radius:8px;padding:7px 10px;">
-              <div style="font-size:10px;font-weight:700;color:#475569;">SYS_AUDIT_LOG (TRUY VẾT)</div>
-              <div id="dbStatAuditCount" style="font-size:15px;font-weight:700;color:#dc2626;">18 Sự kiện</div>
-              <div style="font-size:9.8px;color:#059669;">✓ Lưu vết bất biến 2 chiều</div>
-            </div>
-          </div>
-
-          <div class="table-wrap" style="max-height:240px;">
-            <table>
-              <thead>
-                <tr>
-                  <th>Mã Truy vết (Audit ID)</th>
-                  <th>Thời gian Ghi</th>
-                  <th>Người thực hiện</th>
-                  <th>Loại Thao tác</th>
-                  <th>Bảng CSDL Cập nhật</th>
-                  <th>Mã Bản ghi / Số Lô</th>
-                  <th>Nội dung Thay đổi &amp; Đối soát Tồn kho</th>
-                  <th>Trạng thái CSDL</th>
-                </tr>
-              </thead>
-              <tbody id="reagentAuditLogTableBody"></tbody>
-            </table>
           </div>
         </div>
       </section>
@@ -29029,6 +29223,747 @@ function jsonResponse(obj) {
       updateInventoryNavBadges();
     });
 
+  
+    // =========================================================================
+    // V2026.18: DE-CLUTTERED UX DRAWERS + FLEXIBLE PROCUREMENT & VOUCHER ENGINE
+    // =========================================================================
+    let PROCUREMENT_FILTER_MODE = "ALL";
+    let PROCUREMENT_PLAN_ITEMS = [];
+    let PROCUREMENT_VOUCHERS = [
+      {
+        id: "DT-2026-11-01",
+        date: "02/11/2026 08:30",
+        title: "Dự trù Hóa chất Sinh học phân tử & Kit Tách chiết Tháng 11/2026",
+        dept: "Di truyền & SHPT",
+        receiver: "Khoa Dược - BV Nhi Hà Nội",
+        itemsSummary: "STARMag 96 (+96 Rxn), TaqPath MasterMix (+96 Rxn), RP Panel 1..4 (+200 Rxn)",
+        itemLots: ["SM-2609A", "ABT-2610", "RB0325K03"],
+        itemCount: 5,
+        totalQty: 392,
+        estCost: 68500000,
+        stage: 4,
+        creator: "NHIHN000674 (ThS. Trần Tuấn Anh)",
+        note: "Khoa Dược đã duyệt phiếu lĩnh BM-12-05, nhà thầu Seegene/DKSH hẹn giao sáng 15/11/2026"
+      },
+      {
+        id: "DT-2026-11-02",
+        date: "05/11/2026 14:15",
+        title: "Dự trù Hóa chất Hóa sinh - Miễn dịch & Huyết học Thường quy Tháng 11/2026",
+        dept: "Hóa sinh & Huyết học",
+        receiver: "Khoa Dược & Phòng Vật tư TBYT",
+        itemsSummary: "Glucose Hexokinase (+100 Test), Elecsys FT4 III (+100 Test), Cellpack DCL (+200 Test)",
+        itemLots: ["HS-GLU-882", "ROCHE-FT4-91", "HH-XN-CELL-04"],
+        itemCount: 4,
+        totalQty: 400,
+        estCost: 42800000,
+        stage: 3,
+        creator: "NHIHN000268 (CN. Nguyễn Thị Nhài)",
+        note: "Đã trình ký Trưởng khoa KXN và chuyển sang Khoa Dược chờ duyệt cấp phát"
+      },
+      {
+        id: "DT-2026-10-25",
+        date: "25/10/2026 09:00",
+        title: "Dự trù Bổ sung Thẻ Định danh Vi sinh VITEK 2 & Phẩm nhuộm H&E GPB",
+        dept: "Vi sinh & Giải phẫu bệnh",
+        receiver: "Khoa Dược - BV Nhi Hà Nội",
+        itemsSummary: "Thẻ VITEK 2 GN (+60 Thẻ), Bộ nhuộm Hematoxylin-Eosin (+100 Tiêu bản)",
+        itemLots: ["VS-VTK-GN-55", "GPB-HE-2608"],
+        itemCount: 2,
+        totalQty: 160,
+        estCost: 19400000,
+        stage: 6,
+        creator: "NHIHN000025 (CN. Vũ Thị Thanh Thảo)",
+        note: "Đã nhận đủ hàng, kiểm đạt CQA 100% (BM-12-06) và nhập vào Bảng 4.2"
+      }
+    ];
+
+    const VOUCHER_STAGE_META = {
+      1: { label: "1. Đang lập dự trù (Bản nháp)", pct: 20, badge: "b-info", color: "#64748b" },
+      2: { label: "2. Chờ Trưởng khoa KXN duyệt", pct: 40, badge: "b-info", color: "#0284c7" },
+      3: { label: "3. Đã gửi Khoa Dược / Phòng Vật tư", pct: 60, badge: "b-purple", color: "#7c3aed" },
+      4: { label: "4. Đã duyệt cấp / Đang chờ giao hàng", pct: 80, badge: "b-warn", color: "#d97706" },
+      5: { label: "5. Đã nhận hàng một phần", pct: 90, badge: "b-info", color: "#0d9488" },
+      6: { label: "6. Đã nhận đủ & Nhập kho 4.2 hoàn tất", pct: 100, badge: "b-pass", color: "#059669" }
+    };
+
+    function toggleInvWorkflowDetailDrawer() {
+      const box = document.getElementById("invWorkflow8StepsContainer");
+      if (!box) return;
+      box.style.display = (box.style.display === "none") ? "block" : "none";
+    }
+
+    function toggleQuickAddDrawer(drawerId) {
+      const el = document.getElementById(drawerId);
+      if (!el) return;
+      el.style.display = (el.style.display === "none") ? "block" : "none";
+    }
+
+    function toggleReagentAuditLogDrawer() {
+      const el = document.getElementById("reagentAuditLogDrawerBody");
+      if (!el) return;
+      el.style.display = (el.style.display === "none") ? "block" : "none";
+    }
+
+    function openAndScrollToReagentAuditTrail() {
+      const drawer = document.getElementById("reagentAuditLogDrawerBody");
+      if (drawer) drawer.style.display = "block";
+      const card = document.getElementById("reagentModuleAuditTrailCard");
+      if (card) card.scrollIntoView({ behavior: "smooth", block: "start" });
+    }
+
+    function switchPlanSubSection(secKey) {
+      const allSecs = ["proc", "aliq", "eff"];
+      allSecs.forEach(k => {
+        const el = document.getElementById("planSubSection-" + k);
+        if (el) {
+          el.style.display = (secKey === "all" || secKey === k) ? "block" : "none";
+        }
+      });
+      ["proc", "aliq", "eff", "all"].forEach(k => {
+        const b = document.getElementById("planSubBtn-" + k);
+        if (b) b.classList.toggle("active", k === secKey);
+      });
+      if (secKey === "eff" || secKey === "all") {
+        if (typeof renderInventoryCharts === "function") renderInventoryCharts();
+      }
+    }
+
+    function ensureFlexibleProcurementPlanInitialized(forceReset = false) {
+      enrichReagentLotsDataset();
+      buildCompleteReagentMasterCatalog();
+      if (!forceReset && Array.isArray(PROCUREMENT_PLAN_ITEMS) && PROCUREMENT_PLAN_ITEMS.length > 0) {
+        // Sync current stock (t) from REAGENT_LOTS so automatic x = m - t is always live
+        PROCUREMENT_PLAN_ITEMS.forEach(item => {
+          const lotObj = REAGENT_LOTS.find(l => l.lot === item.lot || l.maDuoc === item.maDuoc);
+          if (lotObj) {
+            item.tStock = lotObj.stock || 0;
+            item.autoX = Math.max(0, (item.m45 || 0) - item.tStock);
+          }
+        });
+        return;
+      }
+
+      PROCUREMENT_PLAN_ITEMS = REAGENT_LOTS.map((l, idx) => {
+        const m = l.m45 || ((l.minStock || 100) + 96);
+        const t = l.stock || 0;
+        const autoX = Math.max(0, m - t);
+        const packSz = l.packSize || 100;
+        // Default actual order quantity: if autoX > 0, round up to nearest pack or use autoX; if autoX === 0, default to 0 (or 1 pack for critical items)
+        const suggestedOrder = autoX > 0 ? Math.max(autoX, packSz) : 0;
+        return {
+          planId: `PR-ITEM-${String(idx + 1).padStart(2, "0")}`,
+          selected: suggestedOrder > 0,
+          lot: l.lot,
+          maDuoc: l.maDuoc || "HC.KXN.01",
+          name: l.name,
+          cat: l.cat || "A. Hóa chất, thuốc thử",
+          dept: l.dept || "Di truyền & SHPT",
+          analyzer: l.analyzer || "Hệ thống máy tự động",
+          supplier: l.supplier || "Nhà thầu trúng thầu BV Nhi HN",
+          pack: l.pack || `100 ${l.unit || 'Rxn'}/Hộp`,
+          packSize: packSz,
+          unit: l.unit || "Rxn",
+          unitPrice: l.unitPrice || 150000,
+          m45: m,
+          tStock: t,
+          autoX: autoX,
+          orderQty: suggestedOrder,
+          y12: l.y12 || 1800,
+          itemStage: suggestedOrder > 0 ? (idx < 3 ? 4 : 2) : 1,
+          reason: suggestedOrder > 0
+            ? `Đặt theo công thức x = m − t (${autoX} ${l.unit || 'Rxn'}), làm tròn theo quy cách hộp`
+            : "Tồn kho hiện tại đảm bảo định mức 45 ngày"
+        };
+      });
+    }
+
+    function populateProcQuickCatalogSelect() {
+      buildCompleteReagentMasterCatalog();
+      const sel = document.getElementById("procQuickCatalogSelect");
+      if (!sel) return;
+      sel.innerHTML = `<option value="">-- Chọn từ 29 Danh mục gốc (4.1) hoặc tự nhập mới --</option>` +
+        REAGENT_MASTER_CATALOG.map(c =>
+          `<option value="${c.idHc}">[${c.dept}] ${c.maDuoc} — ${c.name}</option>`
+        ).join("");
+    }
+
+    function handleProcQuickCatalogPick(idHc) {
+      if (!idHc) return;
+      buildCompleteReagentMasterCatalog();
+      const c = REAGENT_MASTER_CATALOG.find(x => x.idHc === idHc);
+      if (!c) return;
+      document.getElementById("procAddMaDuocInput").value = c.maDuoc;
+      document.getElementById("procAddNameInput").value = c.name;
+      document.getElementById("procAddDeptSelect").value = c.dept;
+      document.getElementById("procAddUnitInput").value = `${c.pack}|${c.unit}`;
+      document.getElementById("procAddM45Input").value = (c.minStock || 100) * 2;
+      document.getElementById("procAddOrderQtyInput").value = c.minStock || 100;
+      document.getElementById("procAddReasonInput").value = `Bổ sung dự trù cho xét nghiệm ${c.qtxn}`;
+    }
+
+    function setProcurementFilterMode(mode) {
+      PROCUREMENT_FILTER_MODE = mode;
+      ["ALL", "NEED", "AUTO", "PENDING"].forEach(k => {
+        const chip = document.getElementById("procFilterChip-" + k);
+        if (chip) chip.classList.toggle("active", k === mode);
+      });
+      renderReagentPlanningAndYield();
+    }
+
+    function toggleSelectAllProcurementItems(checked) {
+      ensureFlexibleProcurementPlanInitialized();
+      PROCUREMENT_PLAN_ITEMS.forEach(item => { item.selected = checked; });
+      renderReagentPlanningAndYield();
+    }
+
+    function toggleSingleProcurementItemCheck(planId, checked) {
+      ensureFlexibleProcurementPlanInitialized();
+      const it = PROCUREMENT_PLAN_ITEMS.find(x => x.planId === planId);
+      if (it) it.selected = checked;
+    }
+
+    // Override renderReagentPlanningAndYield to power the new Flexible Procurement & Voucher Lifecycle tables
+    renderReagentPlanningAndYield = function() {
+      ensureFlexibleProcurementPlanInitialized();
+      populateProcQuickCatalogSelect();
+
+      const growthA = parseFloat(document.getElementById("annualGrowthPctInput")?.value || 15) / 100.0;
+      const q = (document.getElementById("procurementSearchInput")?.value || "").toLowerCase().trim();
+
+      const filteredPlan = PROCUREMENT_PLAN_ITEMS.filter(item => {
+        const matchGlobal = GLOBAL_DEPT === "ALL" || item.dept === GLOBAL_DEPT;
+        const matchQ = !q || `${item.maDuoc} ${item.lot} ${item.name} ${item.dept} ${item.supplier} ${item.reason}`.toLowerCase().includes(q);
+        let matchMode = true;
+        if (PROCUREMENT_FILTER_MODE === "NEED") matchMode = item.orderQty > 0;
+        else if (PROCUREMENT_FILTER_MODE === "AUTO") matchMode = item.autoX > 0;
+        else if (PROCUREMENT_FILTER_MODE === "PENDING") matchMode = item.itemStage >= 2 && item.itemStage <= 5;
+        return matchGlobal && matchQ && matchMode;
+      });
+
+      const needCount = PROCUREMENT_PLAN_ITEMS.filter(x => x.orderQty > 0).length;
+      const totalOrderUnits = PROCUREMENT_PLAN_ITEMS.reduce((s, x) => s + (Number(x.orderQty) || 0), 0);
+      const sumBadge = document.getElementById("procurementSummaryBadge");
+      if (sumBadge) {
+        sumBadge.textContent = `Hiển thị: ${filteredPlan.length}/${PROCUREMENT_PLAN_ITEMS.length} danh mục • Cần đặt: ${needCount} mục (Tổng đặt: ${totalOrderUnits.toLocaleString('vi-VN')} ĐVT)`;
+      }
+
+      const bPlan = document.getElementById("invNavBadgePlan");
+      if (bPlan) bPlan.textContent = `${PROCUREMENT_VOUCHERS.length} Phiếu • ${needCount} Mục đặt`;
+
+      // Render 6A.1: Procurement Vouchers Progress Table
+      renderProcurementVoucherTable();
+
+      // Render 6A.2: Flexible Procurement Plan Table
+      const planBody = document.getElementById("procurementPlanTableBody");
+      if (planBody) {
+        planBody.innerHTML = filteredPlan.map(item => {
+          const xYear = Math.round((item.y12 || 1800) * (1 + growthA));
+          const packCount = Math.max(1, Math.ceil((item.orderQty || 0) / (item.packSize || 100)));
+          const stMeta = VOUCHER_STAGE_META[item.itemStage] || VOUCHER_STAGE_META[1];
+          return `
+            <tr data-plan-id="${item.planId}" style="${item.orderQty > 0 ? 'background:#fffef7;' : ''}">
+              <td style="text-align:center;">
+                <input type="checkbox" ${item.selected ? 'checked' : ''} onchange="toggleSingleProcurementItemCheck('${item.planId}', this.checked)">
+              </td>
+              <td style="word-break:break-word;">
+                <code style="font-weight:700;color:#0068b5;font-size:11px;">${item.maDuoc}</code>
+                <div style="margin-top:2px;"><span class="badge b-info" style="font-size:9.5px;">${item.dept}</span></div>
+              </td>
+              <td style="word-break:break-word;">
+                <strong style="font-size:11.6px;color:#0f172a;">${item.name}</strong>
+                <div style="font-size:10px;color:#64748b;margin-top:2px;">📦 ${item.pack} • ${item.supplier}</div>
+              </td>
+              <td>
+                <input type="number" min="0" class="form-control" style="width:74px;height:26px;font-weight:700;font-size:11.3px;padding:2px 5px;" value="${item.m45}" onchange="editProcurementPlanInline('${item.lot || item.planId}', 'm45', this.value)" title="Sửa tiêu thụ 45 ngày (m)">
+                <div style="font-size:9.5px;color:#64748b;margin-top:1px;">${item.unit}</div>
+              </td>
+              <td>
+                <strong style="font-size:12px;color:#0f172a;">${item.tStock}</strong>
+                <div style="font-size:9.5px;color:#64748b;">${item.unit}</div>
+              </td>
+              <td>
+                <span class="badge ${item.autoX > 0 ? 'b-warn' : 'b-pass'}" style="font-size:10.5px;">
+                  ${item.autoX > 0 ? '+' + item.autoX + ' ' + item.unit : '0 (Đủ)'}
+                </span>
+              </td>
+              <td>
+                <div class="proc-qty-stepper">
+                  <button type="button" class="proc-qty-btn" onclick="stepProcurementOrderQty('${item.planId}', -1)" title="Giảm theo quy cách">−</button>
+                  <input type="number" min="0" class="proc-qty-input" value="${item.orderQty}" onchange="editProcurementPlanInline('${item.lot || item.planId}', 'orderQty', this.value)" title="Chỉnh sửa tự do số lượng dự trù thực đặt">
+                  <button type="button" class="proc-qty-btn" onclick="stepProcurementOrderQty('${item.planId}', 1)" title="Tăng theo quy cách">+</button>
+                </div>
+                <div style="font-size:9.8px;color:${item.orderQty > 0 ? '#0369a1' : '#64748b'};font-weight:600;margin-top:2px;">
+                  ${item.orderQty > 0 ? `≈ ${packCount} hộp (${item.orderQty} ${item.unit})` : 'Không đặt kỳ này'}
+                </div>
+              </td>
+              <td>
+                <input type="number" min="0" class="form-control" style="width:78px;height:24px;font-size:10.8px;padding:2px 4px;" value="${item.y12}" onchange="editProcurementPlanInline('${item.lot || item.planId}', 'y12', this.value)" title="Sửa sử dụng 12 tháng trước (y)">
+                <div style="font-size:9.8px;color:#0068b5;font-weight:700;margin-top:2px;">Năm: ${xYear.toLocaleString('vi-VN')}</div>
+              </td>
+              <td>
+                <select class="form-control" style="height:25px;font-size:10.5px;font-weight:700;padding:1px 4px;margin-bottom:3px;border-color:${stMeta.color};color:${stMeta.color};" onchange="updateProcurementItemStage('${item.planId}', this.value)">
+                  <option value="1" ${item.itemStage == 1 ? 'selected' : ''}>📝 1. Bản nháp dự trù</option>
+                  <option value="2" ${item.itemStage == 2 ? 'selected' : ''}>👨‍⚕️ 2. Chờ KXN duyệt</option>
+                  <option value="3" ${item.itemStage == 3 ? 'selected' : ''}>📤 3. Đã gửi Khoa Dược/VT</option>
+                  <option value="4" ${item.itemStage == 4 ? 'selected' : ''}>🛒 4. Đã duyệt / Đang giao</option>
+                  <option value="5" ${item.itemStage == 5 ? 'selected' : ''}>📦 5. Nhận một phần</option>
+                  <option value="6" ${item.itemStage == 6 ? 'selected' : ''}>✅ 6. Đã nhập kho 4.2</option>
+                </select>
+                <input type="text" class="form-control" style="height:23px;font-size:10.2px;padding:1px 5px;" value="${item.reason || ''}" onchange="editProcurementPlanInline('${item.lot || item.planId}', 'reason', this.value)" placeholder="Ghi chú / Lý do điều chỉnh...">
+              </td>
+              <td>
+                <div style="display:flex;gap:3px;flex-wrap:wrap;">
+                  <button type="button" class="btn btn-primary btn-xs" style="padding:2px 6px;font-size:10px;background:#0d9488;border-color:#0d9488;" onclick="quickCreateVoucherForSingleItem('${item.planId}')" title="Lập nhanh phiếu dự trù cho mặt hàng này">📋 Lập phiếu</button>
+                  <button type="button" class="btn btn-outline btn-xs" style="padding:2px 6px;font-size:10px;color:#dc2626;border-color:#fca5a5;" onclick="removeProcurementPlanItem('${item.planId}')" title="Bớt / Loại bỏ mặt hàng này khỏi danh sách dự trù">🗑 Bớt</button>
+                </div>
+              </td>
+            </tr>
+          `;
+        }).join("");
+      }
+
+      // Render 6C: Efficiency Report Table (BM-12-20)
+      const filteredLots = GLOBAL_DEPT === "ALL" ? REAGENT_LOTS : REAGENT_LOTS.filter(l => l.dept === GLOBAL_DEPT);
+      const effBody = document.getElementById("reagentEfficiencyTableBody");
+      if (effBody) {
+        effBody.innerHTML = filteredLots.map(l => {
+          const bn = l.testBN || 0;
+          const qc = l.testQc || 0;
+          const eqa = l.testEqa || 0;
+          const rerun = l.testRerun || 0;
+          const totalUsed = bn + qc + eqa + rerun;
+          const yieldPct = totalUsed > 0 ? ((bn / totalUsed) * 100).toFixed(1) : "95.0";
+          return `
+            <tr>
+              <td><code>${l.maDuoc}</code><div style="font-size:10.5px;">Lot: ${l.lot}</div></td>
+              <td><strong>${l.name}</strong><div style="font-size:10.5px;color:#64748b;">${l.analyzer}</div></td>
+              <td>${l.openStock}</td>
+              <td style="color:#059669;font-weight:700;">+${l.inQty}</td>
+              <td style="color:#d97706;font-weight:700;">${totalUsed}</td>
+              <td><strong>${l.stock}</strong></td>
+              <td><strong style="color:#059669;">${bn}</strong></td>
+              <td>${qc}</td>
+              <td>${eqa}</td>
+              <td style="color:${rerun > 4 ? '#dc2626' : '#475569'};font-weight:700;">${rerun}</td>
+              <td><span class="badge b-pass">${yieldPct}% (Đạt chuẩn)</span></td>
+            </tr>
+          `;
+        }).join("");
+      }
+
+      // Render 6B: Aliquot & MasterMix Log Table (BM-12-19)
+      const aliqBody = document.getElementById("aliquotLogTableBody");
+      if (aliqBody && typeof ALIQUOT_LOGS !== "undefined") {
+        aliqBody.innerHTML = ALIQUOT_LOGS.map((a, idx) => `
+          <tr>
+            <td><code style="font-weight:700;color:#5b21b6;">${a.id}</code><div style="font-size:10px;color:#64748b;">🕒 ${a.date}</div></td>
+            <td><strong>${a.name}</strong><div style="font-size:10.5px;color:#0068b5;">Lot gốc: <code>${a.lot}</code></div></td>
+            <td><span class="badge b-purple">${a.type}</span></td>
+            <td>
+              <input type="text" class="form-control" style="height:26px;font-size:11px;width:210px;font-weight:600;" value="${a.spec}" onchange="editAliquotLogInline(${idx}, 'spec', this.value)">
+            </td>
+            <td>${a.temp}</td>
+            <td><span class="badge b-pass">${a.qc}</span></td>
+            <td>
+              <input type="text" class="form-control" style="height:26px;font-size:11px;width:105px;font-weight:700;" value="${a.exp}" onchange="editAliquotLogInline(${idx}, 'exp', this.value)">
+            </td>
+            <td>
+              <div style="display:flex;align-items:center;justify-content:space-between;gap:4px;">
+                <span style="font-size:11px;">${a.user}</span>
+                <button type="button" class="btn btn-outline btn-xs" style="color:#dc2626;border-color:#fca5a5;" onclick="deleteAliquotLogRecord(${idx})">🗑 Xóa</button>
+              </div>
+            </td>
+          </tr>
+        `).join("");
+      }
+    };
+
+    // Upgrade editProcurementPlanInline to support m45, y12, orderQty, reason by either lot or planId
+    editProcurementPlanInline = function(keyOrLot, field, val) {
+      ensureFlexibleProcurementPlanInitialized();
+      const item = PROCUREMENT_PLAN_ITEMS.find(x => x.planId === keyOrLot || x.lot === keyOrLot);
+      const lotObj = REAGENT_LOTS.find(x => x.lot === keyOrLot || (item && x.lot === item.lot));
+
+      if (field === "reason") {
+        if (item) item.reason = String(val);
+        commitDatabaseTransaction("Kho_HoaChat_Lot", `Cập nhật lý do điều chỉnh dự trù [${item ? item.maDuoc : keyOrLot}]: ${val}`, keyOrLot, "EDIT_PROCUREMENT_REASON");
+        showToast(`📝 Đã lưu ghi chú điều chỉnh dự trù cho <strong>${item ? item.name : keyOrLot}</strong>!`, "#0284c7");
+        return true;
+      }
+
+      const num = parseInt(val, 10);
+      if (isNaN(num) || num < 0) return false;
+
+      if (item) {
+        item[field] = num;
+        if (field === "m45") {
+          item.autoX = Math.max(0, num - (item.tStock || 0));
+          // Also auto-update orderQty to match autoX if user hasn't set custom or wants live recalc
+          item.orderQty = item.autoX;
+          item.selected = item.orderQty > 0;
+        } else if (field === "orderQty") {
+          item.selected = num > 0;
+        }
+      }
+      if (lotObj && (field === "m45" || field === "y12")) {
+        lotObj[field] = num;
+      }
+
+      renderReagentPlanningAndYield();
+      renderReagentModuleAuditTrail();
+      const labelMap = { m45: "Tiêu thụ 45 ngày (m)", y12: "Sử dụng 12 tháng (y)", orderQty: "SL Dự trù Thực đặt" };
+      commitDatabaseTransaction("Kho_HoaChat_Lot", `Cập nhật ${labelMap[field] || field} = ${num} cho danh mục dự trù [${item ? item.maDuoc : keyOrLot}]`, keyOrLot, "EDIT_PROCUREMENT");
+      showToast(`🧮 Đã cập nhật <strong>${labelMap[field] || field} = ${num}</strong> cho <strong>${item ? item.name : keyOrLot}</strong>!`, "#0284c7");
+      return true;
+    };
+
+    function stepProcurementOrderQty(planId, dir) {
+      ensureFlexibleProcurementPlanInitialized();
+      const item = PROCUREMENT_PLAN_ITEMS.find(x => x.planId === planId);
+      if (!item) return false;
+      const step = item.packSize || 50;
+      const newQty = Math.max(0, (item.orderQty || 0) + dir * step);
+      item.orderQty = newQty;
+      item.selected = newQty > 0;
+      item.reason = `Điều chỉnh số lượng thực đặt = ${newQty} ${item.unit} (Theo quy cách ${step} ${item.unit}/hộp)`;
+      renderReagentPlanningAndYield();
+      renderReagentModuleAuditTrail();
+      commitDatabaseTransaction("Kho_HoaChat_Lot", `Điều chỉnh số lượng dự trù thực đặt [${item.maDuoc}] ${item.name} = ${newQty} ${item.unit}`, item.planId, "STEP_PROCUREMENT_QTY");
+      showToast(`🧮 Đã chỉnh SL Dự trù thực đặt của <strong>${item.name}</strong> thành <strong>${newQty} ${item.unit}</strong>!`, "#059669");
+      return newQty;
+    }
+
+    function updateProcurementItemStage(planId, newStageVal) {
+      ensureFlexibleProcurementPlanInitialized();
+      const item = PROCUREMENT_PLAN_ITEMS.find(x => x.planId === planId);
+      if (!item) return false;
+      const st = parseInt(newStageVal, 10) || 1;
+      item.itemStage = st;
+      const stMeta = VOUCHER_STAGE_META[st] || VOUCHER_STAGE_META[1];
+      renderReagentPlanningAndYield();
+      renderReagentModuleAuditTrail();
+      commitDatabaseTransaction("Kho_HoaChat_Lot", `Cập nhật tiến độ mặt hàng dự trù [${item.maDuoc}] ${item.name} -> ${stMeta.label}`, item.planId, "UPDATE_PROC_ITEM_STATUS");
+      showToast(`📌 Đã cập nhật tình trạng dự trù <strong>${item.name}</strong>: <strong>${stMeta.label}</strong>!`, "#0d9488");
+      return true;
+    }
+
+    function handleAddProcurementPlanItem() {
+      ensureFlexibleProcurementPlanInitialized();
+      const maDuoc = (document.getElementById("procAddMaDuocInput")?.value || "HC.KXN.NEW").trim();
+      const name = (document.getElementById("procAddNameInput")?.value || "Hóa chất dự trù mới").trim();
+      const dept = document.getElementById("procAddDeptSelect")?.value || "Di truyền & SHPT";
+      const unitRaw = (document.getElementById("procAddUnitInput")?.value || "100 Rxn/Hộp|Rxn").split("|");
+      const pack = unitRaw[0] || "100 Rxn/Hộp";
+      const unit = unitRaw[1] || "Rxn";
+      const m45 = parseInt(document.getElementById("procAddM45Input")?.value || "200", 10);
+      const orderQty = parseInt(document.getElementById("procAddOrderQtyInput")?.value || "200", 10);
+      const reason = (document.getElementById("procAddReasonInput")?.value || "Bổ sung dự trù theo nhu cầu thực tế").trim();
+
+      const existingLot = REAGENT_LOTS.find(l => l.maDuoc === maDuoc || l.name === name);
+      const tStock = existingLot ? (existingLot.stock || 0) : 0;
+      const autoX = Math.max(0, m45 - tStock);
+      const newPlanId = `PR-ITEM-${String(PROCUREMENT_PLAN_ITEMS.length + 1).padStart(2, "0")}`;
+
+      const newItem = {
+        planId: newPlanId,
+        selected: true,
+        lot: existingLot ? existingLot.lot : `${maDuoc}-NEW`,
+        maDuoc,
+        name,
+        cat: "A. Hóa chất, thuốc thử",
+        dept,
+        analyzer: existingLot ? existingLot.analyzer : "Hệ thống máy xét nghiệm",
+        supplier: existingLot ? existingLot.supplier : "Nhà thầu cung ứng BV Nhi HN",
+        pack,
+        packSize: 100,
+        unit,
+        unitPrice: 150000,
+        m45,
+        tStock,
+        autoX,
+        orderQty,
+        y12: m45 * 8,
+        itemStage: 2,
+        reason
+      };
+
+      PROCUREMENT_PLAN_ITEMS.unshift(newItem);
+      renderReagentPlanningAndYield();
+      renderReagentModuleAuditTrail();
+      commitDatabaseTransaction("Kho_HoaChat_Lot", `Thêm danh mục vào bảng dự trù [${maDuoc}] ${name} (SL thực đặt: ${orderQty} ${unit} - Lý do: ${reason})`, newPlanId, "ADD_PROCUREMENT_ITEM");
+      showToast(`➕ Đã thêm <strong>[${maDuoc}] ${name}</strong> (SL đặt: <strong>${orderQty} ${unit}</strong>) vào bảng dự trù!`, "#059669");
+      return newItem;
+    }
+
+    function removeProcurementPlanItem(planId) {
+      ensureFlexibleProcurementPlanInitialized();
+      const idx = PROCUREMENT_PLAN_ITEMS.findIndex(x => x.planId === planId);
+      if (idx === -1) return false;
+      const rem = PROCUREMENT_PLAN_ITEMS.splice(idx, 1)[0];
+      renderReagentPlanningAndYield();
+      renderReagentModuleAuditTrail();
+      commitDatabaseTransaction("Kho_HoaChat_Lot", `Bớt / Loại bỏ danh mục [${rem.maDuoc}] ${rem.name} khỏi đợt dự trù hiện tại`, planId, "REMOVE_PROCUREMENT_ITEM");
+      showToast(`🗑 Đã bớt mặt hàng <strong>[${rem.maDuoc}] ${rem.name}</strong> khỏi danh sách dự trù kỳ này!`, "#dc2626");
+      return true;
+    }
+
+    function resetProcurementPlanFromLots() {
+      ensureFlexibleProcurementPlanInitialized(true);
+      renderReagentPlanningAndYield();
+      showToast("🔄 Đã đồng bộ & nạp lại toàn bộ danh mục dự trù từ tồn kho thực tế (x = m − t)!", "#0284c7");
+    }
+
+    // -------------------------------------------------------------------------
+    // PROCUREMENT VOUCHER LIFECYCLE & PROGRESS ENGINE (6 STAGES)
+    // -------------------------------------------------------------------------
+    function renderProcurementVoucherTable() {
+      const tbody = document.getElementById("procurementVoucherTableBody");
+      if (!tbody) return;
+
+      tbody.innerHTML = PROCUREMENT_VOUCHERS.map((v, idx) => {
+        const meta = VOUCHER_STAGE_META[v.stage] || VOUCHER_STAGE_META[1];
+        return `
+          <tr data-voucher-id="${v.id}">
+            <td>
+              <code style="font-weight:700;color:#0f4c81;font-size:11.3px;">${v.id}</code>
+              <div style="font-size:10px;color:#64748b;margin-top:2px;">📅 ${v.date}</div>
+            </td>
+            <td style="word-break:break-word;">
+              <strong style="font-size:11.6px;color:#0f172a;">${v.title}</strong>
+              <div style="margin-top:2px;"><span class="badge b-info" style="font-size:9.5px;">${v.dept}</span></div>
+            </td>
+            <td style="word-break:break-word;font-size:11px;font-weight:600;color:#334155;">${v.receiver}</td>
+            <td style="word-break:break-word;">
+              <div style="font-size:11px;font-weight:700;color:#0f4c81;">${v.itemCount} danh mục • Tổng: ${v.totalQty.toLocaleString('vi-VN')} ĐVT</div>
+              <div style="font-size:10px;color:#475569;margin-top:1px;">${v.itemsSummary}</div>
+              <div style="font-size:10px;color:#059669;font-weight:700;margin-top:1px;">💰 Dự kiến: ${(v.estCost || 0).toLocaleString('vi-VN')} đ</div>
+            </td>
+            <td>
+              <select class="form-control" style="height:26px;font-size:10.8px;font-weight:700;padding:1px 5px;border-color:${meta.color};color:${meta.color};" onchange="updateProcurementVoucherStage('${v.id}', this.value)" title="Cập nhật trực tiếp tình trạng / tiến độ phiếu dự trù">
+                <option value="1" ${v.stage == 1 ? 'selected' : ''}>1. Đang lập dự trù (Bản nháp - 20%)</option>
+                <option value="2" ${v.stage == 2 ? 'selected' : ''}>2. Chờ Trưởng khoa KXN duyệt (40%)</option>
+                <option value="3" ${v.stage == 3 ? 'selected' : ''}>3. Đã gửi Khoa Dược / Vật tư (60%)</option>
+                <option value="4" ${v.stage == 4 ? 'selected' : ''}>4. Đã duyệt cấp / Đang giao (80%)</option>
+                <option value="5" ${v.stage == 5 ? 'selected' : ''}>5. Đã nhận một phần (90%)</option>
+                <option value="6" ${v.stage == 6 ? 'selected' : ''}>6. Đã nhận đủ &amp; Nhập kho 4.2 (100%)</option>
+              </select>
+              <div class="voucher-prog-bar">
+                <div class="voucher-prog-fill" style="width:${meta.pct}%;background:${meta.color};"></div>
+              </div>
+              <div style="font-size:9.8px;color:#475569;margin-top:2px;">📌 ${v.note}</div>
+            </td>
+            <td style="font-size:10.5px;color:#334155;">
+              <strong>${v.creator}</strong>
+            </td>
+            <td>
+              <div style="display:flex;gap:3px;flex-wrap:wrap;">
+                ${v.stage < 6 ? `<button type="button" class="btn btn-primary btn-xs" style="padding:2px 5px;font-size:10px;" onclick="advanceProcurementVoucherNextStage('${v.id}')" title="Chuyển sang bước tiến độ kế tiếp">⏩ Bước tiếp</button>` : ''}
+                ${v.stage < 6 ? `<button type="button" class="btn btn-success btn-xs" style="padding:2px 5px;font-size:10px;" onclick="receiveAndStockFromProcurementVoucher('${v.id}')" title="Nhận hàng từ phiếu dự trù này và cộng tự động vào Tồn Kho Chẵn 4.2">📥 Nhập kho 4.2</button>` : `<span class="badge b-pass" style="font-size:9.5px;">✓ Đã nhập kho</span>`}
+                <button type="button" class="btn btn-outline btn-xs" style="padding:2px 5px;font-size:10px;" onclick="openEditProcurementVoucherModal('${v.id}')" title="Sửa thông tin & tiến độ phiếu dự trù">✎ Sửa</button>
+                <button type="button" class="btn btn-outline btn-xs" style="padding:2px 5px;font-size:10px;color:#dc2626;border-color:#fca5a5;" onclick="deleteProcurementVoucher('${v.id}')" title="Xóa phiếu dự trù">🗑 Xóa</button>
+              </div>
+            </td>
+          </tr>
+        `;
+      }).join("");
+    }
+
+    function createProcurementVoucherFromSelected() {
+      ensureFlexibleProcurementPlanInitialized();
+      const chosen = PROCUREMENT_PLAN_ITEMS.filter(x => x.selected && x.orderQty > 0);
+      const list = chosen.length > 0 ? chosen : PROCUREMENT_PLAN_ITEMS.filter(x => x.orderQty > 0);
+      if (list.length === 0) {
+        showToast("⚠️ Vui lòng chọn ít nhất 1 danh mục có SL Dự trù Thực đặt > 0 để lập Phiếu dự trù!", "#d97706");
+        return null;
+      }
+
+      const newId = `DT-2026-11-${String(PROCUREMENT_VOUCHERS.length + 1).padStart(2, "0")}`;
+      const totalQty = list.reduce((s, x) => s + (Number(x.orderQty) || 0), 0);
+      const estCost = list.reduce((s, x) => s + (Number(x.orderQty) || 0) * (x.unitPrice || 150000), 0);
+      const summary = list.slice(0, 3).map(x => `${x.name.split('(')[0].trim()} (+${x.orderQty} ${x.unit})`).join(", ") + (list.length > 3 ? ` và ${list.length - 3} mục khác` : "");
+      const depts = Array.from(new Set(list.map(x => x.dept))).join(", ");
+
+      const newVoucher = {
+        id: newId,
+        date: typeof getNowVnDateTime === "function" ? getNowVnDateTime() : "14/11/2026 06:25",
+        title: `Phiếu Dự trù & Xin lĩnh Hóa chất - Sinh phẩm (${depts})`,
+        dept: depts,
+        receiver: "Khoa Dược & Phòng Vật tư TBYT",
+        itemsSummary: summary,
+        itemLots: list.map(x => x.lot),
+        itemCount: list.length,
+        totalQty,
+        estCost,
+        stage: 2,
+        creator: "NHIHN000674 (ThS. Trần Tuấn Anh)",
+        note: `Lập từ ${list.length} danh mục dự trù linh hoạt (Tổng: ${totalQty} đơn vị) — Trình Trưởng khoa KXN phê duyệt`
+      };
+
+      list.forEach(x => { x.itemStage = 2; });
+      PROCUREMENT_VOUCHERS.unshift(newVoucher);
+      renderReagentPlanningAndYield();
+      renderReagentModuleAuditTrail();
+      commitDatabaseTransaction("Kho_HoaChat_Lot", `Lập Phiếu Dự trù mới ${newId} gồm ${list.length} danh mục (Tổng SL đặt: ${totalQty}, Kinh phí: ${estCost.toLocaleString('vi-VN')} đ)`, newId, "CREATE_PROCUREMENT_VOUCHER");
+      showToast(`📋 Đã lập Phiếu Dự trù <strong>${newId}</strong> (${list.length} danh mục • Tổng đặt: <strong>${totalQty}</strong>) và chuyển sang bước <strong>Chờ KXN duyệt (40%)</strong>!`, "#059669");
+      return newVoucher;
+    }
+
+    function quickCreateVoucherForSingleItem(planId) {
+      ensureFlexibleProcurementPlanInitialized();
+      const item = PROCUREMENT_PLAN_ITEMS.find(x => x.planId === planId);
+      if (!item) return null;
+      if (!item.orderQty || item.orderQty <= 0) {
+        item.orderQty = item.packSize || 100;
+      }
+      const newId = `DT-2026-11-${String(PROCUREMENT_VOUCHERS.length + 1).padStart(2, "0")}`;
+      const newVoucher = {
+        id: newId,
+        date: typeof getNowVnDateTime === "function" ? getNowVnDateTime() : "14/11/2026 06:25",
+        title: `Phiếu Dự trù Đột xuất: ${item.name}`,
+        dept: item.dept,
+        receiver: "Khoa Dược - BV Nhi Hà Nội",
+        itemsSummary: `${item.name} (+${item.orderQty} ${item.unit})`,
+        itemLots: [item.lot],
+        itemCount: 1,
+        totalQty: item.orderQty,
+        estCost: item.orderQty * (item.unitPrice || 150000),
+        stage: 2,
+        creator: "NHIHN000674 (ThS. Trần Tuấn Anh)",
+        note: item.reason || "Dự trù bổ sung theo nhu cầu xét nghiệm"
+      };
+      item.itemStage = 2;
+      PROCUREMENT_VOUCHERS.unshift(newVoucher);
+      renderReagentPlanningAndYield();
+      renderReagentModuleAuditTrail();
+      commitDatabaseTransaction("Kho_HoaChat_Lot", `Lập Phiếu Dự trù đột xuất ${newId} cho [${item.maDuoc}] ${item.name} (+${item.orderQty} ${item.unit})`, newId, "CREATE_SINGLE_VOUCHER");
+      showToast(`📋 Đã lập Phiếu Dự trù <strong>${newId}</strong> cho <strong>${item.name} (+${item.orderQty} ${item.unit})</strong>!`, "#059669");
+      return newVoucher;
+    }
+
+    function updateProcurementVoucherStage(voucherId, newStageVal) {
+      const v = PROCUREMENT_VOUCHERS.find(x => x.id === voucherId);
+      if (!v) return false;
+      const st = parseInt(newStageVal, 10) || 1;
+      v.stage = st;
+      const meta = VOUCHER_STAGE_META[st] || VOUCHER_STAGE_META[1];
+      v.note = `Cập nhật tiến độ lúc ${typeof getNowVnDateTime === 'function' ? getNowVnDateTime() : '14/11/2026'}: ${meta.label} (${meta.pct}%)`;
+
+      // Sync stage to matching items in PROCUREMENT_PLAN_ITEMS
+      if (Array.isArray(v.itemLots)) {
+        PROCUREMENT_PLAN_ITEMS.forEach(it => {
+          if (v.itemLots.includes(it.lot)) it.itemStage = st;
+        });
+      }
+
+      renderReagentPlanningAndYield();
+      renderReagentModuleAuditTrail();
+      commitDatabaseTransaction("Kho_HoaChat_Lot", `Cập nhật tiến độ Phiếu Dự trù ${voucherId} -> ${meta.label} (${meta.pct}%)`, voucherId, "UPDATE_VOUCHER_STAGE");
+      showToast(`📌 Phiếu Dự trù <strong>${voucherId}</strong> đã chuyển sang: <strong>${meta.label} (${meta.pct}%)</strong>!`, "#0d9488");
+      return true;
+    }
+
+    function advanceProcurementVoucherNextStage(voucherId) {
+      const v = PROCUREMENT_VOUCHERS.find(x => x.id === voucherId);
+      if (!v) return false;
+      const nextSt = Math.min(6, (v.stage || 1) + 1);
+      if (nextSt === 6) {
+        return receiveAndStockFromProcurementVoucher(voucherId);
+      }
+      return updateProcurementVoucherStage(voucherId, nextSt);
+    }
+
+    function receiveAndStockFromProcurementVoucher(voucherId) {
+      const v = PROCUREMENT_VOUCHERS.find(x => x.id === voucherId);
+      if (!v) return false;
+      v.stage = 6;
+      v.note = `Đã nhận đủ hàng (+${v.totalQty} ĐVT), kiểm đạt CQA 100% và tự động cộng vào Kho Chẵn 4.2`;
+
+      let updatedLotsCount = 0;
+      if (Array.isArray(v.itemLots) && v.itemLots.length > 0) {
+        const qtyPerLot = Math.max(1, Math.round((v.totalQty || 100) / v.itemLots.length));
+        v.itemLots.forEach(lotCode => {
+          const lotObj = REAGENT_LOTS.find(l => l.lot === lotCode);
+          if (lotObj) {
+            lotObj.stock = (lotObj.stock || 0) + qtyPerLot;
+            lotObj.inQty = (lotObj.inQty || 0) + qtyPerLot;
+            updatedLotsCount++;
+          }
+          const planIt = PROCUREMENT_PLAN_ITEMS.find(p => p.lot === lotCode);
+          if (planIt) {
+            planIt.itemStage = 6;
+            planIt.tStock = (planIt.tStock || 0) + qtyPerLot;
+            planIt.autoX = Math.max(0, (planIt.m45 || 0) - planIt.tStock);
+            planIt.orderQty = 0;
+            planIt.selected = false;
+            planIt.reason = `Đã nhập kho +${qtyPerLot} ${planIt.unit} theo phiếu ${voucherId}`;
+          }
+        });
+      }
+
+      syncCatalogStockTotalsFromLots();
+      renderInventoryAll();
+      renderReagentCatalogTable();
+      renderReagentPlanningAndYield();
+      renderReagentModuleAuditTrail();
+      commitDatabaseTransaction("Kho_HoaChat_Lot", `Nhận hàng & Nhập kho tự động từ Phiếu Dự trù ${voucherId}: +${v.totalQty} đơn vị vào ${updatedLotsCount} lô trong Bảng 4.2 (Tiến độ 100%)`, voucherId, "RECEIVE_FROM_VOUCHER");
+      showToast(`📥 Đã nhận hàng từ Phiếu Dự trù <strong>${voucherId}</strong>, cộng <strong>+${v.totalQty} đơn vị</strong> vào Kho Chẵn (4.2) và hoàn tất phiếu (100%)!`, "#059669");
+      return true;
+    }
+
+    function openEditProcurementVoucherModal(voucherId) {
+      const v = PROCUREMENT_VOUCHERS.find(x => x.id === voucherId);
+      if (!v) return;
+      document.getElementById("editVoucherIdInput").value = v.id;
+      document.getElementById("editVoucherCodeDisplay").value = v.id;
+      document.getElementById("editVoucherTitleInput").value = v.title;
+      document.getElementById("editVoucherDeptInput").value = v.dept;
+      document.getElementById("editVoucherReceiverSelect").value = v.receiver;
+      document.getElementById("editVoucherStageSelect").value = String(v.stage || 1);
+      document.getElementById("editVoucherItemCountInput").value = v.itemCount || 1;
+      document.getElementById("editVoucherTotalQtyInput").value = v.totalQty || 100;
+      document.getElementById("editVoucherNoteInput").value = v.note || "";
+      openModal("modalEditProcurementVoucher");
+    }
+
+    function handleSaveEditProcurementVoucherSubmit(e) {
+      e.preventDefault();
+      const id = document.getElementById("editVoucherIdInput").value;
+      const v = PROCUREMENT_VOUCHERS.find(x => x.id === id);
+      if (!v) return;
+      v.title = document.getElementById("editVoucherTitleInput").value.trim();
+      v.dept = document.getElementById("editVoucherDeptInput").value.trim();
+      v.receiver = document.getElementById("editVoucherReceiverSelect").value;
+      v.stage = parseInt(document.getElementById("editVoucherStageSelect").value || "1", 10);
+      v.itemCount = parseInt(document.getElementById("editVoucherItemCountInput").value || "1", 10);
+      v.totalQty = parseInt(document.getElementById("editVoucherTotalQtyInput").value || "100", 10);
+      v.note = document.getElementById("editVoucherNoteInput").value.trim();
+
+      renderReagentPlanningAndYield();
+      renderReagentModuleAuditTrail();
+      closeModal("modalEditProcurementVoucher");
+      const meta = VOUCHER_STAGE_META[v.stage] || VOUCHER_STAGE_META[1];
+      commitDatabaseTransaction("Kho_HoaChat_Lot", `Cập nhật Phiếu Dự trù ${v.id} (${v.title}): Tổng SL=${v.totalQty}, Tiến độ=${meta.label}`, v.id, "EDIT_PROCUREMENT_VOUCHER");
+      showToast(`💾 Đã lưu cập nhật Phiếu Dự trù <strong>${v.id}</strong> (Tiến độ: <strong>${meta.label}</strong>)!`, "#059669");
+    }
+
+    function deleteProcurementVoucher(voucherId) {
+      const idx = PROCUREMENT_VOUCHERS.findIndex(x => x.id === voucherId);
+      if (idx === -1) return false;
+      const rem = PROCUREMENT_VOUCHERS.splice(idx, 1)[0];
+      renderReagentPlanningAndYield();
+      renderReagentModuleAuditTrail();
+      commitDatabaseTransaction("Kho_HoaChat_Lot", `Xóa Phiếu Dự trù ${rem.id} (${rem.title})`, voucherId, "DEL_PROCUREMENT_VOUCHER");
+      showToast(`🗑 Đã xóa Phiếu Dự trù <strong>${rem.id}</strong>!`, "#dc2626");
+      return true;
+    }
+
+    window.addEventListener("DOMContentLoaded", () => {
+      ensureFlexibleProcurementPlanInitialized();
+      populateProcQuickCatalogSelect();
+      renderReagentPlanningAndYield();
+      renderProcurementVoucherTable();
+    });
+
   </script>
 
 
@@ -29082,6 +30017,78 @@ function jsonResponse(obj) {
         <div class="modal-footer" style="padding:10px 16px;background:#f8fafc;display:flex;justify-content:flex-end;gap:8px;border-top:1px solid #e2e8f0;">
           <button type="button" class="btn btn-outline" onclick="closeModal('modalEditAssayDeduction')">Hủy</button>
           <button type="submit" class="btn btn-primary" style="background:#d97706;border-color:#d97706;">💾 Lưu Thay đổi &amp; Cân đối Tồn Kho</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  
+  <!-- MODAL: EDIT PROCUREMENT VOUCHER & STATUS PROGRESS (BM-12-01 / BM-12-02 / BM-12-05) -->
+  <div id="modalEditProcurementVoucher" class="modal-backdrop">
+    <div class="modal-box" style="max-width:740px;width:95%;">
+      <div class="modal-header" style="background:linear-gradient(135deg,#0f4c81,#0d9488);color:#fff;">
+        <div>
+          <h3 style="color:#fff;margin:0;font-size:15px;">📋 Cập nhật Phiếu Dự trù Hóa chất &amp; Tiến độ Phê duyệt / Cấp phát (BM-12-02 / BM-12-05)</h3>
+          <div style="font-size:11.2px;color:#ccfbf1;margin-top:2px;">Điều chỉnh thông tin phiếu, số lượng đặt và trạng thái tiến độ từ Bản nháp → Duyệt KXN → Khoa Dược/Vật tư → Nhập kho 4.2</div>
+        </div>
+        <button type="button" class="modal-close" style="color:#fff;" onclick="closeModal('modalEditProcurementVoucher')">×</button>
+      </div>
+      <form onsubmit="handleSaveEditProcurementVoucherSubmit(event)">
+        <div class="modal-body">
+          <input type="hidden" id="editVoucherIdInput">
+          <div style="display:grid;grid-template-columns:1fr 1.6fr;gap:10px;margin-bottom:10px;">
+            <div>
+              <label style="font-size:11.3px;font-weight:700;">Mã Phiếu Dự trù:</label>
+              <input type="text" id="editVoucherCodeDisplay" class="form-control" readonly style="background:#f1f5f9;font-weight:700;">
+            </div>
+            <div>
+              <label style="font-size:11.3px;font-weight:700;">Tên Đợt Dự trù / Phiếu Xin lĩnh:</label>
+              <input type="text" id="editVoucherTitleInput" class="form-control" required>
+            </div>
+          </div>
+          <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-bottom:10px;">
+            <div>
+              <label style="font-size:11.3px;font-weight:700;">Bộ phận Đề xuất:</label>
+              <input type="text" id="editVoucherDeptInput" class="form-control" required>
+            </div>
+            <div>
+              <label style="font-size:11.3px;font-weight:700;">Đơn vị Tiếp nhận:</label>
+              <select id="editVoucherReceiverSelect" class="form-control">
+                <option value="Khoa Dược - BV Nhi Hà Nội">Khoa Dược - BV Nhi Hà Nội</option>
+                <option value="Phòng Vật tư TBYT - BV Nhi Hà Nội">Phòng Vật tư TBYT - BV Nhi Hà Nội</option>
+                <option value="Khoa Dược &amp; Phòng Vật tư TBYT">Khoa Dược &amp; Phòng Vật tư TBYT</option>
+              </select>
+            </div>
+            <div>
+              <label style="font-size:11.3px;font-weight:700;color:#0f766e;">Tình trạng / Tiến độ Phiếu:</label>
+              <select id="editVoucherStageSelect" class="form-control" style="font-weight:700;border-color:#0d9488;">
+                <option value="1">1. Đang lập dự trù (Bản nháp - 20%)</option>
+                <option value="2">2. Chờ Trưởng khoa KXN duyệt (40%)</option>
+                <option value="3">3. Đã gửi Khoa Dược / Phòng Vật tư (60%)</option>
+                <option value="4">4. Đã duyệt cấp / Đang chờ giao hàng (80%)</option>
+                <option value="5">5. Đã nhận hàng một phần (90%)</option>
+                <option value="6">6. Đã nhận đủ &amp; Nhập kho 4.2 hoàn tất (100%)</option>
+              </select>
+            </div>
+          </div>
+          <div style="display:grid;grid-template-columns:1fr 1fr 1.4fr;gap:10px;margin-bottom:10px;">
+            <div>
+              <label style="font-size:11.3px;font-weight:700;">Tổng số mặt hàng:</label>
+              <input type="number" min="1" id="editVoucherItemCountInput" class="form-control" required>
+            </div>
+            <div>
+              <label style="font-size:11.3px;font-weight:700;">Tổng số lượng đơn vị đặt:</label>
+              <input type="number" min="1" id="editVoucherTotalQtyInput" class="form-control" required>
+            </div>
+            <div>
+              <label style="font-size:11.3px;font-weight:700;">Ghi chú Tiến độ / Phê duyệt:</label>
+              <input type="text" id="editVoucherNoteInput" class="form-control" required>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer" style="padding:10px 16px;background:#f8fafc;display:flex;justify-content:flex-end;gap:8px;border-top:1px solid #e2e8f0;">
+          <button type="button" class="btn btn-outline" onclick="closeModal('modalEditProcurementVoucher')">Hủy</button>
+          <button type="submit" class="btn btn-primary" style="background:#0d9488;border-color:#0d9488;">💾 Lưu Cập nhật Phiếu Dự trù</button>
         </div>
       </form>
     </div>
