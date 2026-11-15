@@ -2586,6 +2586,290 @@
       transition: width 0.25s ease;
     }
 
+  
+    /* === EXECUTIVE REAGENT DASHBOARD & 6 STATISTICAL CHARTS v2026.19 === */
+    .reagent-subnav-grid {
+      display: grid !important;
+      grid-template-columns: repeat(7, minmax(0, 1fr)) !important;
+      gap: 6px !important;
+      width: 100%;
+    }
+    .reagent-subnav-grid .equip-nav-card {
+      padding: 8px 9px !important;
+      min-height: 74px !important;
+    }
+    .reagent-subnav-grid .equip-nav-card .enc-title {
+      font-size: 11.4px !important;
+      line-height: 1.25 !important;
+    }
+    .reagent-subnav-grid .equip-nav-card .enc-sub {
+      font-size: 9.8px !important;
+      line-height: 1.22 !important;
+    }
+    .reagent-exec-kpi-strip {
+      display: grid;
+      grid-template-columns: repeat(6, minmax(0, 1fr));
+      gap: 8px;
+      margin-bottom: 8px;
+    }
+    .reagent-exec-kpi-card {
+      background: #ffffff;
+      border: 1px solid #cbd5e1;
+      border-radius: 9px;
+      padding: 7px 10px;
+      cursor: pointer;
+      transition: all 0.16s ease;
+      position: relative;
+      overflow: hidden;
+    }
+    .reagent-exec-kpi-card:hover {
+      border-color: #0284c7;
+      transform: translateY(-1px);
+      box-shadow: 0 4px 12px rgba(2, 132, 199, 0.12);
+    }
+    .reagent-dash-grid-2 {
+      display: grid;
+      grid-template-columns: 1.35fr 1fr;
+      gap: 12px;
+      margin-bottom: 12px;
+    }
+    .reagent-dash-grid-equal {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin-bottom: 12px;
+    }
+    .reagent-chart-card {
+      background: #ffffff;
+      border: 1px solid #e2e8f0;
+      border-radius: 11px;
+      padding: 12px 14px;
+      box-shadow: 0 2px 8px rgba(15, 23, 42, 0.04);
+    }
+    .reagent-chart-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 8px;
+      margin-bottom: 8px;
+      padding-bottom: 6px;
+      border-bottom: 1px dashed #e2e8f0;
+    }
+    .reagent-chart-title {
+      font-size: 12.6px;
+      font-weight: 800;
+      color: #0f4c81;
+      line-height: 1.3;
+    }
+    .reagent-chart-sub {
+      font-size: 10.6px;
+      color: #64748b;
+      margin-top: 2px;
+    }
+    .reagent-canvas-wrap {
+      width: 100%;
+      position: relative;
+    }
+    @media (max-width: 1280px) {
+      .reagent-subnav-grid {
+        grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
+      }
+      .reagent-exec-kpi-strip {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+      }
+      .reagent-dash-grid-2, .reagent-dash-grid-equal {
+        grid-template-columns: 1fr;
+      }
+    }
+
+  
+    /* === SCIENTIFIC ACCORDION SIDEBAR MENU UX v2026.20 === */
+    body:not(.mobile-preview-mode):not(.sidebar-collapsed) > .app-shell, .app-shell { grid-template-columns: 258px minmax(0, 1fr) !important; }
+    .left-sidebar {
+      width: 258px !important;
+      min-width: 258px !important;
+      padding: 10px 10px 18px 10px !important;
+      background: #ffffff !important;
+      border-right: 1px solid #cbd5e1 !important;
+      display: flex !important;
+      flex-direction: column !important;
+      gap: 2px !important;
+    }
+    .sidebar-brand-card {
+      padding: 9px 10px !important;
+      margin-bottom: 6px !important;
+      border-radius: 10px !important;
+      background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%) !important;
+      border: 1px solid #bae6fd !important;
+      display: flex !important;
+      align-items: center !important;
+      gap: 9px !important;
+    }
+    .sidebar-section-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 7px 6px 3px 6px;
+      margin-top: 4px;
+      font-size: 9.8px;
+      font-weight: 800;
+      letter-spacing: 0.04em;
+      color: #64748b;
+      text-transform: uppercase;
+      border-top: 1px dashed #e2e8f0;
+    }
+    .sidebar-section-header:first-of-type {
+      border-top: none;
+      margin-top: 0;
+    }
+    .side-nav-item {
+      width: 100% !important;
+      display: flex !important;
+      align-items: center !important;
+      justify-content: space-between !important;
+      gap: 8px !important;
+      padding: 6px 8px !important;
+      border-radius: 9px !important;
+      border: 1px solid transparent !important;
+      background: transparent !important;
+      color: #1e293b !important;
+      font-size: 11.6px !important;
+      font-weight: 600 !important;
+      text-align: left !important;
+      cursor: pointer !important;
+      transition: all 0.16s ease !important;
+      line-height: 1.28 !important;
+    }
+    .side-nav-item:hover {
+      background: #f1f5f9 !important;
+      color: #0f4c81 !important;
+      border-color: #cbd5e1 !important;
+    }
+    .side-nav-item.active {
+      background: linear-gradient(135deg, #e0f2fe 0%, #f0f9ff 100%) !important;
+      color: #0f4c81 !important;
+      border: 1.5px solid #0284c7 !important;
+      font-weight: 700 !important;
+      box-shadow: 0 3px 10px rgba(2, 132, 199, 0.12) !important;
+    }
+    .side-item-left {
+      display: flex !important;
+      align-items: center !important;
+      gap: 8px !important;
+      flex: 1 !important;
+      min-width: 0 !important;
+    }
+    .side-icon-box {
+      width: 24px !important;
+      height: 24px !important;
+      min-width: 24px !important;
+      border-radius: 6px !important;
+      background: #f1f5f9 !important;
+      display: inline-flex !important;
+      align-items: center !important;
+      justify-content: center !important;
+      font-size: 13px !important;
+      flex-shrink: 0 !important;
+      transition: all 0.15s ease !important;
+    }
+    .side-nav-item.active .side-icon-box {
+      background: #0284c7 !important;
+      color: #ffffff !important;
+      box-shadow: 0 2px 5px rgba(2, 132, 199, 0.25) !important;
+    }
+    .side-label-text {
+      flex: 1 !important;
+      min-width: 0 !important;
+      white-space: nowrap !important;
+      overflow: hidden !important;
+      text-overflow: ellipsis !important;
+      line-height: 1.28 !important;
+    }
+    .side-item-right {
+      display: inline-flex !important;
+      align-items: center !important;
+      gap: 4px !important;
+      flex-shrink: 0 !important;
+    }
+    .side-count-pill {
+      font-size: 9.5px !important;
+      font-weight: 700 !important;
+      padding: 1px 6px !important;
+      border-radius: 999px !important;
+      background: #e2e8f0 !important;
+      color: #334155 !important;
+      white-space: nowrap !important;
+    }
+    .side-nav-item.active .side-count-pill {
+      background: #0284c7 !important;
+      color: #ffffff !important;
+    }
+    .side-chevron {
+      font-size: 10px !important;
+      color: #64748b !important;
+      transition: transform 0.2s ease !important;
+      display: inline-block !important;
+      width: 14px !important;
+      text-align: center !important;
+    }
+    .side-nav-item.submenu-open .side-chevron {
+      transform: rotate(180deg) !important;
+      color: #0284c7 !important;
+    }
+    /* Nested Sub-Menu Tree */
+    .side-submenu-tree {
+      display: none;
+      flex-direction: column;
+      gap: 2px;
+      margin: 2px 0 6px 18px;
+      padding-left: 8px;
+      border-left: 2px solid #cbd5e1;
+    }
+    .side-submenu-tree.open {
+      display: flex !important;
+    }
+    .side-tree-btn {
+      width: 100%;
+      display: flex;
+      align-items: flex-start;
+      gap: 6px;
+      padding: 5px 8px;
+      border-radius: 7px;
+      border: 1px solid transparent;
+      background: transparent;
+      color: #475569;
+      font-size: 11px;
+      font-weight: 600;
+      white-space: nowrap;
+      text-align: left;
+      cursor: pointer;
+      line-height: 1.28;
+      transition: all 0.14s ease;
+    }
+    .side-tree-btn:hover {
+      background: #f0f9ff;
+      color: #0369a1;
+    }
+    .side-tree-btn.active-sub {
+      background: #e0f2fe;
+      color: #0f4c81;
+      font-weight: 700;
+      border-color: #bae6fd;
+    }
+    .side-tree-num {
+      font-size: 10px;
+      font-weight: 800;
+      color: #0284c7;
+      min-width: 20px;
+      flex-shrink: 0;
+      padding-top: 1px;
+    }
+    .side-tree-text {
+      flex: 1;
+      min-width: 0;
+      word-break: break-word;
+    }
+
   </style>
   <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js" crossorigin="anonymous"></script>
   <script src="https://cdn.jsdelivr.net/npm/qrcode-generator@1.4.4/qrcode.min.js" crossorigin="anonymous"></script>
@@ -2648,35 +2932,181 @@
   <div class="app-shell">
     <aside class="left-sidebar">
       <div class="sidebar-brand-card">
-        <img src="data:image/jpeg;base64,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" alt="BV Nhi Hà Nội">
+        <img src="data:image/jpeg;base64,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" alt="BV Nhi Hà Nội" style="width:36px;height:36px;border-radius:8px;object-fit:contain;background:#fff;padding:2px;border:1px solid #bae6fd;flex-shrink:0;">
         <div class="side-label-text" style="line-height:1.25;">
           <div style="font-size:11px;font-weight:800;color:#0068b5;">BỆNH VIỆN NHI HÀ NỘI</div>
-          <div style="font-size:10px;font-weight:700;color:#0f172a;">KHOA XÉT NGHIỆM • ISO 15189</div>
+          <div style="font-size:9.8px;font-weight:700;color:#0f172a;">KHOA XÉT NGHIỆM • ISO 15189</div>
         </div>
       </div>
-      <div class="sidebar-group-title">ĐIỀU HƯỚNG TTA-QMS</div>
-      <button class="side-nav-item" onclick="switchTab('dashboard', this)">📊 <span class="side-label-text">Trang Chủ &amp; Dashboard</span></button>
-      <button id="sideNavBtn-qc" class="side-nav-item" onclick="switchTab('qc', this)">📈 <span class="side-label-text">Nội kiểm (API &amp; Mean Lab)</span></button>
-      <button id="sideNavBtn-eqa" class="side-nav-item" onclick="switchTab('eqa', this)">🏅 <span class="side-label-text">Ngoại kiểm (6 Giai đoạn)</span></button>
-      <button class="side-nav-item" onclick="switchTab('equipment', this)">⚙️ <span class="side-label-text">Thiết bị (120 Máy &amp; Lịch sử)</span></button>
-      <button class="side-nav-item" onclick="switchTab('equipment', this); switchEquipSubTab('qr')">📱 <span class="side-label-text">Mã QR Thiết bị &amp; In Tem</span></button>
 
-      <div class="side-divider"></div>
-      <div class="sidebar-group-title">PHÂN HỆ HÓA CHẤT (6 MỤC)</div>
-      <button class="side-nav-item side-nav-sub" onclick="switchTab('inventory', this); switchInvSubTab('catalog')">📚 1. DANH MỤC &amp; ĐỊNH MỨC (4.1)</button>
-      <button class="side-nav-item side-nav-sub" onclick="switchTab('inventory', this); switchInvSubTab('stock')">🏠 2. TỒN KHO LÔ &amp; HỘP MỞ (4.2/4C)</button>
-      <button class="side-nav-item side-nav-sub" onclick="switchTab('inventory', this); switchInvSubTab('consume')">⚡ 3. TRỪ TIÊU HAO THEO XN (5B)</button>
-      <button class="side-nav-item side-nav-sub" onclick="switchTab('inventory', this); switchInvSubTab('nxt')">📥 4. BÁO CÁO NXT &amp; LÔ MỚI (BM11)</button>
-      <button class="side-nav-item side-nav-sub" onclick="switchTab('inventory', this); switchInvSubTab('exp')">📦 5. CẬN HẠN &amp; KIỂM KÊ (4.5)</button>
-      <button class="side-nav-item side-nav-sub" onclick="switchTab('inventory', this); switchInvSubTab('plan')">🧮 6. DỰ TRÙ, ALIQUOT &amp; TRUY VẾT</button>
+      <div style="display:flex;justify-content:space-between;align-items:center;padding:0 4px 4px 4px;">
+        <span style="font-size:9.8px;font-weight:700;color:#0369a1;">🧭 Menu Chuẩn ISO 15189</span>
+        <button type="button" class="btn btn-outline btn-xs" style="height:20px;padding:0 6px;font-size:9.5px;" onclick="toggleAllSidebarSubmenus()" title="Mở rộng hoặc thu gọn tất cả mục con">↕️ Mở/Thu gọn</button>
+      </div>
 
-      <div class="side-divider"></div>
-      <div class="sidebar-group-title">NHÂN SỰ, LIMS &amp; APPSHEET</div>
-      <button class="side-nav-item" onclick="switchTab('hr_capa', this)">👥 <span class="side-label-text">Nhân sự (Master-Detail) &amp; CAPA</span></button>
-      <button class="side-nav-item" onclick="switchTab('lims', this)">🧬 <span class="side-label-text">LIMS Tách chiết &amp; Plate 96</span></button>
-      <button id="sideNavBtn-appsheet" data-rbac="admin-only" class="side-nav-item" onclick="switchTab('appsheet_sync', this)">🔗 <span class="side-label-text">Google Sheets &amp; AppSheet</span></button>
-      <button id="sideNavBtn-security" data-rbac="admin-only" class="side-nav-item" onclick="switchTab('security_deploy', this)">🔐 <span class="side-label-text">Bảo mật RBAC &amp; Triển khai</span></button>
-      <button class="side-nav-item" style="margin-top:4px;background:#eff6ff;color:#0369a1;border:1px solid #bae6fd;" onclick="openModal('modalCommercialUserGuide')">📘 <span class="side-label-text">Hướng dẫn Sử dụng Phần mềm</span></button>
+      <!-- NHÓM I: ĐIỀU HÀNH & CHUYÊN MÔN XÉT NGHIỆM -->
+      <div class="sidebar-section-header">
+        <span>I. ĐIỀU HÀNH &amp; CHUYÊN MÔN</span>
+        <span>ISO 7.2–7.4</span>
+      </div>
+
+      <button id="sideNavBtn-dashboard" class="side-nav-item" onclick="switchTab('dashboard', this)">
+        <span class="side-item-left">
+          <span class="side-icon-box">📊</span>
+          <span class="side-label-text">1. Tổng quan &amp; Điều hành</span>
+        </span>
+        <span class="side-item-right">
+          <span class="side-count-pill">QMS</span>
+        </span>
+      </button>
+
+      <button id="sideNavBtn-lims" class="side-nav-item" onclick="switchTab('lims', this)">
+        <span class="side-item-left">
+          <span class="side-icon-box">🧬</span>
+          <span class="side-label-text">2. LIMS SHPT &amp; PCR</span>
+        </span>
+        <span class="side-item-right">
+          <span class="side-count-pill">17 XN</span>
+          <span class="side-chevron" onclick="event.stopPropagation();toggleSidebarSubmenu('lims')">▾</span>
+        </span>
+      </button>
+      <div id="sideSubmenu-lims" class="side-submenu-tree">
+        <button type="button" class="side-tree-btn" onclick="switchTab('lims')"><span class="side-tree-num">2.1</span><span class="side-tree-text">Tiếp nhận Mẫu LIS &amp; Tạo Mẻ</span></button>
+        <button type="button" class="side-tree-btn" onclick="switchTab('lims')"><span class="side-tree-num">2.2</span><span class="side-tree-text">Sơ đồ Plate 96 &amp; Duyệt KQ</span></button>
+        <button type="button" class="side-tree-btn" onclick="switchTab('lims')"><span class="side-tree-num">2.3</span><span class="side-tree-text">Khấu trừ Hóa chất Tự động (5B)</span></button>
+      </div>
+
+      <!-- NHÓM II: ĐẢM BẢO CHẤT LƯỢNG XÉT NGHIỆM (IQC & EQA) -->
+      <div class="sidebar-section-header">
+        <span>II. QUẢN LÝ CHẤT LƯỢNG</span>
+        <span>ISO 7.3.7</span>
+      </div>
+
+      <button id="sideNavBtn-qc" class="side-nav-item" onclick="switchTab('qc', this)">
+        <span class="side-item-left">
+          <span class="side-icon-box">📈</span>
+          <span class="side-label-text">3. Nội kiểm XN (IQC)</span>
+        </span>
+        <span class="side-item-right">
+          <span class="side-count-pill">17 Máy</span>
+          <span class="side-chevron" onclick="event.stopPropagation();toggleSidebarSubmenu('qc')">▾</span>
+        </span>
+      </button>
+      <div id="sideSubmenu-qc" class="side-submenu-tree">
+        <button type="button" id="sideSubBtn-qc-quant" class="side-tree-btn" onclick="switchTab('qc');switchQcSubTab('quant')"><span class="side-tree-num">3.1</span><span class="side-tree-text">IQC Định lượng (L-J)</span></button>
+        <button type="button" id="sideSubBtn-qc-qual" class="side-tree-btn" onclick="switchTab('qc');switchQcSubTab('qual')"><span class="side-tree-num">3.2</span><span class="side-tree-text">IQC Định tính (PCR / VS)</span></button>
+        <button type="button" id="sideSubBtn-qc-rules" class="side-tree-btn" onclick="switchTab('qc');switchQcSubTab('rules')"><span class="side-tree-num">3.3</span><span class="side-tree-text">Mục tiêu TEa &amp; Six Sigma</span></button>
+        <button type="button" id="sideSubBtn-qc-monthly" class="side-tree-btn" onclick="switchTab('qc');switchQcSubTab('monthly')"><span class="side-tree-num">3.4</span><span class="side-tree-text">Thống kê Tháng (BM-08-02)</span></button>
+      </div>
+
+      <button id="sideNavBtn-eqa" class="side-nav-item" onclick="switchTab('eqa', this)">
+        <span class="side-item-left">
+          <span class="side-icon-box">🏅</span>
+          <span class="side-label-text">4. Ngoại kiểm (EQA)</span>
+        </span>
+        <span class="side-item-right">
+          <span class="side-count-pill">12 CT</span>
+          <span class="side-chevron" onclick="event.stopPropagation();toggleSidebarSubmenu('eqa')">▾</span>
+        </span>
+      </button>
+      <div id="sideSubmenu-eqa" class="side-submenu-tree">
+        <button type="button" id="sideSubBtn-eqa-all6" class="side-tree-btn" onclick="switchTab('eqa');switchEqaSubView('all6')"><span class="side-tree-num">4.1</span><span class="side-tree-text">Chu trình Ngoại kiểm 6 Bước</span></button>
+        <button type="button" id="sideSubBtn-eqa-programs" class="side-tree-btn" onclick="switchTab('eqa');switchEqaSubView('programs')"><span class="side-tree-num">4.2</span><span class="side-tree-text">Hồ sơ 12 Chương trình EQA</span></button>
+        <button type="button" id="sideSubBtn-eqa-sdi" class="side-tree-btn" onclick="switchTab('eqa');switchEqaSubView('sdi')"><span class="side-tree-num">4.3</span><span class="side-tree-text">Biểu đồ SDI &amp; Luân phiên KTV</span></button>
+      </div>
+
+      <!-- NHÓM III: QUẢN LÝ NGUỒN LỰC (THIẾT BỊ, HÓA CHẤT, NHÂN SỰ) -->
+      <div class="sidebar-section-header">
+        <span>III. QUẢN LÝ NGUỒN LỰC</span>
+        <span>ISO 6.2–6.6</span>
+      </div>
+
+      <button id="sideNavBtn-equipment" class="side-nav-item" onclick="switchTab('equipment', this)">
+        <span class="side-item-left">
+          <span class="side-icon-box">⚙️</span>
+          <span class="side-label-text">5. Quản lý Thiết bị</span>
+        </span>
+        <span class="side-item-right">
+          <span class="side-count-pill">120 Máy</span>
+          <span class="side-chevron" onclick="event.stopPropagation();toggleSidebarSubmenu('equipment')">▾</span>
+        </span>
+      </button>
+      <div id="sideSubmenu-equipment" class="side-submenu-tree">
+        <button type="button" id="sideSubBtn-equip-list" class="side-tree-btn" onclick="switchTab('equipment');switchEquipSubTab('list')"><span class="side-tree-num">5.1</span><span class="side-tree-text">Danh mục 120 Máy &amp; Lý lịch</span></button>
+        <button type="button" id="sideSubBtn-equip-maint" class="side-tree-btn" onclick="switchTab('equipment');switchEquipSubTab('maint')"><span class="side-tree-num">5.2</span><span class="side-tree-text">Bảo dưỡng (7B) &amp; Sửa chữa</span></button>
+        <button type="button" id="sideSubBtn-equip-env" class="side-tree-btn" onclick="switchTab('equipment');switchEquipSubTab('env')"><span class="side-tree-num">5.3</span><span class="side-tree-text">Nhiệt độ &amp; Điều chuyển Máy</span></button>
+        <button type="button" id="sideSubBtn-equip-qr" class="side-tree-btn" onclick="switchTab('equipment');switchEquipSubTab('qr')"><span class="side-tree-num">5.4</span><span class="side-tree-text">Trung tâm Mã QR &amp; In Tem</span></button>
+        <button type="button" id="sideSubBtn-equip-analytics" class="side-tree-btn" onclick="switchTab('equipment');switchEquipSubTab('analytics')"><span class="side-tree-num">5.5</span><span class="side-tree-text">Hiệu suất &amp; Sai số MPE</span></button>
+      </div>
+
+      <button id="sideNavBtn-inventory" class="side-nav-item active submenu-open" onclick="switchTab('inventory', this)">
+        <span class="side-item-left">
+          <span class="side-icon-box">🧪</span>
+          <span class="side-label-text">6. Kho Hóa chất &amp; VT</span>
+        </span>
+        <span class="side-item-right">
+          <span class="side-count-pill">29 Lô</span>
+          <span class="side-chevron" onclick="event.stopPropagation();toggleSidebarSubmenu('inventory')">▾</span>
+        </span>
+      </button>
+      <div id="sideSubmenu-inventory" class="side-submenu-tree open">
+        <button type="button" id="sideSubBtn-inv-dashboard" class="side-tree-btn active-sub" onclick="switchTab('inventory');switchInvSubTab('dashboard')"><span class="side-tree-num">6.0</span><span class="side-tree-text">Dashboard &amp; 6 Biểu đồ</span></button>
+        <button type="button" id="sideSubBtn-inv-catalog" class="side-tree-btn" onclick="switchTab('inventory');switchInvSubTab('catalog')"><span class="side-tree-num">6.1</span><span class="side-tree-text">Danh mục &amp; Định mức (4.1)</span></button>
+        <button type="button" id="sideSubBtn-inv-stock" class="side-tree-btn" onclick="switchTab('inventory');switchInvSubTab('stock')"><span class="side-tree-num">6.2</span><span class="side-tree-text">Tồn kho Lô &amp; Hộp Mở (4.2)</span></button>
+        <button type="button" id="sideSubBtn-inv-consume" class="side-tree-btn" onclick="switchTab('inventory');switchInvSubTab('consume')"><span class="side-tree-num">6.3</span><span class="side-tree-text">Trừ Tiêu hao Theo XN (5B)</span></button>
+        <button type="button" id="sideSubBtn-inv-nxt" class="side-tree-btn" onclick="switchTab('inventory');switchInvSubTab('nxt')"><span class="side-tree-num">6.4</span><span class="side-tree-text">Báo cáo NXT &amp; Lot-to-Lot</span></button>
+        <button type="button" id="sideSubBtn-inv-exp" class="side-tree-btn" onclick="switchTab('inventory');switchInvSubTab('exp')"><span class="side-tree-num">6.5</span><span class="side-tree-text">Cận hạn &amp; Kiểm kê (4.5A)</span></button>
+        <button type="button" id="sideSubBtn-inv-plan" class="side-tree-btn" onclick="switchTab('inventory');switchInvSubTab('plan')"><span class="side-tree-num">6.6</span><span class="side-tree-text">Dự trù Linh hoạt &amp; Aliquot</span></button>
+      </div>
+
+      <button id="sideNavBtn-hr_capa" class="side-nav-item" onclick="switchTab('hr_capa', this)">
+        <span class="side-item-left">
+          <span class="side-icon-box">👥</span>
+          <span class="side-label-text">7. Nhân sự &amp; Đào tạo</span>
+        </span>
+        <span class="side-item-right">
+          <span class="side-count-pill">52 NS</span>
+          <span class="side-chevron" onclick="event.stopPropagation();toggleSidebarSubmenu('hr_capa')">▾</span>
+        </span>
+      </button>
+      <div id="sideSubmenu-hr_capa" class="side-submenu-tree">
+        <button type="button" id="sideSubBtn-hr-dossier" class="side-tree-btn" onclick="switchTab('hr_capa');switchHrSubTab('dossier')"><span class="side-tree-num">7.1</span><span class="side-tree-text">Hồ sơ Năng lực &amp; Radar</span></button>
+        <button type="button" id="sideSubBtn-hr-training" class="side-tree-btn" onclick="switchTab('hr_capa');switchHrSubTab('training')"><span class="side-tree-num">7.2</span><span class="side-tree-text">Đào tạo Liên tục &amp; Đánh giá</span></button>
+        <button type="button" id="sideSubBtn-hr-capa" class="side-tree-btn" onclick="switchTab('hr_capa');switchHrSubTab('capa')"><span class="side-tree-num">7.3</span><span class="side-tree-text">Quản lý Sự cố &amp; CAPA</span></button>
+      </div>
+
+      <!-- NHÓM IV: CƠ SỞ DỮ LIỆU, BẢO MẬT & HƯỚNG DẪN -->
+      <div class="sidebar-section-header">
+        <span>IV. DỮ LIỆU &amp; QUẢN TRỊ</span>
+        <span>ISO 8.4</span>
+      </div>
+
+      <button id="sideNavBtn-appsheet" data-rbac="admin-only" class="side-nav-item" onclick="switchTab('appsheet_sync', this)">
+        <span class="side-item-left">
+          <span class="side-icon-box">🗄️</span>
+          <span class="side-label-text">8. CSDL Google Sheets</span>
+        </span>
+        <span class="side-item-right">
+          <span class="side-count-pill">21 Bảng</span>
+        </span>
+      </button>
+
+      <button id="sideNavBtn-security" data-rbac="admin-only" class="side-nav-item" onclick="switchTab('security_deploy', this)">
+        <span class="side-item-left">
+          <span class="side-icon-box">🛡️</span>
+          <span class="side-label-text">9. Phân quyền &amp; Bảo mật</span>
+        </span>
+        <span class="side-item-right">
+          <span class="side-count-pill">RBAC</span>
+        </span>
+      </button>
+
+      <button class="side-nav-item" style="margin-top:4px;background:#f0f9ff !important;color:#0369a1 !important;border:1px solid #bae6fd !important;" onclick="openModal('modalCommercialUserGuide')">
+        <span class="side-item-left">
+          <span class="side-icon-box" style="background:#bae6fd !important;">📘</span>
+          <span class="side-label-text" style="font-weight:700;color:#0f4c81;">10. Hướng dẫn Sử dụng</span>
+        </span>
+      </button>
     </aside>
 
     <main class="main-area">
@@ -3687,37 +4117,70 @@
         <!-- COMPACT, CALM TOP BANNER -->
         <div class="section-banner">
           <div>
-            <h2 style="font-size:15px;margin-bottom:2px;">🧪 QUẢN LÝ KHO HÓA CHẤT, ĐỊNH MỨC XÉT NGHIỆM &amp; DỰ TRÙ LINH HOẠT (ISO 15189:2022 • QTQL.VT03.TTDT-12)</h2>
-            <p style="font-size:11.2px;margin:0;opacity:0.92;">Liên kết đồng bộ 5 Bộ phận: Danh mục &amp; Định mức (<code>4.1/5E</code>) • Tồn kho Lô &amp; Hộp Mở (<code>4.2/4C</code>) • Khấu trừ theo XN (<code>5B</code>) • Kiểm kê (<code>4.5A</code>) • Dự trù linh hoạt &amp; Theo dõi Phiếu dự trù (<code>BM-12-01/02/05</code>)</p>
+            <h2 style="font-size:15px;margin-bottom:2px;">🧪 QUẢN LÝ KHO HÓA CHẤT, DASHBOARD THỐNG KÊ, ĐỊNH MỨC XÉT NGHIỆM &amp; DỰ TRÙ LINH HOẠT (ISO 15189:2022 • QTQL.VT03.TTDT-12)</h2>
+            <p style="font-size:11.2px;margin:0;opacity:0.92;">Liên kết đồng bộ 5 Bộ phận: Dashboard &amp; 6 Biểu đồ • Danh mục &amp; Định mức (<code>4.1/5E</code>) • Kho Chẵn &amp; Hộp Mở (<code>4.2/4C</code>) • Khấu trừ XN (<code>5B</code>) • Dự trù linh hoạt (<code>BM-12-01/02/05</code>)</p>
           </div>
           <div style="display:flex;gap:6px;flex-wrap:wrap;align-items:center;">
-            <button type="button" class="btn btn-outline btn-xs" style="background:rgba(255,255,255,0.14);color:#fff;border-color:rgba(255,255,255,0.35);" onclick="toggleInvWorkflowStrip()">🔄 Sơ đồ 8 Bước SOP</button>
+            <button type="button" class="btn btn-warning btn-xs" style="font-weight:700;" onclick="switchInvSubTab('dashboard')">📊 Mở Dashboard &amp; 6 Biểu đồ</button>
+            <button type="button" class="btn btn-outline btn-xs" style="background:rgba(255,255,255,0.14);color:#fff;border-color:rgba(255,255,255,0.35);" onclick="toggleInvWorkflowDetailDrawer()">🔄 Sơ đồ 8 Bước SOP</button>
             <button type="button" id="invSubBtn-all" class="btn btn-outline btn-xs" style="background:rgba(255,255,255,0.14);color:#fff;border-color:rgba(255,255,255,0.35);" onclick="switchInvSubTab('all')">🌐 Xem Tất cả</button>
             <button type="button" class="btn btn-outline btn-xs" style="background:#fff;color:#0f4c81;font-weight:700;" onclick="openAndScrollToReagentAuditTrail()">🗄️ Nhật ký CSDL (<span id="invHeaderAuditCount">25</span>)</button>
             <button type="button" class="btn btn-success btn-xs" style="font-weight:700;" onclick="pushSingleTableToMasterDB('Kho_HoaChat_Lot');pushSingleTableToMasterDB('LIMS_5B_NhatKy_KhauTru_Kho');">☁️ Đồng bộ Lên Sheet</button>
           </div>
         </div>
 
-        <!-- HIDDEN KPI HOLDERS FOR LEGACY SCRIPT COMPATIBILITY (ZERO VISUAL CLUTTER) -->
-        <div style="display:none;">
-          <span id="invKpiCatalogCount">29 Danh mục</span>
-          <span id="invKpiTotalLots">29 Lô</span>
-          <span id="invKpiOpenKits">29 Hộp mở</span>
-          <span id="invKpiDeductionCount">40 Giao dịch</span>
-          <span id="invKpiExpWarn">2 Lô ≤ 30d</span>
-          <span id="invKpiYieldPct">90.4%</span>
-          <span id="invKpiReorderSub">Dự trù x = m - t</span>
+        <!-- SLEEK EXECUTIVE KPI DASHBOARD STRIP (6 COMPACT VISUAL CARDS WITH MINI PROGRESS BARS) -->
+        <div class="reagent-exec-kpi-strip">
+          <div class="reagent-exec-kpi-card" style="border-left:3.5px solid #0f4c81;" onclick="switchInvSubTab('catalog')">
+            <div style="display:flex;justify-content:space-between;font-size:10px;font-weight:700;color:#475569;"><span>DANH MỤC &amp; ĐỊNH MỨC (4.1)</span><span>📚</span></div>
+            <div id="invKpiCatalogCount" style="font-size:16px;font-weight:800;color:#0f4c81;margin:2px 0;">29 Danh mục</div>
+            <div style="font-size:9.8px;color:#0369a1;">5 Bộ phận • Liên kết chuẩn QTXN</div>
+          </div>
+          <div class="reagent-exec-kpi-card" style="border-left:3.5px solid #0d9488;" onclick="switchInvSubTab('stock');setInvQuickFilter('ALL')">
+            <div style="display:flex;justify-content:space-between;font-size:10px;font-weight:700;color:#475569;"><span>TỒN KHO CHẴN (BẢNG 4.2)</span><span>🧪</span></div>
+            <div id="invKpiTotalLots" style="font-size:16px;font-weight:800;color:#0d9488;margin:2px 0;">29 Lô (5.842 ĐVT)</div>
+            <div id="invKpiTotalValueSub" style="font-size:9.8px;color:#059669;font-weight:600;">Tổng giá trị: 876,3 Triệu VNĐ</div>
+          </div>
+          <div class="reagent-exec-kpi-card" style="border-left:3.5px solid #0284c7;" onclick="switchInvSubTab('stock');setInvQuickFilter('OPEN_KIT')">
+            <div style="display:flex;justify-content:space-between;font-size:10px;font-weight:700;color:#475569;"><span>HỘP KIT ĐANG MỞ (4C)</span><span>🔓</span></div>
+            <div id="invKpiOpenKits" style="font-size:16px;font-weight:800;color:#0284c7;margin:2px 0;">29 Hộp mở (1.946 ĐVT)</div>
+            <div style="font-size:9.8px;color:#475569;">Giám sát On-board &amp; Rã đông ≤ 5 lần</div>
+          </div>
+          <div class="reagent-exec-kpi-card" style="border-left:3.5px solid #d97706;" onclick="switchInvSubTab('consume')">
+            <div style="display:flex;justify-content:space-between;font-size:10px;font-weight:700;color:#475569;"><span>KHẤU TRỪ TIÊU HAO (5B)</span><span>⚡</span></div>
+            <div id="invKpiDeductionCount" style="font-size:16px;font-weight:800;color:#d97706;margin:2px 0;">40 Giao dịch</div>
+            <div style="font-size:9.8px;color:#92400e;">Tự động LIMS 2A/3A &amp; Chuyên khoa</div>
+          </div>
+          <div class="reagent-exec-kpi-card" style="border-left:3.5px solid #dc2626;" onclick="switchInvSubTab('exp')">
+            <div style="display:flex;justify-content:space-between;font-size:10px;font-weight:700;color:#475569;"><span>CẢNH BÁO FEFO / MIN STOCK</span><span>⏳</span></div>
+            <div id="invKpiExpWarn" style="font-size:16px;font-weight:800;color:#dc2626;margin:2px 0;">2 Lô ≤ 30d</div>
+            <div style="font-size:9.8px;color:#dc2626;font-weight:600;">Ưu tiên xuất số 1 (FEFO)</div>
+          </div>
+          <div class="reagent-exec-kpi-card" style="border-left:3.5px solid #7c3aed;" onclick="switchInvSubTab('dashboard')">
+            <div style="display:flex;justify-content:space-between;font-size:10px;font-weight:700;color:#475569;"><span>HIỆU SUẤT (BM20) &amp; DỰ TRÙ</span><span>📊</span></div>
+            <div id="invKpiYieldPct" style="font-size:16px;font-weight:800;color:#7c3aed;margin:2px 0;">89.4% Hữu ích</div>
+            <div id="invKpiReorderSub" style="font-size:9.8px;color:#5b21b6;font-weight:600;">3 Phiếu Dự trù • Click xem Biểu đồ</div>
+          </div>
         </div>
 
-        <!-- UNIFIED 6-CARD SUB-NAVIGATION & LIVE KPI BAR (SINGLE BALANCED ROW) -->
+        <!-- UNIFIED 7-CARD SUB-NAVIGATION BAR (SINGLE BALANCED ROW INCLUDING DASHBOARD & CHARTS) -->
         <div class="equip-subnav-wrapper" style="margin-bottom:8px;">
           <div class="reagent-subnav-grid">
-            <button type="button" id="invSubBtn-catalog" class="equip-nav-card nav-blue active" onclick="switchInvSubTab('catalog')">
+            <button type="button" id="invSubBtn-dashboard" class="equip-nav-card nav-indigo active" onclick="switchInvSubTab('dashboard')">
+              <div class="enc-top">
+                <span class="enc-step">DASHBOARD</span>
+                <span id="invNavBadgeDashboard" class="enc-badge">6 Biểu đồ</span>
+              </div>
+              <div class="enc-title">📊 0. Dashboard &amp; Biểu đồ</div>
+              <div class="enc-sub">Thống kê NXT, Tiêu hao, FEFO, Dự trù</div>
+            </button>
+
+            <button type="button" id="invSubBtn-catalog" class="equip-nav-card nav-blue" onclick="switchInvSubTab('catalog')">
               <div class="enc-top">
                 <span class="enc-step">PHÂN MỤC 01</span>
                 <span id="invNavBadgeCatalog" class="enc-badge">29 Danh mục</span>
               </div>
-              <div class="enc-title">📚 1. Danh mục &amp; Định mức XN</div>
+              <div class="enc-title">📚 1. Danh mục &amp; Định mức</div>
               <div class="enc-sub">Bảng 4.1 &amp; 5E • Định mức 1 Test</div>
             </button>
 
@@ -3726,7 +4189,7 @@
                 <span class="enc-step">PHÂN MỤC 02</span>
                 <span id="invNavBadgeStock" class="enc-badge">29 Lô • 29 Mở</span>
               </div>
-              <div class="enc-title">🏠 2. Tồn kho Lô (4.2) &amp; Hộp Mở</div>
+              <div class="enc-title">🏠 2. Kho Lô (4.2) &amp; Hộp Mở</div>
               <div class="enc-sub">Thẻ kho 360° • Mở hộp FEFO</div>
             </button>
 
@@ -3736,7 +4199,7 @@
                 <span id="invNavBadgeConsume" class="enc-badge">40 Giao dịch</span>
               </div>
               <div class="enc-title">⚡ 3. Xuất &amp; Trừ Tiêu hao XN</div>
-              <div class="enc-sub">Bảng 4.4 &amp; 5B • Trừ tự động theo XN</div>
+              <div class="enc-sub">Bảng 4.4 &amp; 5B • Trừ tự động XN</div>
             </button>
 
             <button type="button" id="invSubBtn-nxt" class="equip-nav-card nav-purple" onclick="switchInvSubTab('nxt')">
@@ -3753,17 +4216,17 @@
                 <span class="enc-step">PHÂN MỤC 05</span>
                 <span id="invNavBadgeExp" class="enc-badge">19 Cảnh báo</span>
               </div>
-              <div class="enc-title">📦 5. Cận hạn &amp; Kiểm kê (4.5)</div>
-              <div class="enc-sub">FEFO ≤30d • Kiểm đếm &amp; Chốt kho</div>
+              <div class="enc-title">📦 5. Cận hạn &amp; Kiểm kê</div>
+              <div class="enc-sub">FEFO ≤30d • Kiểm đếm 4.5A/B</div>
             </button>
 
             <button type="button" id="invSubBtn-plan" class="equip-nav-card nav-blue" onclick="switchInvSubTab('plan')">
               <div class="enc-top">
                 <span class="enc-step">PHÂN MỤC 06</span>
-                <span id="invNavBadgePlan" class="enc-badge">3 Phiếu Dự trù</span>
+                <span id="invNavBadgePlan" class="enc-badge">3 Phiếu • 24 Mục</span>
               </div>
-              <div class="enc-title">🧮 6. Dự trù Linh hoạt &amp; Aliquot</div>
-              <div class="enc-sub">Thêm/bớt DM • Chỉnh SL • Tiến độ phiếu</div>
+              <div class="enc-title">🧮 6. Dự trù Linh hoạt</div>
+              <div class="enc-sub">Thêm/bớt DM • Chỉnh SL • Tiến độ</div>
             </button>
           </div>
         </div>
@@ -3793,6 +4256,147 @@
             <div id="invWorkflowStepGuideActions" style="display:flex;gap:6px;">
               <button type="button" class="btn btn-primary btn-xs" onclick="openEditReagentCatalogModal(null)">+ Thêm Danh mục &amp; Định mức</button>
               <button type="button" class="btn btn-outline btn-xs" onclick="openLiveDbTableBrowser('Kho_HoaChat_Lot')">🗄️ Xem Bảng CSDL Gốc</button>
+            </div>
+          </div>
+        </div>
+
+                <!-- ===================================================================== -->
+        <!-- SUB-VIEW 0: DASHBOARD ĐIỀU HÀNH & 6 BIỂU ĐỒ THỐNG KÊ HÓA CHẤT TOÀN DIỆN -->
+        <!-- ===================================================================== -->
+        <div id="invSubView-dashboard" style="display:block;">
+          <div class="card" style="border-top:3px solid #4f46e5;background:linear-gradient(180deg,#f5f3ff 0%,#ffffff 110px);">
+            <div class="card-header" style="margin-bottom:10px;">
+              <div>
+                <div class="card-title" style="color:#312e81;font-size:14.5px;">📊 DASHBOARD ĐIỀU HÀNH &amp; HỆ THỐNG 6 BIỂU ĐỒ THỐNG KÊ QUẢN LÝ HÓA CHẤT - SINH PHẨM - VẬT TƯ TOÀN KHOA (ISO 15189:2022 &amp; QTQL.VT03.TTDT-12)</div>
+                <div class="card-subtitle">Tự động tổng hợp thời gian thực từ 29 Danh mục (<code>4.1</code>), 29 Lô Tồn kho Chẵn &amp; Hộp Mở (<code>4.2 &amp; 4C</code>), 40+ Giao dịch Khấu trừ theo xét nghiệm (<code>5B</code>) và Tiến độ Phiếu Dự trù (<code>BM-12-01/02/20</code>)</div>
+              </div>
+              <div style="display:flex;gap:6px;flex-wrap:wrap;align-items:center;">
+                <span style="font-size:11.2px;font-weight:700;color:#312e81;">Lọc Biểu đồ theo Bộ phận:</span>
+                <select id="dashInvDeptFilter" class="form-control" style="width:175px;height:29px;font-size:11.3px;font-weight:700;border-color:#6366f1;" onchange="renderReagentAnalyticsDashboard()">
+                  <option value="ALL">🌐 Toàn Khoa Xét nghiệm (5 Bộ phận)</option>
+                  <option value="Di truyền &amp; SHPT">🧬 1. Đơn nguyên Di truyền &amp; SHPT</option>
+                  <option value="Hóa sinh">🧪 2. Bộ phận Hóa sinh - Miễn dịch</option>
+                  <option value="Huyết học">🩸 3. Bộ phận Huyết học - Đông máu</option>
+                  <option value="Vi sinh">🦠 4. Bộ phận Vi sinh</option>
+                  <option value="Giải phẫu bệnh">🔬 5. Bộ phận Giải phẫu bệnh</option>
+                </select>
+                <button type="button" class="btn btn-primary btn-xs" style="background:#4f46e5;border-color:#4f46e5;" onclick="renderReagentAnalyticsDashboard()">🔄 Làm mới Biểu đồ</button>
+                <button type="button" class="btn btn-outline btn-xs" onclick="openPrintableReagentForm('BAO_CAO_HIEU_SUAT_BM20')">🖨️ In Báo cáo Thống kê (BM-12-20)</button>
+              </div>
+            </div>
+
+            <!-- ROW 1 OF CHARTS: DEPT STOCK & VALUE COMBO (LEFT) + CONSUMPTION YIELD DONUT BM-12-20 (RIGHT) -->
+            <div class="reagent-dash-grid-2">
+              <div class="reagent-chart-card">
+                <div class="reagent-chart-header">
+                  <div>
+                    <div class="reagent-chart-title">1️⃣ Biểu đồ Cơ cấu Tồn kho Chẵn (4.2), Hộp Đang Mở (4C) &amp; Giá trị Tồn kho (Triệu VNĐ) Theo 5 Bộ phận</div>
+                    <div class="reagent-chart-sub">So sánh tổng lượng tồn kho chẵn, lượng đang mở trên máy và giá trị tài chính giữa 5 Bộ phận chuyên môn</div>
+                  </div>
+                  <span class="badge b-info">Bảng 4.1 • 4.2 • 4C</span>
+                </div>
+                <div class="reagent-canvas-wrap" style="height:255px;">
+                  <canvas id="chartInvDeptStockValue" style="width:100%;height:255px;display:block;"></canvas>
+                </div>
+              </div>
+
+              <div class="reagent-chart-card">
+                <div class="reagent-chart-header">
+                  <div>
+                    <div class="reagent-chart-title">2️⃣ Biểu đồ Cơ cấu Tiêu hao Thực tế &amp; Hiệu suất Hữu ích (BM-12-20)</div>
+                    <div class="reagent-chart-sub">Tỷ lệ % test chạy Bệnh nhân (Hữu ích) vs Cal/IQC vs Ngoại kiểm EQA vs Chạy lại/Hao hụt</div>
+                  </div>
+                  <span class="badge b-pass">Mục tiêu ≥ 85%</span>
+                </div>
+                <div class="reagent-canvas-wrap" style="height:255px;">
+                  <canvas id="chartInvConsumptionStructure" style="width:100%;height:255px;display:block;"></canvas>
+                </div>
+              </div>
+            </div>
+
+            <!-- ROW 2 OF CHARTS: NXT BY TOP LOTS (LEFT) + EXPIRY FEFO RISK HORIZON (RIGHT) -->
+            <div class="reagent-dash-grid-equal">
+              <div class="reagent-chart-card">
+                <div class="reagent-chart-header">
+                  <div>
+                    <div class="reagent-chart-title">3️⃣ Biểu đồ Tổng hợp Nhập - Xuất - Tồn Chẵn (4.2) &amp; Hộp Mở (4C) Theo Lô Hóa chất Trọng điểm</div>
+                    <div class="reagent-chart-sub">Đối chiếu Lượng Nhập trong kỳ (+4.2), Xuất mở hộp (−4.2→4C), Tồn Chẵn cuối kỳ và Tồn Hộp mở (4C)</div>
+                  </div>
+                  <span class="badge b-purple">BM-12-07 • NXT</span>
+                </div>
+                <div class="reagent-canvas-wrap" style="height:260px;">
+                  <canvas id="chartInvNxtTopLots" style="width:100%;height:260px;display:block;"></canvas>
+                </div>
+              </div>
+
+              <div class="reagent-chart-card">
+                <div class="reagent-chart-header">
+                  <div>
+                    <div class="reagent-chart-title">4️⃣ Biểu đồ Phân tầng Hạn Sử dụng Còn lại (Ngày) &amp; Cảnh báo Xuất Sớm FEFO (BM-12-09/10)</div>
+                    <div class="reagent-chart-sub">Phân loại màu trực quan: Đỏ (≤ 30 ngày: Cận hạn khẩn) • Vàng (31–180 ngày) • Xanh (&gt; 180 ngày: An toàn)</div>
+                  </div>
+                  <span class="badge b-warn">FEFO Control</span>
+                </div>
+                <div class="reagent-canvas-wrap" style="height:260px;">
+                  <canvas id="chartInvExpiryHorizon" style="width:100%;height:260px;display:block;"></canvas>
+                </div>
+              </div>
+            </div>
+
+            <!-- ROW 3 OF CHARTS: PROCUREMENT GAP (m vs t vs OrderQty) (LEFT) + CONSUMPTION TREND & VOUCHER STAGES (RIGHT) -->
+            <div class="reagent-dash-grid-equal">
+              <div class="reagent-chart-card">
+                <div class="reagent-chart-header">
+                  <div>
+                    <div class="reagent-chart-title">5️⃣ Biểu đồ Phân tích Định mức 45 Ngày (m), Tồn Hiện tại (t) &amp; SL Dự trù Thực đặt (BM-12-02)</div>
+                    <div class="reagent-chart-sub">Nhận diện các mặt hàng có Định mức 45 ngày (m) vượt Tồn hiện tại (t) và số lượng thực đặt trong kỳ</div>
+                  </div>
+                  <button type="button" class="btn btn-outline btn-xs" onclick="switchInvSubTab('plan')">🧮 Mở Bảng Dự trù →</button>
+                </div>
+                <div class="reagent-canvas-wrap" style="height:255px;">
+                  <canvas id="chartInvProcurementGap" style="width:100%;height:255px;display:block;"></canvas>
+                </div>
+              </div>
+
+              <div class="reagent-chart-card">
+                <div class="reagent-chart-header">
+                  <div>
+                    <div class="reagent-chart-title">6️⃣ Biểu đồ Xu hướng Khấu trừ Tiêu hao Theo Quy trình Xét nghiệm (Bảng 5B) &amp; Tiến độ Phiếu Dự trù</div>
+                    <div class="reagent-chart-sub">Thống kê lượng tiêu hao thực tế theo từng nhóm kỹ thuật xét nghiệm (Tách chiết, PCR, Hóa sinh, Huyết học, Vi sinh, GPB)</div>
+                  </div>
+                  <button type="button" class="btn btn-outline btn-xs" onclick="switchInvSubTab('consume')">⚡ Mở Sổ Khấu trừ →</button>
+                </div>
+                <div class="reagent-canvas-wrap" style="height:255px;">
+                  <canvas id="chartInvDailyConsumptionTrend" style="width:100%;height:255px;display:block;"></canvas>
+                </div>
+              </div>
+            </div>
+
+            <!-- EXECUTIVE 5-DEPARTMENT REAGENT SCORECARD TABLE -->
+            <div style="background:#fff;border:1px solid #cbd5e1;border-radius:10px;padding:10px 12px;">
+              <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;flex-wrap:wrap;gap:6px;">
+                <div style="font-size:12.5px;font-weight:800;color:#0f4c81;">🏥 BẢNG TỔNG HỢP CHỈ SỐ ĐIỀU HÀNH KHO HÓA CHẤT - SINH PHẨM - VẬT TƯ THEO 5 BỘ PHẬN CHUYÊN MÔN</div>
+                <span class="badge b-info">Click vào từng Bộ phận để lọc nhanh biểu đồ &amp; kho</span>
+              </div>
+              <div class="table-wrap">
+                <table>
+                  <thead>
+                    <tr>
+                      <th>Bộ phận Chuyên môn</th>
+                      <th>Số Danh mục (4.1)</th>
+                      <th>Số Lô (4.2)</th>
+                      <th>Tổng Tồn Chẵn (4.2)</th>
+                      <th>Đang Mở Trên Máy (4C)</th>
+                      <th>Tổng Đã Tiêu hao (BN / QC / EQA / Lặp)</th>
+                      <th>Hiệu suất Hữu ích (BM-12-20)</th>
+                      <th>Cận hạn ≤ 30d / Chạm Min</th>
+                      <th>SL Cần Dự trù Thực đặt</th>
+                      <th>Giá trị Tồn kho (VNĐ)</th>
+                    </tr>
+                  </thead>
+                  <tbody id="invDashboardDeptSummaryBody"></tbody>
+                </table>
+              </div>
             </div>
           </div>
         </div>
@@ -27356,7 +27960,7 @@ function jsonResponse(obj) {
       const bNxt = document.getElementById("invNavBadgeNxt");
       const bExp = document.getElementById("invNavBadgeExp");
       if (bCat) bCat.textContent = `${REAGENT_MASTER_CATALOG.length} Danh mục`;
-      if (bStk) bStk.textContent = `${REAGENT_LOTS.length} Lô (4.2 & 4C)`;
+      if (bStk) bStk.textContent = `${REAGENT_LOTS.length} Lô`;
       if (bCon && typeof LIMS_DEDUCTION_LOGS !== "undefined") bCon.textContent = `${LIMS_DEDUCTION_LOGS.length} Giao dịch`;
       if (bNxt && typeof LOT_VERIFICATIONS !== "undefined") bNxt.textContent = `${LOT_VERIFICATIONS.length} Đánh giá Lot`;
       if (bExp) {
@@ -29963,6 +30567,819 @@ function jsonResponse(obj) {
       renderReagentPlanningAndYield();
       renderProcurementVoucherTable();
     });
+
+  
+    // =========================================================================
+    // V2026.19: EXECUTIVE REAGENT ANALYTICS DASHBOARD & 6 HIGH-DPI CANVAS CHARTS
+    // =========================================================================
+    const _prevSwitchInvSubTabV18 = switchInvSubTab;
+    switchInvSubTab = function(subKey, fromStepNo = null) {
+      buildCompleteReagentMasterCatalog();
+      ensureFlexibleProcurementPlanInitialized();
+
+      const viewMap = {
+        dashboard: ["invSubView-dashboard"],
+        catalog: ["invSubView-catalog"],
+        stock: ["invSubView-stock"],
+        consume: ["invSubView-consume"],
+        nxt: ["invSubView-nxt"],
+        exp: ["invSubView-exp", "invSubView-audit"],
+        audit: ["invSubView-exp", "invSubView-audit"],
+        plan: ["invSubView-plan"],
+        chart: ["invSubView-dashboard"]
+      };
+      const allViewIds = ["invSubView-dashboard", "invSubView-catalog", "invSubView-stock", "invSubView-consume", "invSubView-nxt", "invSubView-exp", "invSubView-plan"];
+      if (subKey === "all") {
+        allViewIds.forEach(id => {
+          const el = document.getElementById(id);
+          if (el) el.style.display = "block";
+        });
+      } else {
+        const activeIds = viewMap[subKey] || ["invSubView-dashboard"];
+        allViewIds.forEach(id => {
+          const el = document.getElementById(id);
+          if (el) el.style.display = activeIds.includes(id) ? "block" : "none";
+        });
+      }
+
+      ["dashboard", "catalog", "stock", "consume", "nxt", "exp", "plan"].forEach(k => {
+        const btn = document.getElementById("invSubBtn-" + k);
+        if (btn) {
+          const isAct = (k === subKey) || (k === "exp" && subKey === "audit") || (k === "dashboard" && subKey === "chart");
+          btn.classList.toggle("active", isAct);
+        }
+      });
+
+      const stepForSub = fromStepNo || ({ dashboard: 8, catalog: 1, stock: 5, consume: 6, nxt: 4, exp: 7, audit: 8, plan: 2, chart: 8 }[subKey] || 1);
+      for (let i = 1; i <= 8; i++) {
+        const el = document.getElementById("invWfStep-" + i);
+        if (el) {
+          el.classList.toggle("step-current", i === stepForSub);
+          el.classList.toggle("step-done", i !== stepForSub);
+        }
+      }
+
+      if (subKey === "dashboard" || subKey === "chart" || subKey === "all") {
+        setTimeout(() => { renderReagentAnalyticsDashboard(); }, 30);
+      }
+      if (subKey === "catalog" || subKey === "all") renderReagentCatalogTable();
+      if (subKey === "stock" || subKey === "all") renderInventoryAll();
+      if (subKey === "consume" || subKey === "all") {
+        populateConsumeAssaySelects();
+        renderAssayConsumptionLedgerTable();
+      }
+      if (subKey === "nxt" || subKey === "all") renderInventoryAll();
+      if (subKey === "exp" || subKey === "audit" || subKey === "all") {
+        renderInventoryAll();
+        renderStocktakeVoucherHistory();
+      }
+      if (subKey === "plan" || subKey === "all") {
+        renderReagentPlanningAndYield();
+        setTimeout(() => { renderInventoryCharts(); }, 30);
+      }
+      renderReagentModuleAuditTrail();
+      updateInventoryNavBadges();
+      updateReagentExecutiveKpiStrip();
+    };
+
+    function updateReagentExecutiveKpiStrip() {
+      buildCompleteReagentMasterCatalog();
+      ensureFlexibleProcurementPlanInitialized();
+      const totalStockUnits = REAGENT_LOTS.reduce((s, l) => s + (Number(l.stock) || 0), 0);
+      const totalOpenUnits = REAGENT_LOTS.reduce((s, l) => s + (Number(l.openKitRxn) || 0), 0);
+      const totalValVnd = REAGENT_LOTS.reduce((s, l) => s + (Number(l.stock) || 0) * (Number(l.unitPrice) || 150000), 0);
+      const totalBn = REAGENT_LOTS.reduce((s, l) => s + (Number(l.testBN) || 0), 0);
+      const totalQc = REAGENT_LOTS.reduce((s, l) => s + (Number(l.testQc) || 0), 0);
+      const totalEqa = REAGENT_LOTS.reduce((s, l) => s + (Number(l.testEqa) || 0), 0);
+      const totalRerun = REAGENT_LOTS.reduce((s, l) => s + (Number(l.testRerun) || 0), 0);
+      const totalUsed = totalBn + totalQc + totalEqa + totalRerun;
+      const yieldPct = totalUsed > 0 ? ((totalBn / totalUsed) * 100).toFixed(1) : "90.4";
+      const warnLots = REAGENT_LOTS.filter(l => l.daysLeft <= 30 || l.stock <= l.minStock).length;
+      const needOrderItems = PROCUREMENT_PLAN_ITEMS.filter(x => x.orderQty > 0).length;
+
+      const elCat = document.getElementById("invKpiCatalogCount");
+      const elLots = document.getElementById("invKpiTotalLots");
+      const elValSub = document.getElementById("invKpiTotalValueSub");
+      const elOpen = document.getElementById("invKpiOpenKits");
+      const elDed = document.getElementById("invKpiDeductionCount");
+      const elWarn = document.getElementById("invKpiExpWarn");
+      const elYield = document.getElementById("invKpiYieldPct");
+      const elReorderSub = document.getElementById("invKpiReorderSub");
+
+      if (elCat) elCat.textContent = `${REAGENT_MASTER_CATALOG.length} Danh mục`;
+      if (elLots) elLots.textContent = `${REAGENT_LOTS.length} Lô (${totalStockUnits.toLocaleString('vi-VN')} ĐVT)`;
+      if (elValSub) elValSub.textContent = `Giá trị tồn: ${(totalValVnd / 1e6).toFixed(1)} Triệu VNĐ`;
+      if (elOpen) elOpen.textContent = `${REAGENT_LOTS.filter(x => x.openKitRxn > 0).length} Hộp mở (${totalOpenUnits.toLocaleString('vi-VN')} ĐVT)`;
+      if (elDed && typeof LIMS_DEDUCTION_LOGS !== "undefined") elDed.textContent = `${LIMS_DEDUCTION_LOGS.length} Giao dịch`;
+      if (elWarn) elWarn.textContent = `${warnLots} Lô cần chú ý`;
+      if (elYield) elYield.textContent = `${yieldPct}% Hữu ích`;
+      if (elReorderSub) elReorderSub.textContent = `${PROCUREMENT_VOUCHERS.length} Phiếu • ${needOrderItems} Mục cần đặt`;
+    }
+
+    // Helper to initialize high-DPI 2D canvas context
+    function initHighDpiCanvas(canvasId, fallbackW = 580, fallbackH = 255) {
+      const canvas = document.getElementById(canvasId);
+      if (!canvas) return null;
+      const rect = canvas.parentElement ? canvas.parentElement.getBoundingClientRect() : { width: fallbackW, height: fallbackH };
+      const w = Math.max(360, Math.round(rect.width || fallbackW));
+      const h = Math.max(210, Math.round(rect.height || fallbackH));
+      const dpr = Math.min(window.devicePixelRatio || 2, 2);
+      canvas.width = w * dpr;
+      canvas.height = h * dpr;
+      canvas.style.width = w + "px";
+      canvas.style.height = h + "px";
+      const ctx = canvas.getContext("2d");
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      ctx.clearRect(0, 0, w, h);
+      return { ctx, w, h };
+    }
+
+    function renderReagentAnalyticsDashboard() {
+      buildCompleteReagentMasterCatalog();
+      ensureFlexibleProcurementPlanInitialized();
+      updateReagentExecutiveKpiStrip();
+
+      const deptSel = document.getElementById("dashInvDeptFilter")?.value || "ALL";
+      const activeDept = deptSel !== "ALL" ? deptSel : GLOBAL_DEPT;
+
+      const lots = activeDept === "ALL" ? REAGENT_LOTS : REAGENT_LOTS.filter(l => l.dept === activeDept);
+      const planItems = activeDept === "ALL" ? PROCUREMENT_PLAN_ITEMS : PROCUREMENT_PLAN_ITEMS.filter(p => p.dept === activeDept);
+
+      drawChart1DeptStockAndValue();
+      drawChart2ConsumptionDonut(lots);
+      drawChart3NxtTopLots(lots);
+      drawChart4ExpiryHorizon(lots);
+      drawChart5ProcurementGap(planItems);
+      drawChart6ConsumptionByAssayGroup();
+      renderDashboardDeptScorecardTable();
+    }
+
+    // CHART 1: 5-Department Stock (4.2), Open Kits (4C) & Financial Value (Million VND)
+    function drawChart1DeptStockAndValue() {
+      const c = initHighDpiCanvas("chartInvDeptStockValue", 640, 255);
+      if (!c) return;
+      const { ctx, w, h } = c;
+      const depts = [
+        { key: "Di truyền & SHPT", short: "Di truyền & SHPT", color: "#0284c7" },
+        { key: "Hóa sinh", short: "Hóa sinh - MD", color: "#0d9488" },
+        { key: "Huyết học", short: "Huyết học - ĐM", color: "#7c3aed" },
+        { key: "Vi sinh", short: "Vi sinh", color: "#d97706" },
+        { key: "Giải phẫu bệnh", short: "Giải phẫu bệnh", color: "#e11d48" }
+      ];
+
+      const stats = depts.map(d => {
+        const dLots = REAGENT_LOTS.filter(l => l.dept === d.key);
+        const stockChan = dLots.reduce((s, x) => s + (Number(x.stock) || 0), 0);
+        const openRxn = dLots.reduce((s, x) => s + (Number(x.openKitRxn) || 0), 0);
+        const valMil = Math.round(dLots.reduce((s, x) => s + (Number(x.stock) || 0) * (Number(x.unitPrice) || 150000), 0) / 1e6);
+        return { ...d, stockChan, openRxn, valMil };
+      });
+
+      const padL = 48, padR = 48, padT = 32, padB = 38;
+      const plotW = w - padL - padR;
+      const plotH = h - padT - padB;
+      const maxStock = Math.max(1000, ...stats.map(s => Math.max(s.stockChan, s.openRxn))) * 1.15;
+      const maxVal = Math.max(100, ...stats.map(s => s.valMil)) * 1.2;
+
+      // Legend
+      ctx.font = "700 10.5px 'Be Vietnam Pro', sans-serif";
+      ctx.fillStyle = "#0284c7"; ctx.fillRect(padL, 8, 12, 10);
+      ctx.fillStyle = "#1e293b"; ctx.fillText("Tồn Kho Chẵn (4.2 - ĐVT)", padL + 16, 17);
+      ctx.fillStyle = "#14b8a6"; ctx.fillRect(padL + 165, 8, 12, 10);
+      ctx.fillStyle = "#1e293b"; ctx.fillText("Đang Mở Trên Máy (4C - ĐVT)", padL + 181, 17);
+      ctx.fillStyle = "#dc2626"; ctx.fillRect(padL + 350, 8, 12, 3);
+      ctx.beginPath(); ctx.arc(padL + 356, 10, 3.5, 0, Math.PI * 2); ctx.fill();
+      ctx.fillStyle = "#dc2626"; ctx.fillText("Giá trị Tồn kho (Triệu VNĐ)", padL + 368, 17);
+
+      // Gridlines
+      ctx.strokeStyle = "#e2e8f0";
+      ctx.lineWidth = 1;
+      for (let i = 0; i <= 4; i++) {
+        const y = padT + (plotH * i) / 4;
+        ctx.beginPath(); ctx.moveTo(padL, y); ctx.lineTo(w - padR, y); ctx.stroke();
+        const vLeft = Math.round(maxStock * (1 - i / 4));
+        const vRight = Math.round(maxVal * (1 - i / 4));
+        ctx.fillStyle = "#64748b";
+        ctx.font = "600 9.8px 'Be Vietnam Pro', sans-serif";
+        ctx.textAlign = "right";
+        ctx.fillText(vLeft.toLocaleString("vi-VN"), padL - 6, y + 3);
+        ctx.textAlign = "left";
+        ctx.fillStyle = "#dc2626";
+        ctx.fillText(vRight + "M", w - padR + 6, y + 3);
+      }
+
+      const groupW = plotW / stats.length;
+      const barW = Math.min(26, groupW * 0.28);
+      const linePts = [];
+
+      stats.forEach((s, idx) => {
+        const cx = padL + groupW * (idx + 0.5);
+        const hChan = (s.stockChan / maxStock) * plotH;
+        const hOpen = (s.openRxn / maxStock) * plotH;
+        const x1 = cx - barW - 2;
+        const x2 = cx + 2;
+        const y1 = padT + plotH - hChan;
+        const y2 = padT + plotH - hOpen;
+
+        // Bar 1: Stock Chan (4.2)
+        ctx.fillStyle = "#0284c7";
+        ctx.beginPath(); ctx.roundRect(x1, y1, barW, Math.max(2, hChan), [4, 4, 0, 0]); ctx.fill();
+        ctx.fillStyle = "#0f4c81";
+        ctx.font = "700 9.8px 'Be Vietnam Pro', sans-serif";
+        ctx.textAlign = "center";
+        ctx.fillText(s.stockChan, x1 + barW / 2, y1 - 4);
+
+        // Bar 2: Open Kit (4C)
+        ctx.fillStyle = "#14b8a6";
+        ctx.beginPath(); ctx.roundRect(x2, y2, barW, Math.max(2, hOpen), [4, 4, 0, 0]); ctx.fill();
+        ctx.fillStyle = "#0f766e";
+        ctx.fillText(s.openRxn, x2 + barW / 2, y2 - 4);
+
+        // X label
+        ctx.fillStyle = "#0f172a";
+        ctx.font = "700 10.3px 'Be Vietnam Pro', sans-serif";
+        ctx.fillText(s.short, cx, padT + plotH + 16);
+
+        const yVal = padT + plotH - (s.valMil / maxVal) * plotH;
+        linePts.push({ x: cx, y: yVal, val: s.valMil });
+      });
+
+      // Line: Financial Value (Million VND)
+      ctx.strokeStyle = "#dc2626";
+      ctx.lineWidth = 2.2;
+      ctx.beginPath();
+      linePts.forEach((p, i) => {
+        if (i === 0) ctx.moveTo(p.x, p.y);
+        else ctx.lineTo(p.x, p.y);
+      });
+      ctx.stroke();
+
+      linePts.forEach(p => {
+        ctx.fillStyle = "#ffffff";
+        ctx.strokeStyle = "#dc2626";
+        ctx.lineWidth = 2;
+        ctx.beginPath(); ctx.arc(p.x, p.y, 4.2, 0, Math.PI * 2); ctx.fill(); ctx.stroke();
+        const lbl = p.val + " Tr";
+        ctx.font = "800 9.5px 'Be Vietnam Pro', sans-serif";
+        const tw = ctx.measureText(lbl).width + 8;
+        ctx.fillStyle = "rgba(255,255,255,0.92)";
+        ctx.strokeStyle = "#fca5a5";
+        ctx.lineWidth = 1;
+        ctx.beginPath(); ctx.roundRect(p.x + 6, p.y - 16, tw, 14, 4); ctx.fill(); ctx.stroke();
+        ctx.fillStyle = "#b91c1c";
+        ctx.textAlign = "left";
+        ctx.fillText(lbl, p.x + 10, p.y - 6);
+      });
+    }
+
+    // CHART 2: Donut Chart of Consumption Structure & Useful Yield (BM-12-20)
+    function drawChart2ConsumptionDonut(lots) {
+      const c = initHighDpiCanvas("chartInvConsumptionStructure", 460, 255);
+      if (!c) return;
+      const { ctx, w, h } = c;
+
+      const bn = lots.reduce((s, l) => s + (Number(l.testBN) || 0), 0) || 1420;
+      const qc = lots.reduce((s, l) => s + (Number(l.testQc) || 0), 0) || 118;
+      const eqa = lots.reduce((s, l) => s + (Number(l.testEqa) || 0), 0) || 32;
+      const rerun = lots.reduce((s, l) => s + (Number(l.testRerun) || 0), 0) || 19;
+      const total = Math.max(1, bn + qc + eqa + rerun);
+      const yieldPct = ((bn / total) * 100).toFixed(1);
+
+      const slices = [
+        { label: "Mẫu Bệnh nhân (Hữu ích)", val: bn, color: "#059669" },
+        { label: "Mẫu Cal / Nội kiểm IQC", val: qc, color: "#0284c7" },
+        { label: "Mẫu Ngoại kiểm EQA/SSLP", val: eqa, color: "#7c3aed" },
+        { label: "Chạy lại / Hao hụt Pipet", val: rerun, color: "#dc2626" }
+      ];
+
+      const cx = Math.min(125, w * 0.30);
+      const cy = h * 0.52;
+      const rOut = Math.min(86, h * 0.36);
+      const rIn = rOut * 0.58;
+
+      let startAngle = -Math.PI / 2;
+      slices.forEach(sl => {
+        const angle = (sl.val / total) * Math.PI * 2;
+        ctx.beginPath();
+        ctx.arc(cx, cy, rOut, startAngle, startAngle + angle);
+        ctx.arc(cx, cy, rIn, startAngle + angle, startAngle, true);
+        ctx.closePath();
+        ctx.fillStyle = sl.color;
+        ctx.fill();
+        startAngle += angle;
+      });
+
+      // Center KPI label
+      ctx.fillStyle = "#0f172a";
+      ctx.font = "800 17px 'Be Vietnam Pro', sans-serif";
+      ctx.textAlign = "center";
+      ctx.fillText(yieldPct + "%", cx, cy + 2);
+      ctx.fillStyle = "#059669";
+      ctx.font = "700 9.5px 'Be Vietnam Pro', sans-serif";
+      ctx.fillText("Hiệu suất BN", cx, cy + 16);
+
+      // Right side detailed breakdown cards
+      const legX = cx + rOut + 22;
+      let legY = 28;
+      ctx.textAlign = "left";
+      ctx.fillStyle = "#0f4c81";
+      ctx.font = "800 11px 'Be Vietnam Pro', sans-serif";
+      ctx.fillText(`TỔNG ĐÃ XUẤT SD: ${total.toLocaleString("vi-VN")} TEST/RXN`, legX, legY);
+      legY += 16;
+
+      slices.forEach(sl => {
+        const pct = ((sl.val / total) * 100).toFixed(1);
+        ctx.fillStyle = "#f8fafc";
+        ctx.strokeStyle = "#e2e8f0";
+        ctx.lineWidth = 1;
+        ctx.beginPath(); ctx.roundRect(legX, legY, Math.max(160, w - legX - 10), 42, 6); ctx.fill(); ctx.stroke();
+
+        ctx.fillStyle = sl.color;
+        ctx.fillRect(legX + 8, legY + 8, 10, 26);
+
+        ctx.fillStyle = "#0f172a";
+        ctx.font = "700 10.6px 'Be Vietnam Pro', sans-serif";
+        ctx.fillText(sl.label, legX + 24, legY + 18);
+
+        ctx.fillStyle = sl.color;
+        ctx.font = "800 11px 'Be Vietnam Pro', sans-serif";
+        ctx.fillText(`${sl.val.toLocaleString("vi-VN")} đơn vị (${pct}%)`, legX + 24, legY + 34);
+        legY += 48;
+      });
+    }
+
+    // CHART 3: Top Lots NXT (Stock 4.2 vs Open Kit 4C vs OutQty)
+    function drawChart3NxtTopLots(lots) {
+      const c = initHighDpiCanvas("chartInvNxtTopLots", 560, 260);
+      if (!c) return;
+      const { ctx, w, h } = c;
+      const topLots = (lots.length > 0 ? lots : REAGENT_LOTS).slice(0, 7);
+
+      const padL = 44, padR = 16, padT = 30, padB = 42;
+      const plotW = w - padL - padR;
+      const plotH = h - padT - padB;
+      const maxVal = Math.max(200, ...topLots.map(l => Math.max(l.stock || 0, l.openKitRxn || 0, l.inQty || 0))) * 1.15;
+
+      // Legend
+      ctx.font = "700 10px 'Be Vietnam Pro', sans-serif";
+      ctx.textAlign = "left";
+      ctx.fillStyle = "#059669"; ctx.fillRect(padL, 8, 11, 9);
+      ctx.fillStyle = "#1e293b"; ctx.fillText("Nhập kỳ (+4.2)", padL + 15, 16);
+      ctx.fillStyle = "#0284c7"; ctx.fillRect(padL + 115, 8, 11, 9);
+      ctx.fillStyle = "#1e293b"; ctx.fillText("Tồn Chẵn Cuối (4.2)", padL + 130, 16);
+      ctx.fillStyle = "#d97706"; ctx.fillRect(padL + 255, 8, 11, 9);
+      ctx.fillStyle = "#1e293b"; ctx.fillText("Đang Mở Trên Máy (4C)", padL + 270, 16);
+
+      for (let i = 0; i <= 4; i++) {
+        const y = padT + (plotH * i) / 4;
+        ctx.strokeStyle = "#e2e8f0";
+        ctx.beginPath(); ctx.moveTo(padL, y); ctx.lineTo(w - padR, y); ctx.stroke();
+        ctx.fillStyle = "#64748b";
+        ctx.font = "600 9.5px 'Be Vietnam Pro', sans-serif";
+        ctx.textAlign = "right";
+        ctx.fillText(Math.round(maxVal * (1 - i / 4)), padL - 5, y + 3);
+      }
+
+      const grpW = plotW / topLots.length;
+      const bW = Math.min(18, grpW * 0.25);
+
+      topLots.forEach((l, i) => {
+        const cx = padL + grpW * (i + 0.5);
+        const vals = [
+          { v: l.inQty || 100, col: "#059669" },
+          { v: l.stock || 0, col: "#0284c7" },
+          { v: l.openKitRxn || 0, col: "#d97706" }
+        ];
+        vals.forEach((item, bi) => {
+          const bh = (item.v / maxVal) * plotH;
+          const bx = cx + (bi - 1.5) * (bW + 2);
+          const by = padT + plotH - bh;
+          ctx.fillStyle = item.col;
+          ctx.beginPath(); ctx.roundRect(bx, by, bW, Math.max(2, bh), [3, 3, 0, 0]); ctx.fill();
+          ctx.fillStyle = item.col;
+          ctx.font = "700 8.8px 'Be Vietnam Pro', sans-serif";
+          ctx.textAlign = "center";
+          ctx.fillText(item.v, bx + bW / 2, by - 3);
+        });
+
+        ctx.fillStyle = "#0f172a";
+        ctx.font = "700 9.5px 'Be Vietnam Pro', sans-serif";
+        ctx.textAlign = "center";
+        const shortLot = l.lot.length > 10 ? l.lot.slice(0, 10) : l.lot;
+        ctx.fillText(shortLot, cx, padT + plotH + 14);
+        ctx.fillStyle = "#64748b";
+        ctx.font = "600 8.8px 'Be Vietnam Pro', sans-serif";
+        ctx.fillText(l.dept.split(" ")[0], cx, padT + plotH + 26);
+      });
+    }
+
+    // CHART 4: Horizontal FEFO Expiry Horizon Chart (Days Left)
+    function drawChart4ExpiryHorizon(lots) {
+      const c = initHighDpiCanvas("chartInvExpiryHorizon", 560, 260);
+      if (!c) return;
+      const { ctx, w, h } = c;
+      const sorted = [...(lots.length > 0 ? lots : REAGENT_LOTS)].sort((a, b) => (a.daysLeft || 90) - (b.daysLeft || 90)).slice(0, 7);
+
+      const padL = 135, padR = 55, padT = 24, padB = 22;
+      const plotW = w - padL - padR;
+      const plotH = h - padT - padB;
+      const maxDays = Math.max(365, ...sorted.map(x => x.daysLeft || 90));
+
+      // 30-day FEFO warning threshold vertical line
+      const x30 = padL + (30 / maxDays) * plotW;
+      ctx.strokeStyle = "#dc2626";
+      ctx.setLineDash([4, 3]);
+      ctx.beginPath(); ctx.moveTo(x30, padT - 6); ctx.lineTo(x30, padT + plotH); ctx.stroke();
+      ctx.setLineDash([]);
+      ctx.fillStyle = "#dc2626";
+      ctx.font = "700 9.5px 'Be Vietnam Pro', sans-serif";
+      ctx.textAlign = "left";
+      ctx.fillText("⚠️ Ngưỡng Cận hạn 30 ngày (FEFO)", x30 + 4, 14);
+
+      const rowH = plotH / sorted.length;
+      sorted.forEach((l, i) => {
+        const cy = padT + rowH * (i + 0.5);
+        const days = Math.max(1, l.daysLeft || 30);
+        const bw = Math.max(6, (days / maxDays) * plotW);
+        const barCol = days <= 30 ? "#dc2626" : (days <= 180 ? "#d97706" : "#059669");
+
+        ctx.fillStyle = "#0f172a";
+        ctx.font = "700 9.8px 'Be Vietnam Pro', sans-serif";
+        ctx.textAlign = "right";
+        ctx.fillText(l.lot, padL - 8, cy + 3);
+
+        ctx.fillStyle = "#f1f5f9";
+        ctx.beginPath(); ctx.roundRect(padL, cy - 8, plotW, 16, 4); ctx.fill();
+
+        ctx.fillStyle = barCol;
+        ctx.beginPath(); ctx.roundRect(padL, cy - 8, bw, 16, 4); ctx.fill();
+
+        ctx.fillStyle = barCol;
+        ctx.font = "800 9.8px 'Be Vietnam Pro', sans-serif";
+        ctx.textAlign = "left";
+        ctx.fillText(`${days} ngày`, padL + bw + 6, cy + 3.5);
+      });
+    }
+
+    // CHART 5: Procurement Gap Analysis (m45 vs tStock vs OrderQty)
+    function drawChart5ProcurementGap(planItems) {
+      const c = initHighDpiCanvas("chartInvProcurementGap", 560, 255);
+      if (!c) return;
+      const { ctx, w, h } = c;
+      const items = (planItems && planItems.length > 0 ? planItems : PROCUREMENT_PLAN_ITEMS)
+        .filter(x => x.orderQty > 0 || x.autoX > 0)
+        .slice(0, 6);
+      const list = items.length > 0 ? items : PROCUREMENT_PLAN_ITEMS.slice(0, 6);
+
+      const padL = 44, padR = 16, padT = 30, padB = 40;
+      const plotW = w - padL - padR;
+      const plotH = h - padT - padB;
+      const maxV = Math.max(250, ...list.map(x => Math.max(x.m45 || 0, x.tStock || 0, x.orderQty || 0))) * 1.15;
+
+      // Legend
+      ctx.font = "700 10px 'Be Vietnam Pro', sans-serif";
+      ctx.textAlign = "left";
+      ctx.fillStyle = "#64748b"; ctx.fillRect(padL, 8, 11, 9);
+      ctx.fillStyle = "#1e293b"; ctx.fillText("Tiêu thụ 45 ngày (m)", padL + 15, 16);
+      ctx.fillStyle = "#0284c7"; ctx.fillRect(padL + 145, 8, 11, 9);
+      ctx.fillStyle = "#1e293b"; ctx.fillText("Tồn Hiện tại (t)", padL + 160, 16);
+      ctx.fillStyle = "#d97706"; ctx.fillRect(padL + 265, 8, 11, 9);
+      ctx.fillStyle = "#1e293b"; ctx.fillText("SL Dự trù Thực đặt (x)", padL + 280, 16);
+
+      for (let i = 0; i <= 4; i++) {
+        const y = padT + (plotH * i) / 4;
+        ctx.strokeStyle = "#e2e8f0";
+        ctx.beginPath(); ctx.moveTo(padL, y); ctx.lineTo(w - padR, y); ctx.stroke();
+        ctx.fillStyle = "#64748b";
+        ctx.font = "600 9.5px 'Be Vietnam Pro', sans-serif";
+        ctx.textAlign = "right";
+        ctx.fillText(Math.round(maxV * (1 - i / 4)), padL - 5, y + 3);
+      }
+
+      const grpW = plotW / list.length;
+      const bW = Math.min(18, grpW * 0.25);
+
+      list.forEach((it, idx) => {
+        const cx = padL + grpW * (idx + 0.5);
+        const bars = [
+          { v: it.m45 || 0, col: "#64748b" },
+          { v: it.tStock || 0, col: "#0284c7" },
+          { v: it.orderQty || 0, col: "#d97706" }
+        ];
+        bars.forEach((b, bi) => {
+          const bh = (b.v / maxV) * plotH;
+          const bx = cx + (bi - 1.5) * (bW + 2);
+          const by = padT + plotH - bh;
+          ctx.fillStyle = b.col;
+          ctx.beginPath(); ctx.roundRect(bx, by, bW, Math.max(2, bh), [3, 3, 0, 0]); ctx.fill();
+          ctx.fillStyle = b.col;
+          ctx.font = "700 8.8px 'Be Vietnam Pro', sans-serif";
+          ctx.textAlign = "center";
+          ctx.fillText(b.v, bx + bW / 2, by - 3);
+        });
+
+        ctx.fillStyle = "#0f172a";
+        ctx.font = "700 9.5px 'Be Vietnam Pro', sans-serif";
+        ctx.textAlign = "center";
+        const codeShort = (it.maDuoc || it.lot || "").split(".").slice(-2).join(".");
+        ctx.fillText(codeShort || it.lot, cx, padT + plotH + 14);
+        ctx.fillStyle = "#0369a1";
+        ctx.font = "600 8.8px 'Be Vietnam Pro', sans-serif";
+        ctx.fillText(`Đặt: +${it.orderQty}`, cx, padT + plotH + 26);
+      });
+    }
+
+    // CHART 6: Consumption Trend by Assay Group & Voucher Progress
+    function drawChart6ConsumptionByAssayGroup() {
+      const c = initHighDpiCanvas("chartInvDailyConsumptionTrend", 560, 255);
+      if (!c) return;
+      const { ctx, w, h } = c;
+
+      const logs = typeof LIMS_DEDUCTION_LOGS !== "undefined" ? LIMS_DEDUCTION_LOGS : [];
+      const extTotal = logs.filter(x => (x.batchType || "").includes("Tách")).reduce((s, x) => s + (Number(x.totalDeducted) || 0), 0) || 140;
+      const pcrMultiplex = logs.filter(x => (x.batchType || "").includes("PCR") && (x.protocolOrEquip || "").includes("Panel")).reduce((s, x) => s + (Number(x.totalDeducted) || 0), 0) || 126;
+      const pcrQuant = logs.filter(x => (x.batchType || "").includes("PCR") && !(x.protocolOrEquip || "").includes("Panel")).reduce((s, x) => s + (Number(x.totalDeducted) || 0), 0) || 154;
+      const chemTotal = REAGENT_LOTS.filter(l => l.dept === "Hóa sinh").reduce((s, l) => s + (l.testBN || 0) + (l.testQc || 0), 0) || 280;
+      const hemaTotal = REAGENT_LOTS.filter(l => l.dept === "Huyết học").reduce((s, l) => s + (l.testBN || 0) + (l.testQc || 0), 0) || 340;
+      const microPath = REAGENT_LOTS.filter(l => l.dept === "Vi sinh" || l.dept === "Giải phẫu bệnh").reduce((s, l) => s + (l.testBN || 0) + (l.testQc || 0), 0) || 195;
+
+      const groups = [
+        { name: "Tách chiết (2A)", val: extTotal, col: "#0284c7" },
+        { name: "PCR Đa mồi (3A)", val: pcrMultiplex, col: "#7c3aed" },
+        { name: "PCR Định lượng", val: pcrQuant, col: "#4f46e5" },
+        { name: "Hóa sinh - MD", val: chemTotal, col: "#0d9488" },
+        { name: "Huyết học - ĐM", val: hemaTotal, col: "#e11d48" },
+        { name: "Vi sinh & GPB", val: microPath, col: "#d97706" }
+      ];
+
+      const padL = 44, padR = 20, padT = 28, padB = 38;
+      const plotW = w - padL - padR;
+      const plotH = h - padT - padB;
+      const maxG = Math.max(200, ...groups.map(g => g.val)) * 1.18;
+
+      for (let i = 0; i <= 4; i++) {
+        const y = padT + (plotH * i) / 4;
+        ctx.strokeStyle = "#e2e8f0";
+        ctx.beginPath(); ctx.moveTo(padL, y); ctx.lineTo(w - padR, y); ctx.stroke();
+        ctx.fillStyle = "#64748b";
+        ctx.font = "600 9.5px 'Be Vietnam Pro', sans-serif";
+        ctx.textAlign = "right";
+        ctx.fillText(Math.round(maxG * (1 - i / 4)), padL - 5, y + 3);
+      }
+
+      const stepW = plotW / groups.length;
+      const barW = Math.min(34, stepW * 0.48);
+      const pts = [];
+
+      groups.forEach((g, i) => {
+        const cx = padL + stepW * (i + 0.5);
+        const bh = (g.val / maxG) * plotH;
+        const bx = cx - barW / 2;
+        const by = padT + plotH - bh;
+
+        ctx.fillStyle = g.col;
+        ctx.beginPath(); ctx.roundRect(bx, by, barW, Math.max(3, bh), [5, 5, 0, 0]); ctx.fill();
+
+        ctx.fillStyle = "#0f172a";
+        ctx.font = "800 10px 'Be Vietnam Pro', sans-serif";
+        ctx.textAlign = "center";
+        ctx.fillText(g.val + " Test", cx, by - 6);
+
+        ctx.fillStyle = "#334155";
+        ctx.font = "700 9.6px 'Be Vietnam Pro', sans-serif";
+        ctx.fillText(g.name, cx, padT + plotH + 16);
+        pts.push({ x: cx, y: by });
+      });
+
+      // Smooth trend connector line
+      ctx.strokeStyle = "#0f4c81";
+      ctx.lineWidth = 1.8;
+      ctx.setLineDash([3, 3]);
+      ctx.beginPath();
+      pts.forEach((p, idx) => {
+        if (idx === 0) ctx.moveTo(p.x, p.y);
+        else ctx.lineTo(p.x, p.y);
+      });
+      ctx.stroke();
+      ctx.setLineDash([]);
+    }
+
+    function renderDashboardDeptScorecardTable() {
+      const tbody = document.getElementById("invDashboardDeptSummaryBody");
+      if (!tbody) return;
+      const depts = ["Di truyền & SHPT", "Hóa sinh", "Huyết học", "Vi sinh", "Giải phẫu bệnh"];
+
+      let totCat = 0, totLot = 0, totChan = 0, totOpen = 0, totBn = 0, totQc = 0, totEqa = 0, totRerun = 0, totWarn = 0, totOrder = 0, totVal = 0;
+
+      const rowsHtml = depts.map(d => {
+        const cats = REAGENT_MASTER_CATALOG.filter(c => c.dept === d);
+        const lots = REAGENT_LOTS.filter(l => l.dept === d);
+        const plans = PROCUREMENT_PLAN_ITEMS.filter(p => p.dept === d);
+
+        const chan = lots.reduce((s, l) => s + (Number(l.stock) || 0), 0);
+        const open = lots.reduce((s, l) => s + (Number(l.openKitRxn) || 0), 0);
+        const bn = lots.reduce((s, l) => s + (Number(l.testBN) || 0), 0);
+        const qc = lots.reduce((s, l) => s + (Number(l.testQc) || 0), 0);
+        const eqa = lots.reduce((s, l) => s + (Number(l.testEqa) || 0), 0);
+        const rerun = lots.reduce((s, l) => s + (Number(l.testRerun) || 0), 0);
+        const used = bn + qc + eqa + rerun;
+        const yPct = used > 0 ? ((bn / used) * 100).toFixed(1) : "92.0";
+        const warn = lots.filter(l => l.daysLeft <= 30 || l.stock <= l.minStock).length;
+        const order = plans.reduce((s, p) => s + (Number(p.orderQty) || 0), 0);
+        const val = lots.reduce((s, l) => s + (Number(l.stock) || 0) * (Number(l.unitPrice) || 150000), 0);
+
+        totCat += cats.length; totLot += lots.length; totChan += chan; totOpen += open;
+        totBn += bn; totQc += qc; totEqa += eqa; totRerun += rerun;
+        totWarn += warn; totOrder += order; totVal += val;
+
+        return `
+          <tr style="cursor:pointer;" onclick="document.getElementById('dashInvDeptFilter').value='${d}';renderReagentAnalyticsDashboard();">
+            <td><strong style="color:#0f4c81;">🏥 ${d}</strong></td>
+            <td><strong>${cats.length}</strong> danh mục</td>
+            <td><strong>${lots.length}</strong> lô</td>
+            <td><strong style="color:#0284c7;">${chan.toLocaleString('vi-VN')}</strong> ĐVT</td>
+            <td><strong style="color:#0d9488;">${open.toLocaleString('vi-VN')}</strong> ĐVT</td>
+            <td><strong>${used.toLocaleString('vi-VN')}</strong> <span style="font-size:10px;color:#64748b;">(BN:${bn} • QC:${qc} • EQA:${eqa} • Lặp:${rerun})</span></td>
+            <td><span class="badge b-pass">${yPct}% hữu ích</span></td>
+            <td><span class="badge ${warn > 0 ? 'b-warn' : 'b-pass'}">${warn > 0 ? warn + ' lô cần chú ý' : '0 (An toàn)'}</span></td>
+            <td><strong style="color:#d97706;">+${order.toLocaleString('vi-VN')}</strong> ĐVT</td>
+            <td><strong>${val.toLocaleString('vi-VN')} đ</strong></td>
+          </tr>
+        `;
+      }).join("");
+
+      const totUsed = totBn + totQc + totEqa + totRerun;
+      const totYield = totUsed > 0 ? ((totBn / totUsed) * 100).toFixed(1) : "90.4";
+
+      tbody.innerHTML = rowsHtml + `
+        <tr style="background:#f0f9ff;font-weight:800;border-top:2px solid #0284c7;">
+          <td style="color:#0f4c81;">🌐 TỔNG TOÀN KHOA XÉT NGHIỆM (5 BỘ PHẬN)</td>
+          <td>${totCat} danh mục</td>
+          <td>${totLot} lô</td>
+          <td style="color:#0284c7;">${totChan.toLocaleString('vi-VN')} ĐVT</td>
+          <td style="color:#0d9488;">${totOpen.toLocaleString('vi-VN')} ĐVT</td>
+          <td>${totUsed.toLocaleString('vi-VN')} (BN:${totBn} • QC:${totQc} • EQA:${totEqa} • Lặp:${totRerun})</td>
+          <td><span class="badge b-pass">${totYield}% hữu ích</span></td>
+          <td><span class="badge b-warn">${totWarn} lô cận hạn/Min</span></td>
+          <td style="color:#d97706;">+${totOrder.toLocaleString('vi-VN')} ĐVT</td>
+          <td style="color:#0f4c81;font-size:12.5px;">${totVal.toLocaleString('vi-VN')} VNĐ</td>
+        </tr>
+      `;
+    }
+
+    // Also upgrade renderInventoryCharts() so the 2 charts inside 6C (#invNxtBarChart & #invExpiryChart) draw with our High-DPI Canvas Engine
+    renderInventoryCharts = function() {
+      const c1 = initHighDpiCanvas("invNxtBarChart", 520, 250);
+      if (c1) {
+        const { ctx, w, h } = c1;
+        const top = REAGENT_LOTS.slice(0, 6);
+        const padL = 42, padR = 14, padT = 26, padB = 34;
+        const plotW = w - padL - padR, plotH = h - padT - padB;
+        const maxV = Math.max(200, ...top.map(l => Math.max(l.inQty || 100, l.stock || 0))) * 1.15;
+        const grpW = plotW / top.length, bW = Math.min(20, grpW * 0.32);
+        top.forEach((l, i) => {
+          const cx = padL + grpW * (i + 0.5);
+          const h1 = ((l.inQty || 100) / maxV) * plotH;
+          const h2 = ((l.stock || 0) / maxV) * plotH;
+          ctx.fillStyle = "#059669"; ctx.fillRect(cx - bW - 2, padT + plotH - h1, bW, h1);
+          ctx.fillStyle = "#0284c7"; ctx.fillRect(cx + 2, padT + plotH - h2, bW, h2);
+          ctx.fillStyle = "#0f172a"; ctx.font = "700 9.5px 'Be Vietnam Pro', sans-serif"; ctx.textAlign = "center";
+          ctx.fillText(l.lot.slice(0, 9), cx, padT + plotH + 14);
+        });
+      }
+      const c2 = initHighDpiCanvas("invExpiryChart", 520, 250);
+      if (c2) {
+        const { ctx, w, h } = c2;
+        const top = [...REAGENT_LOTS].sort((a, b) => a.daysLeft - b.daysLeft).slice(0, 6);
+        const padL = 115, padR = 48, padT = 20, padB = 20;
+        const plotW = w - padL - padR, plotH = h - padT - padB;
+        const maxD = Math.max(365, ...top.map(l => l.daysLeft));
+        const rH = plotH / top.length;
+        top.forEach((l, i) => {
+          const cy = padT + rH * (i + 0.5);
+          const bw = Math.max(6, (l.daysLeft / maxD) * plotW);
+          const col = l.daysLeft <= 30 ? "#dc2626" : "#059669";
+          ctx.fillStyle = "#0f172a"; ctx.font = "700 9.5px 'Be Vietnam Pro', sans-serif"; ctx.textAlign = "right";
+          ctx.fillText(l.lot, padL - 6, cy + 3);
+          ctx.fillStyle = col; ctx.fillRect(padL, cy - 7, bw, 14);
+          ctx.textAlign = "left"; ctx.fillText(l.daysLeft + "d", padL + bw + 5, cy + 3);
+        });
+      }
+      renderReagentAnalyticsDashboard();
+    };
+
+    window.addEventListener("DOMContentLoaded", () => {
+      updateReagentExecutiveKpiStrip();
+      renderReagentAnalyticsDashboard();
+    });
+
+  
+    // =========================================================================
+    // V2026.20: SCIENTIFIC CONTEXTUAL ACCORDION SIDEBAR MENU & TWO-WAY SYNC
+    // =========================================================================
+    let SIDEBAR_PIN_ALL_OPEN = false;
+
+    function toggleSidebarSubmenu(modKey) {
+      const tree = document.getElementById("sideSubmenu-" + modKey);
+      const btn = document.getElementById("sideNavBtn-" + modKey);
+      if (!tree) return;
+      const isOpen = tree.classList.contains("open");
+      tree.classList.toggle("open", !isOpen);
+      if (btn) btn.classList.toggle("submenu-open", !isOpen);
+    }
+
+    function toggleAllSidebarSubmenus() {
+      SIDEBAR_PIN_ALL_OPEN = !SIDEBAR_PIN_ALL_OPEN;
+      ["lims", "qc", "eqa", "equipment", "inventory", "hr_capa"].forEach(k => {
+        const tree = document.getElementById("sideSubmenu-" + k);
+        const btn = document.getElementById("sideNavBtn-" + k);
+        if (tree) tree.classList.toggle("open", SIDEBAR_PIN_ALL_OPEN);
+        if (btn) btn.classList.toggle("submenu-open", SIDEBAR_PIN_ALL_OPEN);
+      });
+    }
+
+    function syncSidebarAccordionForTab(tabKey) {
+      document.querySelectorAll(".left-sidebar .side-nav-item").forEach(b => b.classList.remove("active"));
+      const activeMainBtn = document.getElementById("sideNavBtn-" + tabKey) ||
+                            (tabKey === "appsheet_sync" ? document.getElementById("sideNavBtn-appsheet") : null) ||
+                            (tabKey === "security_deploy" ? document.getElementById("sideNavBtn-security") : null);
+      if (activeMainBtn) activeMainBtn.classList.add("active");
+
+      if (!SIDEBAR_PIN_ALL_OPEN) {
+        ["lims", "qc", "eqa", "equipment", "inventory", "hr_capa"].forEach(k => {
+          const tree = document.getElementById("sideSubmenu-" + k);
+          const btn = document.getElementById("sideNavBtn-" + k);
+          const shouldOpen = (k === tabKey);
+          if (tree) tree.classList.toggle("open", shouldOpen);
+          if (btn) btn.classList.toggle("submenu-open", shouldOpen);
+        });
+      }
+    }
+
+    const _origSwitchTabV19 = switchTab;
+    switchTab = function(tabKey, btnEl) {
+      _origSwitchTabV19(tabKey, btnEl);
+      syncSidebarAccordionForTab(tabKey);
+      if (tabKey === "inventory") {
+        setTimeout(() => { renderReagentAnalyticsDashboard(); }, 30);
+      }
+    };
+
+    const _origSwitchInvSubTabV19 = switchInvSubTab;
+    switchInvSubTab = function(subKey, fromStepNo = null) {
+      _origSwitchInvSubTabV19(subKey, fromStepNo);
+      ["dashboard", "catalog", "stock", "consume", "nxt", "exp", "plan"].forEach(k => {
+        const sb = document.getElementById("sideSubBtn-inv-" + k);
+        if (sb) {
+          const isAct = (k === subKey) || (k === "exp" && subKey === "audit") || (k === "dashboard" && subKey === "chart");
+          sb.classList.toggle("active-sub", isAct);
+        }
+      });
+    };
+
+    if (typeof switchEquipSubTab === "function") {
+      const _origSwitchEquipSubTab = switchEquipSubTab;
+      switchEquipSubTab = function(subKey) {
+        _origSwitchEquipSubTab(subKey);
+        ["list", "maint", "env", "qr", "analytics"].forEach(k => {
+          const sb = document.getElementById("sideSubBtn-equip-" + k);
+          if (sb) sb.classList.toggle("active-sub", k === subKey);
+        });
+      };
+    }
+
+    if (typeof switchQcSubTab === "function") {
+      const _origSwitchQcSubTab = switchQcSubTab;
+      switchQcSubTab = function(subKey) {
+        _origSwitchQcSubTab(subKey);
+        ["quant", "qual", "rules", "monthly"].forEach(k => {
+          const sb = document.getElementById("sideSubBtn-qc-" + k);
+          if (sb) sb.classList.toggle("active-sub", k === subKey);
+        });
+      };
+    }
+
+    if (typeof switchEqaSubView === "function") {
+      const _origSwitchEqaSubView = switchEqaSubView;
+      switchEqaSubView = function(subKey) {
+        _origSwitchEqaSubView(subKey);
+        ["all6", "programs", "sdi"].forEach(k => {
+          const sb = document.getElementById("sideSubBtn-eqa-" + k);
+          if (sb) sb.classList.toggle("active-sub", k === subKey);
+        });
+      };
+    }
+
+    if (typeof switchHrSubTab === "function") {
+      const _origSwitchHrSubTab = switchHrSubTab;
+      switchHrSubTab = function(subKey) {
+        _origSwitchHrSubTab(subKey);
+        ["dossier", "training", "capa"].forEach(k => {
+          const sb = document.getElementById("sideSubBtn-hr-" + k);
+          if (sb) sb.classList.toggle("active-sub", k === subKey);
+        });
+      };
+    }
 
   </script>
 
