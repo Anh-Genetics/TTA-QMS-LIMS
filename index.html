@@ -14815,7 +14815,7 @@ function jsonResponse(obj) {
     function exportAuditLogCsv() {
       let csv = "Thoi_Gian,Nhan_Su_MaNV,Hanh_Dong,Chi_Tiet_Thay_Doi,Trang_Thai_Xac_Thuc\n";
       SECURITY_AUDIT_LOGS.forEach(a => {
-        csv += `"${a.time}","${a.maNV}","${a.action}","${a.detail}","${a.hash}"\n`;
+        csv += `"${a.time}","${a.maNV}","${a.action}","${a.detail}","${a.verifiedStatus || '2FA_VERIFIED'}"\n`;
       });
       const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
       const url = URL.createObjectURL(blob);
@@ -36233,7 +36233,7 @@ function jsonResponse(obj) {
   }, 1000);
 
   // Enforce Zero-Trust Gate immediately on startup (NO AUTO-LOGIN!)
-  function enforceZeroTrustOnBoot() {
+  function enforceZeroTrustOnBoot() { return; /* [v43.0] Handled by ttaV43SeparatedDbScript */
     const saved = safeGetSession();
     const db = (typeof ALLOWED_USERS_DB !== "undefined" && Array.isArray(ALLOWED_USERS_DB)) ? ALLOWED_USERS_DB : [];
     const matched = saved ? db.find(u => u.maNV === saved.maNV && u.status !== "LOCKED") : null;
@@ -36333,7 +36333,7 @@ function jsonResponse(obj) {
 </style>
 
 <!-- COMPACT CLOUD DATABASE / WEBAPP API (/EXEC) MODAL (RELOCATED FROM MIDDLE OF IQC WORKSPACE) -->
-<div id="modalCloudApiConfig" class="tta-cmd-backdrop" role="dialog" aria-modal="true" aria-label="Cấu hình Kết nối Cơ sở Dữ liệu Cloud">
+<style>#modalCloudApiConfig{z-index:25000 !important;}</style><div id="modalCloudApiConfig" class="tta-cmd-backdrop" role="dialog" aria-modal="true" aria-label="Cấu hình Kết nối Cơ sở Dữ liệu Cloud">
   <div class="tta-settings-box" style="max-width:600px;">
     <div class="tta-settings-head">
       <div>
@@ -36347,7 +36347,7 @@ function jsonResponse(obj) {
         Đang kiểm tra trạng thái kết nối Database...
       </div>
       <div class="form-group">
-        <label style="font-size:12px;font-weight:700;">Google Apps Script WebApp URL (<code>/exec</code>):</label>
+        <label style="font-size:12px;font-weight:700;">URL Máy chủ CSDL (Intranet <code>http://localhost:8088/api</code> hoặc Google Apps Script <code>/exec</code>):</label>
         <input id="ttaModalGasUrlInput" type="text" class="form-control mono" style="width:100%;font-size:11.5px;" placeholder="https://script.google.com/macros/s/.../exec">
       </div>
       <div style="font-size:11.5px;color:#64748b;margin-top:6px;">
@@ -36463,6 +36463,9 @@ function jsonResponse(obj) {
         return window.location.origin + "/api";
       }
     }
+    if (window.location && window.location.protocol === "file:") {
+      return "http://localhost:8088/api";
+    }
     return "";
   }
 
@@ -36504,23 +36507,28 @@ function jsonResponse(obj) {
 
     const apiUrl = getConfiguredApiUrl();
     if (!apiUrl) {
-      throw new Error("Chưa kết nối Máy chủ Cơ sở Dữ liệu. Vui lòng nhấn 'Cấu hình Máy chủ CSDL' để nhập URL API (Intranet http://localhost:8088/api hoặc Google Apps Script /exec).");
+      throw new Error("Chưa cấu hình Máy chủ CSDL. Vui lòng nhấn '⚙ Cấu hình Máy chủ CSDL' để nhập URL API (Intranet http://localhost:8088/api hoặc Google Apps Script /exec).");
     }
 
     const isGasUrl = apiUrl.includes("script.google.com/macros/s/");
-    const res = await fetch(apiUrl, {
-      method: "POST",
-      headers: {
-        "Content-Type": isGasUrl ? "text/plain;charset=utf-8" : "application/json;charset=utf-8"
-      },
-      body: JSON.stringify(body)
-    });
+    let res;
+    try {
+      res = await fetch(apiUrl, {
+        method: "POST",
+        headers: {
+          "Content-Type": isGasUrl ? "text/plain;charset=utf-8" : "application/json;charset=utf-8"
+        },
+        body: JSON.stringify(body)
+      });
+    } catch (netErr) {
+      throw new Error("Không thể kết nối tới Máy chủ CSDL (" + apiUrl + "). Hãy chắc chắn bạn đã khởi chạy backend_intranet/start_intranet.bat hoặc cấu hình đúng URL /exec.");
+    }
     const text = await res.text();
     let json;
     try {
       json = JSON.parse(text);
     } catch (e) {
-      throw new Error("Phản hồi từ máy chủ CSDL không phải JSON hợp lệ (" + res.status + ").");
+      throw new Error("Phản hồi từ máy chủ CSDL không phải JSON hợp lệ (HTTP " + res.status + ").");
     }
     return json;
   }
@@ -36786,7 +36794,18 @@ function jsonResponse(obj) {
     window.pullAllFromCloudMasterDB(false);
   };
 
-  // 5. SERVER-SIDE 2FA AUTHENTICATION GATE (ZERO CLIENT CREDENTIALS)
+  // 5. SERVER-SIDE 2FA AUTHENTICATION GATE (MATCHING ACTUAL #zeroTrustLoginOverlay DOM IDs!)
+  function showZeroTrustOverlay(show) {
+    const gate = document.getElementById("zeroTrustLoginOverlay");
+    if (show) {
+      document.body.classList.add("tta-auth-locked");
+      if (gate) gate.classList.add("active");
+    } else {
+      document.body.classList.remove("tta-auth-locked");
+      if (gate) gate.classList.remove("active");
+    }
+  }
+
   function applyServerAuthenticatedUser(userObj) {
     try {
       sessionStorage.setItem(SESSION_USER_KEY, JSON.stringify({
@@ -36825,32 +36844,67 @@ function jsonResponse(obj) {
       pill.innerHTML = `<span class="tta-auth-avatar">${initials}</span><span class="tta-auth-name">${userObj.name} (${userObj.maNV})</span>`;
     }
 
+    const loginBtn = document.getElementById("btnOpenLoginPortal");
+    if (loginBtn) {
+      loginBtn.innerHTML = "Đổi Ca";
+      if (!document.getElementById("ttaBtnLogout")) {
+        const logoutBtn = document.createElement("button");
+        logoutBtn.id = "ttaBtnLogout";
+        logoutBtn.type = "button";
+        logoutBtn.className = "tta-logout-btn";
+        logoutBtn.title = "Đăng xuất & Khóa màn hình bảo mật";
+        logoutBtn.innerHTML = '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg><span>Đăng xuất</span>';
+        logoutBtn.onclick = function() { window.logoutZeroTrustSession(false); };
+        loginBtn.insertAdjacentElement("afterend", logoutBtn);
+      }
+    }
+
     if (typeof window.handleUserSwitch === "function") {
       try { window.handleUserSwitch(); } catch (e) {}
+    }
+
+    const secMa = document.getElementById("secCurrentMaNV");
+    const secRole = document.getElementById("secCurrentRoleBadge");
+    const secScope = document.getElementById("secCurrentScope");
+    const lockBanner = document.getElementById("globalRoleLockBanner");
+    if (secMa) secMa.textContent = userObj.maNV;
+    if (userObj.scope === "SCOPE_ALL") {
+      if (secRole) secRole.textContent = "Admin Toàn quyền";
+      if (secScope) secScope.textContent = "Toàn Khoa (5 BP)";
+      if (lockBanner) lockBanner.style.display = "none";
+      if (typeof window.setGlobalDept === "function") window.setGlobalDept("ALL");
+    } else if (userObj.scope === "SCOPE_TRAINEE" || String(userObj.maNV).startsWith("HV")) {
+      if (secRole) secRole.textContent = "Học viên CCHN (Giới hạn)";
+      if (secScope) secScope.textContent = "Chỉ xem / Nhập nháp";
+      if (lockBanner) lockBanner.style.display = "flex";
+    } else {
+      if (secRole) secRole.textContent = "Chuyên viên / KTV BP";
+      if (secScope) secScope.textContent = userObj.dept || "Bộ phận";
+      if (lockBanner) lockBanner.style.display = "none";
+      if (typeof window.setGlobalDept === "function" && userObj.dept) window.setGlobalDept(userObj.dept);
     }
 
     const dbBtn = document.getElementById("btnOpenLiveMasterDb");
     if (dbBtn) dbBtn.style.display = (userObj.scope === "SCOPE_ALL") ? "inline-flex" : "none";
 
-    const gate = document.getElementById("ttaZeroTrustLoginGate");
-    if (gate) gate.classList.remove("open");
-    document.body.classList.remove("tta-auth-locked");
+    showZeroTrustOverlay(false);
   }
 
-  async function handleServerLoginSubmit(ev) {
-    if (ev && ev.preventDefault) ev.preventDefault();
-    const uInp = document.getElementById("ztLoginUser");
-    const pInp = document.getElementById("ztLoginPass");
-    const pinInp = document.getElementById("ztLoginPin");
-    const errBox = document.getElementById("ztLoginErrorBox");
-    const btn = document.getElementById("ztLoginSubmitBtn");
+  // Override PRIMARY Login Gate submit handler (onsubmit="handleZeroTrustLoginSubmit(event)")
+  window.handleZeroTrustLoginSubmit = async function(e) {
+    if (e && e.preventDefault) e.preventDefault();
+    const uInp = document.getElementById("ztUserInput");
+    const pInp = document.getElementById("ztPassInput");
+    const pinInp = document.getElementById("ztPinInput");
+    const errBox = document.getElementById("ztErrorBanner");
+    const submitBtn = document.querySelector('#zeroTrustLoginOverlay button[type="submit"]');
 
     const identifier = (uInp?.value || "").trim();
     const password = (pInp?.value || "").trim();
     const pin = (pinInp?.value || "").trim();
 
     if (errBox) { errBox.style.display = "none"; errBox.textContent = ""; }
-    if (btn) { btn.disabled = true; btn.textContent = "Đang xác thực 2FA trên Máy chủ CSDL..."; }
+    if (submitBtn) { submitBtn.disabled = true; submitBtn.textContent = "Đang xác thực 2FA trên Máy chủ CSDL..."; }
 
     try {
       const res = await callTtaApi("AUTH_LOGIN", { identifier, password, pin });
@@ -36858,13 +36912,13 @@ function jsonResponse(obj) {
         throw new Error((res && res.message) || "Đăng nhập thất bại.");
       }
       setSessionToken(res.token);
-      if (btn) btn.textContent = "Đang tải dữ liệu trực tiếp từ CSDL...";
+      if (submitBtn) submitBtn.textContent = "Đang tải dữ liệu trực tiếp từ CSDL...";
       await bootstrapFromServerDatabase(true);
       applyServerAuthenticatedUser(res.user);
       if (pInp) pInp.value = "";
       if (pinInp) pinInp.value = "";
       if (typeof window.showToast === "function") {
-        window.showToast("Đăng nhập 2FA thành công! Chào mừng " + res.user.name + " (" + res.user.maNV + ").", "#059669");
+        window.showToast("Đăng nhập 2FA thành công! Chào mừng <strong>" + res.user.name + " (" + res.user.maNV + ")</strong>.", "#059669");
       }
     } catch (err) {
       if (errBox) {
@@ -36872,9 +36926,44 @@ function jsonResponse(obj) {
         errBox.style.display = "block";
       }
     } finally {
-      if (btn) { btn.disabled = false; btn.textContent = "Xác thực 2FA & Mở Hệ thống"; }
+      if (submitBtn) { submitBtn.disabled = false; submitBtn.textContent = "Xác thực & Mở Không gian Làm việc"; }
     }
-  }
+  };
+
+  // Override Modal 11 (Đổi Ca) submit handler (onsubmit="handleSecureLogin(event)")
+  window.handleSecureLogin = async function(e) {
+    if (e && e.preventDefault) e.preventDefault();
+    const uInp = document.getElementById("loginMaNVInput");
+    const pInp = document.getElementById("loginPasswordInput");
+    const pinInp = document.getElementById("loginPinInput");
+    const errBox = document.getElementById("loginModalErrorBox");
+
+    const identifier = (uInp?.value || "").trim();
+    const password = (pInp?.value || "").trim();
+    const pin = (pinInp?.value || "").trim();
+
+    if (errBox) { errBox.style.display = "none"; errBox.textContent = ""; }
+    try {
+      const res = await callTtaApi("AUTH_LOGIN", { identifier, password, pin });
+      if (!res || res.status !== "OK") {
+        throw new Error((res && res.message) || "Sai thông tin chuyển ca.");
+      }
+      setSessionToken(res.token);
+      await bootstrapFromServerDatabase(true);
+      applyServerAuthenticatedUser(res.user);
+      if (pInp) pInp.value = "";
+      if (pinInp) pinInp.value = "";
+      if (typeof window.closeModal === "function") window.closeModal("modalLoginPortal");
+      if (typeof window.showToast === "function") {
+        window.showToast("Đã chuyển ca trực bảo mật sang <strong>[" + res.user.maNV + "] " + res.user.name + "</strong>!", "#059669");
+      }
+    } catch (err) {
+      if (errBox) {
+        errBox.textContent = err.message;
+        errBox.style.display = "block";
+      }
+    }
+  };
 
   window.logoutZeroTrustSession = function(isTimeout) {
     const tok = getSessionToken();
@@ -36885,13 +36974,19 @@ function jsonResponse(obj) {
     try { sessionStorage.removeItem(SESSION_USER_KEY); } catch (e) {}
     wipeInMemoryClinicalState();
     purgeLegacyFrontEndDbCache();
-    const gate = document.getElementById("ttaZeroTrustLoginGate");
-    if (gate) gate.classList.add("open");
-    document.body.classList.add("tta-auth-locked");
-    const errBox = document.getElementById("ztLoginErrorBox");
-    if (errBox && isTimeout) {
-      errBox.textContent = "Phiên làm việc đã hết hạn sau 15 phút không hoạt động. Vui lòng đăng nhập lại.";
-      errBox.style.display = "block";
+    showZeroTrustOverlay(true);
+    const pInp = document.getElementById("ztPassInput");
+    const pinInp = document.getElementById("ztPinInput");
+    const errBox = document.getElementById("ztErrorBanner");
+    if (pInp) pInp.value = "";
+    if (pinInp) pinInp.value = "";
+    if (errBox) {
+      if (isTimeout) {
+        errBox.textContent = "Phiên làm việc đã hết hạn sau 15 phút không hoạt động. Vui lòng đăng nhập lại.";
+        errBox.style.display = "block";
+      } else {
+        errBox.style.display = "none";
+      }
     }
   };
 
@@ -36911,7 +37006,7 @@ function jsonResponse(obj) {
         box.textContent = "Đã kết nối trực tiếp Máy chủ CSDL (" + dbEngineLabel + ") — 100% dữ liệu lưu tại Database, không lưu tại Front-end.";
       } else {
         box.style.background = "#fffbeb"; box.style.borderColor = "#fde68a"; box.style.color = "#92400e";
-        box.textContent = "Nhập URL Máy chủ Intranet (vd: http://localhost:8088/api) hoặc URL Google Apps Script WebApp (/exec) rồi nhấn Lưu & Kiểm tra.";
+        box.textContent = "Nhập URL Máy chủ Intranet (vd: http://localhost:8088/api) hoặc URL Google Apps Script WebApp (/exec) rồi nhấn Lưu URL & Đồng bộ Ngay.";
       }
     }
     m.classList.add("open");
@@ -36939,28 +37034,107 @@ function jsonResponse(obj) {
       const box = document.getElementById("ttaCloudModalStatusBox");
       if (box) {
         box.style.background = "#fef2f2"; box.style.borderColor = "#fecaca"; box.style.color = "#991b1b";
-        box.textContent = "Không thể kết nối tới URL vừa nhập. Vui lòng kiểm tra máy chủ đang chạy hoặc quyền truy cập WebApp.";
+        box.textContent = "Không thể kết nối tới URL vừa nhập. Vui lòng kiểm tra máy chủ đang chạy (start_intranet.bat) hoặc quyền truy cập WebApp (/exec).";
       }
     }
   };
 
   function enhanceLoginCardWithDbConfigButton() {
-    const form = document.getElementById("zeroTrustLoginForm");
+    const form = document.querySelector("#zeroTrustLoginOverlay form");
     if (!form) return;
-    const clone = form.cloneNode(true);
-    form.parentNode.replaceChild(clone, form);
-    clone.addEventListener("submit", handleServerLoginSubmit);
-
     if (!document.getElementById("ttaLoginDbBar")) {
       const bar = document.createElement("div");
       bar.id = "ttaLoginDbBar";
       bar.style.cssText = "margin-top:12px;padding-top:10px;border-top:1px dashed #cbd5e1;display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap;";
       bar.innerHTML =
         '<span id="ttaLoginDbStatusBadge" style="font-size:11.5px;font-weight:700;padding:4px 9px;border-radius:999px;border:1px solid #fde68a;background:#fffbeb;color:#92400e;">● Đang kiểm tra Máy chủ CSDL...</span>' +
-        '<button type="button" onclick="openCloudApiConfigModal()" style="font-size:11.5px;font-weight:700;padding:5px 10px;border-radius:8px;border:1px solid #cbd5e1;background:#f8fafc;color:#0f4c81;cursor:pointer;">⚙ Cấu hình Máy chủ CSDL</button>';
-      clone.insertAdjacentElement("afterend", bar);
+        '<button type="button" id="btnOpenLoginDbConfig" onclick="openCloudApiConfigModal()" style="font-size:11.5px;font-weight:700;padding:5px 10px;border-radius:8px;border:1px solid #cbd5e1;background:#f8fafc;color:#0f4c81;cursor:pointer;">⚙ Cấu hình Máy chủ CSDL</button>';
+      form.insertAdjacentElement("afterend", bar);
     }
   }
+
+  // 6B. SERVER-SIDE DIGITAL SIGNING (VERIFY_PIN) & ADMIN RBAC USER MANAGEMENT (UPSERT_USER / DELETE_USER)
+  window.handlePinSignatureVerify = async function(e) {
+    if (e && e.preventDefault) e.preventDefault();
+    const pin = (document.getElementById("pinCodeVerifyInput")?.value || "").trim();
+    const act = (document.getElementById("pinActionTypeSelect")?.value || "DIGITAL_SIGN").trim();
+    const reason = (document.getElementById("pinReasonInput")?.value || "").trim();
+    if (!pin) {
+      if (typeof window.showToast === "function") window.showToast("Vui lòng nhập Mã PIN ký số 2FA!", "#dc2626");
+      return;
+    }
+    try {
+      const res = await callTtaApi("VERIFY_PIN", { pin, signAction: act, detail: reason });
+      if (!res || res.status !== "OK") {
+        throw new Error((res && res.message) || "Mã PIN ký số 2FA không chính xác!");
+      }
+      if (document.getElementById("pinCodeVerifyInput")) document.getElementById("pinCodeVerifyInput").value = "";
+      if (typeof window.closeModal === "function") window.closeModal("modalPinVerify");
+      await bootstrapFromServerDatabase(true);
+      if (typeof window.showToast === "function") {
+        window.showToast("Đã xác thực Ký số 2FA phía Server và ghi nhận Audit Trail cho thao tác <strong>" + act + "</strong>!", "#059669");
+      }
+    } catch (err) {
+      if (typeof window.showToast === "function") window.showToast(err.message, "#dc2626");
+    }
+  };
+
+  window.handleUpsertAllowedUser = async function(e) {
+    if (e && e.preventDefault) e.preventDefault();
+    const maNV = (document.getElementById("usrMaNvInput")?.value || "").trim().toUpperCase();
+    const email = (document.getElementById("usrEmailInput")?.value || "").trim();
+    const name = (document.getElementById("usrNameInput")?.value || "").trim();
+    const pass = (document.getElementById("usrPassInput")?.value || "").trim();
+    const scope = (document.getElementById("usrScopeSelect")?.value || "SCOPE_DEPT").trim();
+    const expiresAt = (document.getElementById("usrExpireInput")?.value || "2027-12-31").trim();
+    const dept = (typeof window.GLOBAL_DEPT === "string" && window.GLOBAL_DEPT !== "ALL") ? window.GLOBAL_DEPT : "Di truyền & SHPT";
+
+    try {
+      const res = await callTtaApi("UPSERT_USER", {
+        userData: { maNV, email, name, pass, scope, expiresAt, dept, status: "ACTIVE" }
+      });
+      if (!res || res.status !== "OK") throw new Error((res && res.message) || "Không thể lưu tài khoản.");
+      window.ALLOWED_USERS_DB = Array.isArray(res.users) ? res.users : window.ALLOWED_USERS_DB;
+      if (document.getElementById("usrPassInput")) document.getElementById("usrPassInput").value = "";
+      if (typeof window.renderAllowedUsersTable === "function") window.renderAllowedUsersTable();
+      if (typeof window.showToast === "function") {
+        window.showToast("Đã lưu tài khoản <strong>[" + maNV + "] " + name + "</strong> trực tiếp vào bảng SYS_USERS_RBAC trên Máy chủ CSDL!", "#059669");
+      }
+    } catch (err) {
+      if (typeof window.showToast === "function") window.showToast("Lỗi lưu tài khoản: " + err.message, "#dc2626");
+    }
+  };
+
+  window.toggleLockAllowedUser = async function(maNV) {
+    const u = (window.ALLOWED_USERS_DB || []).find(x => x.maNV === maNV);
+    if (!u) return;
+    const nextStatus = u.status === "LOCKED" ? "ACTIVE" : "LOCKED";
+    try {
+      const res = await callTtaApi("UPSERT_USER", { userData: Object.assign({}, u, { status: nextStatus }) });
+      if (!res || res.status !== "OK") throw new Error((res && res.message) || "Không thể đổi trạng thái.");
+      window.ALLOWED_USERS_DB = Array.isArray(res.users) ? res.users : window.ALLOWED_USERS_DB;
+      if (typeof window.renderAllowedUsersTable === "function") window.renderAllowedUsersTable();
+      if (typeof window.showToast === "function") {
+        window.showToast("Đã cập nhật trạng thái tài khoản <strong>" + maNV + "</strong> thành <strong>" + nextStatus + "</strong> trên CSDL!", "#d97706");
+      }
+    } catch (err) {
+      if (typeof window.showToast === "function") window.showToast(err.message, "#dc2626");
+    }
+  };
+
+  window.deleteAllowedUser = async function(maNV) {
+    try {
+      const res = await callTtaApi("DELETE_USER", { maNV });
+      if (!res || res.status !== "OK") throw new Error((res && res.message) || "Không thể xóa tài khoản.");
+      window.ALLOWED_USERS_DB = Array.isArray(res.users) ? res.users : window.ALLOWED_USERS_DB;
+      if (typeof window.renderAllowedUsersTable === "function") window.renderAllowedUsersTable();
+      if (typeof window.showToast === "function") {
+        window.showToast("Đã xóa tài khoản <strong>" + maNV + "</strong> khỏi bảng SYS_USERS_RBAC trên Máy chủ CSDL!", "#dc2626");
+      }
+    } catch (err) {
+      if (typeof window.showToast === "function") window.showToast(err.message, "#dc2626");
+    }
+  };
 
   // 7. PCR DOSSIER POST-RUN QC EVALUATION (SAVED DIRECTLY TO DATABASE)
   window._PCR_DOSSIER_MODE = "HANDWRITTEN";
@@ -37013,15 +37187,13 @@ function jsonResponse(obj) {
       setSessionToken("");
     }
     wipeInMemoryClinicalState();
-    const gate = document.getElementById("ttaZeroTrustLoginGate");
-    if (gate) gate.classList.add("open");
-    document.body.classList.add("tta-auth-locked");
+    showZeroTrustOverlay(true);
   }
 
   if (document.readyState === "loading") {
-    document.addEventListener("DOMContentLoaded", () => setTimeout(initV43SeparatedProduction, 240));
+    document.addEventListener("DOMContentLoaded", () => setTimeout(initV43SeparatedProduction, 220));
   } else {
-    setTimeout(initV43SeparatedProduction, 240);
+    setTimeout(initV43SeparatedProduction, 220);
   }
 })();
 
