@@ -3234,7 +3234,11 @@
             <kbd>?</kbd>
             <span class="tta-hide-sm">Phím tắt</span>
           </button>
-          <span class="tta-version-pill" title="TTA-QMS & LIMS ISO 15189:2022 — Phiên bản Thương mại v39.0">v39.0 Pro</span>
+          <button type="button" id="ttaApiStatusPill" class="tta-bc-action tta-api-pill" onclick="openCloudApiConfigModal()" title="Trạng thái kết nối Database &amp; Cấu hình WebApp API (/exec)">
+            <span id="ttaApiStatusDot" style="width:7px;height:7px;border-radius:999px;background:#10b981;display:inline-block;"></span>
+            <span id="ttaApiStatusLabel">API CSDL</span>
+          </button>
+          <span class="tta-version-pill" title="TTA-QMS &amp; LIMS ISO 15189:2022 — Phiên bản Thực chiến v40.0">v40.0</span>
         </div>
       </div>
       <!-- TOP MODULE NAVIGATION (PRESERVES EXACT BUTTON LABELS FROM PREV) -->
@@ -4025,7 +4029,7 @@
               </div>
               <div style="display:flex;gap:6px;flex-wrap:wrap;">
                 <button type="button" class="btn btn-primary btn-xs" onclick="openModal('modalEnv')">+ Mở Hộp thoại Ghi Nhiệt độ</button>
-                <button type="button" class="btn btn-danger btn-xs" onclick="simulateEnvThresholdExcursion()">Giả lập Cảnh báo Vượt ngưỡng Nhiệt độ Tủ 2–8°C</button>
+                
                 <button type="button" class="btn btn-success btn-xs" onclick="pushSingleTableToMasterDB('NhatKy_MoiTruong')">Đồng bộ Sheet Môi trường</button>
               </div>
             </div>
@@ -5600,80 +5604,67 @@
                 <div class="card-title" style="color:#fff;border-left:4px solid #38bdf8;font-size:14.5px;">1A. Nội kiểm Định lượng Real-time PCR — QuantStudio 5 Dx
                 </div>
                 <div class="card-subtitle" style="color:#e0f2fe;margin-top:2px;font-size:11.5px;">
-                  Thiết bị: <strong>Applied Biosystems™ QuantStudio™ 5 Dx (TTB.KXN.SHPT.09)</strong> • Tự động quy đổi <code style="background:rgba(255,255,255,0.18);color:#fff;padding:1px 5px;border-radius:4px;">Log10(IU/mL)</code>, tính Z-score Kép (PC-Low &amp; PC-High) &amp; quét đa quy tắc Westgard (<code style="background:rgba(255,255,255,0.18);color:#fff;padding:1px 5px;border-radius:4px;">1-3s, 2-2s, R-4s, 4-1s, 10-x</code>)
+                  Thiết bị: <strong>QuantStudio™ 5 Dx (TTB.KXN.SHPT.09)</strong> • Quy đổi Log10, Z-score Kép &amp; Westgard
                 </div>
               </div>
               <div style="display:flex;gap:6px;flex-wrap:wrap;align-items:center;">
-                <button type="button" class="btn btn-xs" style="background:#f59e0b;color:#fff;border:none;font-weight:800;" onclick="simulateMolQuantScenario('10X_DRIFT')">Giả lập 10-x (10 ngày lệch)</button>
-                <button type="button" class="btn btn-xs" style="background:#ef4444;color:#fff;border:none;font-weight:800;" onclick="simulateMolQuantScenario('1_3S_FAIL')">Giả lập 1-3s</button>
-                <button type="button" class="btn btn-xs" style="background:#7c3aed;color:#fff;border:none;font-weight:800;" onclick="simulateMolQuantScenario('R_4S_FAIL')">Giả lập R-4s</button>
-                <button type="button" class="btn btn-xs" style="background:#10b981;color:#fff;border:none;font-weight:800;" onclick="simulateMolQuantScenario('RESET_30D')">Chuẩn 30 Ngày (Đạt)</button>
+                
+                
+                
+                
                 <button type="button" class="btn btn-xs" style="background:#fff;color:#0f4c81;border:none;font-weight:800;" onclick="printMolQuantIqcReport30d()">In Hồ sơ A4</button>
               </div>
             </div>
 
-            <!-- COMPACT FILTER & TARGET SPEC BAR -->
-            <div style="display:grid;grid-template-columns:2fr 1.1fr 1fr 1fr 1.1fr;gap:10px;background:#f8fafc;padding:10px 12px;border-radius:10px;border:1px solid #cbd5e1;margin-bottom:12px;align-items:end;">
-              <div>
-                <label style="font-size:11px;font-weight:800;color:#0f4c81;display:block;margin-bottom:3px;">1. Chọn Xét nghiệm Định lượng (SHPT — QuantStudio 5 Dx):</label>
-                <select id="molQuantAssaySelect" class="form-control" style="font-weight:800;color:#0f172a;border:1.5px solid #0284c7;" onchange="renderMolQuantIqcAll()">
-                  <option value="GP_HBV">1. HBV Real-time PCR Định lượng — GeneProof Hepatitis B Virus (IU/mL Log10)</option>
-                  <option value="GP_CMV">2. CMV Real-time PCR Định lượng — GeneProof Cytomegalovirus (IU/mL Log10)</option>
-                  <option value="GP_EBV">3. EBV Real-time PCR Định lượng — GeneProof Epstein-Barr Virus (IU/mL Log10)</option>
-                  <option value="GP_HSV12">4. HSV-1/2 Real-time PCR Định lượng — GeneProof Herpes Simplex 1/2 (Copies/mL Log10)</option>
-                  <option value="GP_ADV">5. Adenovirus Real-time PCR Định lượng — GeneProof Adenovirus (Copies/mL Log10)</option>
-                </select>
-              </div>
-              <div>
-                <label style="font-size:11px;font-weight:800;color:#334155;display:block;margin-bottom:3px;">2. Chế độ Hiển thị Bảng:</label>
-                <select id="molQuantRowFilterSelect" class="form-control" style="font-weight:700;" onchange="renderMolQuantIqcAll()">
-                  <option value="ALL_30">Trọn bộ 30 ngày (Khung cuộn gọn)</option>
-                  <option value="LAST_10">10 ngày gần nhất (Ngày 21 30)</option>
-                  <option value="LAST_15">15 ngày gần nhất (Ngày 16 30)</option>
-                  <option value="WARN_FAIL">Chỉ ngày Cảnh báo / Vi phạm</option>
-                </select>
-              </div>
-              <div>
-                <label style="font-size:11px;font-weight:800;color:#0369a1;display:block;margin-bottom:3px;">Target PC-Low (Log10 ± SD):</label>
-                <div style="display:flex;gap:4px;">
-                  <input id="molQuantTargetLowMean" type="number" step="0.01" class="form-control" style="font-weight:800;text-align:center;" value="3.00" onchange="updateMolQuantTargetSpec()">
-                  <input id="molQuantTargetLowSd" type="number" step="0.01" class="form-control" style="font-weight:800;text-align:center;width:72px;" value="0.15" onchange="updateMolQuantTargetSpec()">
+            <!-- COMPACT FILTER & TARGET SPEC BAR (V40 CLEAN 2-ROW NON-CLIPPING LAYOUT) -->
+            <div class="tta-iqc-filter-bar" style="display:flex;flex-direction:column;gap:10px;background:#f8fafc;padding:12px 14px;border-radius:10px;border:1px solid #cbd5e1;margin-bottom:12px;">
+              <div style="display:grid;grid-template-columns:minmax(240px,2fr) minmax(170px,1.1fr) minmax(155px,1fr) minmax(155px,1fr);gap:10px;align-items:end;">
+                <div>
+                  <label style="font-size:11px;font-weight:800;color:#0f4c81;display:block;margin-bottom:3px;">1. Xét nghiệm Định lượng (SHPT):</label>
+                  <select id="molQuantAssaySelect" class="form-control" style="font-weight:700;color:#0f172a;border:1.5px solid #0284c7;width:100%;" onchange="renderMolQuantIqcAll()">
+                    <option value="GP_HBV">1. HBV Real-time PCR Định lượng — Hepatitis B Virus (IU/mL Log10)</option>
+                    <option value="GP_CMV">2. CMV Real-time PCR Định lượng — Cytomegalovirus (IU/mL Log10)</option>
+                    <option value="GP_EBV">3. EBV Real-time PCR Định lượng — Epstein-Barr Virus (IU/mL Log10)</option>
+                    <option value="GP_HSV12">4. HSV-1/2 Real-time PCR Định lượng — Herpes Simplex 1/2 (Copies/mL Log10)</option>
+                    <option value="GP_ADV">5. Adenovirus Real-time PCR Định lượng — Adenovirus (Copies/mL Log10)</option>
+                  </select>
+                </div>
+                <div>
+                  <label style="font-size:11px;font-weight:800;color:#334155;display:block;margin-bottom:3px;">2. Phạm vi Hiển thị:</label>
+                  <select id="molQuantRowFilterSelect" class="form-control" style="font-weight:700;width:100%;" onchange="renderMolQuantIqcAll()">
+                    <option value="ALL_30">Trọn bộ 30 ngày</option>
+                    <option value="LAST_10">10 ngày gần nhất</option>
+                    <option value="LAST_15">15 ngày gần nhất</option>
+                    <option value="WARN_FAIL">Chỉ ngày Cảnh báo / Vi phạm</option>
+                  </select>
+                </div>
+                <div>
+                  <label style="font-size:11px;font-weight:800;color:#0369a1;display:block;margin-bottom:3px;">Target PC-Low (Log10 ± SD):</label>
+                  <div style="display:flex;gap:5px;">
+                    <input id="molQuantTargetLowMean" type="number" step="0.01" class="form-control" style="font-weight:800;text-align:center;min-width:0;flex:1;" value="3.00" onchange="updateMolQuantTargetSpec()">
+                    <input id="molQuantTargetLowSd" type="number" step="0.01" class="form-control" style="font-weight:800;text-align:center;width:66px;flex-shrink:0;" value="0.15" onchange="updateMolQuantTargetSpec()">
+                  </div>
+                </div>
+                <div>
+                  <label style="font-size:11px;font-weight:800;color:#7c3aed;display:block;margin-bottom:3px;">Target PC-High (Log10 ± SD):</label>
+                  <div style="display:flex;gap:5px;">
+                    <input id="molQuantTargetHighMean" type="number" step="0.01" class="form-control" style="font-weight:800;text-align:center;min-width:0;flex:1;" value="6.00" onchange="updateMolQuantTargetSpec()">
+                    <input id="molQuantTargetHighSd" type="number" step="0.01" class="form-control" style="font-weight:800;text-align:center;width:66px;flex-shrink:0;" value="0.20" onchange="updateMolQuantTargetSpec()">
+                  </div>
                 </div>
               </div>
-              <div>
-                <label style="font-size:11px;font-weight:800;color:#7c3aed;display:block;margin-bottom:3px;">Target PC-High (Log10 ± SD):</label>
-                <div style="display:flex;gap:4px;">
-                  <input id="molQuantTargetHighMean" type="number" step="0.01" class="form-control" style="font-weight:800;text-align:center;" value="6.00" onchange="updateMolQuantTargetSpec()">
-                  <input id="molQuantTargetHighSd" type="number" step="0.01" class="form-control" style="font-weight:800;text-align:center;width:72px;" value="0.20" onchange="updateMolQuantTargetSpec()">
-                </div>
-              </div>
-              <div style="display:flex;gap:6px;align-items:center;">
-                <button type="button" class="btn btn-success btn-xs" style="flex:1;padding:8px 10px;font-weight:800;white-space:nowrap;" onclick="pushSingleTableToMasterDB('IQC_SHPT_DinhLuong_30D')" title="Đẩy toàn bộ bảng IQC_SHPT_DinhLuong_30D lên Google Sheets MasterDB">Đồng bộ Dữ liệu</button>
-                <button type="button" class="btn btn-outline btn-xs" style="padding:8px 8px;font-weight:800;" onclick="pullAllFromCloudMasterDB(false)" title="Kéo dữ liệu mới nhất từ Google Sheets">Kéo Sheet</button>
-                <button type="button" class="btn btn-outline btn-xs" style="padding:8px 8px;" onclick="exportMolQuant30dCsv()">⬇ CSV</button>
-              </div>
-            </div>
-
-            <!-- THANH KẾT NỐI TRỰC TIẾP GOOGLE APPS SCRIPT WEBAPP (/EXEC) & TRẠNG THÁI GHI DATABASE -->
-            <div id="iqcCloudBridgeBanner" style="background:linear-gradient(90deg,#f0fdf4,#e0f2fe);border:1.5px solid #0284c7;border-radius:10px;padding:8px 12px;margin-bottom:10px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;">
-              <div style="font-size:11.5px;color:#0f172a;display:flex;align-items:center;gap:6px;flex-wrap:wrap;">
-                <span id="iqcCloudBridgeStatusBadge" class="badge b-info" style="font-weight:800;">Trạng thái Kết nối Google Sheets</span>
-                <span id="iqcCloudBridgeStatusText" style="font-weight:700;color:#0f4c81;">Dán WebApp URL (<code>/exec</code>) từ dự án Apps Script <a href="https://script.google.com/d/1lRBafJ2tB1syjfx1ioYWh9NLt4C75uFTdcgEAu0wm4ug3g5e4SZnLTKs/edit" target="_blank" style="text-decoration:underline;color:#0284c7;font-weight:800;">TTA-QMS &amp; LIMS ↗</a> để tự động ghi thẳng vào Google Sheets:</span>
-              </div>
-              <div style="display:flex;gap:6px;align-items:center;flex:1;min-width:340px;max-width:620px;">
-                <input id="quickGasExecUrlInput" type="text" class="form-control mono" style="font-size:11px;padding:4px 8px;border:1.5px solid #0284c7;" placeholder="Dán https://script.google.com/macros/s/AKfycb.../exec vào đây..." oninput="syncQuickGasUrlInput(this.value)">
-                <button type="button" class="btn btn-primary btn-xs" style="white-space:nowrap;padding:6px 10px;font-weight:800;" onclick="connectAndPushGasNow('IQC_SHPT_DinhLuong_30D')">Lưu URL &amp; Ghi Sheet Ngay</button>
-                <button type="button" class="btn btn-warning btn-xs" style="white-space:nowrap;padding:6px 8px;font-weight:800;" onclick="copyTableRowsAsTsvToClipboard('IQC_SHPT_DinhLuong_30D', null, true)" title="Copy bảng chuẩn 28 cột để dán Ctrl+V vào Google Sheets">Copy Bảng</button>
+              <div style="display:flex;justify-content:flex-end;align-items:center;gap:8px;flex-wrap:wrap;padding-top:8px;border-top:1px dashed #cbd5e1;">
+                <button type="button" class="btn btn-success btn-xs" style="padding:6px 12px;font-weight:700;white-space:nowrap;" onclick="pushSingleTableToMasterDB('IQC_SHPT_DinhLuong_30D')">Đồng bộ Dữ liệu</button>
+                <button type="button" class="btn btn-outline btn-xs" style="padding:6px 12px;font-weight:700;white-space:nowrap;" onclick="pullAllFromCloudMasterDB(false)">Tải từ CSDL</button>
+                <button type="button" class="btn btn-outline btn-xs" style="padding:6px 12px;font-weight:700;white-space:nowrap;" onclick="exportMolQuant30dCsv()">Xuất CSV</button>
+                <button type="button" class="btn btn-outline btn-xs" style="padding:6px 12px;font-weight:700;white-space:nowrap;" onclick="copyTableRowsAsTsvToClipboard('IQC_SHPT_DinhLuong_30D', null, true)">Copy Bảng</button>
               </div>
             </div>
 
             <!-- FORM NHẬP NHANH MẺ NỘI KIỂM ĐỊNH LƯỢNG MỚI (THỰC CHIẾN — MẶC ĐỊNH NGÀY HIỆN TẠI, CHỈNH SỬA TRỰC TIẾP) -->
             <div style="background:#fffbeb;border:2px solid #f59e0b;border-radius:10px;padding:10px 12px;margin-bottom:12px;">
               <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;flex-wrap:wrap;gap:6px;">
-                <div style="font-size:12px;font-weight:800;color:#92400e;">KHỞI TẠO &amp; GHI NHẬN MẺ NỘI KIỂM ĐỊNH LƯỢNG MỚI (MẶC ĐỊNH NGÀY HIỆN TẠI • TỰ ĐỘNG TÍNH LOG10, Z-SCORE &amp; WESTGARD)
-                </div>
-                <div style="font-size:11px;color:#78350f;font-weight:700;">Mẹo: Chọn ngày bất kỳ hoặc giữ nguyên ngày hôm nay, nhập KQ thô PC-Low / PC-High rồi bấm <strong>Thêm Mẻ &amp; Ghi CSDL</strong> (Mọi dòng bên dưới đều sửa trực tiếp được)
-                </div>
+                <div style="font-size:12px;font-weight:800;color:#92400e;">GHI NHẬN MẺ NỘI KIỂM ĐỊNH LƯỢNG MỚI</div>
               </div>
               <div style="display:grid;grid-template-columns:1.1fr 1.2fr 1.1fr 1fr 1fr 0.9fr 0.9fr 0.8fr 1.3fr auto;gap:6px;align-items:end;">
                 <div>
@@ -5909,7 +5900,7 @@
                 </div>
                 <div style="display:flex;gap:8px;flex-wrap:wrap;">
                   <button type="submit" class="btn btn-success" style="flex:1;">Lưu Điểm IQC &amp; Chạy Kiểm tra Westgard</button>
-                  <button id="btnSimulateWestgardViolation" type="button" class="btn btn-danger btn-xs" onclick="simulateWestgardError()">Thử tình huống Lỗi 1-3s (Ct=29.8)</button>
+                  
                 </div>
               </form>
             </div>
@@ -5924,7 +5915,7 @@
                     <div class="card-subtitle">Theo Phụ lục QT.VT03.TTDT-08 (Thu thập ≥ 20 điểm trong 20 ngày, loại bỏ điểm ngoại lai vượt ±3SD và áp dụng Mean Lab cho tháng tiếp theo)</div>
                   </div>
                   <div style="display:flex;gap:6px;flex-wrap:wrap;">
-                    <button type="button" class="btn btn-outline btn-xs" onclick="simulate20DayMeanLabSetup()">Nạp 20 Điểm Tích lũy Chuẩn (20 Ngày)</button>
+                    
                     <button class="btn btn-primary btn-xs" onclick="applyMeanLabAsTarget()">Áp dụng Mean Lab &amp; SD Lab làm Giới hạn Kiểm soát Mới</button>
                   </div>
                 </div>
@@ -6431,7 +6422,7 @@
             </div>
             <div style="display:flex;gap:6px;">
               <button type="button" class="btn btn-success btn-xs" onclick="openModal('modalQualIqc')">+ Ghi Nhận Mẻ Nội kiểm Định tính / Tế bào Mới</button>
-              <button type="button" class="btn btn-danger btn-xs" onclick="simulateQualitativeContamination()">Giả lập Nhiễm chéo Chứng Âm NC (+) (Khóa mẻ PCR)</button>
+              
             </div>
           </div>
 
@@ -6444,20 +6435,20 @@
                 <div class="card-title" style="color:#fff;border-left:4px solid #5eead4;font-size:14.5px;">2A. NỘI KIỂM REAL-TIME PCR ĐỊNH TÍNH ĐA TÁC NHÂN (MULTIPLEX 4 KÊNH MÀU) — CFX OPUS 96 DX (30 NGÀY)
                 </div>
                 <div class="card-subtitle" style="color:#ccfbf1;margin-top:2px;font-size:11.5px;">
-                  Thiết bị: <strong>Bio-Rad CFX Opus 96 Dx (TTB.KXN.SHPT.06)</strong> • Kiểm soát 4 kênh huỳnh quang (<code style="background:rgba(255,255,255,0.18);color:#fff;padding:1px 5px;border-radius:4px;">FAM, HEX/VIC, ROX/Cal Red 610, Cy5/Quasar 670-IC</code>), NTC, Mean Ct IC Mẫu BN, ΔCt &amp; quy tắc <strong>Westgard 10-x</strong>
+                  Thiết bị: <strong>CFX Opus 96 Dx (TTB.KXN.SHPT.06)</strong> • 4 kênh huỳnh quang, NTC, IC &amp; ΔCt
                 </div>
               </div>
               <div style="display:flex;gap:6px;flex-wrap:wrap;align-items:center;">
-                <button type="button" class="btn btn-xs" style="background:#f59e0b;color:#fff;border:none;font-weight:800;" onclick="simulateMolMultiplexScenario('10X_CT_DRIFT')">Giả lập 10-x (Trôi Ct PC)</button>
-                <button type="button" class="btn btn-xs" style="background:#ef4444;color:#fff;border:none;font-weight:800;" onclick="simulateMolMultiplexScenario('NTC_CONTAM')">Giả lập Nhiễm NTC (+)</button>
-                <button type="button" class="btn btn-xs" style="background:#7c3aed;color:#fff;border:none;font-weight:800;" onclick="simulateMolMultiplexScenario('IC_INHIBITION')">Giả lập Ức chế IC</button>
-                <button type="button" class="btn btn-xs" style="background:#10b981;color:#fff;border:none;font-weight:800;" onclick="simulateMolMultiplexScenario('RESET_30D')">Chuẩn 30 Ngày (Đạt)</button>
+                
+                
+                
+                
                 <button type="button" class="btn btn-xs" style="background:#fff;color:#065f46;border:none;font-weight:800;" onclick="printMolMultiplexIqcReport30d()">In Hồ sơ A4</button>
               </div>
             </div>
 
             <!-- PANEL SELECTOR & CHANNEL TARGET CONFIG BAR -->
-            <div style="display:grid;grid-template-columns:2.1fr 1.1fr 1fr 1fr 1fr;gap:10px;background:#f0fdf4;padding:10px 12px;border-radius:10px;border:1px solid #a7f3d0;margin-bottom:12px;align-items:end;">
+            <div class="tta-iqc-filter-bar" style="display:grid;grid-template-columns:minmax(220px,2fr) minmax(150px,1fr) minmax(150px,1fr) minmax(150px,1fr) auto;gap:10px;background:#f0fdf4;padding:10px 12px;border-radius:10px;border:1px solid #a7f3d0;margin-bottom:12px;align-items:end;">
               <div>
                 <label style="font-size:11px;font-weight:800;color:#065f46;display:block;margin-bottom:3px;">1. Chọn Bộ Sinh phẩm Đa tác nhân (Multiplex PCR — CFX Opus 96 Dx):</label>
                 <select id="molMultiplexAssaySelect" class="form-control" style="font-weight:800;color:#0f172a;border:1.5px solid #0d9488;" onchange="renderMolMultiplexIqcAll()">
@@ -6497,13 +6488,13 @@
               </div>
               <div style="display:flex;gap:6px;align-items:center;">
                 <button type="button" class="btn btn-success btn-xs" style="flex:1;padding:8px 10px;font-weight:800;white-space:nowrap;" onclick="pushSingleTableToMasterDB('IQC_SHPT_Multiplex_30D')">Đồng bộ Dữ liệu</button>
-                <button type="button" class="btn btn-outline btn-xs" style="padding:8px 8px;" onclick="exportMolMultiplex30dCsv()">⬇ CSV</button>
+                <button type="button" class="btn btn-outline btn-xs" style="padding:7px 10px;white-space:nowrap;font-weight:700;" onclick="exportMolMultiplex30dCsv()">Xuất CSV</button>
               </div>
             </div>
 
             <!-- FORM NHẬP NHANH MẺ NỘI KIỂM ĐA TÁC NHÂN MỚI (SEEGENE ALLPLEX — MẶC ĐỊNH NGÀY HIỆN TẠI) -->
             <div style="background:#f0fdfa;border:2px solid #0d9488;border-radius:10px;padding:10px 12px;margin-bottom:12px;">
-              <div style="font-size:12px;font-weight:800;color:#0f766e;margin-bottom:6px;">KHỞI TẠO &amp; GHI NHẬN MẺ NỘI KIỂM ĐA TÁC NHÂN MỚI (MẶC ĐỊNH NGÀY HIỆN TẠI • TỰ ĐỘNG TÍNH ΔCT &amp; WESTGARD 10-X)
+              <div style="font-size:12px;font-weight:800;color:#0f766e;margin-bottom:6px;">GHI NHẬN MẺ NỘI KIỂM ĐA TÁC NHÂN MỚI
               </div>
               <div style="display:grid;grid-template-columns:1.1fr 1.2fr 1.1fr 0.8fr 0.8fr 0.8fr 0.8fr 0.9fr 0.9fr 1.2fr auto;gap:6px;align-items:end;">
                 <div>
@@ -6638,7 +6629,7 @@
               </div>
               <div style="display:flex;gap:8px;flex-wrap:wrap;">
                 <button type="button" class="btn btn-success btn-xs" onclick="openModal('modalQualIqc')">+ Ghi Nhận Mẻ Nội kiểm Định tính / Tế bào Mới</button>
-                <button type="button" class="btn btn-danger btn-xs" onclick="simulateQualitativeContamination()">Giả lập Nhiễm chéo Chứng Âm NC (+) (Khóa mẻ PCR)</button>
+                
               </div>
             </div>
 
@@ -7074,7 +7065,7 @@
             <div style="display:flex;flex-wrap:wrap;gap:7px;">
               <button type="button" class="btn" style="background:#ffffff;color:#4c1d95;font-weight:800;border:none;padding:6px 12px;" onclick="openModal('modalEqa')">Đăng ký / Nhập Đợt Mới</button>
               <button type="button" class="btn" style="background:#f59e0b;color:#fff;font-weight:800;border:none;padding:6px 12px;" onclick="openModal('modalEqaReceiveSample')">Giao nhận Mẫu (Bước 2)</button>
-              <button type="button" class="btn" style="background:#ef4444;color:#fff;font-weight:800;border:none;padding:6px 12px;" onclick="simulateEqaFailureAndClinicalReview()">Giả lập EQA Trượt (|SDI|=3.45)</button>
+              
               <button type="button" class="btn" style="background:#10b981;color:#fff;font-weight:800;border:none;padding:6px 12px;" onclick="openPrintableEqaForm('BM_09_05_EVAL')">In Hồ sơ BM-09-01..05</button>
             </div>
           </div>
@@ -7176,7 +7167,7 @@
                     <option value="Giải phẫu bệnh">Giải phẫu bệnh</option>
                   </select>
                   <select id="eqaHistoryProgSelect" class="form-control" style="width:auto;max-width:260px;font-size:11.5px;font-weight:700;padding:4px 9px;display:none;" onchange="renderEqaTrendAndRotation()"></select>
-                  <button type="button" class="btn btn-outline btn-xs" style="color:#d97706;border-color:#fcd34d;font-weight:700;" onclick="simulateEqaWarningTrend()">Giả lập Cảnh báo (SDI=+2.35)</button>
+                  
                   <button type="button" class="btn btn-outline btn-xs" style="color:#059669;border-color:#6ee7b7;font-weight:700;" onclick="restoreCleanEqaBaseline()">Chuẩn 100% Đạt</button>
                   <button type="button" class="btn btn-primary btn-xs" style="background:#4c1d95;border-color:#4c1d95;" onclick="openPrintableIqcForm('BM_17_04_EQA')">Xuất Báo cáo Thống kê (BM04.17)</button>
                 </div>
@@ -15061,23 +15052,28 @@ function jsonResponse(obj) {
           </tr>
         `).join("");
 
-        const patientRowsHtml = samples.map((sw, idx) => `
+        const isHandwrittenMode = (window._PCR_DOSSIER_MODE || "HANDWRITTEN") === "HANDWRITTEN";
+        const qcEval = curPcr.qcEvaluation || { pc: "", nc: "", ic: "", conclusion: "", saved: false };
+        const patientRowsHtml = samples.map((sw, idx) => {
+          const savedRes = (!isHandwrittenMode && sw.order.manualResultVerified) ? (sw.order.resultCt || "") : "";
+          const savedConcl = (!isHandwrittenMode && sw.order.manualResultVerified) ? (sw.order.conclusion || "") : "";
+          return `
           <tr>
-            <td style="border:1px solid #cbd5e1;padding:6px 8px;text-align:center;">${idx + 1}</td>
-            <td style="border:1px solid #cbd5e1;padding:6px 8px;text-align:center;font-weight:800;color:#dc2626;">${sw.well}</td>
-            <td style="border:1px solid #cbd5e1;padding:6px 8px;text-align:center;font-weight:700;">${sw.order.sid}</td>
-            <td style="border:1px solid #cbd5e1;padding:6px 8px;">${sw.order.patient}</td>
-            <td style="border:1px solid #cbd5e1;padding:6px 8px;font-size:11.5px;">${sw.order.resultCt || "IC Đạt"}</td>
-            <td style="border:1px solid #cbd5e1;padding:6px 8px;text-align:center;font-weight:700;">${sw.order.conclusion || "Hợp lệ"}</td>
-          </tr>
-        `).join("");
+            <td style="border:1px solid #cbd5e1;padding:7px 8px;text-align:center;">${idx + 1}</td>
+            <td style="border:1px solid #cbd5e1;padding:7px 8px;text-align:center;font-weight:800;color:#dc2626;">${sw.well}</td>
+            <td style="border:1px solid #cbd5e1;padding:7px 8px;text-align:center;font-weight:700;">${sw.order.sid}</td>
+            <td style="border:1px solid #cbd5e1;padding:7px 8px;">${sw.order.patient}</td>
+            <td style="border:1px solid #cbd5e1;padding:7px 8px;font-size:11.5px;min-width:165px;">${isHandwrittenMode ? '<span style="color:#cbd5e1;">&nbsp;</span>' : `<input type="text" class="form-control no-print" style="height:26px;font-size:11.5px;padding:2px 6px;" data-pcr-res-id="${sw.order.idChiDinh}" value="${savedRes}" placeholder="Nhập Ct / Copies..."><span class="print-only-val">${savedRes || ""}</span>`}</td>
+            <td style="border:1px solid #cbd5e1;padding:7px 8px;text-align:center;font-weight:700;min-width:120px;">${isHandwrittenMode ? '<span style="color:#cbd5e1;">&nbsp;</span>' : `<select class="form-control no-print" style="height:26px;font-size:11.5px;padding:2px 4px;" data-pcr-concl-id="${sw.order.idChiDinh}"><option value="" ${!savedConcl ? "selected" : ""}>— Chưa kết luận —</option><option value="Âm tính" ${savedConcl === "Âm tính" ? "selected" : ""}>Âm tính</option><option value="Dương tính" ${savedConcl === "Dương tính" ? "selected" : ""}>Dương tính</option><option value="Chạy lại" ${savedConcl === "Chạy lại" ? "selected" : ""}>Chạy lại</option></select><span class="print-only-val">${savedConcl || ""}</span>`}</td>
+          </tr>`;
+        }).join("");
 
         container.innerHTML = `
           <div style="font-family:'Be Vietnam Pro', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;color:#0f172a;padding:12px;border:1px solid #cbd5e1;">
             <table style="width:100%;border-collapse:collapse;margin-bottom:12px;">
               <tr>
                 <td style="border:1px solid #334155;padding:8px;text-align:center;width:32%;font-size:11.5px;font-weight:800;">
-                  BỆNH VIỆN NHI HÀ NỘI<br/>KHOA XÉT NGHIỆM<br/>ĐƠN NGUYÊN DI TRUYỀN Y HỌC
+                  BỆNH VIỆN NHI HÀ NỘI<br/>KHOA XÉT NGHIỆM<br/>ĐƠN NGUYÊN DI TRUYỀN &amp; SHPT
                 </td>
                 <td style="border:1px solid #334155;padding:8px;text-align:center;width:43%;font-size:14px;font-weight:700;">
                   HỒ SƠ XÉT NGHIỆM PCR/REAL-TIME PCR<br/><span style="font-size:11.5px;font-weight:700;">(BIỂU MẪU LIMS CHUẨN ISO 15189:2022)</span>
@@ -15146,10 +15142,51 @@ function jsonResponse(obj) {
               </tbody>
             </table>
 
+            <div class="no-print" style="display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap;background:#f0f9ff;border:1px solid #bae6fd;border-radius:8px;padding:8px 12px;margin-bottom:10px;">
+              <div style="font-size:12px;font-weight:700;color:#0f4c81;">Chế độ Hồ sơ:
+                <button type="button" class="btn ${isHandwrittenMode ? "btn-primary" : "btn-outline"} btn-xs" style="margin-left:6px;" onclick="setPcrDossierMode('HANDWRITTEN')">Biểu mẫu Trống (Ghi tay)</button>
+                <button type="button" class="btn ${!isHandwrittenMode ? "btn-primary" : "btn-outline"} btn-xs" style="margin-left:4px;" onclick="setPcrDossierMode('ELECTRONIC')">Nhập Đánh giá Sau Mẻ chạy</button>
+              </div>
+              ${!isHandwrittenMode ? `<button type="button" class="btn btn-success btn-xs" style="font-weight:700;" onclick="savePcrDossierEvaluation('${curPcr.idMePcr}')">Lưu Đánh giá &amp; KQ vào CSDL</button>` : `<span style="font-size:11px;color:#475569;">Để trống ô QC, Kết quả &amp; Kết luận để ghi tay trực tiếp sau khi kết thúc mẻ chạy</span>`}
+            </div>
+
             <div style="font-weight:800;color:#0f4c81;font-size:13px;margin-bottom:4px;">IV. ĐÁNH GIÁ CHẤT LƯỢNG (QC) KẾT QUẢ XÉT NGHIỆM</div>
-            <div style="border:1px solid #cbd5e1;padding:8px 12px;font-size:12px;margin-bottom:12px;background:#f8fafc;">
-              <div>• <strong>Chứng dương (PC - Giếng ${wellAssignment.pcWell}):</strong> Đạt &nbsp;&nbsp;|&nbsp;&nbsp; <strong>Chứng âm (NC - Giếng ${wellAssignment.ncWell}):</strong> Đạt &nbsp;&nbsp;|&nbsp;&nbsp; <strong>Chứng nội (IC - ${meta.tenIc}):</strong> Đạt</div>
-              <div style="margin-top:4px;">• <strong>Kết luận chất lượng mẻ chạy:</strong> <strong style="color:#059669;">Đạt yêu cầu (Cho phép trả kết quả LIS)</strong> &nbsp;&nbsp; Không đạt (Chạy lại)</div>
+            <div style="border:1px solid #cbd5e1;padding:9px 12px;font-size:12px;margin-bottom:12px;background:#ffffff;">
+              ${isHandwrittenMode ? `
+                <div style="line-height:1.8;">• <strong>Chứng dương (PC - Giếng ${wellAssignment.pcWell}):</strong> &nbsp; ☐ Đạt &nbsp;&nbsp; ☐ Không đạt &nbsp;&nbsp;|&nbsp;&nbsp; <strong>Chứng âm (NC - Giếng ${wellAssignment.ncWell}):</strong> &nbsp; ☐ Đạt &nbsp;&nbsp; ☐ Không đạt &nbsp;&nbsp;|&nbsp;&nbsp; <strong>Chứng nội (IC - ${meta.tenIc}):</strong> &nbsp; ☐ Đạt &nbsp;&nbsp; ☐ Không đạt</div>
+                <div style="margin-top:4px;line-height:1.8;">• <strong>Kết luận chất lượng mẻ chạy:</strong> &nbsp; ☐ Đạt yêu cầu (Cho phép trả kết quả LIS) &nbsp;&nbsp;&nbsp; ☐ Không đạt (Chạy lại / Xử lý sự cố)</div>
+              ` : `
+                <div style="display:flex;gap:14px;flex-wrap:wrap;align-items:center;margin-bottom:6px;">
+                  <span><strong>Chứng dương (PC - ${wellAssignment.pcWell}):</strong>
+                    <select id="pcrQcPcSelect" class="form-control no-print" style="display:inline-block;width:auto;height:25px;padding:1px 6px;font-size:11.5px;margin-left:4px;">
+                      <option value="" ${!qcEval.pc ? "selected" : ""}>— Chưa đánh giá —</option>
+                      <option value="Đạt" ${qcEval.pc === "Đạt" ? "selected" : ""}>Đạt</option>
+                      <option value="Không đạt" ${qcEval.pc === "Không đạt" ? "selected" : ""}>Không đạt</option>
+                    </select><span class="print-only-val">${qcEval.pc || "☐ Đạt  ☐ Không đạt"}</span>
+                  </span>
+                  <span><strong>Chứng âm (NC - ${wellAssignment.ncWell}):</strong>
+                    <select id="pcrQcNcSelect" class="form-control no-print" style="display:inline-block;width:auto;height:25px;padding:1px 6px;font-size:11.5px;margin-left:4px;">
+                      <option value="" ${!qcEval.nc ? "selected" : ""}>— Chưa đánh giá —</option>
+                      <option value="Đạt" ${qcEval.nc === "Đạt" ? "selected" : ""}>Đạt</option>
+                      <option value="Không đạt" ${qcEval.nc === "Không đạt" ? "selected" : ""}>Không đạt</option>
+                    </select><span class="print-only-val">${qcEval.nc || "☐ Đạt  ☐ Không đạt"}</span>
+                  </span>
+                  <span><strong>Chứng nội (IC):</strong>
+                    <select id="pcrQcIcSelect" class="form-control no-print" style="display:inline-block;width:auto;height:25px;padding:1px 6px;font-size:11.5px;margin-left:4px;">
+                      <option value="" ${!qcEval.ic ? "selected" : ""}>— Chưa đánh giá —</option>
+                      <option value="Đạt" ${qcEval.ic === "Đạt" ? "selected" : ""}>Đạt</option>
+                      <option value="Không đạt" ${qcEval.ic === "Không đạt" ? "selected" : ""}>Không đạt</option>
+                    </select><span class="print-only-val">${qcEval.ic || "☐ Đạt  ☐ Không đạt"}</span>
+                  </span>
+                </div>
+                <div><strong>Kết luận chất lượng mẻ chạy:</strong>
+                  <select id="pcrQcConclusionSelect" class="form-control no-print" style="display:inline-block;width:auto;height:26px;padding:1px 8px;font-size:11.5px;margin-left:6px;">
+                    <option value="" ${!qcEval.conclusion ? "selected" : ""}>— Chưa kết luận (Chờ kết thúc mẻ) —</option>
+                    <option value="Đạt yêu cầu (Cho phép trả kết quả LIS)" ${qcEval.conclusion === "Đạt yêu cầu (Cho phép trả kết quả LIS)" ? "selected" : ""}>Đạt yêu cầu (Cho phép trả kết quả LIS)</option>
+                    <option value="Không đạt (Chạy lại)" ${qcEval.conclusion === "Không đạt (Chạy lại)" ? "selected" : ""}>Không đạt (Chạy lại)</option>
+                  </select><span class="print-only-val">${qcEval.conclusion || "☐ Đạt yêu cầu   ☐ Không đạt (Chạy lại)"}</span>
+                </div>
+              `}
             </div>
 
             <div style="font-weight:800;color:#0f4c81;font-size:13px;margin-bottom:6px;">V. DANH SÁCH MẪU XÉT NGHIỆM</div>
@@ -15171,7 +15208,7 @@ function jsonResponse(obj) {
 
             <div style="display:grid;grid-template-columns:1fr 1fr;margin-top:20px;text-align:center;font-size:12px;">
               <div><strong>NGƯỜI THỰC HIỆN XÉT NGHIỆM</strong><div style="height:45px;"></div><strong>${curPcr.nguoiThucHien}</strong></div>
-              <div><strong>NGƯỜI DUYỆT / QUẢN LÝ CHẤT LƯỢNG</strong><div style="height:45px;color:#059669;font-weight:700;display:flex;align-items:center;justify-content:center;">[Đã ký số SHA-256 • ISO 15189:2022]</div><strong>ThS. Trần Tuấn Anh (NHIHN000674)</strong></div>
+              <div><strong>NGƯỜI DUYỆT / QUẢN LÝ CHẤT LƯỢNG</strong><div style="height:45px;color:#64748b;font-size:11px;display:flex;align-items:center;justify-content:center;">${(!isHandwrittenMode && qcEval.saved) ? '<span style="color:#059669;font-weight:700;">[Đã xác nhận đánh giá QC]</span>' : '(Ký và ghi rõ họ tên)'}</div><strong>....................................................</strong></div>
             </div>
           </div>
         `;
@@ -36981,4 +37018,308 @@ function jsonResponse(obj) {
 })();
 </script>
 <!-- ==================== END V2026_39_2_ZERO_TRUST_SECURITY ==================== -->
+
+<!-- ==================== START V2026_40_PRODUCTION_DATABASE_AND_UX_CLEANUP ==================== -->
+<style id="ttaV40ProductionStyle">
+  /* Print helper: hide interactive inputs on A4 print, show clean text */
+  .print-only-val { display: none; }
+  @media print {
+    .no-print { display: none !important; }
+    .print-only-val { display: inline !important; font-weight: 700; }
+  }
+
+  /* Compact API Status Pill on Breadcrumb */
+  .tta-api-pill {
+    border-color: #a7f3d0 !important;
+    background: #ecfdf5 !important;
+    color: #065f46 !important;
+    font-weight: 700 !important;
+  }
+  .tta-api-pill.disconnected {
+    border-color: #fde68a !important;
+    background: #fffbeb !important;
+    color: #92400e !important;
+  }
+  body[data-theme="dark"] .tta-api-pill {
+    background: rgba(16, 185, 129, 0.14) !important;
+    border-color: rgba(16, 185, 129, 0.35) !important;
+    color: #6ee7b7 !important;
+  }
+  body[data-theme="dark"] .tta-iqc-filter-bar {
+    background: #1e293b !important;
+    border-color: #334155 !important;
+  }
+
+  /* Responsive stacking for 1A/2A filter bars on medium laptops */
+  @media (max-width: 1180px) {
+    .tta-iqc-filter-bar > div:first-child {
+      grid-template-columns: 1fr 1fr !important;
+    }
+  }
+  @media (max-width: 760px) {
+    .tta-iqc-filter-bar > div:first-child {
+      grid-template-columns: 1fr !important;
+    }
+  }
+
+  /* V40 Streamlined Visual Density: calmer banners & cleaner subtitles */
+  .section-banner {
+    padding: 13px 16px !important;
+    margin-bottom: 12px !important;
+  }
+  .section-banner p {
+    font-size: 12px !important;
+    opacity: 0.9 !important;
+    max-width: 82ch;
+  }
+</style>
+
+<!-- COMPACT CLOUD DATABASE / WEBAPP API (/EXEC) MODAL (RELOCATED FROM MIDDLE OF IQC WORKSPACE) -->
+<div id="modalCloudApiConfig" class="tta-cmd-backdrop" role="dialog" aria-modal="true" aria-label="Cấu hình Kết nối Cơ sở Dữ liệu Cloud">
+  <div class="tta-settings-box" style="max-width:600px;">
+    <div class="tta-settings-head">
+      <div>
+        <div style="font-size:15px;font-weight:800;">Kết nối Cơ sở Dữ liệu (MasterDB &amp; WebApp API)</div>
+        <div style="font-size:11.5px;opacity:0.88;margin-top:2px;">Toàn bộ số liệu phát sinh được đồng bộ trực tiếp với Database (không lưu dữ liệu y tế tại trình duyệt)</div>
+      </div>
+      <button type="button" onclick="closeCloudApiConfigModal()" style="background:rgba(255,255,255,0.18);border:1px solid rgba(255,255,255,0.35);color:#fff;width:30px;height:30px;border-radius:8px;cursor:pointer;font-size:16px;font-weight:700;">×</button>
+    </div>
+    <div class="tta-settings-body">
+      <div id="ttaCloudModalStatusBox" style="padding:10px 12px;border-radius:9px;background:#ecfdf5;border:1px solid #a7f3d0;color:#065f46;font-size:12px;font-weight:700;margin-bottom:12px;">
+        Đang kiểm tra trạng thái kết nối Database...
+      </div>
+      <div class="form-group">
+        <label style="font-size:12px;font-weight:700;">Google Apps Script WebApp URL (<code>/exec</code>):</label>
+        <input id="ttaModalGasUrlInput" type="text" class="form-control mono" style="width:100%;font-size:11.5px;" placeholder="https://script.google.com/macros/s/.../exec">
+      </div>
+      <div style="font-size:11.5px;color:#64748b;margin-top:6px;">
+        Mọi thay đổi phát sinh ở LIMS, IQC, EQA, Thiết bị, Kho Hóa chất, Nhân sự và CAPA sẽ được ghi trực tiếp lên hệ quản trị MasterDB 21 bảng.
+      </div>
+    </div>
+    <div class="tta-settings-foot">
+      <button type="button" class="btn btn-outline btn-xs" onclick="pullAllFromCloudMasterDB(false)">Tải dữ liệu từ CSDL</button>
+      <div style="display:flex;gap:8px;">
+        <button type="button" class="btn btn-outline btn-xs" onclick="closeCloudApiConfigModal()">Đóng</button>
+        <button type="button" class="btn btn-primary btn-xs" onclick="saveAndSyncCloudApiFromModal()">Lưu URL &amp; Đồng bộ Ngay</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script id="ttaV40ProductionScript">
+(function() {
+  "use strict";
+
+  // --------------------------------------------------------------------------
+  // 1. DATABASE-ONLY PERSISTENCE POLICY (ZERO FRONT-END CLINICAL DATA STORAGE)
+  // --------------------------------------------------------------------------
+  function purgeLegacyFrontEndDbCache() {
+    try {
+      const legacyKeys = [
+        typeof MASTER_DB_LOCAL_STORE_KEY !== "undefined" ? MASTER_DB_LOCAL_STORE_KEY : "HCH_TTA_QMS_MASTER_DB_V2026_11",
+        typeof MASTER_DB_STORE_KEY_V12 !== "undefined" ? MASTER_DB_STORE_KEY_V12 : "HCH_TTA_QMS_MASTER_DB_V12_LIVE",
+        "TTA_QMS_LIMS_LOCAL_DB_SNAPSHOT",
+        "TTA_QMS_MASTER_DB_CACHE"
+      ];
+      legacyKeys.forEach(k => { if (k) localStorage.removeItem(k); });
+      window._MASTER_DB_MEMORY_STORE = null;
+    } catch (e) {}
+  }
+
+  // Override hydrateFromMasterDatabaseStore so it NEVER hydrates stale front-end localStorage data
+  window.hydrateFromMasterDatabaseStore = function() {
+    purgeLegacyFrontEndDbCache();
+    return false;
+  };
+
+  // Wrap commitDatabaseTransaction: NEVER write clinical tables to localStorage;
+  // immediately sync directly to Cloud Database via Google Apps Script Backend
+  const _origCommitV40 = typeof window.commitDatabaseTransaction === "function" ? window.commitDatabaseTransaction : null;
+  window.commitDatabaseTransaction = function(tableName, actionDesc, recordId, opType) {
+    if (_origCommitV40) {
+      try { _origCommitV40(tableName, actionDesc, recordId, opType); } catch (e) {}
+    }
+    // Enforce zero front-end clinical DB persistence
+    purgeLegacyFrontEndDbCache();
+
+    // Update API status pill to reflect live cloud sync
+    syncBreadcrumbApiStatusPill();
+
+    // If a specific table mutated and live WebApp API is configured, push table rows directly to Database
+    if (tableName && tableName !== "ALL_21_TABLES" && tableName !== "SYS_AUDIT_LOG") {
+      try {
+        if (typeof isNativeAppsScriptHost === "function" && isNativeAppsScriptHost() && typeof getTableRowsForCloudSync === "function") {
+          const rows = getTableRowsForCloudSync(tableName);
+          if (Array.isArray(rows) && rows.length > 0 && typeof google !== "undefined" && google.script && google.script.run) {
+            const actor = document.getElementById("currentUserSelect")?.value || "SYSTEM";
+            google.script.run.syncTableFromClient(tableName, rows, actor, actionDesc || "");
+          }
+        }
+      } catch (errSync) {}
+    }
+  };
+
+  // --------------------------------------------------------------------------
+  // 2. RELOCATED WEBAPP API STATUS PILL & CONFIGURATION MODAL
+  // --------------------------------------------------------------------------
+  function syncBreadcrumbApiStatusPill() {
+    const pill = document.getElementById("ttaApiStatusPill");
+    const dot = document.getElementById("ttaApiStatusDot");
+    const label = document.getElementById("ttaApiStatusLabel");
+    if (!pill || !dot || !label) return;
+
+    const isNative = typeof isNativeAppsScriptHost === "function" && isNativeAppsScriptHost();
+    const isLive = typeof isLiveGasWebAppConfigured === "function" && isLiveGasWebAppConfigured();
+
+    if (isNative || isLive) {
+      pill.classList.remove("disconnected");
+      dot.style.background = "#10b981";
+      label.textContent = isNative ? "CSDL: Apps Script" : "CSDL: Đã kết nối";
+      pill.title = "Đã kết nối WebApp API (/exec) — Mọi số liệu đồng bộ trực tiếp với MasterDB";
+    } else {
+      pill.classList.add("disconnected");
+      dot.style.background = "#f59e0b";
+      label.textContent = "CSDL: Chưa kết nối";
+      pill.title = "Nhấn để dán đường dẫn WebApp API (/exec) kết nối Cơ sở Dữ liệu";
+    }
+  }
+
+  window.openCloudApiConfigModal = function() {
+    const m = document.getElementById("modalCloudApiConfig");
+    const inp = document.getElementById("ttaModalGasUrlInput");
+    const box = document.getElementById("ttaCloudModalStatusBox");
+    if (!m) return;
+    const curUrl = (typeof DEFAULT_GAS_API_URL === "string") ? DEFAULT_GAS_API_URL : "";
+    if (inp) inp.value = curUrl;
+
+    const isNative = typeof isNativeAppsScriptHost === "function" && isNativeAppsScriptHost();
+    const isLive = typeof isLiveGasWebAppConfigured === "function" && isLiveGasWebAppConfigured();
+    if (box) {
+      if (isNative) {
+        box.style.background = "#ecfdf5"; box.style.borderColor = "#a7f3d0"; box.style.color = "#065f46";
+        box.textContent = "Đã kết nối trực tiếp Google Apps Script Host — Tự động đồng bộ 2 chiều với MasterDB.";
+      } else if (isLive) {
+        box.style.background = "#ecfdf5"; box.style.borderColor = "#a7f3d0"; box.style.color = "#065f46";
+        box.textContent = "Đã kết nối WebApp API (/exec) — Sẵn sàng đồng bộ dữ liệu thực chiến lên MasterDB.";
+      } else {
+        box.style.background = "#fffbeb"; box.style.borderColor = "#fde68a"; box.style.color = "#92400e";
+        box.textContent = "Chưa cấu hình WebApp API (/exec). Hãy dán URL triển khai từ Apps Script để lưu trữ dữ liệu về Database.";
+      }
+    }
+    m.classList.add("open");
+  };
+
+  window.closeCloudApiConfigModal = function() {
+    const m = document.getElementById("modalCloudApiConfig");
+    if (m) m.classList.remove("open");
+  };
+
+  window.saveAndSyncCloudApiFromModal = function() {
+    const inp = document.getElementById("ttaModalGasUrlInput");
+    const url = (inp?.value || "").trim();
+    const inp8 = document.getElementById("gasApiEndpointInput");
+    if (inp8 && url) inp8.value = url;
+    if (typeof saveGasEndpointConfig === "function") saveGasEndpointConfig();
+    syncBreadcrumbApiStatusPill();
+    closeCloudApiConfigModal();
+    if (typeof pushAllToCloudMasterDB === "function" && url.startsWith("https://script.google.com/macros/s/") && !url.includes("HNH_EXEC")) {
+      pushAllToCloudMasterDB();
+    }
+  };
+
+  // Override syncGasUrlUiElements to also sync our compact Breadcrumb API pill
+  if (typeof window.syncGasUrlUiElements === "function") {
+    const _origSyncGasUi = window.syncGasUrlUiElements;
+    window.syncGasUrlUiElements = function() {
+      try { _origSyncGasUi.apply(this, arguments); } catch (e) {}
+      syncBreadcrumbApiStatusPill();
+    };
+  }
+
+  // --------------------------------------------------------------------------
+  // 3. PCR DOSSIER POST-RUN QC EVALUATION & HANDWRITTEN MODE CONTROLS
+  // --------------------------------------------------------------------------
+  window._PCR_DOSSIER_MODE = "HANDWRITTEN";
+
+  window.setPcrDossierMode = function(mode) {
+    window._PCR_DOSSIER_MODE = mode;
+    if (typeof openPrintableLimsDossier === "function") {
+      openPrintableLimsDossier("PCR");
+    }
+  };
+
+  window.savePcrDossierEvaluation = function(runId) {
+    const batch = (typeof LIMS_PCR_BATCHES !== "undefined") ? LIMS_PCR_BATCHES.find(b => b.idMePcr === runId) : null;
+    if (!batch) return;
+
+    batch.qcEvaluation = {
+      pc: document.getElementById("pcrQcPcSelect")?.value || "",
+      nc: document.getElementById("pcrQcNcSelect")?.value || "",
+      ic: document.getElementById("pcrQcIcSelect")?.value || "",
+      conclusion: document.getElementById("pcrQcConclusionSelect")?.value || "",
+      saved: true,
+      evaluatedAt: new Date().toLocaleString("vi-VN"),
+      evaluatedBy: document.getElementById("currentUserSelect")?.value || "SYSTEM"
+    };
+
+    document.querySelectorAll("[data-pcr-res-id]").forEach(inp => {
+      const oid = inp.getAttribute("data-pcr-res-id");
+      const ord = (typeof LIMS_LIS_ORDERS !== "undefined") ? LIMS_LIS_ORDERS.find(o => o.idChiDinh === oid) : null;
+      if (ord) {
+        ord.resultCt = inp.value.trim();
+        ord.manualResultVerified = true;
+      }
+    });
+    document.querySelectorAll("[data-pcr-concl-id]").forEach(sel => {
+      const oid = sel.getAttribute("data-pcr-concl-id");
+      const ord = (typeof LIMS_LIS_ORDERS !== "undefined") ? LIMS_LIS_ORDERS.find(o => o.idChiDinh === oid) : null;
+      if (ord) {
+        ord.conclusion = sel.value;
+        ord.manualResultVerified = true;
+      }
+    });
+
+    if (typeof commitDatabaseTransaction === "function") {
+      commitDatabaseTransaction("LIMS_3A_MeChayPCR", `Lưu đánh giá QC & KQ mẻ PCR ${runId}`);
+    }
+    if (typeof pushSingleTableToMasterDB === "function") {
+      try { pushSingleTableToMasterDB("LIMS_3A_MeChayPCR"); } catch (e) {}
+    }
+    if (typeof openPrintableLimsDossier === "function") openPrintableLimsDossier("PCR");
+    if (typeof showToast === "function") {
+      showToast(`Đã lưu Đánh giá QC &amp; Kết quả mẻ <strong>${runId}</strong> lên Cơ sở Dữ liệu!`, "#059669");
+    }
+  };
+
+  // Close API modal on backdrop click or Esc
+  document.addEventListener("click", function(ev) {
+    if (ev.target && ev.target.id === "modalCloudApiConfig") closeCloudApiConfigModal();
+  });
+  document.addEventListener("keydown", function(ev) {
+    if (ev.key === "Escape") {
+      const m = document.getElementById("modalCloudApiConfig");
+      if (m && m.classList.contains("open")) closeCloudApiConfigModal();
+    }
+  });
+
+  // Boot cleanup + Cloud-First Hydration
+  function initV40Production() {
+    purgeLegacyFrontEndDbCache();
+    syncBreadcrumbApiStatusPill();
+    // Auto-hydrate real data from Cloud MasterDB if API is configured
+    if (typeof pullAllFromCloudMasterDB === "function" &&
+        ((typeof isNativeAppsScriptHost === "function" && isNativeAppsScriptHost()) ||
+         (typeof isLiveGasWebAppConfigured === "function" && isLiveGasWebAppConfigured()))) {
+      setTimeout(() => { try { pullAllFromCloudMasterDB(true); } catch (e) {} }, 600);
+    }
+  }
+
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", () => setTimeout(initV40Production, 220));
+  } else {
+    setTimeout(initV40Production, 220);
+  }
+})();
+</script>
+<!-- ==================== END V2026_40_PRODUCTION_DATABASE_AND_UX_CLEANUP ==================== -->
 </body></html>
