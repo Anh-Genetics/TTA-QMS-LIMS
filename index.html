@@ -2944,6 +2944,17 @@
   </style>
   <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js" crossorigin="anonymous"></script>
   <script src="https://cdn.jsdelivr.net/npm/qrcode-generator@1.4.4/qrcode.min.js" crossorigin="anonymous"></script>
+<style id="ttaMobileLoginFix">
+@media (max-width: 768px) {
+  #zeroTrustLoginOverlay { align-items: flex-start !important; padding: 10px !important; }
+  #zeroTrustLoginOverlay .zt-card { grid-template-columns: 1fr !important; max-width: 100% !important; border-radius: 14px !important; margin: 4px auto !important; }
+  #zeroTrustLoginOverlay .zt-left { padding: 14px 16px !important; }
+  #zeroTrustLoginOverlay .zt-left h2 { font-size: 16px !important; margin-bottom: 6px !important; }
+  #zeroTrustLoginOverlay .zt-left p, #zeroTrustLoginOverlay .zt-left > div:last-child { display: none !important; }
+  #zeroTrustLoginOverlay .zt-right { padding: 16px !important; }
+  #zeroTrustLoginOverlay .grid-2 { grid-template-columns: 1fr !important; }
+}
+</style>
 </head>
 <body>
 
@@ -3238,7 +3249,7 @@
             <span id="ttaApiStatusDot" style="width:7px;height:7px;border-radius:999px;background:#10b981;display:inline-block;"></span>
             <span id="ttaApiStatusLabel">API CSDL</span>
           </button>
-          <span class="tta-version-pill" title="TTA-QMS &amp; LIMS ISO 15189:2022 — Phiên bản Thực chiến v43.0">v43.0</span>
+          <span class="tta-version-pill" title="TTA-QMS &amp; LIMS ISO 15189:2022 — Phiên bản Thực chiến v44.0">v44.0</span>
         </div>
       </div>
       <!-- TOP MODULE NAVIGATION (PRESERVES EXACT BUTTON LABELS FROM PREV) -->
@@ -7985,42 +7996,60 @@ function doPost(e) {
               <div style="font-weight:800;color:#0f4c81;font-size:13px;margin-bottom:8px;">MỤC 2: QUẢN TRỊ TÀI KHOẢN &amp; PHÂN QUYỀN USER BỀN VỮNG (<code>Allowed_Users</code> / <code>SYS_USERS_RBAC</code>)
               </div>
               <form onsubmit="handleUpsertAllowedUser(event)">
-                <div class="grid-3" style="gap:6px;">
+                                <div class="grid-3" style="gap:6px;">
                   <div class="form-group">
-                    <label>Mã NV (Key):</label>
-                    <input id="usrMaNvInput" type="text" class="form-control" value="NHIHN000574" required="">
+                    <label>Mã NV (Khóa chính):</label>
+                    <input id="usrMaNvInput" type="text" class="form-control" value="" placeholder="VD: NHIHN000574" required="">
                   </div>
                   <div class="form-group">
                     <label>Email Công vụ:</label>
-                    <input id="usrEmailInput" type="email" class="form-control" value="linh196hmu@gmail.com" required="">
+                    <input id="usrEmailInput" type="email" class="form-control" value="" placeholder="email@benhvien.vn" required="">
                   </div>
                   <div class="form-group">
                     <label>Họ và tên:</label>
-                    <input id="usrNameInput" type="text" class="form-control" value="Nguyễn Thị Linh" required="">
+                    <input id="usrNameInput" type="text" class="form-control" value="" placeholder="Nhập họ và tên..." required="">
                   </div>
                 </div>
                 <div class="grid-3" style="gap:6px;">
                   <div class="form-group">
-                    <label>Mật khẩu:</label>
-                    <input id="usrPassInput" type="text" class="form-control" value="" placeholder="Nhập mật khẩu (lưu trên Server)" required="">
-                  </div>
-                  <div class="form-group">
-                    <label>Phạm vi (Data_Scope):</label>
-                    <select id="usrScopeSelect" class="form-control">
-                      <option value="SCOPE_ALL">SCOPE_ALL (Toàn Khoa - Primary Admin)</option>
-                      <option value="SCOPE_DEPT" selected="">SCOPE_DEPT (Phụ trách Bộ phận)</option>
-                      <option value="SCOPE_LAB">SCOPE_LAB (KTV Chính - Vận hành &amp; IQC)</option>
-                      <option value="SCOPE_TRAINEE">SCOPE_TRAINEE (Học viên - Giới hạn quyền)</option>
+                    <label>Bộ phận chuyên môn (RLS):</label>
+                    <select id="usrDeptSelect" class="form-control">
+                      <option value="Di truyền &amp; SHPT">Di truyền &amp; SHPT</option>
+                      <option value="Hóa sinh">Hóa sinh</option>
+                      <option value="Huyết học">Huyết học</option>
+                      <option value="Vi sinh">Vi sinh</option>
+                      <option value="Giải phẫu bệnh">Giải phẫu bệnh</option>
+                      <option value="Nhận mẫu &amp; Đa khoa">Nhận mẫu &amp; Đa khoa</option>
                     </select>
                   </div>
                   <div class="form-group">
-                    <label>Hạn truy cập:</label>
+                    <label>Phạm vi (Role RBAC):</label>
+                    <select id="usrScopeSelect" class="form-control">
+                      <option value="SCOPE_ALL">SCOPE_ALL (Toàn Khoa - Admin)</option>
+                      <option value="SCOPE_DEPT" selected="">SCOPE_DEPT (Phụ trách Bộ phận)</option>
+                      <option value="SCOPE_LAB">SCOPE_LAB (KTV Chính - Vận hành)</option>
+                      <option value="SCOPE_TRAINEE">SCOPE_TRAINEE (Học viên - Giới hạn)</option>
+                    </select>
+                  </div>
+                  <div class="form-group">
+                    <label>Hạn sử dụng (YYYY-MM-DD):</label>
                     <input id="usrExpireInput" type="date" class="form-control" value="2027-12-31" required="">
                   </div>
                 </div>
+                <div class="grid-2" style="gap:6px;">
+                  <div class="form-group">
+                    <label>Mật khẩu mới (để trống nếu giữ nguyên):</label>
+                    <input id="usrPassInput" type="password" class="form-control" value="" placeholder="Để trống nếu giữ mật khẩu hiện tại..." autocomplete="new-password">
+                  </div>
+                  <div class="form-group">
+                    <label>Mã PIN 2FA 5 số (để trống nếu giữ nguyên):</label>
+                    <input id="usrPinInput" type="password" class="form-control" value="" maxlength="6" placeholder="Để trống nếu giữ PIN hiện tại..." autocomplete="off">
+                  </div>
+                </div>
                 <div style="display:flex;gap:6px;flex-wrap:wrap;margin-top:4px;">
-                  <button type="submit" class="btn btn-primary btn-xs">Lưu / Cập nhật Tài khoản &amp; Phân quyền (Đồng bộ DB)</button>
+                  <button type="submit" class="btn btn-primary btn-xs">Lưu Tài khoản &amp; Phân quyền xuống CSDL</button>
                   <button type="button" class="btn btn-outline btn-xs" onclick="extendUserOneYear()">Gia hạn +1 Năm</button>
+                  <button type="button" class="btn btn-outline btn-xs" onclick="resetUserEditForm()">Tạo mới (Xóa form)</button>
                 </div>
               </form>
             </div>
@@ -8034,7 +8063,7 @@ function doPost(e) {
                   <th>MaNV</th>
                   <th>Họ tên &amp; Bộ phận</th>
                   <th>Email Đăng nhập</th>
-                  <th>Mật khẩu &amp; PIN</th>
+                  <th>Bảo mật 2FA</th>
                   <th>Data_Scope &amp; Quyền hạn</th>
                   <th>Hạn Truy cập (Access_Expires_At)</th>
                   <th>Trạng thái</th>
@@ -10234,7 +10263,7 @@ function jsonResponse(obj) {
     // Capture saved DB snapshot at the VERY FIRST LINE of <script> before any seed/init code runs!
     window._INITIAL_BOOT_DB_SNAPSHOT_JSON = (() => {
       try {
-        const ls = null /* [v43.0] Zero client DB storage */ || null /* [v43.0] Zero client DB storage */;
+        const ls = null || null;
         if (ls && ls.length > 100) return ls;
       } catch (e) {}
       try {
@@ -10246,27 +10275,18 @@ function jsonResponse(obj) {
     })();
 
     // EMBEDDED MASTER DATASETS
-    var EQUIPMENTS = []; // [v43.0] Hydrated strictly from Server Database
-    var KEY_ANALYZERS = []; // [v43.0] Hydrated strictly from Server Database
-    var STAFF_LIST = []; // [v43.0] Hydrated strictly from Server Database
-    var IQC_POINTS = []; // [v43.0] Hydrated strictly from Server Database
-    var EQA_PROGRAMS = []; // [v43.0] Hydrated strictly from Server Database
-    var REAGENT_LOTS = []; // [v43.0] Hydrated strictly from Server Database
-    var LOT_VERIFICATIONS = []; // [v43.0] Hydrated strictly from Server Database
-    var TRANSFER_LOGS = []; // [v43.0] Hydrated strictly from Server Database
-    var HR_TRAININGS = []; // [v43.0] Hydrated strictly from Server Database
-    var HR_COMPETENCIES = []; // [v43.0] Hydrated strictly from Server Database
+    var EQUIPMENTS = []; // [v44.0] Hydrated from Server Database
+    var KEY_ANALYZERS = []; // [v44.0] Hydrated from Server Database
+    var STAFF_LIST = []; // [v44.0] Hydrated from Server Database
+    var IQC_POINTS = []; // [v44.0] Hydrated from Server Database
+    var EQA_PROGRAMS = []; // [v44.0] Hydrated from Server Database
+    var REAGENT_LOTS = []; // [v44.0] Hydrated from Server Database
+    var LOT_VERIFICATIONS = []; // [v44.0] Hydrated from Server Database
+    var TRANSFER_LOGS = []; // [v44.0] Hydrated from Server Database
+    var HR_TRAININGS = []; // [v44.0] Hydrated from Server Database
+    var HR_COMPETENCIES = []; // [v44.0] Hydrated from Server Database
 
-    var MAINT_LOGS = []; // [v43.0] Hydrated strictly from Server Database
-
-
-
-
-
-
-
-
-    var ENV_LOGS = []; // [v43.0] Hydrated strictly from Server Database
+    var MAINT_LOGS = []; // [v44.0] Hydrated from Server Database
 
 
 
@@ -10274,12 +10294,21 @@ function jsonResponse(obj) {
 
 
 
-    var CAPA_LIST = []; // [v43.0] Hydrated strictly from Server Database
+
+    var ENV_LOGS = []; // [v44.0] Hydrated from Server Database
 
 
 
 
-    var LIS_SAMPLES = []; // [v43.0] Hydrated strictly from Server Database
+
+
+
+    var CAPA_LIST = []; // [v44.0] Hydrated from Server Database
+
+
+
+
+    var LIS_SAMPLES = []; // [v44.0] Hydrated from Server Database
 
 
 
@@ -10844,7 +10873,7 @@ function jsonResponse(obj) {
 
     // deterministic inline SVG QR generator (no external image load issues)
     // 100% REAL ISO/IEC 18004 QR CODE MATRICES (Optical Scanner Verified for all 120 Equipments & Reagents)
-    var PRECOMPUTED_ISO_QR_MAP = {}; // [v43.0] Hydrated strictly from Server Database
+    var PRECOMPUTED_ISO_QR_MAP = {}; // [v44.0] Hydrated from Server Database
 
     function generateQrSvg(text, size = 144) {
       const raw = String(text || "").trim();
@@ -10854,7 +10883,7 @@ function jsonResponse(obj) {
       let matrix = null;
 
       // 1. Check precomputed ISO/IEC 18004 hex matrix for exact Equipment ID or Reagent Lot ID
-      if (PRECOMPUTED_ISO_QR_MAP[firstKey]) {
+      if (typeof PRECOMPUTED_ISO_QR_MAP !== "undefined" && PRECOMPUTED_ISO_QR_MAP && PRECOMPUTED_ISO_QR_MAP[firstKey]) {
         const entry = PRECOMPUTED_ISO_QR_MAP[firstKey];
         n = entry[0];
         const hexRows = entry[1];
@@ -10883,6 +10912,7 @@ function jsonResponse(obj) {
       // Fallback to first equipment QR if neither matched
       if (!matrix) {
         const fallback = PRECOMPUTED_ISO_QR_MAP["TTB.KXN.VS.01"];
+        if (!fallback) return `<svg width="${size}" height="${size}" viewBox="0 0 ${size} ${size}" xmlns="http://www.w3.org/2000/svg"></svg>`;
         n = fallback[0];
         matrix = fallback[1].map(h => {
           const bin = BigInt("0x" + h).toString(2).padStart(n, "0");
@@ -12074,7 +12104,7 @@ function jsonResponse(obj) {
     // 7. LIMS MASTER MIX, 96-WELL PLATE, EXTRACTION & LIS WORKBENCH (TTA-LIMS)
 
     // 5C. DanhMuc_IC (9 loại Chứng nội IC chuẩn TTA-LIMS)
-    var LIMS_IC_CATALOG = {}; // [v43.0] Hydrated strictly from Server Database
+    var LIMS_IC_CATALOG = {}; // [v44.0] Hydrated from Server Database
 
 
 
@@ -12087,7 +12117,7 @@ function jsonResponse(obj) {
 
 
     // 5A. DanhMuc_XN & 5E. DinhMuc_HoaChat & 5F. DinhMuc_VatTu
-    var LIMS_ASSAY_CATALOG = []; // [v43.0] Hydrated strictly from Server Database
+    var LIMS_ASSAY_CATALOG = []; // [v44.0] Hydrated from Server Database
 
 
 
@@ -12109,7 +12139,7 @@ function jsonResponse(obj) {
 
 
     // 1. LIS_Data (Exact patient & SID records from TTA-LIMS screenshots image_7812fc.png, image_77aa3c.jpg, image_77a9fc.png, image_77a9c1.png, image_77a2dd.png)
-    var LIMS_LIS_ORDERS = []; // [v43.0] Hydrated strictly from Server Database
+    var LIMS_LIS_ORDERS = []; // [v44.0] Hydrated from Server Database
 
 
 
@@ -12142,7 +12172,7 @@ function jsonResponse(obj) {
 
 
     // 2A. MeTachChiet (Exact batches from image_77a9fc.png, image_77a61d.png & image_77a29c.png)
-    var LIMS_EXT_BATCHES = []; // [v43.0] Hydrated strictly from Server Database
+    var LIMS_EXT_BATCHES = []; // [v44.0] Hydrated from Server Database
 
 
 
@@ -12194,7 +12224,7 @@ function jsonResponse(obj) {
 
 
     // 3A. HoSo_PCR (Exact PCR runs from image_77a9c1.png, image_77a6db.png, image_77a65f.png & image_77a2dd.png)
-    var LIMS_PCR_BATCHES = []; // [v43.0] Hydrated strictly from Server Database
+    var LIMS_PCR_BATCHES = []; // [v44.0] Hydrated from Server Database
 
 
 
@@ -12365,7 +12395,7 @@ function jsonResponse(obj) {
       "TG (T5-T2)"
     ];
 
-    var EMBEDDED_NHN_LIS_EXCEL_RAW_ROWS = []; // [v43.0] Hydrated strictly from Server Database
+    var EMBEDDED_NHN_LIS_EXCEL_RAW_ROWS = []; // [v44.0] Hydrated from Server Database
 
     function normalizeExistingLisOrdersTo21Cols() {
       LIMS_LIS_ORDERS.forEach(o => {
@@ -13666,6 +13696,7 @@ function jsonResponse(obj) {
         curPcr.haoHutPipet = nDead;
       }
 
+      if (!meta || !Array.isArray(meta.mixComponents)) return;
       const sumMixVol1 = meta.mixComponents.reduce((acc, c) => acc + c.vol1, 0);
       const badge = document.getElementById("pcrTotalRxnBadge");
       if (badge) {
@@ -14653,7 +14684,7 @@ function jsonResponse(obj) {
 
     
     // 9. SECURITY, RBAC MATRIX, AUDIT TRAIL & MOBILE/DESKTOP VIEWPORT ENGINE
-    var RBAC_PERMISSIONS = []; // [v43.0] Hydrated strictly from Server Database
+    var RBAC_PERMISSIONS = []; // [v44.0] Hydrated from Server Database
 
 
 
@@ -14663,7 +14694,7 @@ function jsonResponse(obj) {
 
 
 
-    var SECURITY_AUDIT_LOGS = []; // [v43.0] Hydrated strictly from Server Database
+    var SECURITY_AUDIT_LOGS = []; // [v44.0] Hydrated from Server Database
 
 
 
@@ -14881,13 +14912,13 @@ function jsonResponse(obj) {
     var CURRENT_USER_ID = "NHIHN000674";
     let DEFAULT_SPREADSHEET_ID = "1kHMKruMnxKQHN3GnBaDTlZOOvCvPKKKJFQ641lgSX9k";
 
-    var INITIAL_ALLOWED_USERS = []; // [v43.0] Hydrated strictly from Server Database
+    var INITIAL_ALLOWED_USERS = []; // [v44.0] Hydrated from Server Database
 
     var ALLOWED_USERS_DB = [];
 
     function loadAllowedUsersFromStorage() {
       try {
-        const raw = null /* [v43.0] Zero client DB storage */;
+        const raw = null;
         if (raw) {
           const parsed = JSON.parse(raw);
           if (Array.isArray(parsed) && parsed.length > 0) {
@@ -14901,7 +14932,7 @@ function jsonResponse(obj) {
 
     function saveAllowedUsersToStorage() {
       try {
-        void(0) /* [v43.0] Zero client DB storage */;
+        void(0);
       } catch (err) {}
       renderAllowedUsersTable();
       syncRoleSwitcherWithAllowedUsers();
@@ -15187,7 +15218,7 @@ function jsonResponse(obj) {
       "TTB.KXN.GPB.05", "TTB.KXN.GPB.12"
     ];
 
-    var MPE_EVALUATIONS = []; // [v43.0] Hydrated strictly from Server Database
+    var MPE_EVALUATIONS = []; // [v44.0] Hydrated from Server Database
 
 
 
@@ -15718,7 +15749,7 @@ function jsonResponse(obj) {
     let SELECTED_REAGENT_LOT = "L_8899";
 
     // Enrich REAGENT_LOTS with real Hospital Pharmacy Codes (Ma_Duoc_BV), Category A/B/C, Supplier, Freeze-Thaw count, 45-day usage (m), 12-month usage (y), and BM-12-20 efficiency breakdown
-    var REAGENT_ENRICHMENT_MAP = {}; // [v43.0] Hydrated strictly from Server Database
+    var REAGENT_ENRICHMENT_MAP = {}; // [v44.0] Hydrated from Server Database
 
 
 
@@ -15771,7 +15802,7 @@ function jsonResponse(obj) {
       }
     }
 
-    var ALIQUOT_LOGS = []; // [v43.0] Hydrated strictly from Server Database
+    var ALIQUOT_LOGS = []; // [v44.0] Hydrated from Server Database
 
 
 
@@ -16358,7 +16389,7 @@ function jsonResponse(obj) {
     let iqcSigmaChartInstance = null;
 
     // 1. 2026 Quality Goals & Automatic Westgard Sigma Rule Selection Dataset (From Google Drive Sheets)
-    var IQC_SIGMA_GOALS = []; // [v43.0] Hydrated strictly from Server Database
+    var IQC_SIGMA_GOALS = []; // [v44.0] Hydrated from Server Database
 
 
 
@@ -16372,7 +16403,7 @@ function jsonResponse(obj) {
 
 
     // 2. Qualitative, Cytogenetics, Microbiology ATCC & Histopathology H&E IQC Dataset
-    var QUALITATIVE_IQC_LOGS = []; // [v43.0] Hydrated strictly from Server Database
+    var QUALITATIVE_IQC_LOGS = []; // [v44.0] Hydrated from Server Database
 
 
 
@@ -16382,7 +16413,7 @@ function jsonResponse(obj) {
 
 
     // 3. Westgard Violation & Troubleshooting Log (BM.QT.VT03.TTDT-08-01.V1)
-    var IQC_VIOLATION_LOGS = []; // [v43.0] Hydrated strictly from Server Database
+    var IQC_VIOLATION_LOGS = []; // [v44.0] Hydrated from Server Database
 
 
 
@@ -17225,7 +17256,7 @@ function jsonResponse(obj) {
       if (bCapa) bCapa.className = (mode === "capa") ? "btn btn-primary btn-xs" : "btn btn-outline btn-xs";
     }
 
-    var MOL_QUANT_ASSAY_CATALOG = {}; // [v43.0] Hydrated strictly from Server Database
+    var MOL_QUANT_ASSAY_CATALOG = {}; // [v44.0] Hydrated from Server Database
 
 
 
@@ -17313,7 +17344,7 @@ function jsonResponse(obj) {
 
 
 
-    var MOL_MULTIPLEX_ASSAY_CATALOG = {}; // [v43.0] Hydrated strictly from Server Database
+    var MOL_MULTIPLEX_ASSAY_CATALOG = {}; // [v44.0] Hydrated from Server Database
 
 
 
@@ -17478,7 +17509,7 @@ function jsonResponse(obj) {
 
 
 
-    var SHPT_OPERATORS_ROTATION = []; // [v43.0] Hydrated strictly from Server Database
+    var SHPT_OPERATORS_ROTATION = []; // [v44.0] Hydrated from Server Database
 
 
 
@@ -17503,7 +17534,7 @@ function jsonResponse(obj) {
     let molQuantLjChartInstance = null;
     let molMultiplexLjChartInstance = null;
 
-    var MOL_IQC_CAPA_LOGS = []; // [v43.0] Hydrated strictly from Server Database
+    var MOL_IQC_CAPA_LOGS = []; // [v44.0] Hydrated from Server Database
 
 
 
@@ -17599,6 +17630,7 @@ function jsonResponse(obj) {
 
     function buildClean30DaysQuantForAssay(assayKey) {
       const cfg = MOL_QUANT_ASSAY_CATALOG[assayKey] || MOL_QUANT_ASSAY_CATALOG["GP_HBV"];
+      if (!cfg) return;
       const rows = [];
       for (let d = 1; d <= 30; d++) {
         const dayStr = String(d).padStart(2, "0");
@@ -17636,6 +17668,7 @@ function jsonResponse(obj) {
 
     function buildClean30DaysMultiplexForAssay(assayKey) {
       const cfg = MOL_MULTIPLEX_ASSAY_CATALOG[assayKey] || MOL_MULTIPLEX_ASSAY_CATALOG["SG_RP1"];
+      if (!cfg) return;
       const rows = [];
       for (let d = 1; d <= 30; d++) {
         const dayStr = String(d).padStart(2, "0");
@@ -17677,7 +17710,7 @@ function jsonResponse(obj) {
       return rows;
     }
 
-    function initMolIqc30dDatabases() { /* [v43.0] Synthetic generator disabled */ if (typeof window.hydrateMolIqcFromDbRows === "function") window.hydrateMolIqcFromDbRows(); return;
+    function initMolIqc30dDatabases() { if (typeof window.hydrateMolIqcFromDbRows === "function") window.hydrateMolIqcFromDbRows(); return;
       Object.keys(MOL_QUANT_ASSAY_CATALOG).forEach(k => {
         if (!MOL_QUANT_30D_DB[k]) {
           MOL_QUANT_30D_DB[k] = buildClean30DaysQuantForAssay(k);
@@ -17801,6 +17834,7 @@ function jsonResponse(obj) {
       const sel = document.getElementById("molQuantAssaySelect");
       const assayKey = sel ? sel.value : "GP_HBV";
       const cfg = MOL_QUANT_ASSAY_CATALOG[assayKey] || MOL_QUANT_ASSAY_CATALOG["GP_HBV"];
+      if (!cfg) return;
       const rows = MOL_QUANT_30D_DB[assayKey] || [];
 
       const elLowM = document.getElementById("molQuantTargetLowMean");
@@ -18211,6 +18245,7 @@ function jsonResponse(obj) {
       const sel = document.getElementById("molMultiplexAssaySelect");
       const assayKey = sel ? sel.value : "SG_RP1";
       const cfg = MOL_MULTIPLEX_ASSAY_CATALOG[assayKey] || MOL_MULTIPLEX_ASSAY_CATALOG["SG_RP1"];
+      if (!cfg) return;
       const rows = MOL_MULTIPLEX_30D_DB[assayKey] || [];
 
       const specDisp = document.getElementById("molMpxTargetSpecDisplay");
@@ -18913,7 +18948,7 @@ function jsonResponse(obj) {
         };
         const snapJson = JSON.stringify(snapshot);
         window._MASTER_DB_MEMORY_STORE = snapJson;
-        try { void(0) /* [v43.0] Zero client DB storage */; } catch (errLs) {}
+        try { void(0); } catch (errLs) {}
       } catch (e) {}
 
       // Update Header Badge & Inspector Table
@@ -18957,7 +18992,7 @@ function jsonResponse(obj) {
     function hydrateFromMasterDatabaseStore() {
       try {
         let raw = window._MASTER_DB_MEMORY_STORE || null;
-        try { raw = null /* [v43.0] Zero client DB storage */ || raw; } catch (errLs) {}
+        try { raw = null || raw; } catch (errLs) {}
         if (!raw) return false;
         const data = JSON.parse(raw);
         if (Array.isArray(data.LIMS_LIS_ORDERS) && data.LIMS_LIS_ORDERS.length > 0) LIMS_LIS_ORDERS = data.LIMS_LIS_ORDERS;
@@ -19247,7 +19282,7 @@ function jsonResponse(obj) {
     let SELECTED_EQA_ID = "EQA-2026-10";
     let eqaSdiTrendChartInstance = null;
 
-    var EQA_ENRICHED_PROGRAMS = []; // [v43.0] Hydrated strictly from Server Database
+    var EQA_ENRICHED_PROGRAMS = []; // [v44.0] Hydrated from Server Database
 
 
 
@@ -20015,7 +20050,7 @@ function jsonResponse(obj) {
     // =========================================================================
     // V2026.11 COMPREHENSIVE MULTI-SPECIALTY IQC & ALL-MODULE CRUD UPGRADE
     // =========================================================================
-    var ROUTINE_IQC_SPEC_CATALOG = {}; // [v43.0] Hydrated strictly from Server Database
+    var ROUTINE_IQC_SPEC_CATALOG = {}; // [v44.0] Hydrated from Server Database
 
 
 
@@ -20183,7 +20218,7 @@ function jsonResponse(obj) {
     }
 
     function getRoutineIqcSpec(equipCode, testName, levelStr) {
-      const eq = ROUTINE_IQC_SPEC_CATALOG[equipCode] || ROUTINE_IQC_SPEC_CATALOG["CA800"];
+      const eq = ROUTINE_IQC_SPEC_CATALOG[equipCode] || ROUTINE_IQC_SPEC_CATALOG["CA800"] || { params: {}, lot: "", lotLabel: "", dept: "", equipId: "", operator: "" };
       const pMap = eq.params || {};
       const p = pMap[testName] || Object.values(pMap)[0] || { mean1: 10.0, sd1: 0.4, mean2: 25.0, sd2: 1.0, mean3: 4.0, sd3: 0.2, tea: 8.0 };
       let mean = p.mean1, sd = p.sd1;
@@ -20202,7 +20237,7 @@ function jsonResponse(obj) {
     }
 
     // Seed rich 12-day test data across ALL 17 analyzers and ALL parameters (Manual + API)
-    function seedComprehensiveMultiSpecialtyIqcPoints() { /* [v43.0] Synthetic generator disabled */ return;
+    function seedComprehensiveMultiSpecialtyIqcPoints() { return;
       if (window._comprehensiveMultiSpecialtySeeded) return;
       window._comprehensiveMultiSpecialtySeeded = true;
 
@@ -20739,7 +20774,7 @@ function jsonResponse(obj) {
     }
 
     // Enrich 2B. Qualitative Multi-Specialty IQC (Di truyền NST, Vi sinh ATCC, GPB H&E, Huyết học Nhóm máu, Hóa sinh Nước tiểu) + Edit/Delete
-    var ENRICHED_QUAL_IQC_LOGS = []; // [v43.0] Hydrated strictly from Server Database
+    var ENRICHED_QUAL_IQC_LOGS = []; // [v44.0] Hydrated from Server Database
 
 
 
@@ -20963,7 +20998,7 @@ function jsonResponse(obj) {
     var LIMS_DEDUCTION_LOGS = [];
 
     // Normalize Lot mapping between LIMS_ASSAY_CATALOG and REAGENT_LOTS so every single protocol links 1:1 to a Reagent Lot
-    var SHPT_COMPLETE_REAGENT_CATALOG = []; // [v43.0] Hydrated strictly from Server Database
+    var SHPT_COMPLETE_REAGENT_CATALOG = []; // [v44.0] Hydrated from Server Database
 
 
 
@@ -21497,7 +21532,7 @@ function jsonResponse(obj) {
 
     // Execute all 17 Molecular Biology PCR protocols × 2 runs each (34 PCR runs) + 6 Extraction batches (2 runs per extraction kit)
     // and populate the live state so every single protocol, dossier print, and inventory deduction is persisted & visible!
-    function runAndSeedAll17ShptProtocols2x() {
+    function runAndSeedAll17ShptProtocols2x() { return; /* [v44.1] Synthetic seeder disabled */
       if (window._all17Protocols2xExecuted) return;
       window._all17Protocols2xExecuted = true;
 
@@ -21516,7 +21551,7 @@ function jsonResponse(obj) {
         "HBV", "CMV", "EBV", "ADV", "EV", "HSV", "MTB", "MP"
       ];
 
-      var PATIENT_POOL = []; // [v43.0] Hydrated strictly from Server Database
+      var PATIENT_POOL = []; // [v44.0] Hydrated from Server Database
 
 
 
@@ -22020,6 +22055,7 @@ function jsonResponse(obj) {
     function updateSuggestedQuantRunCode() {
       const assayKey = document.getElementById("molQuantAssaySelect")?.value || "GP_HBV";
       const cfg = MOL_QUANT_ASSAY_CATALOG[assayKey] || MOL_QUANT_ASSAY_CATALOG["GP_HBV"];
+      if (!cfg) return;
       const rows = MOL_QUANT_30D_DB[assayKey] || [];
       const nextNo = rows.length + 1;
       const dateVal = document.getElementById("molQuantNewRunDateInput")?.value || getTodayIsoDate();
@@ -22033,6 +22069,7 @@ function jsonResponse(obj) {
     function updateSuggestedMpxRunCode() {
       const assayKey = document.getElementById("molMultiplexAssaySelect")?.value || "SG_RP1";
       const cfg = MOL_MULTIPLEX_ASSAY_CATALOG[assayKey] || MOL_MULTIPLEX_ASSAY_CATALOG["SG_RP1"];
+      if (!cfg) return;
       const rows = MOL_MULTIPLEX_30D_DB[assayKey] || [];
       const nextNo = rows.length + 1;
       const dateVal = document.getElementById("molMpxNewRunDateInput")?.value || getTodayIsoDate();
@@ -22537,7 +22574,7 @@ function jsonResponse(obj) {
         };
         const snapJson = JSON.stringify(snapshot);
         window._MASTER_DB_MEMORY_STORE = snapJson;
-        try { void(0) /* [v43.0] Zero client DB storage */; } catch (errLs) {}
+        try { void(0); } catch (errLs) {}
       } catch (e) {}
 
       const rowsToSync = serializeTableForGoogleSheets(tableName);
@@ -23266,8 +23303,8 @@ function jsonResponse(obj) {
         window._MASTER_DB_MEMORY_STORE = snapJson;
         try { window.name = "TTA_MASTER_DB_V12:" + snapJson; } catch (errWn) {}
         try {
-          void(0) /* [v43.0] Zero client DB storage */;
-          void(0) /* [v43.0] Zero client DB storage */;
+          void(0);
+          void(0);
         } catch (errLs) {}
       } catch (e) {}
 
@@ -23334,7 +23371,7 @@ function jsonResponse(obj) {
           }
         } catch (errWn) {}
         try {
-          raw = null /* [v43.0] Zero client DB storage */ || raw;
+          raw = null || raw;
         } catch (errLs) {}
         if (!raw) return false;
         const data = JSON.parse(raw);
@@ -23821,7 +23858,7 @@ function jsonResponse(obj) {
         if (window.name && window.name.startsWith("TTA_MASTER_DB_V12:")) hasSavedSnapshot = true;
       } catch (ew) {}
       try {
-        hasSavedSnapshot = hasSavedSnapshot || Boolean(null /* [v43.0] Zero client DB storage */);
+        hasSavedSnapshot = hasSavedSnapshot || Boolean(null);
       } catch (e) {}
       if (hasSavedSnapshot) {
         hydrateFromMasterDatabaseStore();
@@ -24609,7 +24646,7 @@ function jsonResponse(obj) {
     // =========================================================================
     // V2026.13 EQA MULTI-MODE SDI/BIAS CHART, EARLY WARNING ENGINE & INTERACTIVE KTV ROTATION
     // =========================================================================
-    var DEPT_ROTATION_ROSTER = {}; // [v43.0] Hydrated strictly from Server Database
+    var DEPT_ROTATION_ROSTER = {}; // [v44.0] Hydrated from Server Database
 
 
 
@@ -26384,7 +26421,7 @@ function jsonResponse(obj) {
     // Capture initial saved DB snapshot BEFORE any DOMContentLoaded seed function runs
     const _BOOT_SAVED_DB_SNAPSHOT_V14 = (() => {
       try {
-        const ls = null /* [v43.0] Zero client DB storage */ || null /* [v43.0] Zero client DB storage */;
+        const ls = null || null;
         if (ls && ls.length > 100) return ls;
       } catch (e) {}
       try {
@@ -26400,7 +26437,7 @@ function jsonResponse(obj) {
       if (bootSnap) {
         window._MASTER_DB_MEMORY_STORE = bootSnap;
         try { window.name = "TTA_MASTER_DB_V12:" + bootSnap; } catch (ew) {}
-        try { void(0) /* [v43.0] Zero client DB storage */; } catch (el) {}
+        try { void(0); } catch (el) {}
         if (typeof hydrateFromMasterDatabaseStore === "function") hydrateFromMasterDatabaseStore();
         window._INITIAL_BOOT_DB_SNAPSHOT_JSON = null;
       }
@@ -28397,7 +28434,7 @@ function jsonResponse(obj) {
     let CATALOG_GROUP_FILTER = "ALL";
     let CONSUME_DEPT_FILTER = "ALL";
     let CONSUME_SOURCE_FILTER = "ALL";
-    var STOCKTAKE_VOUCHERS_4_5A = []; // [v43.0] Hydrated strictly from Server Database
+    var STOCKTAKE_VOUCHERS_4_5A = []; // [v44.0] Hydrated from Server Database
 
 
 
@@ -29372,7 +29409,7 @@ function jsonResponse(obj) {
     // =========================================================================
     let PROCUREMENT_FILTER_MODE = "ALL";
     var PROCUREMENT_PLAN_ITEMS = [];
-    var PROCUREMENT_VOUCHERS = []; // [v43.0] Hydrated strictly from Server Database
+    var PROCUREMENT_VOUCHERS = []; // [v44.0] Hydrated from Server Database
 
 
 
@@ -35958,323 +35995,7 @@ function jsonResponse(obj) {
   }
 </style>
 
-<script id="ttaV392ZeroTrustScript">
-(function() {
-  "use strict";
-
-  const SESSION_KEY = "TTA_AUTH_SESSION_V39";
-  let failedAttempts = 0;
-  let lockoutUntil = 0;
-  let idleSeconds = 15 * 60;
-
-  function safeGetSession() {
-    try {
-      const raw = sessionStorage.getItem(SESSION_KEY);
-      return raw ? JSON.parse(raw) : null;
-    } catch (e) { return null; }
-  }
-  function safeSetSession(obj) {
-    try { sessionStorage.setItem(SESSION_KEY, JSON.stringify(obj)); } catch (e) {}
-  }
-  function safeClearSession() {
-    try { sessionStorage.removeItem(SESSION_KEY); } catch (e) {}
-  }
-
-  window.togglePasswordField = function(inputId, btnEl) {
-    const inp = document.getElementById(inputId);
-    if (!inp) return;
-    const isPwd = inp.type === "password";
-    inp.type = isPwd ? "text" : "password";
-    if (btnEl) btnEl.style.opacity = isPwd ? "1" : "0.65";
-  };
-
-  function getInitials(name) {
-    const parts = String(name || "NV").trim().split(/\s+/);
-    if (parts.length === 1) return parts[0].slice(0, 2).toUpperCase();
-    return (parts[0][0] + parts[parts.length - 1][0]).toUpperCase();
-  }
-
-  function renderAuthenticatedHeaderProfile(userObj) {
-    const switcher = document.querySelector(".header-controls .role-switcher");
-    if (switcher) {
-      let pill = document.getElementById("ttaAuthUserPill");
-      if (!pill) {
-        pill = document.createElement("div");
-        pill.id = "ttaAuthUserPill";
-        pill.className = "tta-auth-user-pill";
-        switcher.appendChild(pill);
-      }
-      const dispName = userObj ? `${userObj.name} (${userObj.maNV})` : "Chưa đăng nhập";
-      pill.title = userObj ? `${userObj.name} • ${userObj.maNV} • ${userObj.dept} (${userObj.scope})` : "Vui lòng đăng nhập";
-      pill.innerHTML = `<span class="tta-auth-avatar">${getInitials(userObj ? userObj.name : "NV")}</span><span class="tta-auth-name">${dispName}</span>`;
-    }
-
-    // Ensure Logout button exists cleanly right after #btnOpenLoginPortal
-    const loginBtn = document.getElementById("btnOpenLoginPortal");
-    if (loginBtn) {
-      loginBtn.innerHTML = "Đổi Ca";
-      loginBtn.title = "Xác thực chuyển đổi ca trực (Yêu cầu Mật khẩu & PIN 2FA)";
-      if (!document.getElementById("ttaBtnLogout")) {
-        const logoutBtn = document.createElement("button");
-        logoutBtn.id = "ttaBtnLogout";
-        logoutBtn.type = "button";
-        logoutBtn.className = "tta-logout-btn";
-        logoutBtn.title = "Đăng xuất & Khóa màn hình bảo mật Zero-Trust";
-        logoutBtn.innerHTML = '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg><span>Đăng xuất</span>';
-        logoutBtn.onclick = function() { window.logoutZeroTrustSession(false); };
-        loginBtn.insertAdjacentElement("afterend", logoutBtn);
-      }
-    }
-  }
-
-  function authenticateUserCredentials(userRaw, passRaw, pinRaw) {
-    const now = Date.now();
-    if (lockoutUntil > now) {
-      const rem = Math.ceil((lockoutUntil - now) / 1000);
-      return { ok: false, error: `Tài khoản tạm khóa bảo mật do nhập sai nhiều lần. Vui lòng thử lại sau ${rem} giây.` };
-    }
-    const uKey = String(userRaw || "").trim().toLowerCase();
-    const pass = String(passRaw || "").trim();
-    const pin = String(pinRaw || "").trim();
-
-    if (!uKey || !pass || !pin) {
-      return { ok: false, error: "Vui lòng nhập đầy đủ Mã NV / Email, Mật khẩu và Mã PIN 2FA!" };
-    }
-
-    const db = (typeof ALLOWED_USERS_DB !== "undefined" && Array.isArray(ALLOWED_USERS_DB)) ? ALLOWED_USERS_DB : [];
-    const found = db.find(u =>
-      String(u.maNV || "").toLowerCase() === uKey ||
-      String(u.email || "").toLowerCase() === uKey ||
-      (u.altEmail && String(u.altEmail).toLowerCase() === uKey)
-    );
-
-    const pinValid = false; // [v43.0] Client-side credential check disabled
-
-    if (!found || found.pass !== pass || !pinValid) {
-      failedAttempts++;
-      if (failedAttempts >= 5) {
-        lockoutUntil = Date.now() + 30000;
-        failedAttempts = 0;
-        return { ok: false, error: "Đã nhập sai quá 5 lần! Cổng đăng nhập tạm khóa 30 giây theo chính sách Zero-Trust." };
-      }
-      return { ok: false, error: `Sai thông tin đăng nhập (Mã NV/Email, Mật khẩu hoặc Mã PIN 2FA). Còn ${5 - failedAttempts} lần thử.` };
-    }
-
-    if (found.status === "LOCKED") {
-      return { ok: false, error: "Tài khoản này đã bị khóa tạm thời bởi Quản trị viên!" };
-    }
-
-    const todayStr = new Date().toISOString().split("T")[0];
-    if (found.expiresAt && found.expiresAt < todayStr) {
-      return { ok: false, error: `ACCOUNT_EXPIRED: Tài khoản đã hết hạn truy cập (${found.expiresAt}). Vui lòng liên hệ Quản trị viên để gia hạn.` };
-    }
-
-    failedAttempts = 0;
-    lockoutUntil = 0;
-    return { ok: true, user: found };
-  }
-
-  function applyAuthenticatedSession(found, channelLabel) {
-    safeSetSession({
-      maNV: found.maNV,
-      name: found.name,
-      dept: found.dept,
-      scope: found.scope,
-      loginAt: new Date().toISOString()
-    });
-    idleSeconds = 15 * 60;
-
-    // Sync hidden #currentUserSelect for full backwards compatibility with all RBAC/LIMS/Audit functions
-    const selTop = document.getElementById("currentUserSelect");
-    if (selTop) {
-      if (!Array.from(selTop.options).some(o => o.value === found.maNV)) {
-        const opt = document.createElement("option");
-        opt.value = found.maNV;
-        opt.textContent = `[${found.maNV}] ${found.name} — ${found.dept}`;
-        selTop.appendChild(opt);
-      }
-      selTop.value = found.maNV;
-    }
-
-    if (typeof handleUserSwitch === "function") handleUserSwitch();
-
-    const dbBtn = document.getElementById("btnOpenLiveMasterDb");
-    if (dbBtn) dbBtn.style.display = (found.scope === "SCOPE_ALL") ? "inline-flex" : "none";
-
-    // Sync Security Center summary fields
-    const secMa = document.getElementById("secCurrentMaNV");
-    const secRole = document.getElementById("secCurrentRoleBadge");
-    const secScope = document.getElementById("secCurrentScope");
-    const lockBanner = document.getElementById("globalRoleLockBanner");
-    if (secMa) secMa.textContent = found.maNV;
-    if (found.scope === "SCOPE_ALL") {
-      if (secRole) secRole.textContent = "Admin Toàn quyền";
-      if (secScope) secScope.textContent = "Toàn Khoa (5 BP)";
-      if (lockBanner) lockBanner.style.display = "none";
-      if (typeof setGlobalDept === "function") setGlobalDept("ALL");
-    } else if (found.scope === "SCOPE_TRAINEE" || String(found.maNV).startsWith("HV")) {
-      if (secRole) secRole.textContent = "Học viên CCHN (Giới hạn)";
-      if (secScope) secScope.textContent = "Chỉ xem / Nhập nháp";
-      if (lockBanner) lockBanner.style.display = "flex";
-    } else {
-      if (secRole) secRole.textContent = "Chuyên viên / KTV BP";
-      if (secScope) secScope.textContent = found.dept || "Bộ phận";
-      if (lockBanner) lockBanner.style.display = "none";
-      if (typeof setGlobalDept === "function" && found.dept) setGlobalDept(found.dept);
-    }
-
-    renderAuthenticatedHeaderProfile(found);
-
-    // Unlock workspace & hide Zero-Trust Gate
-    document.body.classList.remove("tta-auth-locked");
-    const gate = document.getElementById("zeroTrustLoginOverlay");
-    if (gate) gate.classList.remove("active");
-
-    if (typeof addSecurityAuditEntry === "function" && channelLabel) {
-      addSecurityAuditEntry(`${found.maNV} (${found.name})`, channelLabel, `Xác thực 2FA thành công (${found.scope})`);
-    }
-  }
-
-  // Override handleZeroTrustLoginSubmit with strict Password + PIN + Lockout verification
-  window.handleZeroTrustLoginSubmit = function(e) {
-    e.preventDefault();
-    const userInp = document.getElementById("ztUserInput")?.value || "";
-    const passInp = document.getElementById("ztPassInput")?.value || "";
-    const pinInp = document.getElementById("ztPinInput")?.value || "";
-    const errBox = document.getElementById("ztErrorBanner");
-
-    const res = authenticateUserCredentials(userInp, passInp, pinInp);
-    if (!res.ok) {
-      if (errBox) {
-        errBox.style.display = "block";
-        errBox.textContent = res.error;
-      }
-      return;
-    }
-    if (errBox) errBox.style.display = "none";
-    document.getElementById("ztPassInput").value = "";
-    document.getElementById("ztPinInput").value = "";
-    applyAuthenticatedSession(res.user, "ZERO_TRUST_LOGIN_2FA");
-    if (typeof showToast === "function") {
-      showToast(`Chào mừng <strong>${res.user.name} (${res.user.maNV})</strong>! Phiên bảo mật 2FA (${res.user.scope}) đã sẵn sàng.`, "#059669");
-    }
-  };
-
-  // Override handleSecureLogin (Modal 11 — Đổi Ca) with real credential verification
-  window.handleSecureLogin = function(e) {
-    e.preventDefault();
-    const userInp = document.getElementById("loginMaNVInput")?.value || "";
-    const passInp = document.getElementById("loginPasswordInput")?.value || "";
-    const pinInp = document.getElementById("loginPinInput")?.value || "";
-    const errBox = document.getElementById("loginModalErrorBox");
-
-    const res = authenticateUserCredentials(userInp, passInp, pinInp);
-    if (!res.ok) {
-      if (errBox) {
-        errBox.style.display = "block";
-        errBox.textContent = res.error;
-      }
-      return;
-    }
-    if (errBox) errBox.style.display = "none";
-    document.getElementById("loginPasswordInput").value = "";
-    document.getElementById("loginPinInput").value = "";
-    applyAuthenticatedSession(res.user, "SHIFT_SWITCH_2FA");
-    if (typeof closeModal === "function") closeModal("modalLoginPortal");
-    if (typeof showToast === "function") {
-      showToast(`Đã chuyển ca trực bảo mật sang <strong>[${res.user.maNV}] ${res.user.name}</strong>!`, "#059669");
-    }
-  };
-
-  // Explicit Logout & Lock Session
-  window.logoutZeroTrustSession = function(isAutoLock) {
-    const sess = safeGetSession();
-    if (sess && typeof addSecurityAuditEntry === "function") {
-      addSecurityAuditEntry(`${sess.maNV} (${sess.name})`, isAutoLock ? "AUTO_LOCK_IDLE_15M" : "ZERO_TRUST_LOGOUT", isAutoLock ? "Tự động khóa màn hình do không thao tác 15 phút" : "Người dùng chủ động đăng xuất phiên làm việc");
-    }
-    safeClearSession();
-    document.body.classList.add("tta-auth-locked");
-    const gate = document.getElementById("zeroTrustLoginOverlay");
-    if (gate) gate.classList.add("active");
-    const ztPass = document.getElementById("ztPassInput");
-    const ztPin = document.getElementById("ztPinInput");
-    const errBox = document.getElementById("ztErrorBanner");
-    if (ztPass) ztPass.value = "";
-    if (ztPin) ztPin.value = "";
-    if (errBox) {
-      if (isAutoLock) {
-        errBox.style.display = "block";
-        errBox.textContent = "Phiên làm việc đã tự động khóa sau 15 phút không thao tác. Vui lòng đăng nhập lại.";
-      } else {
-        errBox.style.display = "none";
-      }
-    }
-    setTimeout(() => { document.getElementById("ztUserInput")?.focus(); }, 60);
-  };
-
-  // Disable closeZeroTrustGate unless an authenticated session exists
-  window.closeZeroTrustGate = function() {
-    if (!safeGetSession()) return;
-    const gate = document.getElementById("zeroTrustLoginOverlay");
-    if (gate) gate.classList.remove("active");
-    document.body.classList.remove("tta-auth-locked");
-  };
-
-  // Reset inactivity timer on user activity & enforce 15-minute auto-lock
-  ["mousemove", "keydown", "click", "touchstart"].forEach(evt => {
-    document.addEventListener(evt, () => { idleSeconds = 15 * 60; }, { passive: true });
-  });
-  setInterval(() => {
-    if (!safeGetSession()) return;
-    idleSeconds--;
-    if (idleSeconds <= 0) {
-      window.logoutZeroTrustSession(true);
-    }
-  }, 1000);
-
-  // Enforce Zero-Trust Gate immediately on startup (NO AUTO-LOGIN!)
-  function enforceZeroTrustOnBoot() { return; /* [v43.0] Handled by ttaV43SeparatedDbScript */
-    const saved = safeGetSession();
-    const db = (typeof ALLOWED_USERS_DB !== "undefined" && Array.isArray(ALLOWED_USERS_DB)) ? ALLOWED_USERS_DB : [];
-    const matched = saved ? db.find(u => u.maNV === saved.maNV && u.status !== "LOCKED") : null;
-
-    if (matched) {
-      applyAuthenticatedSession(matched, null);
-    } else {
-      safeClearSession();
-      document.body.classList.add("tta-auth-locked");
-      const gate = document.getElementById("zeroTrustLoginOverlay");
-      if (gate) gate.classList.add("active");
-      setTimeout(() => { document.getElementById("ztUserInput")?.focus(); }, 100);
-    }
-  }
-
-  // Clear Modal 11 inputs whenever opened
-  if (typeof window.openModal === "function") {
-    const _origOpenModalV392 = window.openModal;
-    window.openModal = function(id) {
-      if (id === "modalLoginPortal") {
-        const u = document.getElementById("loginMaNVInput");
-        const p = document.getElementById("loginPasswordInput");
-        const pin = document.getElementById("loginPinInput");
-        const err = document.getElementById("loginModalErrorBox");
-        if (u) u.value = "";
-        if (p) p.value = "";
-        if (pin) pin.value = "";
-        if (err) err.style.display = "none";
-        setTimeout(() => { if (u) u.focus(); }, 40);
-      }
-      return _origOpenModalV392.apply(this, arguments);
-    };
-  }
-
-  if (document.readyState === "loading") {
-    document.addEventListener("DOMContentLoaded", () => setTimeout(enforceZeroTrustOnBoot, 160));
-  } else {
-    setTimeout(enforceZeroTrustOnBoot, 160);
-  }
-})();
-</script>
+<!-- [v44.0] Legacy client-side auth removed; unified into ttaV44CoreEngine -->
 <!-- ==================== END V2026_39_2_ZERO_TRUST_SECURITY ==================== -->
 
 <!-- ==================== START V2026_40_PRODUCTION_DATABASE_AND_UX_CLEANUP ==================== -->
@@ -36364,15 +36085,39 @@ function jsonResponse(obj) {
   </div>
 </div>
 
-<script id="ttaV43SeparatedDbScript">
+<script id="ttaV44CoreEngine">
+/**
+ * ============================================================================
+ * TTA-QMS & LIMS ISO 15189:2022 — CORE FRONT-END ENGINE (v44.0)
+ * Architecture: Strict Database–Frontend Separation (Zero Client Data Storage)
+ * Modules:
+ *   1. Zero-Frontend-Storage Guard
+ *   2. Unified Dual-Backend API Client (Intranet SQLite WAL + Google Cloud GAS)
+ *   3. Date & Expiry UX Helpers
+ *   4. Server-Side 2FA Auth, Shift Switch & 15-Min Inactivity Auto-Lock
+ *   5. RBAC Policy Enforcement (SCOPE_ALL / SCOPE_DEPT / SCOPE_LAB / SCOPE_TRAINEE)
+ *   6. Database Hydration & Dynamic Dropdowns
+ *   7. Direct-to-Database Mutation Pipeline
+ *   8. Admin User CRUD & Server-Side 2FA Digital Signing
+ *   9. API Configuration Modal & Boot Sequence
+ * ============================================================================
+ */
 (function() {
   "use strict";
 
-  const API_URL_STORAGE_KEY = "TTA_API_ENDPOINT_V43";
-  const SESSION_TOKEN_KEY   = "TTA_SESSION_TOKEN_V43";
-  const SESSION_USER_KEY    = "TTA_AUTH_SESSION_V39";
+  const API_URL_STORAGE_KEY = "TTA_API_ENDPOINT_V44";
+  const LEGACY_API_URL_KEY  = "TTA_API_ENDPOINT_V43";
+  const SESSION_TOKEN_KEY   = "TTA_SESSION_TOKEN_V44";
+  const SESSION_USER_KEY    = "TTA_AUTH_SESSION_V44";
+  const IDLE_TIMEOUT_SEC    = 15 * 60;
 
-  // All operational collections hydrated strictly from Server Database (ZERO hardcoded in front-end)
+  const ROLE_META = {
+    SCOPE_ALL:     { label: "Admin Toàn quyền",       badge: "b-pass", scopeText: "Toàn Khoa (5 BP)" },
+    SCOPE_DEPT:    { label: "Phụ trách Bộ phận",      badge: "b-info", scopeText: null },
+    SCOPE_LAB:     { label: "KTV Chính (Vận hành)",   badge: "b-info", scopeText: null },
+    SCOPE_TRAINEE: { label: "Học viên CCHN (Giới hạn)", badge: "b-warn", scopeText: "Chỉ xem / Giám sát" }
+  };
+
   const OPERATIONAL_COLLECTION_KEYS = [
     "EQUIPMENTS", "KEY_ANALYZERS", "STAFF_LIST", "IQC_POINTS", "EQA_PROGRAMS",
     "REAGENT_LOTS", "LOT_VERIFICATIONS", "TRANSFER_LOGS", "HR_TRAININGS", "HR_COMPETENCIES",
@@ -36386,7 +36131,6 @@ function jsonResponse(obj) {
     "STOCKTAKE_VOUCHERS_4_5A", "PROCUREMENT_VOUCHERS", "LIMS_DEDUCTION_LOGS"
   ];
 
-  // Map MasterDB table names -> frontend collection keys for targeted writes
   const TABLE_TO_COLLECTIONS_MAP = {
     "DM_ThietBi": ["EQUIPMENTS", "KEY_ANALYZERS"],
     "NS_HoSoNhanSu": ["STAFF_LIST"],
@@ -36412,8 +36156,12 @@ function jsonResponse(obj) {
   let dbConnectedMode = "DISCONNECTED";
   let dbEngineLabel = "Chưa kết nối";
   let activeSessionToken = "";
+  let activeUserProfile = null;
+  let idleSecondsRemaining = IDLE_TIMEOUT_SEC;
 
-  // 1. ZERO FRONT-END CLINICAL DATA STORAGE GUARD
+  // =========================================================================
+  // 1. ZERO-FRONTEND-STORAGE GUARD
+  // =========================================================================
   function purgeLegacyFrontEndDbCache() {
     try {
       const forbiddenPrefixes = [
@@ -36440,6 +36188,7 @@ function jsonResponse(obj) {
     window.MOL_MULTIPLEX_30D_DB = {};
     window.REAGENT_MASTER_CATALOG = [];
     window.PROCUREMENT_PLAN_ITEMS = [];
+    activeUserProfile = null;
   }
 
   window.hydrateFromMasterDatabaseStore = function() {
@@ -36447,14 +36196,16 @@ function jsonResponse(obj) {
     return false;
   };
 
-  // 2. UNIFIED DUAL-BACKEND API CLIENT (INTRANET SQLITE WAL + GOOGLE CLOUD GAS)
+  // =========================================================================
+  // 2. UNIFIED DUAL-BACKEND API CLIENT
+  // =========================================================================
   function isAppsScriptHost() {
     return typeof google !== "undefined" && google.script && google.script.run && typeof google.script.run.invokeApi === "function";
   }
 
   function getConfiguredApiUrl() {
     try {
-      const saved = (localStorage.getItem(API_URL_STORAGE_KEY) || "").trim();
+      const saved = (localStorage.getItem(API_URL_STORAGE_KEY) || localStorage.getItem(LEGACY_API_URL_KEY) || "").trim();
       if (saved) return saved;
     } catch (e) {}
     if (window.location && /^https?:$/i.test(window.location.protocol)) {
@@ -36473,7 +36224,10 @@ function jsonResponse(obj) {
     try {
       const clean = String(url || "").trim();
       if (clean) localStorage.setItem(API_URL_STORAGE_KEY, clean);
-      else localStorage.removeItem(API_URL_STORAGE_KEY);
+      else {
+        localStorage.removeItem(API_URL_STORAGE_KEY);
+        localStorage.removeItem(LEGACY_API_URL_KEY);
+      }
     } catch (e) {}
   }
 
@@ -36507,7 +36261,7 @@ function jsonResponse(obj) {
 
     const apiUrl = getConfiguredApiUrl();
     if (!apiUrl) {
-      throw new Error("Chưa cấu hình Máy chủ CSDL. Vui lòng nhấn '⚙ Cấu hình Máy chủ CSDL' để nhập URL API (Intranet http://localhost:8088/api hoặc Google Apps Script /exec).");
+      throw new Error("Chưa cấu hình Máy chủ CSDL. Nhấn '⚙ Cấu hình Máy chủ CSDL' để nhập URL API (Intranet http://localhost:8088/api hoặc Google Apps Script /exec).");
     }
 
     const isGasUrl = apiUrl.includes("script.google.com/macros/s/");
@@ -36521,16 +36275,14 @@ function jsonResponse(obj) {
         body: JSON.stringify(body)
       });
     } catch (netErr) {
-      throw new Error("Không thể kết nối tới Máy chủ CSDL (" + apiUrl + "). Hãy chắc chắn bạn đã khởi chạy backend_intranet/start_intranet.bat hoặc cấu hình đúng URL /exec.");
+      throw new Error("Không thể kết nối Máy chủ CSDL (" + apiUrl + "). Hãy kiểm tra máy chủ đang chạy hoặc URL /exec.");
     }
     const text = await res.text();
-    let json;
     try {
-      json = JSON.parse(text);
+      return JSON.parse(text);
     } catch (e) {
-      throw new Error("Phản hồi từ máy chủ CSDL không phải JSON hợp lệ (HTTP " + res.status + ").");
+      throw new Error("Phản hồi máy chủ CSDL không hợp lệ (HTTP " + res.status + ").");
     }
-    return json;
   }
   window.callTtaApi = callTtaApi;
 
@@ -36555,43 +36307,348 @@ function jsonResponse(obj) {
     const dot = document.getElementById("ttaApiStatusDot");
     const label = document.getElementById("ttaApiStatusLabel");
     if (pill && dot && label) {
-      if (connected) {
-        pill.classList.remove("disconnected");
-        dot.style.background = "#10b981";
-        label.textContent = engineName.includes("SQLite") ? "CSDL: Intranet WAL" : "CSDL: Đã kết nối";
-        pill.title = "Đã kết nối trực tiếp CSDL (" + engineName + ") — Tuyệt đối không lưu dữ liệu tại Front-end";
-      } else {
-        pill.classList.add("disconnected");
-        dot.style.background = "#f59e0b";
-        label.textContent = "CSDL: Chưa kết nối";
-        pill.title = "Nhấn để cấu hình URL Máy chủ CSDL (Intranet hoặc Google Cloud /exec)";
-      }
+      pill.classList.toggle("disconnected", !connected);
+      dot.style.background = connected ? "#10b981" : "#f59e0b";
+      label.textContent = connected
+        ? (engineName.includes("SQLite") ? "CSDL: Intranet WAL" : "CSDL: Google Sheets")
+        : "CSDL: Chưa kết nối";
+      pill.title = connected
+        ? "Đã kết nối trực tiếp CSDL (" + engineName + ") — Không lưu dữ liệu tại Front-end"
+        : "Nhấn để cấu hình URL Máy chủ CSDL";
     }
     const loginBadge = document.getElementById("ttaLoginDbStatusBadge");
     if (loginBadge) {
-      if (connected) {
-        loginBadge.style.background = "#ecfdf5";
-        loginBadge.style.color = "#065f46";
-        loginBadge.style.borderColor = "#a7f3d0";
-        loginBadge.textContent = "● Đã kết nối CSDL: " + engineName;
-      } else {
-        loginBadge.style.background = "#fffbeb";
-        loginBadge.style.color = "#92400e";
-        loginBadge.style.borderColor = "#fde68a";
-        loginBadge.textContent = "● Chưa kết nối Máy chủ CSDL";
-      }
+      loginBadge.style.background = connected ? "#ecfdf5" : "#fffbeb";
+      loginBadge.style.color = connected ? "#065f46" : "#92400e";
+      loginBadge.style.borderColor = connected ? "#a7f3d0" : "#fde68a";
+      loginBadge.textContent = connected ? ("● Đã kết nối CSDL: " + engineName) : "● Chưa kết nối Máy chủ CSDL";
     }
   }
 
-  // 3. HYDRATE ALL FRONT-END COLLECTIONS & DYNAMIC <select> FROM SERVER DB
+  // =========================================================================
+  // 3. DATE & EXPIRY UX HELPERS
+  // =========================================================================
+  function normalizeYmd(val) {
+    let s = String(val || "").trim();
+    while ((s.startsWith('"') && s.endsWith('"')) || (s.startsWith("'") && s.endsWith("'"))) {
+      s = s.slice(1, -1).trim();
+    }
+    if (!s) return "";
+    if (/^\d{4}-\d{2}-\d{2}/.test(s)) return s.slice(0, 10);
+    const mVn = s.match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})$/);
+    if (mVn) return `${mVn[3]}-${mVn[2].padStart(2, "0")}-${mVn[1].padStart(2, "0")}`;
+    return "";
+  }
+
+  function getExpiryMeta(ymdStr) {
+    const ymd = normalizeYmd(ymdStr);
+    if (!ymd) return { ymd: "Không giới hạn", daysLeft: null, status: "ACTIVE", badgeClass: "b-info", label: "Không giới hạn" };
+    const today = new Date();
+    const todayUtc = Date.UTC(today.getFullYear(), today.getMonth(), today.getDate());
+    const parts = ymd.split("-").map(Number);
+    const expUtc = Date.UTC(parts[0], parts[1] - 1, parts[2]);
+    const daysLeft = Math.floor((expUtc - todayUtc) / 86400000);
+    if (daysLeft < 0) return { ymd, daysLeft, status: "EXPIRED", badgeClass: "b-fail", label: `Hết hạn (${Math.abs(daysLeft)} ngày)` };
+    if (daysLeft <= 30) return { ymd, daysLeft, status: "EXPIRING_SOON", badgeClass: "b-warn", label: `Còn ${daysLeft} ngày` };
+    return { ymd, daysLeft, status: "ACTIVE", badgeClass: "b-pass", label: `Còn ${daysLeft} ngày` };
+  }
+
+  function escHtml(s) {
+    return String(s ?? "").replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
+  }
+
+  // =========================================================================
+  // 4. SERVER-SIDE 2FA AUTH, SHIFT SWITCH & 15-MIN AUTO-LOCK
+  // =========================================================================
+  window.togglePasswordField = function(inputId, btnEl) {
+    const inp = document.getElementById(inputId);
+    if (!inp) return;
+    const isPwd = inp.type === "password";
+    inp.type = isPwd ? "text" : "password";
+    if (btnEl) btnEl.style.opacity = isPwd ? "1" : "0.65";
+  };
+
+  function showZeroTrustOverlay(show) {
+    const gate = document.getElementById("zeroTrustLoginOverlay");
+    document.body.classList.toggle("tta-auth-locked", Boolean(show));
+    if (gate) gate.classList.toggle("active", Boolean(show));
+  }
+
+  window.closeZeroTrustGate = function() {
+    if (!getSessionToken() || !activeUserProfile) return;
+    showZeroTrustOverlay(false);
+  };
+
+  // Inactivity 15-minute auto-lock
+  ["mousemove", "keydown", "click", "touchstart"].forEach(evt => {
+    document.addEventListener(evt, () => { idleSecondsRemaining = IDLE_TIMEOUT_SEC; }, { passive: true });
+  });
+  setInterval(() => {
+    if (!getSessionToken() || !activeUserProfile) return;
+    idleSecondsRemaining--;
+    if (idleSecondsRemaining <= 0) {
+      window.logoutZeroTrustSession(true);
+    }
+  }, 1000);
+
+  // =========================================================================
+  // 5. RBAC POLICY ENFORCEMENT (4 ROLES + DEPT LOCK + HEADER PILL)
+  // =========================================================================
+  function getInitials(name) {
+    const parts = String(name || "NV").trim().split(/\s+/);
+    if (parts.length === 1) return parts[0].slice(0, 2).toUpperCase();
+    return (parts[0][0] + parts[parts.length - 1][0]).toUpperCase();
+  }
+
+  function applyRbacUiPolicy(userObj) {
+    activeUserProfile = userObj;
+    idleSecondsRemaining = IDLE_TIMEOUT_SEC;
+    window.CURRENT_USER_ID = userObj.maNV;
+
+    try {
+      sessionStorage.setItem(SESSION_USER_KEY, JSON.stringify({
+        maNV: userObj.maNV,
+        name: userObj.name,
+        dept: userObj.dept,
+        scope: userObj.scope,
+        expiresAt: normalizeYmd(userObj.expiresAt),
+        loginAt: new Date().toISOString()
+      }));
+    } catch (e) {}
+
+    // Sync hidden #currentUserSelect for backwards compatibility
+    const selTop = document.getElementById("currentUserSelect");
+    if (selTop) {
+      if (!Array.from(selTop.options).some(o => o.value === userObj.maNV)) {
+        const opt = document.createElement("option");
+        opt.value = userObj.maNV;
+        opt.textContent = `[${userObj.maNV}] ${userObj.name} — ${userObj.dept}`;
+        selTop.appendChild(opt);
+      }
+      selTop.value = userObj.maNV;
+    }
+
+    // Header user pill + Logout button
+    const roleMeta = ROLE_META[userObj.scope] || ROLE_META.SCOPE_DEPT;
+    const switcher = document.querySelector(".header-controls .role-switcher");
+    if (switcher) {
+      let pill = document.getElementById("ttaAuthUserPill");
+      if (!pill) {
+        pill = document.createElement("div");
+        pill.id = "ttaAuthUserPill";
+        pill.className = "tta-auth-user-pill";
+        switcher.appendChild(pill);
+      }
+      const expMeta = getExpiryMeta(userObj.expiresAt);
+      pill.title = `${userObj.name} • ${userObj.maNV} • ${roleMeta.label} • ${userObj.dept} • HSD: ${expMeta.ymd}`;
+      pill.innerHTML = `<span class="tta-auth-avatar">${escHtml(getInitials(userObj.name))}</span><span class="tta-auth-name">${escHtml(userObj.name)} (${escHtml(userObj.maNV)})</span>`;
+    }
+
+    const loginBtn = document.getElementById("btnOpenLoginPortal");
+    if (loginBtn) {
+      loginBtn.innerHTML = "Đổi Ca";
+      loginBtn.title = "Chuyển đổi ca trực (Xác thực 2FA phía máy chủ)";
+      if (!document.getElementById("ttaBtnLogout")) {
+        const logoutBtn = document.createElement("button");
+        logoutBtn.id = "ttaBtnLogout";
+        logoutBtn.type = "button";
+        logoutBtn.className = "tta-logout-btn";
+        logoutBtn.title = "Đăng xuất & Xóa bộ nhớ phiên làm việc";
+        logoutBtn.innerHTML = '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg><span>Đăng xuất</span>';
+        logoutBtn.onclick = () => window.logoutZeroTrustSession(false);
+        loginBtn.insertAdjacentElement("afterend", logoutBtn);
+      }
+    }
+
+    // Security Center summary & Dept Bar Row-Level Security (RLS) lock
+    const secMa = document.getElementById("secCurrentMaNV");
+    const secRole = document.getElementById("secCurrentRoleBadge");
+    const secScope = document.getElementById("secCurrentScope");
+    const lockBanner = document.getElementById("globalRoleLockBanner");
+    const strip = document.getElementById("securityFilterStatusText");
+    const dbBtn = document.getElementById("btnOpenLiveMasterDb");
+
+    if (secMa) secMa.textContent = userObj.maNV;
+    if (secRole) secRole.textContent = roleMeta.label;
+    if (secScope) secScope.textContent = roleMeta.scopeText || userObj.dept || "Bộ phận";
+    if (dbBtn) dbBtn.style.display = (userObj.scope === "SCOPE_ALL") ? "inline-flex" : "none";
+
+    // Lock department pills for SCOPE_DEPT & SCOPE_LAB
+    const deptPills = Array.from(document.querySelectorAll(".dept-bar .dept-pill"));
+    if (userObj.scope === "SCOPE_ALL") {
+      deptPills.forEach(b => { b.disabled = false; b.style.opacity = "1"; b.style.pointerEvents = "auto"; });
+      if (lockBanner) lockBanner.style.display = "none";
+      if (strip) {
+        strip.style.background = "#ecfdf5"; strip.style.color = "#065f46";
+        strip.textContent = `Phân quyền: ${roleMeta.label} (${userObj.maNV} — ${userObj.name}) • Truy cập toàn bộ 5 bộ phận & quản trị tài khoản`;
+      }
+      if (typeof window.setGlobalDept === "function") window.setGlobalDept("ALL", deptPills[0]);
+    } else if (userObj.scope === "SCOPE_TRAINEE") {
+      deptPills.forEach(b => { b.disabled = false; b.style.opacity = "0.9"; b.style.pointerEvents = "auto"; });
+      if (lockBanner) lockBanner.style.display = "flex";
+      if (strip) {
+        strip.style.background = "#fef3c7"; strip.style.color = "#92400e";
+        strip.textContent = `Phân quyền: ${roleMeta.label} (${userObj.maNV}) — Chỉ xem, khóa ghi đè CSDL & khóa ký số 2FA`;
+      }
+    } else {
+      // SCOPE_DEPT or SCOPE_LAB: enforce strict Row-Level Security to assigned department
+      let matchedBtn = null;
+      deptPills.forEach(b => {
+        const oc = b.getAttribute("onclick") || "";
+        const isMatch = userObj.dept && oc.includes(userObj.dept);
+        if (isMatch) matchedBtn = b;
+        b.disabled = !isMatch;
+        b.style.opacity = isMatch ? "1" : "0.42";
+        b.style.pointerEvents = isMatch ? "auto" : "none";
+      });
+      if (lockBanner) lockBanner.style.display = "none";
+      if (strip) {
+        strip.style.background = "#e0f2fe"; strip.style.color = "#0369a1";
+        strip.textContent = `Phân quyền: ${roleMeta.label} (${userObj.maNV}) — Khóa phạm vi RLS tại bộ phận ${userObj.dept}`;
+      }
+      if (typeof window.setGlobalDept === "function" && userObj.dept) window.setGlobalDept(userObj.dept, matchedBtn);
+    }
+
+    if (typeof window.applyStrictRbacPolicy === "function") {
+      try { window.applyStrictRbacPolicy(); } catch (e) {}
+    }
+    renderAllowedUsersTableV44();
+    showZeroTrustOverlay(false);
+
+    // Subtle expiry notice if account expires within 30 days
+    const expMeta = getExpiryMeta(userObj.expiresAt);
+    if (expMeta.status === "EXPIRING_SOON" && typeof window.showToast === "function") {
+      setTimeout(() => {
+        window.showToast(`Lưu ý: Tài khoản <strong>${escHtml(userObj.maNV)}</strong> sẽ hết hạn vào <strong>${expMeta.ymd}</strong> (còn ${expMeta.daysLeft} ngày).`, "#d97706");
+      }, 900);
+    }
+  }
+
+  window.handleZeroTrustLoginSubmit = async function(e) {
+    if (e && e.preventDefault) e.preventDefault();
+    const uInp = document.getElementById("ztUserInput");
+    const pInp = document.getElementById("ztPassInput");
+    const pinInp = document.getElementById("ztPinInput");
+    const errBox = document.getElementById("ztErrorBanner");
+    const submitBtn = document.querySelector('#zeroTrustLoginOverlay button[type="submit"]');
+
+    const identifier = (uInp?.value || "").trim();
+    const password = (pInp?.value || "").trim();
+    const pin = (pinInp?.value || "").trim();
+
+    if (errBox) { errBox.style.display = "none"; errBox.textContent = ""; }
+    if (submitBtn) { submitBtn.disabled = true; submitBtn.textContent = "Đang xác thực 2FA trên Máy chủ CSDL..."; }
+
+    try {
+      const res = await callTtaApi("AUTH_LOGIN", { identifier, password, pin });
+      if (!res || res.status !== "OK") {
+        throw new Error((res && res.message) || "Đăng nhập thất bại.");
+      }
+      setSessionToken(res.token);
+      if (submitBtn) submitBtn.textContent = "Đang đồng bộ dữ liệu trực tiếp từ CSDL...";
+      await bootstrapFromServerDatabase(true);
+      applyRbacUiPolicy(res.user);
+      if (pInp) pInp.value = "";
+      if (pinInp) pinInp.value = "";
+      if (typeof window.showToast === "function") {
+        window.showToast(`Đăng nhập 2FA thành công! Chào mừng <strong>${escHtml(res.user.name)} (${escHtml(res.user.maNV)})</strong>.`, "#059669");
+      }
+    } catch (err) {
+      if (errBox) {
+        errBox.textContent = err.message;
+        errBox.style.display = "block";
+      }
+    } finally {
+      if (submitBtn) { submitBtn.disabled = false; submitBtn.textContent = "Xác thực & Mở Không gian Làm việc"; }
+    }
+  };
+
+  window.handleSecureLogin = async function(e) {
+    if (e && e.preventDefault) e.preventDefault();
+    const uInp = document.getElementById("loginMaNVInput");
+    const pInp = document.getElementById("loginPasswordInput");
+    const pinInp = document.getElementById("loginPinInput");
+    const errBox = document.getElementById("loginModalErrorBox");
+
+    const identifier = (uInp?.value || "").trim();
+    const password = (pInp?.value || "").trim();
+    const pin = (pinInp?.value || "").trim();
+
+    if (errBox) { errBox.style.display = "none"; errBox.textContent = ""; }
+    try {
+      const res = await callTtaApi("AUTH_LOGIN", { identifier, password, pin });
+      if (!res || res.status !== "OK") {
+        throw new Error((res && res.message) || "Sai thông tin chuyển ca.");
+      }
+      setSessionToken(res.token);
+      await bootstrapFromServerDatabase(true);
+      applyRbacUiPolicy(res.user);
+      if (pInp) pInp.value = "";
+      if (pinInp) pinInp.value = "";
+      if (typeof window.closeModal === "function") window.closeModal("modalLoginPortal");
+      if (typeof window.showToast === "function") {
+        window.showToast(`Đã chuyển ca trực sang <strong>[${escHtml(res.user.maNV)}] ${escHtml(res.user.name)}</strong>!`, "#059669");
+      }
+    } catch (err) {
+      if (errBox) {
+        errBox.textContent = err.message;
+        errBox.style.display = "block";
+      }
+    }
+  };
+
+  window.logoutZeroTrustSession = function(isTimeout) {
+    const tok = getSessionToken();
+    if (tok) callTtaApi("AUTH_LOGOUT", { token: tok }).catch(() => {});
+    setSessionToken("");
+    try { sessionStorage.removeItem(SESSION_USER_KEY); } catch (e) {}
+    wipeInMemoryClinicalState();
+    purgeLegacyFrontEndDbCache();
+    showZeroTrustOverlay(true);
+
+    const pInp = document.getElementById("ztPassInput");
+    const pinInp = document.getElementById("ztPinInput");
+    const errBox = document.getElementById("ztErrorBanner");
+    if (pInp) pInp.value = "";
+    if (pinInp) pinInp.value = "";
+    if (errBox) {
+      if (isTimeout) {
+        errBox.textContent = "Phiên làm việc đã tự động khóa sau 15 phút không thao tác. Vui lòng đăng nhập lại.";
+        errBox.style.display = "block";
+      } else {
+        errBox.style.display = "none";
+      }
+    }
+    setTimeout(() => { document.getElementById("ztUserInput")?.focus(); }, 60);
+  };
+
+  // Clear Modal 11 fields on open
+  if (typeof window.openModal === "function") {
+    const _origOpenModal = window.openModal;
+    window.openModal = function(id) {
+      if (id === "modalLoginPortal") {
+        ["loginMaNVInput", "loginPasswordInput", "loginPinInput"].forEach(fid => {
+          const el = document.getElementById(fid);
+          if (el) el.value = "";
+        });
+        const err = document.getElementById("loginModalErrorBox");
+        if (err) err.style.display = "none";
+        setTimeout(() => { document.getElementById("loginMaNVInput")?.focus(); }, 40);
+      }
+      return _origOpenModal.apply(this, arguments);
+    };
+  }
+
+  // =========================================================================
+  // 6. DATABASE HYDRATION & DYNAMIC DROPDOWNS
+  // =========================================================================
   window.hydrateMolIqcFromDbRows = function() {
     const qRows = window.MOL_QUANT_30D_DB_ROWS;
     if (Array.isArray(qRows) && qRows.length > 0 && (!window.MOL_QUANT_30D_DB || Object.keys(window.MOL_QUANT_30D_DB).length === 0)) {
       const grouped = {};
       qRows.forEach(r => {
         const key = String(r.Ma_XetNghiem || r.Ten_XetNghiem || "HBV").trim() || "HBV";
-        if (!grouped[key]) grouped[key] = [];
-        grouped[key].push(r);
+        (grouped[key] = grouped[key] || []).push(r);
       });
       window.MOL_QUANT_30D_DB = grouped;
     }
@@ -36600,8 +36657,7 @@ function jsonResponse(obj) {
       const grouped = {};
       mRows.forEach(r => {
         const key = String(r.Ma_Panel || r.Ten_Panel || "RESP_PANEL").trim() || "RESP_PANEL";
-        if (!grouped[key]) grouped[key] = [];
-        grouped[key].push(r);
+        (grouped[key] = grouped[key] || []).push(r);
       });
       window.MOL_MULTIPLEX_30D_DB = grouped;
     }
@@ -36611,11 +36667,9 @@ function jsonResponse(obj) {
     const sel = document.getElementById(id);
     if (!sel) return;
     const prev = sel.value;
-    let html = includeAllText ? `<option value="ALL">${includeAllText}</option>` : "";
+    let html = includeAllText ? `<option value="ALL">${escHtml(includeAllText)}</option>` : "";
     items.forEach(it => {
-      const v = String(getVal(it) ?? "").replace(/"/g, "&quot;");
-      const lbl = String(getLabel(it) ?? "").replace(/</g, "&lt;");
-      html += `<option value="${v}">${lbl}</option>`;
+      html += `<option value="${escHtml(getVal(it))}">${escHtml(getLabel(it))}</option>`;
     });
     sel.innerHTML = html || '<option value="">-- Chưa có dữ liệu --</option>';
     if (prev && Array.from(sel.options).some(o => o.value === prev)) sel.value = prev;
@@ -36687,12 +36741,12 @@ function jsonResponse(obj) {
     }
     populateAllDynamicSelects();
 
-    try { if (typeof window.renderAllViews === "function") window.renderAllViews(); } catch (e) {}
-    try { if (typeof window.initIqcSelects === "function") window.initIqcSelects(); } catch (e) {}
-    try { if (typeof window.renderMolQuantIqcAll === "function") window.renderMolQuantIqcAll(); } catch (e) {}
-    try { if (typeof window.renderMolMultiplexIqcAll === "function") window.renderMolMultiplexIqcAll(); } catch (e) {}
-    try { if (typeof window.renderMolIqcCapaLogTable === "function") window.renderMolIqcCapaLogTable(); } catch (e) {}
-    try { if (typeof window.renderMasterDbLiveInspector === "function") window.renderMasterDbLiveInspector(); } catch (e) {}
+    ["renderAllViews", "initIqcSelects", "renderMolQuantIqcAll", "renderMolMultiplexIqcAll", "renderMolIqcCapaLogTable", "renderMasterDbLiveInspector"].forEach(fn => {
+      if (typeof window[fn] === "function") {
+        try { window[fn](); } catch (e) {}
+      }
+    });
+    renderAllowedUsersTableV44();
 
     if (!silent && typeof window.showToast === "function") {
       window.showToast("Đã đồng bộ dữ liệu trực tiếp từ Cơ sở Dữ liệu máy chủ (" + dbEngineLabel + ")!", "#059669");
@@ -36701,7 +36755,9 @@ function jsonResponse(obj) {
   }
   window.bootstrapFromServerDatabase = bootstrapFromServerDatabase;
 
-  // 4. DIRECT-TO-DATABASE MUTATION PIPELINE (ZERO FRONT-END PERSISTENCE)
+  // =========================================================================
+  // 7. DIRECT-TO-DATABASE MUTATION PIPELINE
+  // =========================================================================
   window.commitDatabaseTransaction = function(tableName, actionDesc) {
     purgeLegacyFrontEndDbCache();
     window.DB_LAST_SYNC_TIME = new Date().toLocaleString("vi-VN");
@@ -36740,14 +36796,14 @@ function jsonResponse(obj) {
           badge.style.color = "#166534";
         }
         const statusTxt = document.getElementById("masterDbSyncStatusText");
-        if (statusTxt) statusTxt.innerHTML = "Đã ghi trực tiếp xuống Cơ sở Dữ liệu bảng <code>" + tableName + "</code> (" + (actionDesc || "") + ")";
+        if (statusTxt) statusTxt.innerHTML = "Đã ghi trực tiếp xuống Cơ sở Dữ liệu bảng <code>" + escHtml(tableName) + "</code> (" + escHtml(actionDesc || "") + ")";
         const lastTime = document.getElementById("masterDbLastWriteTime");
         if (lastTime) lastTime.textContent = "Cập nhật cuối: " + window.DB_LAST_SYNC_TIME;
         try { if (typeof window.renderMasterDbLiveInspector === "function") window.renderMasterDbLiveInspector(); } catch (e) {}
       } else if (res && res.status === "UNAUTHORIZED") {
         window.logoutZeroTrustSession(true);
       } else if (typeof window.showToast === "function") {
-        window.showToast("Lỗi ghi CSDL: " + ((res && res.message) || "Không xác định"), "#dc2626");
+        window.showToast("Từ chối ghi CSDL: " + escHtml((res && res.message) || "Không có quyền"), "#dc2626");
       }
     }).catch(err => {
       if (badge) {
@@ -36756,18 +36812,14 @@ function jsonResponse(obj) {
         badge.style.color = "#991b1b";
       }
       if (typeof window.showToast === "function") {
-        window.showToast("Không thể ghi xuống Máy chủ CSDL: " + err.message, "#dc2626");
+        window.showToast("Không thể ghi xuống Máy chủ CSDL: " + escHtml(err.message), "#dc2626");
       }
     });
   };
 
   window.pullAllFromCloudMasterDB = async function(silent) {
-    try {
-      await bootstrapFromServerDatabase(Boolean(silent));
-    } catch (e) {
-      if (!silent && typeof window.showToast === "function") {
-        window.showToast("Lỗi kéo dữ liệu từ CSDL: " + e.message, "#dc2626");
-      }
+    try { await bootstrapFromServerDatabase(Boolean(silent)); } catch (e) {
+      if (!silent && typeof window.showToast === "function") window.showToast("Lỗi kéo dữ liệu: " + escHtml(e.message), "#dc2626");
     }
   };
 
@@ -36777,15 +36829,12 @@ function jsonResponse(obj) {
       if (typeof window[k] !== "undefined") allCols[k] = window[k];
     });
     try {
-      const res = await callTtaApi("SYNC_BATCH_TABLES", {
-        collections: allCols,
-        detail: "Đồng bộ toàn bộ tập dữ liệu lên Cơ sở Dữ liệu"
-      });
+      const res = await callTtaApi("SYNC_BATCH_TABLES", { collections: allCols, detail: "Đồng bộ toàn bộ dữ liệu lên CSDL" });
       if (res && res.status === "OK" && typeof window.showToast === "function") {
         window.showToast("Đã đồng bộ toàn bộ dữ liệu trực tiếp lên Máy chủ CSDL!", "#059669");
       }
     } catch (e) {
-      if (typeof window.showToast === "function") window.showToast("Lỗi đồng bộ: " + e.message, "#dc2626");
+      if (typeof window.showToast === "function") window.showToast("Lỗi đồng bộ: " + escHtml(e.message), "#dc2626");
     }
   };
 
@@ -36794,266 +36843,159 @@ function jsonResponse(obj) {
     window.pullAllFromCloudMasterDB(false);
   };
 
-  // 5. SERVER-SIDE 2FA AUTHENTICATION GATE (MATCHING ACTUAL #zeroTrustLoginOverlay DOM IDs!)
-  function showZeroTrustOverlay(show) {
-    const gate = document.getElementById("zeroTrustLoginOverlay");
-    if (show) {
-      document.body.classList.add("tta-auth-locked");
-      if (gate) gate.classList.add("active");
-    } else {
-      document.body.classList.remove("tta-auth-locked");
-      if (gate) gate.classList.remove("active");
+  // =========================================================================
+  // 8. ADMIN USER CRUD (CLEAN EXPIRY & ZERO CREDENTIAL LEAK) & 2FA SIGNING
+  // =========================================================================
+  function renderAllowedUsersTableV44() {
+    const tbody = document.getElementById("allowedUsersCrudTableBody");
+    if (!tbody) return;
+    const list = Array.isArray(window.ALLOWED_USERS_DB) ? window.ALLOWED_USERS_DB : [];
+    const isAdmin = activeUserProfile && activeUserProfile.scope === "SCOPE_ALL";
+    if (!list.length) {
+      tbody.innerHTML = '<tr><td colspan="8" style="text-align:center;color:#64748b;padding:14px;">Chưa có dữ liệu tài khoản.</td></tr>';
+      return;
     }
+    tbody.innerHTML = list.map(u => {
+      const roleMeta = ROLE_META[u.scope] || { label: u.scope, badge: "b-info" };
+      const exp = getExpiryMeta(u.expiresAt);
+      const isLocked = String(u.status || "ACTIVE").toUpperCase() === "LOCKED";
+      const isSelf = activeUserProfile && u.maNV === activeUserProfile.maNV;
+      return `
+        <tr>
+          <td><code style="font-weight:800;color:#0f4c81;">${escHtml(u.maNV)}</code></td>
+          <td><strong>${escHtml(u.name)}</strong><div style="font-size:11px;color:#475569;">${escHtml(u.dept)}</div></td>
+          <td><code>${escHtml(u.email)}</code>${u.altEmail ? `<div style="font-size:10.5px;color:#64748b;">Phụ: ${escHtml(u.altEmail)}</div>` : ""}</td>
+          <td><span class="badge b-pass" style="font-size:10.5px;">2FA Server-Side</span></td>
+          <td><span class="badge ${roleMeta.badge}">${escHtml(u.scope)}</span><div style="font-size:10.5px;color:#475569;margin-top:2px;">${escHtml(roleMeta.label)}</div></td>
+          <td><strong>${escHtml(exp.ymd)}</strong><div><span class="badge ${exp.badgeClass}" style="font-size:10px;margin-top:2px;">${escHtml(exp.label)}</span></div></td>
+          <td><span class="badge ${isLocked ? "b-fail" : "b-pass"}">${isLocked ? "LOCKED" : "ACTIVE"}</span></td>
+          <td>
+            ${isAdmin ? `<div style="display:flex;gap:4px;flex-wrap:wrap;">
+              <button type="button" class="btn btn-outline btn-xs" onclick="loadUserIntoEditForm('${escHtml(u.maNV)}')">Sửa</button>
+              <button type="button" class="btn btn-outline btn-xs" onclick="quickRenewUserOneYear('${escHtml(u.maNV)}')" title="Gia hạn thêm 1 năm ngay trên CSDL">+1 Năm</button>
+              ${!isSelf ? `<button type="button" class="btn btn-warning btn-xs" onclick="toggleLockAllowedUser('${escHtml(u.maNV)}')">${isLocked ? "Mở" : "Khóa"}</button>` : ""}
+              ${!isSelf && u.maNV !== "NHIHN000674" ? `<button type="button" class="btn btn-danger btn-xs" onclick="deleteAllowedUser('${escHtml(u.maNV)}')">Xóa</button>` : ""}
+            </div>` : '<span style="font-size:11px;color:#64748b;">Chỉ xem</span>'}
+          </td>
+        </tr>
+      `;
+    }).join("");
   }
+  window.renderAllowedUsersTable = renderAllowedUsersTableV44;
 
-  function applyServerAuthenticatedUser(userObj) {
-    try {
-      sessionStorage.setItem(SESSION_USER_KEY, JSON.stringify({
-        maNV: userObj.maNV,
-        name: userObj.name,
-        dept: userObj.dept,
-        scope: userObj.scope,
-        loginAt: new Date().toISOString()
-      }));
-    } catch (e) {}
-
-    window.CURRENT_USER_ID = userObj.maNV;
-    const selTop = document.getElementById("currentUserSelect");
-    if (selTop) {
-      if (!Array.from(selTop.options).some(o => o.value === userObj.maNV)) {
-        const opt = document.createElement("option");
-        opt.value = userObj.maNV;
-        opt.textContent = `[${userObj.maNV}] ${userObj.name} — ${userObj.dept}`;
-        selTop.appendChild(opt);
-      }
-      selTop.value = userObj.maNV;
+  window.loadUserIntoEditForm = function(maNV) {
+    const u = (window.ALLOWED_USERS_DB || []).find(x => x.maNV === maNV);
+    if (!u) return;
+    const setVal = (id, v) => { const el = document.getElementById(id); if (el) el.value = v ?? ""; };
+    setVal("usrMaNvInput", u.maNV);
+    setVal("usrEmailInput", u.email);
+    setVal("usrNameInput", u.name);
+    setVal("usrDeptSelect", u.dept || "Di truyền & SHPT");
+    setVal("usrPassInput", ""); // NEVER populate password from client; blank = keep server password
+    setVal("usrPinInput", "");  // NEVER populate PIN from client; blank = keep server PIN
+    setVal("usrScopeSelect", u.scope || "SCOPE_DEPT");
+    setVal("usrExpireInput", normalizeYmd(u.expiresAt) || "2027-12-31");
+    if (typeof window.showToast === "function") {
+      window.showToast(`Đã nạp <strong>[${escHtml(u.maNV)}] ${escHtml(u.name)}</strong> lên biểu mẫu (để trống Mật khẩu/PIN nếu giữ nguyên).`, "#0284c7");
     }
+  };
 
-    const switcher = document.querySelector(".header-controls .role-switcher");
-    if (switcher) {
-      let pill = document.getElementById("ttaAuthUserPill");
-      if (!pill) {
-        pill = document.createElement("div");
-        pill.id = "ttaAuthUserPill";
-        pill.className = "tta-auth-user-pill";
-        switcher.appendChild(pill);
-      }
-      const parts = String(userObj.name || "NV").trim().split(/\s+/);
-      const initials = parts.length === 1 ? parts[0].slice(0, 2).toUpperCase() : (parts[0][0] + parts[parts.length - 1][0]).toUpperCase();
-      pill.title = `${userObj.name} • ${userObj.maNV} • ${userObj.dept} (${userObj.scope})`;
-      pill.innerHTML = `<span class="tta-auth-avatar">${initials}</span><span class="tta-auth-name">${userObj.name} (${userObj.maNV})</span>`;
-    }
+  window.resetUserEditForm = function() {
+    const setVal = (id, v) => { const el = document.getElementById(id); if (el) el.value = v; };
+    setVal("usrMaNvInput", "");
+    setVal("usrEmailInput", "");
+    setVal("usrNameInput", "");
+    setVal("usrDeptSelect", "Di truyền & SHPT");
+    setVal("usrPassInput", "");
+    setVal("usrPinInput", "");
+    setVal("usrScopeSelect", "SCOPE_DEPT");
+    const nextYr = new Date();
+    nextYr.setFullYear(nextYr.getFullYear() + 1);
+    setVal("usrExpireInput", nextYr.toISOString().slice(0, 10));
+  };
 
-    const loginBtn = document.getElementById("btnOpenLoginPortal");
-    if (loginBtn) {
-      loginBtn.innerHTML = "Đổi Ca";
-      if (!document.getElementById("ttaBtnLogout")) {
-        const logoutBtn = document.createElement("button");
-        logoutBtn.id = "ttaBtnLogout";
-        logoutBtn.type = "button";
-        logoutBtn.className = "tta-logout-btn";
-        logoutBtn.title = "Đăng xuất & Khóa màn hình bảo mật";
-        logoutBtn.innerHTML = '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg><span>Đăng xuất</span>';
-        logoutBtn.onclick = function() { window.logoutZeroTrustSession(false); };
-        loginBtn.insertAdjacentElement("afterend", logoutBtn);
-      }
-    }
-
-    if (typeof window.handleUserSwitch === "function") {
-      try { window.handleUserSwitch(); } catch (e) {}
-    }
-
-    const secMa = document.getElementById("secCurrentMaNV");
-    const secRole = document.getElementById("secCurrentRoleBadge");
-    const secScope = document.getElementById("secCurrentScope");
-    const lockBanner = document.getElementById("globalRoleLockBanner");
-    if (secMa) secMa.textContent = userObj.maNV;
-    if (userObj.scope === "SCOPE_ALL") {
-      if (secRole) secRole.textContent = "Admin Toàn quyền";
-      if (secScope) secScope.textContent = "Toàn Khoa (5 BP)";
-      if (lockBanner) lockBanner.style.display = "none";
-      if (typeof window.setGlobalDept === "function") window.setGlobalDept("ALL");
-    } else if (userObj.scope === "SCOPE_TRAINEE" || String(userObj.maNV).startsWith("HV")) {
-      if (secRole) secRole.textContent = "Học viên CCHN (Giới hạn)";
-      if (secScope) secScope.textContent = "Chỉ xem / Nhập nháp";
-      if (lockBanner) lockBanner.style.display = "flex";
-    } else {
-      if (secRole) secRole.textContent = "Chuyên viên / KTV BP";
-      if (secScope) secScope.textContent = userObj.dept || "Bộ phận";
-      if (lockBanner) lockBanner.style.display = "none";
-      if (typeof window.setGlobalDept === "function" && userObj.dept) window.setGlobalDept(userObj.dept);
-    }
-
-    const dbBtn = document.getElementById("btnOpenLiveMasterDb");
-    if (dbBtn) dbBtn.style.display = (userObj.scope === "SCOPE_ALL") ? "inline-flex" : "none";
-
-    showZeroTrustOverlay(false);
-  }
-
-  // Override PRIMARY Login Gate submit handler (onsubmit="handleZeroTrustLoginSubmit(event)")
-  window.handleZeroTrustLoginSubmit = async function(e) {
+  window.handleUpsertAllowedUser = async function(e) {
     if (e && e.preventDefault) e.preventDefault();
-    const uInp = document.getElementById("ztUserInput");
-    const pInp = document.getElementById("ztPassInput");
-    const pinInp = document.getElementById("ztPinInput");
-    const errBox = document.getElementById("ztErrorBanner");
-    const submitBtn = document.querySelector('#zeroTrustLoginOverlay button[type="submit"]');
+    const maNV = (document.getElementById("usrMaNvInput")?.value || "").trim().toUpperCase();
+    const email = (document.getElementById("usrEmailInput")?.value || "").trim();
+    const name = (document.getElementById("usrNameInput")?.value || "").trim();
+    const dept = (document.getElementById("usrDeptSelect")?.value || "Di truyền & SHPT").trim();
+    const pass = (document.getElementById("usrPassInput")?.value || "").trim();
+    const pin = (document.getElementById("usrPinInput")?.value || "").trim();
+    const scope = (document.getElementById("usrScopeSelect")?.value || "SCOPE_DEPT").trim();
+    const expiresAt = normalizeYmd(document.getElementById("usrExpireInput")?.value) || "2027-12-31";
 
-    const identifier = (uInp?.value || "").trim();
-    const password = (pInp?.value || "").trim();
-    const pin = (pinInp?.value || "").trim();
-
-    if (errBox) { errBox.style.display = "none"; errBox.textContent = ""; }
-    if (submitBtn) { submitBtn.disabled = true; submitBtn.textContent = "Đang xác thực 2FA trên Máy chủ CSDL..."; }
-
+    if (!maNV || !email || !name) {
+      if (typeof window.showToast === "function") window.showToast("Vui lòng nhập đầy đủ Mã NV, Email và Họ tên!", "#dc2626");
+      return;
+    }
     try {
-      const res = await callTtaApi("AUTH_LOGIN", { identifier, password, pin });
-      if (!res || res.status !== "OK") {
-        throw new Error((res && res.message) || "Đăng nhập thất bại.");
-      }
-      setSessionToken(res.token);
-      if (submitBtn) submitBtn.textContent = "Đang tải dữ liệu trực tiếp từ CSDL...";
-      await bootstrapFromServerDatabase(true);
-      applyServerAuthenticatedUser(res.user);
-      if (pInp) pInp.value = "";
-      if (pinInp) pinInp.value = "";
+      const res = await callTtaApi("UPSERT_USER", {
+        userData: { maNV, email, name, dept, pass, pin, scope, expiresAt, status: "ACTIVE" }
+      });
+      if (!res || res.status !== "OK") throw new Error((res && res.message) || "Không thể lưu tài khoản.");
+      window.ALLOWED_USERS_DB = Array.isArray(res.users) ? res.users : window.ALLOWED_USERS_DB;
+      if (document.getElementById("usrPassInput")) document.getElementById("usrPassInput").value = "";
+      if (document.getElementById("usrPinInput")) document.getElementById("usrPinInput").value = "";
+      renderAllowedUsersTableV44();
       if (typeof window.showToast === "function") {
-        window.showToast("Đăng nhập 2FA thành công! Chào mừng <strong>" + res.user.name + " (" + res.user.maNV + ")</strong>.", "#059669");
+        window.showToast(`Đã lưu tài khoản <strong>[${escHtml(maNV)}] ${escHtml(name)}</strong> (HSD: ${expiresAt}) trực tiếp xuống CSDL!`, "#059669");
       }
     } catch (err) {
-      if (errBox) {
-        errBox.textContent = err.message;
-        errBox.style.display = "block";
-      }
-    } finally {
-      if (submitBtn) { submitBtn.disabled = false; submitBtn.textContent = "Xác thực & Mở Không gian Làm việc"; }
+      if (typeof window.showToast === "function") window.showToast("Lỗi lưu tài khoản: " + escHtml(err.message), "#dc2626");
     }
   };
 
-  // Override Modal 11 (Đổi Ca) submit handler (onsubmit="handleSecureLogin(event)")
-  window.handleSecureLogin = async function(e) {
-    if (e && e.preventDefault) e.preventDefault();
-    const uInp = document.getElementById("loginMaNVInput");
-    const pInp = document.getElementById("loginPasswordInput");
-    const pinInp = document.getElementById("loginPinInput");
-    const errBox = document.getElementById("loginModalErrorBox");
-
-    const identifier = (uInp?.value || "").trim();
-    const password = (pInp?.value || "").trim();
-    const pin = (pinInp?.value || "").trim();
-
-    if (errBox) { errBox.style.display = "none"; errBox.textContent = ""; }
+  window.quickRenewUserOneYear = async function(maNV) {
+    const u = (window.ALLOWED_USERS_DB || []).find(x => x.maNV === maNV);
+    if (!u) return;
+    const baseYmd = normalizeYmd(u.expiresAt) || new Date().toISOString().slice(0, 10);
+    const parts = baseYmd.split("-").map(Number);
+    const newYmd = `${parts[0] + 1}-${String(parts[1]).padStart(2, "0")}-${String(parts[2]).padStart(2, "0")}`;
     try {
-      const res = await callTtaApi("AUTH_LOGIN", { identifier, password, pin });
-      if (!res || res.status !== "OK") {
-        throw new Error((res && res.message) || "Sai thông tin chuyển ca.");
-      }
-      setSessionToken(res.token);
-      await bootstrapFromServerDatabase(true);
-      applyServerAuthenticatedUser(res.user);
-      if (pInp) pInp.value = "";
-      if (pinInp) pinInp.value = "";
-      if (typeof window.closeModal === "function") window.closeModal("modalLoginPortal");
+      const res = await callTtaApi("UPSERT_USER", { userData: Object.assign({}, u, { expiresAt: newYmd, pass: "", pin: "" }) });
+      if (!res || res.status !== "OK") throw new Error((res && res.message) || "Không thể gia hạn.");
+      window.ALLOWED_USERS_DB = Array.isArray(res.users) ? res.users : window.ALLOWED_USERS_DB;
+      renderAllowedUsersTableV44();
       if (typeof window.showToast === "function") {
-        window.showToast("Đã chuyển ca trực bảo mật sang <strong>[" + res.user.maNV + "] " + res.user.name + "</strong>!", "#059669");
+        window.showToast(`Đã gia hạn tài khoản <strong>${escHtml(maNV)}</strong> đến <strong>${newYmd}</strong> trên CSDL!`, "#059669");
       }
     } catch (err) {
-      if (errBox) {
-        errBox.textContent = err.message;
-        errBox.style.display = "block";
-      }
+      if (typeof window.showToast === "function") window.showToast(escHtml(err.message), "#dc2626");
     }
   };
 
-  window.logoutZeroTrustSession = function(isTimeout) {
-    const tok = getSessionToken();
-    if (tok) {
-      callTtaApi("AUTH_LOGOUT", { token: tok }).catch(() => {});
-    }
-    setSessionToken("");
-    try { sessionStorage.removeItem(SESSION_USER_KEY); } catch (e) {}
-    wipeInMemoryClinicalState();
-    purgeLegacyFrontEndDbCache();
-    showZeroTrustOverlay(true);
-    const pInp = document.getElementById("ztPassInput");
-    const pinInp = document.getElementById("ztPinInput");
-    const errBox = document.getElementById("ztErrorBanner");
-    if (pInp) pInp.value = "";
-    if (pinInp) pinInp.value = "";
-    if (errBox) {
-      if (isTimeout) {
-        errBox.textContent = "Phiên làm việc đã hết hạn sau 15 phút không hoạt động. Vui lòng đăng nhập lại.";
-        errBox.style.display = "block";
-      } else {
-        errBox.style.display = "none";
-      }
-    }
-  };
-
-  // 6. API CONFIGURATION MODAL (ACCESSIBLE FROM BOTH LOGIN CARD & BREADCRUMB)
-  window.openCloudApiConfigModal = function() {
-    const m = document.getElementById("modalCloudApiConfig");
-    const inp = document.getElementById("ttaModalGasUrlInput");
-    const box = document.getElementById("ttaCloudModalStatusBox");
-    if (!m) return;
-    if (inp) {
-      inp.value = getConfiguredApiUrl();
-      inp.placeholder = "http://localhost:8088/api hoặc https://script.google.com/macros/s/.../exec";
-    }
-    if (box) {
-      if (dbConnectedMode !== "DISCONNECTED") {
-        box.style.background = "#ecfdf5"; box.style.borderColor = "#a7f3d0"; box.style.color = "#065f46";
-        box.textContent = "Đã kết nối trực tiếp Máy chủ CSDL (" + dbEngineLabel + ") — 100% dữ liệu lưu tại Database, không lưu tại Front-end.";
-      } else {
-        box.style.background = "#fffbeb"; box.style.borderColor = "#fde68a"; box.style.color = "#92400e";
-        box.textContent = "Nhập URL Máy chủ Intranet (vd: http://localhost:8088/api) hoặc URL Google Apps Script WebApp (/exec) rồi nhấn Lưu URL & Đồng bộ Ngay.";
-      }
-    }
-    m.classList.add("open");
-  };
-
-  window.closeCloudApiConfigModal = function() {
-    const m = document.getElementById("modalCloudApiConfig");
-    if (m) m.classList.remove("open");
-  };
-
-  window.saveAndSyncCloudApiFromModal = async function() {
-    const inp = document.getElementById("ttaModalGasUrlInput");
-    const url = (inp?.value || "").trim();
-    setConfiguredApiUrl(url);
-    const res = await probeDatabaseHealth();
-    if (res && res.status === "OK") {
-      closeCloudApiConfigModal();
+  window.toggleLockAllowedUser = async function(maNV) {
+    const u = (window.ALLOWED_USERS_DB || []).find(x => x.maNV === maNV);
+    if (!u) return;
+    const nextStatus = String(u.status || "ACTIVE").toUpperCase() === "LOCKED" ? "ACTIVE" : "LOCKED";
+    try {
+      const res = await callTtaApi("UPSERT_USER", { userData: Object.assign({}, u, { status: nextStatus, pass: "", pin: "" }) });
+      if (!res || res.status !== "OK") throw new Error((res && res.message) || "Không thể đổi trạng thái.");
+      window.ALLOWED_USERS_DB = Array.isArray(res.users) ? res.users : window.ALLOWED_USERS_DB;
+      renderAllowedUsersTableV44();
       if (typeof window.showToast === "function") {
-        window.showToast("Kết nối Máy chủ CSDL thành công (" + (res.engine || "OK") + ")!", "#059669");
+        window.showToast(`Đã chuyển trạng thái <strong>${escHtml(maNV)}</strong> thành <strong>${nextStatus}</strong> trên CSDL!`, "#d97706");
       }
-      if (getSessionToken()) {
-        await bootstrapFromServerDatabase(true);
-      }
-    } else {
-      const box = document.getElementById("ttaCloudModalStatusBox");
-      if (box) {
-        box.style.background = "#fef2f2"; box.style.borderColor = "#fecaca"; box.style.color = "#991b1b";
-        box.textContent = "Không thể kết nối tới URL vừa nhập. Vui lòng kiểm tra máy chủ đang chạy (start_intranet.bat) hoặc quyền truy cập WebApp (/exec).";
-      }
+    } catch (err) {
+      if (typeof window.showToast === "function") window.showToast(escHtml(err.message), "#dc2626");
     }
   };
 
-  function enhanceLoginCardWithDbConfigButton() {
-    const form = document.querySelector("#zeroTrustLoginOverlay form");
-    if (!form) return;
-    if (!document.getElementById("ttaLoginDbBar")) {
-      const bar = document.createElement("div");
-      bar.id = "ttaLoginDbBar";
-      bar.style.cssText = "margin-top:12px;padding-top:10px;border-top:1px dashed #cbd5e1;display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap;";
-      bar.innerHTML =
-        '<span id="ttaLoginDbStatusBadge" style="font-size:11.5px;font-weight:700;padding:4px 9px;border-radius:999px;border:1px solid #fde68a;background:#fffbeb;color:#92400e;">● Đang kiểm tra Máy chủ CSDL...</span>' +
-        '<button type="button" id="btnOpenLoginDbConfig" onclick="openCloudApiConfigModal()" style="font-size:11.5px;font-weight:700;padding:5px 10px;border-radius:8px;border:1px solid #cbd5e1;background:#f8fafc;color:#0f4c81;cursor:pointer;">⚙ Cấu hình Máy chủ CSDL</button>';
-      form.insertAdjacentElement("afterend", bar);
+  window.deleteAllowedUser = async function(maNV) {
+    try {
+      const res = await callTtaApi("DELETE_USER", { maNV });
+      if (!res || res.status !== "OK") throw new Error((res && res.message) || "Không thể xóa tài khoản.");
+      window.ALLOWED_USERS_DB = Array.isArray(res.users) ? res.users : window.ALLOWED_USERS_DB;
+      renderAllowedUsersTableV44();
+      if (typeof window.showToast === "function") {
+        window.showToast(`Đã xóa tài khoản <strong>${escHtml(maNV)}</strong> khỏi CSDL!`, "#dc2626");
+      }
+    } catch (err) {
+      if (typeof window.showToast === "function") window.showToast(escHtml(err.message), "#dc2626");
     }
-  }
+  };
 
-  // 6B. SERVER-SIDE DIGITAL SIGNING (VERIFY_PIN) & ADMIN RBAC USER MANAGEMENT (UPSERT_USER / DELETE_USER)
   window.handlePinSignatureVerify = async function(e) {
     if (e && e.preventDefault) e.preventDefault();
     const pin = (document.getElementById("pinCodeVerifyInput")?.value || "").trim();
@@ -37065,78 +37007,19 @@ function jsonResponse(obj) {
     }
     try {
       const res = await callTtaApi("VERIFY_PIN", { pin, signAction: act, detail: reason });
-      if (!res || res.status !== "OK") {
-        throw new Error((res && res.message) || "Mã PIN ký số 2FA không chính xác!");
-      }
+      if (!res || res.status !== "OK") throw new Error((res && res.message) || "Mã PIN ký số 2FA không chính xác!");
       if (document.getElementById("pinCodeVerifyInput")) document.getElementById("pinCodeVerifyInput").value = "";
       if (typeof window.closeModal === "function") window.closeModal("modalPinVerify");
       await bootstrapFromServerDatabase(true);
       if (typeof window.showToast === "function") {
-        window.showToast("Đã xác thực Ký số 2FA phía Server và ghi nhận Audit Trail cho thao tác <strong>" + act + "</strong>!", "#059669");
+        window.showToast(`Đã xác thực Ký số 2FA phía Server và ghi Audit Trail cho thao tác <strong>${escHtml(act)}</strong>!`, "#059669");
       }
     } catch (err) {
-      if (typeof window.showToast === "function") window.showToast(err.message, "#dc2626");
+      if (typeof window.showToast === "function") window.showToast(escHtml(err.message), "#dc2626");
     }
   };
 
-  window.handleUpsertAllowedUser = async function(e) {
-    if (e && e.preventDefault) e.preventDefault();
-    const maNV = (document.getElementById("usrMaNvInput")?.value || "").trim().toUpperCase();
-    const email = (document.getElementById("usrEmailInput")?.value || "").trim();
-    const name = (document.getElementById("usrNameInput")?.value || "").trim();
-    const pass = (document.getElementById("usrPassInput")?.value || "").trim();
-    const scope = (document.getElementById("usrScopeSelect")?.value || "SCOPE_DEPT").trim();
-    const expiresAt = (document.getElementById("usrExpireInput")?.value || "2027-12-31").trim();
-    const dept = (typeof window.GLOBAL_DEPT === "string" && window.GLOBAL_DEPT !== "ALL") ? window.GLOBAL_DEPT : "Di truyền & SHPT";
-
-    try {
-      const res = await callTtaApi("UPSERT_USER", {
-        userData: { maNV, email, name, pass, scope, expiresAt, dept, status: "ACTIVE" }
-      });
-      if (!res || res.status !== "OK") throw new Error((res && res.message) || "Không thể lưu tài khoản.");
-      window.ALLOWED_USERS_DB = Array.isArray(res.users) ? res.users : window.ALLOWED_USERS_DB;
-      if (document.getElementById("usrPassInput")) document.getElementById("usrPassInput").value = "";
-      if (typeof window.renderAllowedUsersTable === "function") window.renderAllowedUsersTable();
-      if (typeof window.showToast === "function") {
-        window.showToast("Đã lưu tài khoản <strong>[" + maNV + "] " + name + "</strong> trực tiếp vào bảng SYS_USERS_RBAC trên Máy chủ CSDL!", "#059669");
-      }
-    } catch (err) {
-      if (typeof window.showToast === "function") window.showToast("Lỗi lưu tài khoản: " + err.message, "#dc2626");
-    }
-  };
-
-  window.toggleLockAllowedUser = async function(maNV) {
-    const u = (window.ALLOWED_USERS_DB || []).find(x => x.maNV === maNV);
-    if (!u) return;
-    const nextStatus = u.status === "LOCKED" ? "ACTIVE" : "LOCKED";
-    try {
-      const res = await callTtaApi("UPSERT_USER", { userData: Object.assign({}, u, { status: nextStatus }) });
-      if (!res || res.status !== "OK") throw new Error((res && res.message) || "Không thể đổi trạng thái.");
-      window.ALLOWED_USERS_DB = Array.isArray(res.users) ? res.users : window.ALLOWED_USERS_DB;
-      if (typeof window.renderAllowedUsersTable === "function") window.renderAllowedUsersTable();
-      if (typeof window.showToast === "function") {
-        window.showToast("Đã cập nhật trạng thái tài khoản <strong>" + maNV + "</strong> thành <strong>" + nextStatus + "</strong> trên CSDL!", "#d97706");
-      }
-    } catch (err) {
-      if (typeof window.showToast === "function") window.showToast(err.message, "#dc2626");
-    }
-  };
-
-  window.deleteAllowedUser = async function(maNV) {
-    try {
-      const res = await callTtaApi("DELETE_USER", { maNV });
-      if (!res || res.status !== "OK") throw new Error((res && res.message) || "Không thể xóa tài khoản.");
-      window.ALLOWED_USERS_DB = Array.isArray(res.users) ? res.users : window.ALLOWED_USERS_DB;
-      if (typeof window.renderAllowedUsersTable === "function") window.renderAllowedUsersTable();
-      if (typeof window.showToast === "function") {
-        window.showToast("Đã xóa tài khoản <strong>" + maNV + "</strong> khỏi bảng SYS_USERS_RBAC trên Máy chủ CSDL!", "#dc2626");
-      }
-    } catch (err) {
-      if (typeof window.showToast === "function") window.showToast(err.message, "#dc2626");
-    }
-  };
-
-  // 7. PCR DOSSIER POST-RUN QC EVALUATION (SAVED DIRECTLY TO DATABASE)
+  // PCR Dossier post-run evaluation (saved directly to Database)
   window._PCR_DOSSIER_MODE = "HANDWRITTEN";
   window.setPcrDossierMode = function(mode) {
     window._PCR_DOSSIER_MODE = mode;
@@ -37168,10 +37051,67 @@ function jsonResponse(obj) {
     if (typeof window.openPrintableLimsDossier === "function") window.openPrintableLimsDossier("PCR");
   };
 
-  // 8. BOOT SEQUENCE: STRICT SERVER SESSION CHECK -> HYDRATE FROM DB ONLY
-  async function initV43SeparatedProduction() {
+  // =========================================================================
+  // 9. API CONFIGURATION MODAL & BOOT SEQUENCE
+  // =========================================================================
+  window.openCloudApiConfigModal = function() {
+    const m = document.getElementById("modalCloudApiConfig");
+    const inp = document.getElementById("ttaModalGasUrlInput");
+    const box = document.getElementById("ttaCloudModalStatusBox");
+    if (!m) return;
+    if (inp) {
+      inp.value = getConfiguredApiUrl();
+      inp.placeholder = "http://localhost:8088/api hoặc https://script.google.com/macros/s/.../exec";
+    }
+    if (box) {
+      const ok = dbConnectedMode !== "DISCONNECTED";
+      box.style.background = ok ? "#ecfdf5" : "#fffbeb";
+      box.style.borderColor = ok ? "#a7f3d0" : "#fde68a";
+      box.style.color = ok ? "#065f46" : "#92400e";
+      box.textContent = ok
+        ? "Đã kết nối trực tiếp Máy chủ CSDL (" + dbEngineLabel + ") — 100% dữ liệu lưu tại Database."
+        : "Nhập URL Máy chủ Intranet (vd: http://localhost:8088/api) hoặc URL Google Apps Script WebApp (/exec).";
+    }
+    m.classList.add("open");
+  };
+
+  window.closeCloudApiConfigModal = function() {
+    const m = document.getElementById("modalCloudApiConfig");
+    if (m) m.classList.remove("open");
+  };
+
+  window.saveAndSyncCloudApiFromModal = async function() {
+    const url = (document.getElementById("ttaModalGasUrlInput")?.value || "").trim();
+    setConfiguredApiUrl(url);
+    const res = await probeDatabaseHealth();
+    if (res && res.status === "OK") {
+      closeCloudApiConfigModal();
+      if (typeof window.showToast === "function") window.showToast("Kết nối Máy chủ CSDL thành công (" + (res.engine || "OK") + ")!", "#059669");
+      if (getSessionToken()) await bootstrapFromServerDatabase(true);
+    } else {
+      const box = document.getElementById("ttaCloudModalStatusBox");
+      if (box) {
+        box.style.background = "#fef2f2"; box.style.borderColor = "#fecaca"; box.style.color = "#991b1b";
+        box.textContent = "Không thể kết nối tới URL vừa nhập. Kiểm tra máy chủ đang chạy hoặc quyền truy cập WebApp (/exec).";
+      }
+    }
+  };
+
+  function injectLoginCardDbBar() {
+    const form = document.querySelector("#zeroTrustLoginOverlay form");
+    if (!form || document.getElementById("ttaLoginDbBar")) return;
+    const bar = document.createElement("div");
+    bar.id = "ttaLoginDbBar";
+    bar.style.cssText = "margin-top:12px;padding-top:10px;border-top:1px dashed #cbd5e1;display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap;";
+    bar.innerHTML =
+      '<span id="ttaLoginDbStatusBadge" style="font-size:11.5px;font-weight:700;padding:4px 9px;border-radius:999px;border:1px solid #fde68a;background:#fffbeb;color:#92400e;">● Đang kiểm tra Máy chủ CSDL...</span>' +
+      '<button type="button" id="btnOpenLoginDbConfig" onclick="openCloudApiConfigModal()" style="font-size:11.5px;font-weight:700;padding:5px 10px;border-radius:8px;border:1px solid #cbd5e1;background:#f8fafc;color:#0f4c81;cursor:pointer;">⚙ Cấu hình Máy chủ CSDL</button>';
+    form.insertAdjacentElement("afterend", bar);
+  }
+
+  async function initV44CoreEngine() {
     purgeLegacyFrontEndDbCache();
-    enhanceLoginCardWithDbConfigButton();
+    injectLoginCardDbBar();
     const health = await probeDatabaseHealth();
 
     const existingToken = getSessionToken();
@@ -37180,7 +37120,7 @@ function jsonResponse(obj) {
         const me = await callTtaApi("AUTH_ME", { token: existingToken });
         if (me && me.status === "OK" && me.user) {
           await bootstrapFromServerDatabase(true);
-          applyServerAuthenticatedUser(me.user);
+          applyRbacUiPolicy(me.user);
           return;
         }
       } catch (e) {}
@@ -37188,12 +37128,13 @@ function jsonResponse(obj) {
     }
     wipeInMemoryClinicalState();
     showZeroTrustOverlay(true);
+    setTimeout(() => { document.getElementById("ztUserInput")?.focus(); }, 80);
   }
 
   if (document.readyState === "loading") {
-    document.addEventListener("DOMContentLoaded", () => setTimeout(initV43SeparatedProduction, 220));
+    document.addEventListener("DOMContentLoaded", () => setTimeout(initV44CoreEngine, 180));
   } else {
-    setTimeout(initV43SeparatedProduction, 220);
+    setTimeout(initV44CoreEngine, 180);
   }
 })();
 
